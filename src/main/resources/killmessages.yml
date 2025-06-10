@@ -1,0 +1,14 @@
+fire:
+ id: 1
+ name: 'Fire'
+ price: 5000
+ rarity: COMMON
+ buyable: true
+ icon: 'BLAZE_POWDER:0 : 1 : display=Bat : lore=&8Kill Message\n \n&7Select the Fire Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n'
+ messages:
+  melee:
+   - '{display} &7was struck down by {display2}.'
+   - '{display} &7was turned to dust by {display2}.'
+   - '{display} &7was melted by {display2}.'
+   - '{display} &7was turned to ash by {display2}.'
+   - '{display} &7was fried by {display2}.'

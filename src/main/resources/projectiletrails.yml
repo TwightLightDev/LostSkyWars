@@ -1,0 +1,27 @@
+flame:
+ id: 1
+ name: 'Flame'
+ price: 5000
+ rarity: COMMON
+ buyable: true
+ shape: LINE
+ type: PARTICLE
+ count: 1
+ particle: FLAME
+
+ icon: 'BLAZE_POWDER:0 : 1 : display=Flame : lore=&8Projectile Trail\n \n&7Plays the Flame Projectile Trail\n&7when you shoot.\n  '
+ 
+santa:
+ id: 2
+ name: 'Santa'
+ price: 35000
+ rarity: LEGENDARY
+ buyable: true
+ shape: DOUBLE_SPIRAL
+ type: PARTICLE
+ count: 1
+ particle: SNOW_SHOVEL
+ options:
+  radius: 0.5
+
+ icon: 'WOOL:0 : 1 : display=Santa : lore=&8Projectile Trail\n \n&7Plays the Santa Projectile Trail\n&7when you shoot.\n  ' 

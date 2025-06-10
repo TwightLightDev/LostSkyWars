@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LostSkyWars:jar">
+    <output-path>$PROJECT_DIR$/../Main D Disk/New folder/SkywarsSetup/plugins</output-path>
+    <root id="archive" name="LostSkyWars.jar">
+      <element id="module-output" name="LostSkyWars" />
+    </root>
+  </artifact>
+</component>

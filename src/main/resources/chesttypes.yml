@@ -1,0 +1,160 @@
+# Format:
+# PERCENTAGE, ITEMSTACK
+#
+s:
+  name: 'solo'
+  minItems: 5
+  maxItems: 10
+  refill:
+    35:
+      - 'DIAMOND_SWORD : 1 : enchantments=DAMAGE_ALL:1'
+    40:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'EGG : 16'
+    50:
+      - 'GOLDEN_APPLE : 2'
+    60:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'DIAMOND_SWORD : 1'
+    100:
+      - 'DIAMOND_HELMET : 1'
+      - 'DIAMOND_CHESTPLATE : 1'
+      - 'WOOD:0 : 64'
+      - 'STONE : 64'
+
+  content:
+    20:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+    40:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'EGG : 16'
+    50:
+      - 'FISHING_ROD : 1'
+      - 'WOOD : 16'
+      - 'COOKED_BEEF : 16'
+      - 'COOKED_BEEF : 8'
+      - 'EXP_BOTTLE : 32'
+    100:
+      - 'IRON_HELMET : 1'
+      - 'IRON_CHESTPLATE : 1'
+      - 'STONE : 32'
+      - 'WATER_BUCKET : 1'
+      - 'POTION:16417 : 1'
+      - 'STONE_AXE : 1'
+      - 'COOKED_BEEF : 8'
+      - 'IRON_SWORD : 1'
+
+s2:
+  name: 'solo2'
+  minItems: 3
+  maxItems: 7
+  refill:
+    40:
+      - 'POTION:8259 : 1'
+      - 'POTION:8261 : 1'
+      - 'SNOW_BALL : 16'
+    60:
+      - 'POTION:8259 : 1'
+      - 'POTION:8261 : 1'
+    50:
+      - 'GOLDEN_APPLE : 2'
+    100:
+      - 'DIAMOND_LEGGINGS : 1'
+      - 'DIAMOND_BOOTS : 1'
+      - 'ARROW : 32'
+      - 'BOW : 1 : enchantments=ARROW_DAMAGE:1'
+      - 'WOOD:0 : 64'
+      - 'STONE:0 : 64'
+
+  content:
+    20:
+      - 'POTION:8261 : 1'
+      - 'POTION:8259 : 1'
+    40:
+      - 'POTION:8261 : 1'
+      - 'POTION:8259 : 1'
+      - 'SNOW_BALL : 16'
+    50:
+      - 'FISHING_ROD : 1'
+      - 'STONE : 16'
+      - 'COOKED_BEEF : 16'
+      - 'COOKED_BEEF : 8'
+      - 'EXP_BOTTLE : 32'
+    100:
+      - 'IRON_LEGGINGS : 1'
+      - 'IRON_BOOTS : 1'
+      - 'WOOD : 32'
+      - 'ARROW : 15'
+      - 'BOW : 1'
+
+sf:
+  name: 'solofeast'
+  minItems: 8
+  maxItems: 15
+  refill:
+    20:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'POTION:8259 : 1'
+      - 'POTION:16393 : 1'
+    30:
+      - 'DIAMOND_SWORD:0 : 1 : enchantments=DAMAGE_ALL:3\nFIRE_ASPECT:1'
+    35:
+      - 'DIAMOND_SWORD:0 : 1 : enchantments=DAMAGE_ALL:3'
+    40:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'POTION:8259 : 1'
+      - 'POTION:16393 : 1'
+      - 'ARROW:0 : 32'
+      - 'EGG:0 : 16'
+      - 'SNOW_BALL:0 : 16'
+    50:
+      - 'GOLDEN_APPLE:0 : 5'
+    60:
+      - 'DIAMOND_CHESTPLATE:0 : 1 : enchantments=PROTECTION_ENVIRONMENTAL:3'
+      - 'DIAMOND_LEGGINGS:0 : 1 : enchantments=PROTECTION_PROJECTILE:3'
+      - 'DIAMOND_BOOTS:0 : 1 : enchantments=PROTECTION_ENVIRONMENTAL:4'
+      - 'DIAMOND_HELMET:0 : 1 : enchantments=PROTECTION_ENVIRONMENTAL:4'
+      - 'DIAMOND_SWORD:0 : 1'
+    100:
+      - 'WOOD:0 : 64'
+      - 'STONE:0 : 64'
+
+  content:
+    20:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'POTION:8259 : 1'
+    40:
+      - 'POTION:16417 : 1'
+      - 'POTION:16420 : 1'
+      - 'POTION:16418 : 1'
+      - 'POTION:8259 : 1'
+      - 'ARROW:0 : 32'
+      - 'EGG:0 : 16'
+      - 'SNOW_BALL:0 : 16'
+      - 'BOW:0 : 1 : enchantments=ARROW_DAMAGE:1'
+    50:
+      - 'GOLDEN_APPLE:0 : 2'
+    60:
+      - 'DIAMOND_CHESTPLATE:0 : 1'
+      - 'DIAMOND_LEGGINGS:0 : 1'
+      - 'DIAMOND_BOOTS:0 : 1'
+      - 'DIAMOND_HELMET:0 : 1'
+      - 'DIAMOND_SWORD:0 : 1'
+    100:
+      - 'WOOD:0 : 64'
+      - 'STONE:0 : 64'
+    35:
+      - 'DIAMOND_SWORD:0 : 1 : enchantments=DAMAGE_ALL:1'
+
