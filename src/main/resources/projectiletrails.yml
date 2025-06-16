@@ -8,6 +8,7 @@ flame:
  type: PARTICLE
  count: 1
  particle: FLAME
+ permission: 'none'
 
  icon: 'BLAZE_POWDER:0 : 1 : display=Flame : lore=&8Projectile Trail\n \n&7Plays the Flame Projectile Trail\n&7when you shoot.\n  '
  
@@ -21,6 +22,7 @@ santa:
  type: PARTICLE
  count: 1
  particle: SNOW_SHOVEL
+ permission: 'none'
  options:
   radius: 0.5
 

@@ -1,0 +1,152 @@
+lightning-strike:
+ id: 1
+ name: 'Lightning Strike'
+ price: 5000
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'STRING:0 : 1 : display=Lightning Strike : lore=&8Kill Effect\n \n&7Select the Lightning Strike Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+firework:
+ id: 2
+ name: 'Firework'
+ price: 5000
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'FIREWORK:0 : 1 : display=Firework : lore=&8Kill Effect\n \n&7Select the Firework Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+batcrux:
+ id: 3
+ name: 'BatCrux'
+ price: 10000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'MONSTER_EGG:65 : 1 : display=Batcrux : lore=&8Kill Effect\n \n&7Select the Batcrux Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+crying:
+ id: 9
+ name: 'Crying'
+ price: 5000
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Crying : lore=&8Kill Effect\n \n&7Select the Crying Kill\n&7Effect for in-game kill\n&7effect!.\n  : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDIyZjFiZjU5MzFiYWQxNGMwMTJkOWVjNjA1ZWViNDJmNjYwOWZhOTQyZTAzZmZiYWJmNzY5Yzc5ZjRiZjZlMiJ9fX0='
+
+rekt:
+ id: 4
+ name: 'Rekt'
+ price: 10000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'SIGN:0 : 1 : display=Rekt : lore=&8Kill Effect\n \n&7Select the Rekt Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+burning-shoes:
+ id: 5
+ name: 'Burning Shoes'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'IRON_BOOTS:0 : 1 : display=Burning Shoes : lore=&8Kill Effect\n \n&7Select the Burning Shoes Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+rainbow:
+ id: 12
+ name: 'Rainbow'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Rainbow : lore=&8Kill Effect\n \n&7Select the Rainbow Kill\n&7Effect for in-game kill\n&7effect!.\n  : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI0OTMyYmI5NDlkMGM2NTcxN2IxMjFjOGNkOWEyMWI2OWU4NmMwZjdlMzQyMWFlOWI4YzY0ZDhiOTkwZWI2MCJ9fX0='
+
+rebirth:
+ id: 13
+ name: 'Rebirth'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'BED:0 : 1 : display=Rebirth : lore=&8Kill Effect\n \n&7Select the Rebirth Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+heart-aura:
+ id: 6
+ name: 'Heart Aura'
+ price: 20000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'APPLE:0 : 1 : display=Heart Aura : lore=&8Kill Effect\n \n&7Select the Heart Aura Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+squid-missile:
+ id: 7
+ name: 'Squid Missle'
+ price: 25000
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'MONSTER_EGG:94 : 1 : display=Squid Missle : lore=&8Kill Effect\n \n&7Select the Squid Missle Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+tornado:
+ id: 8
+ name: 'Tornado'
+ price: 30000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'GLASS:0 : 1 : display=Tornado : lore=&8Kill Effect\n \n&7Select the Tornado Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+explosion:
+ id: 10
+ name: 'Explosion'
+ price: 7500
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'TNT:0 : 1 : display=Explosion : lore=&8Kill Effect\n \n&7Select the Explosion Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+lucky-block:
+ id: 11
+ name: 'Lucky Block'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Lucky Block : lore=&8Kill Effect\n \n&7Select the Lucky Block Kill\n&7Effect for in-game kill\n&7effect!.\n  : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGI5MmNiNDMzMzNhYTYyMWM3MGVlZjRlYmYyOTliYTQxMmI0NDZmZTEyZTM0MWNjYzU4MmYzMTkyMTg5In19fQ=='
+
+sadface:
+ id: 14
+ name: 'Sadface'
+ price: 10000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Sadface : lore=&8Kill Effect\n \n&7Select the Sadface Kill\n&7Effect for in-game kill\n&7effect!.\n  : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjBjZjhiMmExZTVhYWQ1YzljNTE0ZGIzOTE2ODdlNzlhZDVlOWRiODRlZjM0MTY2Zjc2MWQzNjIwOGQ5MDM5In19fQ=='
+
+shatter:
+ id: 15
+ name: 'Shatter'
+ price: 25000
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'DIAMOND_AXE:0 : 1 : display=Shatter : lore=&8Kill Effect\n \n&7Select the Shatter Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+volcano:
+ id: 16
+ name: 'Volcano'
+ price: 12000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'OBSIDIAN:0 : 1 : display=Volcano : lore=&8Kill Effect\n \n&7Select the Volcano Kill\n&7Effect for in-game kill\n&7effect!.\n  '
+
+mysterybox:
+ id: 17
+ name: 'Mystery Box'
+ price: 20000
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'ENDER_CHEST:0 : 1 : display=Mystery Box : lore=&8Kill Effect\n \n&7Select the Mystery Box Kill\n&7Effect for in-game kill\n&7effect!.\n  '

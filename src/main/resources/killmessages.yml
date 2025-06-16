@@ -3,8 +3,9 @@ fire:
  name: 'Fire'
  price: 5000
  rarity: COMMON
+ permission: 'none'
  buyable: true
- icon: 'BLAZE_POWDER:0 : 1 : display=Bat : lore=&8Kill Message\n \n&7Select the Fire Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n'
+ icon: 'BLAZE_POWDER:0 : 1 : display=Fire : lore=&8Kill Message\n \n&7Select the Fire Kill\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
  messages:
   melee:
    - '{display} &7was struck down by {display2}.'
@@ -12,3 +13,613 @@ fire:
    - '{display} &7was melted by {display2}.'
    - '{display} &7was turned to ash by {display2}.'
    - '{display} &7was fried by {display2}.'
+
+
+western:
+ id: 2
+ name: Western
+ price: 5000
+ rarity: COMMON
+ permission: none
+ buyable: true
+ icon: 'BOW:0 : 1 : display=Western : lore=&8Kill Message\n \n&7Select the Western Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was filled full of lead by {display2}.'
+   - '{display} &7met their end by {display2}.'
+   - '{display} &7lost a drinking contest with {display2}.'
+
+honourable:
+ id: 3
+ name: Honourable
+ price: 7500
+ rarity: UNCOMMON
+ permission: none
+ buyable: true
+ icon: 'DIAMOND:0 : 1 : display=Honourable : lore=&8Kill Message\n \n&7Select the Honourable Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7died in close combat to {display2}.'
+  void:
+   - '{display} &7fought to the edge with {display2}.'
+   - '{display} &7fell to the great marksmanship of {display2}.'
+   - '{display} &7stumbled off a ledge with help by {display2}.'
+
+love:
+ id: 4
+ name: Love
+ price: 7500
+ rarity: UNCOMMON
+ permission: none
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Love : lore=&8Kill Message\n \n&7Select the Love Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTI5ZmI5ZjU5M2I2YWU1MzNkZmE4Y2U3OTYxNWZjYzM1ODk0YTQyY2JiNDFkZTU5OGQ2OTQ3NjczNTJmZSJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was given the cold shoulder by {display2}.'
+   - '{display} &7was out of the league of {display2}.'
+  bow:
+   - '{display} &7was struck with Cupid''s arrow by {display2}.'
+
+bbq:
+ id: 5
+ name: 'BBQ'
+ price: 10000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=BBQ : lore=&8Kill Message\n \n&7Select the BBQ Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTg2ZjE5YmYyM2QyNDhlNjYyYzljOGI3ZmExNWVmYjhhMWYxZDViZGFjZDNiODYyNWE5YjU5ZTkzYWM4YSJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was glazed in BBQ sauce by {display2}.'
+   - '{display} &7was not spicy enough for {display2}.'
+  void:
+   - '{display} &7slipped in BBQ sauce off the edge spilled by {display2}.'
+   - '{display} &7was thrown chilli powder at by {display2}.'
+
+woof-woof:
+ id: 6
+ name: 'Woof Woof'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'BONE:0 : 1 : display=Woof Woof : lore=&8Kill Message\n \n&7Select the Woof Woof Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was bitten by {display2}.'
+   - '{display} &7was distracted by a puppy place by {display2}.'
+   - '{display} &7played too rough with {display2}.'
+   - '{display} &7was ripped apart by {display2}.'
+  mob:
+   - '{display} &7was mauled by a wild wolf pack.'
+   - '{display} &7got chased into oblivion by hounds.'
+
+santas-workshop:
+ id: 7
+ name: 'Santa''s Workshop'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'SNOW_BALL:0 : 1 : display=Santa''s Workshop : lore=&8Kill Message\n \n&7Select the Santa''s Workshop Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was wrapped into a gift by {display2}.'
+   - '{display} &7was put on the naughty list by {display2}.'
+   - '{display} &7was turned to gingerbread by {display2}.'
+  bow:
+   - '{display} &7was snowball-sniped by {display2}.'
+   - '{display} &7got hit by {display2}''s &7present arrow.'
+
+primal:
+ id: 8
+ name: 'Primal'
+ price: 17500
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'STONE_AXE:0 : 1 : display=Primal : lore=&8Kill Message\n \n&7Select the Primal Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was hunted down by {display2}.'
+   - '{display} &7stumbled on a trap set by {display2}.'
+   - '{display} &7was mauled by {display2}.'
+  mob:
+   - '{display} &7was devoured by a prehistoric beast.'
+   - '{display} &7fell to nature''s raw power.'
+
+squeak:
+ id: 9
+ name: 'Squeak'
+ price: 17500
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Squeak : lore=&8Kill Message\n \n&7Select the Squeak Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGI2ZDI0ODQ5ZmY4ODZiMWQ0ZjI0ZjVhMTg2NWNlMzhmNmE0NzFmMzAwYzU3MTcxYWFhMDRhYWQ0YWM5YWNiZiJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was chewed up by {display2}.'
+   - '{display} &7stepped in a mouse trap placed by {display2}.'
+   - '{display} &7was distracted by a rat dragging pizza from {display2}.'
+  void:
+   - '{display} &7was scared into the void by {display2}.'
+   - '{display} &7chased cheese right off the edge by {display2}.'
+
+pirate:
+ id: 10
+ name: 'Pirate'
+ price: 22500
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Pirate : lore=&8Kill Message\n \n&7Select the Pirate Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNWFhMmY1OTQ5NzgwN2FkMDVjYWYwYmZmMjQ4YTAzYmNhZTU0YmJhMmY2YWVhMzY5ZGNhYmMwZjUwOGE4OWIzIn19fQ=='
+ messages:
+  melee:
+   - '{display} &7be sent to Davy Jone''s locker by {display2}.'
+   - '{display} &7be cannonballed to death by {display2}.'
+   - '{display} &7be killed with magic by {display2}.'
+   - '{display} &7be killed with metal by {display2}.'
+  bow:
+   - '{display} &7was harpooned by {display2}''s &7pirate bow.'
+   - '{display} &7got sniped from the crow''s nest by {display2}.'
+  mob:
+   - '{display} &7was boarded by a skeleton crew.'
+   - '{display} &7walked the plank into shark-infested waters.'
+   - '{display} &7was cursed by pirate ghosts.'
+
+spooked:
+ id: 11
+ name: 'Spooked'
+ price: 25000
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'JACK_O_LANTERN:0 : 1 : display=Spooked : lore=&8Kill Message\n \n&7Select the Spooked Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was spooked by {display2}.'
+   - '{display} &7was remotely spooked by {display2}.'
+   - '{display} &7was totally spooked by {display2}.'
+  void:
+   - '{display} &7was spooked off the map by {display2}.'
+   - '{display} &7ghosted themselves because of {display2}.'
+  mob:
+   - '{display} &7was haunted by a ghost.'
+   - '{display} &7was scared to death by a phantom.'
+   - '{display} &7met their end in a haunted mansion.'
+
+memed:
+ id: 12
+ name: 'Memed'
+ price: 25000
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Memed : lore=&8Kill Message\n \n&7Select the Memed Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjIyYjMzMTliNTk5MzQ4MTcyMzAzNThjZjMzZDAzOGM5ODNjOWI2NzdhZDE1YjBhM2Y1ZjFmZTNiNWMxNTdiIn19fQ=='
+ messages:
+  melee:
+   - '{display} &7got rekt by by {display2}.'
+   - '{display} &7took the L to {display2}.'
+   - '{display} &7got smacked by {display2}.'
+   - '{display} &7got roasted by {display2}.'
+   - '{display} &7got bamboozled by {display2}.'
+  bow:
+   - '{display} &7got clapped by {display2}''s &7meme arrow.'
+   - '{display} &7was ratio''d from afar by {display2}.'
+  mob:
+   - '{display} &7was trolled by a creeper.'
+   - '{display} &7got clowned on by pillagers.'
+   - '{display} &7was ratio''d by zombies.'
+
+buzz:
+ id: 13
+ name: 'Buzz'
+ price: 35000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Buzz : lore=&8Kill Message\n \n&7Select the Buzz Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjU5MDAxYTg1MWJiMWI5ZTljMDVkZTVkNWM2OGIxZWEwZGM4YmQ4NmJhYmYxODhlMGFkZWQ4ZjkxMmMwN2QwZCJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was buzzed to death by {display2}.'
+   - '{display} &7was startled by {display2}.'
+   - '{display} &7was bee''d by {display2}.'
+  bow:
+   - '{display} &7was stung by {display2}''s &7bee arrow.'
+   - '{display} &7got pollen-ated from afar by {display2}.'
+   - '{display} &7was targeted by {display2}''s &7swarm sight.'
+  void:
+   - '{display} &7was stung off the edge by {display2}.'
+   - '{display} &7was buzzz''d into the void by {display2}.'
+   - '{display} &7was swarmed into the void by {display2}''s &7bees.'
+   - '{display} &7fell while dodging {display2}''s &7angry hive.'
+   - '{display} &7was pollen-blinded and walked off by {display2}.'
+  mob:
+   - '{display} &7was swarmed by angry bees.'
+   - '{display} &7got the hive mind treatment.'
+   - '{display} &7was pollen-ated to death.'
+
+oink:
+ id: 14
+ name: 'Oink'
+ price: 35000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'COOKED_BEEF:0 : 1 : display=Oink : lore=&8Kill Message\n \n&7Select the Oink Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was oinked by {display2}.'
+   - '{display} &7got attacked by a carrot from {display2}.'
+   - '{display} &7was distracted by a piglet from {display2}.'
+  bow:
+   - '{display} &7was skewered by {display2}''s &7carrot arrow.'
+   - '{display} &7got sniped by {display2}''s &7truffle-seeking arrow.'
+   - '{display} &7was hunted down by {display2}''s &7piglin bow.'
+  void:
+   - '{display} &7slipped into the void for {display2}.'
+   - '{display} &7was lured off by {display2}''s &7golden carrot.'
+   - '{display} &7was chased off by {display2}''s &7hoglin call.'
+  mob:
+   - '{display} &7was trampled by a hoglin.'
+   - '{display} &7got turned into bacon by piglins.'
+   - '{display} &7was out-oinked by a piglin brute.'
+   - '{display} &7got caught in a piglin hunting party.'
+   - '{display} &7was snouted into the afterlife by a warped fungus hog.'
+
+dramatic:
+ id: 16
+ name: 'Dramatic'
+ price: 50000
+ rarity: MYTHIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Dramatic : lore=&8Kill Message\n \n&7Select the Dramatic Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY5ZWM3MjJkOWNiNmVkOWJhZTkzYzI2NmJkMDk4ZjBhMzA2YzVlOGMwMzg0OWMyN2NkY2YxOGM2MGQ2Y2IzZSJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was tragically backstabbed by {display2}.'
+   - '{display} &7heart was pierced by {display2}.'
+   - '{display} &7was delivered into nothingness by {display2}.'
+   - '{display} &7was dismembered by {display2}.'
+   - '{display} &7was dreadfully corrupted by {display2}.'
+  bow:
+   - '{display} &7was struck by {display2}''s &7arrow of destiny.'
+   - '{display} &7met their fate via {display2}''s &7dramatic shot.'
+   - '{display} &7was slain in a Shakespearean archery duel by {display2}.'
+  void:
+   - '{display} &7took a dramatic leap to escape {display2}.'
+   - '{display} &7fell during a climactic battle with {display2}.'
+   - '{display} &7slipped while delivering final words to {display2}.'
+  mob:
+   - '{display} &7had a dramatic final stand against the ender dragon.'
+   - '{display} &7was given a Shakespearean death by witches.'
+   - '{display} &7had a tragic fate with the wither.'
+
+gardener:
+ id: 16
+ name: 'Gardener'
+ price: 5000
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'DIAMOND_HOE:0 : 1 : display=Gardener : lore=&8Kill Message\n \n&7Select the Gardener Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was pruned by {display2}.'
+   - '{display} &7got dug up by {display2}.'
+   - '{display} &7was harvested by {display2}.'
+
+dragon_slayer:
+ id: 20
+ name: 'Dragon Slayer'
+ price: 35000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'DIAMOND_SWORD:0 : 1 : display=Dragon Slayer : lore=&8Kill Message\n \n&7Select the Dragon Slayer Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was devoured by {display2}.'
+   - '{display} &7was scorched by {display2}''s &7breath.'
+   - '{display} &7was crushed by {display2}''s &7tail.'
+   - '{display} &7was clawed apart by {display2}.'
+  bow:
+   - '{display} &7was shot down by {display2}.'
+   - '{display} &7was hunted from above by {display2}.'
+   - '{display} &7was pierced by {display2}&7''s dragonbone arrow.'
+  void:
+   - '{display} &7was thrown off by {display2}''s &7wings.'
+   - '{display} &7fell into the void chasing {display2}.'
+   - '{display} &7was blasted away by {display2}''s &7roar.'
+   - '{display} &7was wing-slapped into oblivion by {display2}.'
+  mob:
+   - '{display} &7was eaten by {display2}''s &7dragon.'
+   - '{display} &7was sacrificed to the Ender Dragon by {display2}.'
+   - '{display} &7was torched by {display2}''s &7dragonfire.'
+
+fisherman:
+ id: 17
+ name: 'Fisherman'
+ price: 10000
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'FISHING_ROD:0 : 1 : display=Fisherman : lore=&8Kill Message\n \n&7Select the Fisherman Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7got reeled in by {display2}.'
+   - '{display} &7was caught by {display2}''s &7hook.'
+   - '{display} &7took the bait from {display2}.'
+   - '{display} &7was thrown back by {display2}.'
+   - '{display} &7couldn''t escape {display2}''s &7line.'
+   -
+blacksmith:
+ id: 22
+ name: 'Blacksmith'
+ price: 12500
+ rarity: UNCOMMON
+ permission: 'none'
+ buyable: true
+ icon: 'ANVIL:0 : 1 : display=Blacksmith : lore=&8Kill Message\n \n&7Select the Blacksmith Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was forged into scrap by {display2}.'
+   - '{display} &7got hammered by {display2}.'
+   - '{display} &7was melted down by {display2}.'
+   - '{display} &7was crushed under {display2}''s &7anvil.'
+   - '{display} &7was reforged painfully by {display2}.'
+   -
+ninja:
+ id: 18
+ name: 'Ninja'
+ price: 15000
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'NETHER_STAR:0 : 1 : display=Ninja : lore=&8Kill Message\n \n&7Select the Ninja Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was silently eliminated by {display2}.'
+   - '{display} &7never saw {display2}&7 coming.'
+   - '{display} &7was backstabbed by {display2}.'
+  void:
+   - '{display} &7was thrown into shadows by {display2}.'
+   - '{display} &7disappeared into the night thanks to {display2}.'
+
+frostbite:
+ id: 21
+ name: 'Frostbite'
+ price: 7500
+ rarity: COMMON
+ permission: 'none'
+ buyable: true
+ icon: 'ICE:0 : 1 : display=Frostbite : lore=&8Kill Message\n \n&7Select the Frostbite Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was frozen solid by {display2}.'
+   - '{display} &7slipped on ice placed by {display2}.'
+   - '{display} &7couldn''t handle the cold from {display2}.'
+   - '{display} &7was shattered by {display2}''s &7icy touch.'
+
+pharaoh_curse:
+ id: 19
+ name: 'Pharaoh''s Curse'
+ price: 22500
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Pharaoh''s Curse : lore=&8Kill Message\n \n&7Select the Pharaoh''s Curse Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzdhZTRkZWE1ZTgxMjQ4MGQ1NTY2MDAwOWYyNjFhZjZiNGZkYzQ1MmJhNTkyZGI5YzZiYzU4MGU0OTRiYmZjZSJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was cursed by {display2}.'
+   - '{display} &7was entombed by {display2}''s &7wrath.'
+   - '{display} &7was mummified by {display2}.'
+   - '{display} &7was sacrificed to {display2}''s &7gods.'
+  bow:
+   - '{display} &7was struck down by {display2}''s &7divine arrow.'
+   - '{display} &7was cursed by {display2}''s &7hieroglyph arrow.'
+   - '{display} &7was pierced by {display2}''s &7cobra shot.'
+  mob:
+   - '{display} &7was devoured by {display2}''s &7scarab swarm.'
+   - '{display} &7was dragged until die by {display2}''s &7mummies.'
+   - '{display} &7was buried alive by {display2}''s &7sandstorm.'
+
+wizard:
+ id: 24
+ name: 'Wizard'
+ price: 22500
+ rarity: EPIC
+ permission: 'none'
+ buyable: true
+ icon: 'ENCHANTED_BOOK:0 : 1 : display=Wizard : lore=&8Kill Message\n \n&7Select the Wizard Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was magicked away by {display2}.'
+   - '{display} &7got zapped by {display2}''s &7staff.'
+   - '{display} &7was spell-struck by {display2}.'
+  bow:
+   - '{display} &7was arcane-shot by {display2}.'
+   - '{display} &7got spell-sniped by {display2}.'
+   - '{display} &7was enchanted to death by {display2}.'
+  mob:
+   - '{display} &7was polymorphed by {display2}''s &7familiar.'
+   - '{display} &7got cursed by {display2}''s &7tome.'
+   - '{display} &7was banished by {display2}''s &7golem.'
+
+titan:
+ id: 25
+ name: 'Titan'
+ price: 35000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'IRON_CHESTPLATE:0 : 1 : display=Titan : lore=&8Kill Message\n \n&7Select the Titan Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was crushed by {display2}''s &7might.'
+   - '{display} &7got stomped by {display2}.'
+   - '{display} &7was shattered by {display2}''s &7strength.'
+   - '{display} &7got pummeled by {display2}''s &7fists.'
+  bow:
+   - '{display} &7was obliterated by {display2}''s &7power shot.'
+   - '{display} &7got demolished by {display2}''s &7arrow.'
+   - '{display} &7was wrecked by {display2}''s &7siege shot.'
+  void:
+   - '{display} &7was hurled into the abyss by {display2}.'
+   - '{display} &7got thrown down by {display2}''s &7rage.'
+   - '{display} &7was quake-launched by {display2}.'
+  mob:
+   - '{display} &7was trampled by {display2}''s &7colossus.'
+   - '{display} &7got smashed by {display2}''s &7golem.'
+   - '{display} &7was earthquaked by {display2}''s &7minions.'
+
+archer:
+ id: 23
+ name: 'Archer'
+ price: 17500
+ rarity: RARE
+ permission: 'none'
+ buyable: true
+ icon: 'BOW:0 : 1 : display=Archer : lore=&8Kill Message\n \n&7Select the Archer Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was outdrawn by {display2}.'
+   - '{display} &7got strung up by {display2}.'
+   - '{display} &7was notched by {display2}.'
+  bow:
+   - '{display} &7was bullseyed by {display2}.'
+   - '{display} &7got pinned down by {display2}''s &7arrow.'
+   - '{display} &7was hunted by {display2}''s &7precision.'
+   - '{display} &7got quivered by {display2}''s &7shot.'
+
+celestial:
+ id: 26
+ name: 'Celestial'
+ price: 50000
+ rarity: MYTHIC
+ permission: 'none'
+ buyable: true
+ icon: 'PRISMARINE_CRYSTALS:0 : 1 : display=Celestial : lore=&8Kill Message\n \n&7Select the Celestial Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was erased by {display2}''s &7cosmic touch.'
+   - '{display} &7got vanished by {display2}''s &7starlight.'
+   - '{display} &7was dissolved by {display2}''s &7galactic power.'
+   - '{display} &7was supernova-punched by {display2}.'
+  bow:
+   - '{display} &7was supernova''d by {display2}.'
+   - '{display} &7got comet-struck by {display2}.'
+   - '{display} &7was nebula-shot by {display2}.'
+  void:
+   - '{display} &7was black-holed by {display2}.'
+   - '{display} &7got event-horizoned by {display2}''s &7gravity.'
+   - '{display} &7was singularity-sucked by {display2}.'
+  mob:
+   - '{display} &7was consumed by {display2}''s &7constellation.'
+   - '{display} &7got atomized by {display2}''s &7quasar.'
+   - '{display} &7was cosmic-rayed by {display2}''s &7pulsars.'
+
+weeb:
+ id: 27
+ name: 'Weeb'
+ price: 60000
+ rarity: MYTHIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Weeb : lore=&8Kill Message\n \n&7Select the Weeb Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTdlYTFiYTNhMjZjYmM0YzgxODI4MWMyMmE5OTliOGYxYTcxZDEzMzgzMzAzMDU2OTc1MDExYjZkMTIxMmI0NCJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was one-punched by {display2}''s &7100 push-ups.'
+   - '{display} &7got Bankai''d by {display2}.'
+   - '{display} &7was outplayed in 4D chess by {display2}''s &7Light Yagami move.'
+   - '{display} &7took a Rasengan to the face from {display2}.'
+  bow:
+   - '{display} &7was sniped by {display2}''s &7Dragon Slayer arrow.'
+   - '{display} &7got Unlimited Blade Works''d by {display2}.'
+   - '{display} &7was headshot by {display2}''s &7Sniper Wolf skills.'
+  void:
+   - '{display} &7was sent to the Shadow Realm by {display2}.'
+   - '{display} &7got isekai''d by {display2}''s &7truck-kun.'
+   - '{display} &7was Kamui''d into the void by {display2}.'
+  mob:
+   - '{display} &7was devoured by {display2}''s &7Stand「Za Warudo」.'
+   - '{display} &7got Titan-chomped by {display2}''s &7Attack Titan.'
+   - '{display} &7was cursed by {display2}''s &7Sukuna fingers.'
+   - '{display} &7was Nomu''d by {display2}''s &7All For One.'
+
+eldritch_terror:
+ id: 28
+ name: 'Eldritch Terror'
+ price: 60000
+ rarity: MYTHIC
+ permission: 'none'
+ buyable: true
+ icon: 'SKULL_ITEM:3 : 1 : display=Eldritch Terror : lore=&8Kill Message\n \n&7Select the Cosmic Horror Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n   : skinvalue=eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGMzNTMxMmVjZmUwODNlZTE0MWM0ZjhjMGE5OGJhNmM4ZWE0ZGZhMWMyYTNmY2EzNWRiMDM0NTk2ZjAxZWU0YiJ9fX0='
+ messages:
+  melee:
+   - '{display} &7was devoured by {display2}''s &7void maw.'
+   - '{display} &7went insane from {display2}''s &7true form.'
+   - '{display} &7was unraveled by {display2}''s &7tentacles.'
+   - '{display} &7dissolved into {display2}''s &7cosmic flesh.'
+  bow:
+   - '{display} &7was pierced by {display2}''s &7eldritch arrow.'
+   - '{display} &7saw the abyss in {display2}''s &7projectile.'
+   - '{display} &7was cursed by {display2}''s &7whispering shot.'
+  void:
+   - '{display} &7was dragged beyond spacetime by {display2}.'
+   - '{display} &7fell into {display2}''s &7dimensional rift.'
+   - '{display} &7was erased from existence by {display2}.'
+  mob:
+   - '{display} &7was sacrificed to {display2}''s &7old gods.'
+   - '{display} &7became a puppet for {display2}''s &7nightmares.'
+   - '{display} &7was consumed by {display2}''s &7star-spawn.'
+
+phoenix_fury:
+ id: 30
+ name: 'Phoenix Fury'
+ price: 28000
+ rarity: EPIC
+ permission: 'none'
+ buyable: false
+ icon: 'FIREBALL:0 : 1 : display=Phoenix Fury : lore=&8Kill Message\n \n&7Select the Phoenix Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n&cBattle pass season 1 exclusive!\n  '
+ messages:
+  melee:
+   - '{display} &7was incinerated by {display2}''s &7ember claws.'
+   - '{display} &7got scorched by {display2}''s &7rebirth flames.'
+   - '{display} &7was reduced to ashes by {display2}.'
+  bow:
+   - '{display} &7was firestormed by {display2}''s &7solar arrow.'
+   - '{display} &7got dive-bombed by {display2}''s &7flaming shot.'
+   - '{display} &7was purified in {display2}''s &7holy fire.'
+  mob:
+   - '{display} &7was immolated by {display2}''s &7fledglings.'
+   - '{display} &7got nest-crushed by {display2}''s &7roost.'
+   - '{display} &7was reborn as {display2}''s &7fuel.'
+
+atomic_apocalypse:
+ id: 31
+ name: 'Atomic Apocalypse'
+ price: 45000
+ rarity: LEGENDARY
+ permission: 'none'
+ buyable: true
+ icon: 'GOLD_NUGGET:0 : 1 : display=Atomic Apocalypse : lore=&8Kill Message\n \n&7Select the Nuclear Kill,\n&7Message for in-game kill\n&7messages!.\n \n&eRight-Click to preview!\n  '
+ messages:
+  melee:
+   - '{display} &7was fission-kicked by {display2}''s &7atomic boots.'
+   - '{display} &7got critical-mass punched by {display2}.'
+   - '{display} &7was irradiated by {display2}''s &7touch.'
+   - '{display} &7disintegrated in {display2}''s &7nuclear grip.'
+  bow:
+   - '{display} &7was nuked by {display2}''s &7uranium arrow.'
+   - '{display} &7got hit by {display2}''s &7ICBM shot.'
+   - '{display} &7was obliterated by {display2}''s &7fallout rain.'
+  void:
+   - '{display} &7was blasted into the stratosphere by {display2}.'
+   - '{display} &7vaporized in {display2}''s &7mushroom cloud.'
+   - '{display} &7fell into {display2}''s &7nuclear crater.'
+  mob:
+   - '{display} &7was melted by {display2}''s &7mutant horde.'
+   - '{display} &7got consumed by {display2}''s &7radioactive swarm.'
+   - '{display} &7was sacrificed to {display2}''s &7fallout beasts.'
+   - '{display} &7became waste in {display2}''s &7nuclear winter.'

@@ -1,6 +1,6 @@
-author: GoatMango
+author: Twightlightdev
 name: LostSkyWars
 version: 2.4.26
-softdepend: [ Vault, Citizens, LostParties, LostBoxes ]
+softdepend: [ Vault, Citizens, LostParties, LostBoxes, TwightLightCore ]
 
-main: tk.kanaostore.losteddev.skywars.Main
+main: org.twightlight.skywars.Main

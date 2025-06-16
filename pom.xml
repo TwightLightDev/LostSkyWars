@@ -115,6 +115,11 @@
         <scope>system</scope>
         <systemPath>${project.basedir}/libs/ProtocolLib.jar</systemPath>
     </dependency>
+    <dependency>
+        <groupId>com.grinderwolf</groupId>
+        <artifactId>slimeworldmanager-api</artifactId>
+        <version>2.2.1</version>
+    </dependency>
     </dependencies>
 
   

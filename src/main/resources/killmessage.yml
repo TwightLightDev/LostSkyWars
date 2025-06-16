@@ -4,7 +4,7 @@
 # OPEN:closeinv
 # SENDMESSAGE:&aHi
 # PERFORMCOMMAND:/command
-title: 'Projectile Trail'
+title: 'Kill Message'
 # Don't change this here
 rows: 6
 items:
@@ -41,6 +41,10 @@ extras:
  - ''
  - '&cUnavailable for purchase!'
  description-unlocked:
+ - '&7Rarity: {rarity}'
+ - ''
  - '&eClick to select!'
  description-selected:
+ - '&7Rarity: {rarity}'
+ - ''
  - '&eSELECTED!'
