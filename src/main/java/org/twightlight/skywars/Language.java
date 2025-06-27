@@ -9,8 +9,8 @@ import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Field;
@@ -274,8 +274,10 @@ public class Language {
     public static String command$join_game$game_already_started = "§cGame already started.";
 
     public static String cosmetics$sprays$holograms = "§eClick!";
+    public static List<String> recentgames$lore = Arrays.asList("&7Result: &a{result}", "&7Start Time: &a{startTime}",
+            "&7Duration: &a{duration}", "", "&eClick to watch replay!");
 
-    public static LostLogger LOGGER;
+    public static Logger LOGGER;
     private static ConfigUtils CONFIG;
 
     public static void setupLanguage() {
@@ -336,7 +338,7 @@ public class Language {
                         writer.set(nativeName, value);
                     }
                 } catch (ReflectiveOperationException e) {
-                    LOGGER.log(LostLevel.WARNING, "Unexpected error on language file: ", e);
+                    LOGGER.log(Level.WARNING, "Unexpected error on language file: ", e);
                 }
             }
         }
@@ -386,15 +388,21 @@ public class Language {
 
                     writer.set(nativeName, value);
                 } catch (ReflectiveOperationException e) {
-                    LOGGER.log(LostLevel.WARNING, "Unexpected error on language file: ", e);
+                    LOGGER.log(Level.WARNING, "Unexpected error on language file: ", e);
                 }
             }
         }
 
         writer.write();
     }
-
     public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type) {
+        return getSkyWarsEventTimeline(type, 1);
+    }
+
+    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type, int multiplier) {
+        if (multiplier == 0) {
+            multiplier = 1;
+        }
         Map<Integer, SkyWarsEvent> timeline = new TreeMap<>(Comparator.reverseOrder());
         int begin;
         int doom;
@@ -416,10 +424,10 @@ public class Language {
         }
 
         for (Integer integer : refills) {
-            timeline.putIfAbsent(integer, SkyWarsEvent.Refill);
+            timeline.putIfAbsent(integer * multiplier, SkyWarsEvent.Refill);
         }
-        timeline.put(begin, SkyWarsEvent.Begin);
-        timeline.put(doom, SkyWarsEvent.Doom);
+        timeline.put(begin * multiplier, SkyWarsEvent.Begin);
+        timeline.put(doom * multiplier, SkyWarsEvent.Doom);
         timeline.put(0, SkyWarsEvent.End);
         return timeline;
     }

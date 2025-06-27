@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class VictoryDancesMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("killmessage");
+    private static final ConfigMenu config = ConfigMenu.getByName("victorydance");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

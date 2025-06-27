@@ -53,8 +53,8 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.NORMAL);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
-                                        WorldServer<?> privateServer = server.cloneServer(true, server.getWorld().getName() + "_" + account.getPlayer().getUniqueId().toString());
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
+                                        WorldServer<?> privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
                                         privateServer.connect(account);
                                     }
                                 } else {
@@ -66,7 +66,7 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.INSANE);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {

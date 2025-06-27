@@ -15,8 +15,8 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +106,7 @@ public class SkyWarsBalloon extends Cosmetic {
         return coins;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Ballons");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Ballons");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("balloons");
 
     public static void setupBallons() {
@@ -123,7 +123,7 @@ public class SkyWarsBalloon extends Cosmetic {
 
             SkyWarsBalloon balloon = new SkyWarsBalloon(id, name, permission, icon, rarity, buyable, price, textures);
             if (!balloon.isValid()) {
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> LOGGER.log(LostLevel.WARNING, "Invalid FrameList on Balloon \"" + key + "\""));
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> LOGGER.log(Level.WARNING, "Invalid FrameList on Balloon \"" + key + "\""));
                 continue;
             }
 

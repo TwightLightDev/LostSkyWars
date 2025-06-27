@@ -14,11 +14,11 @@ import org.twightlight.skywars.listeners.player.*;
 import org.twightlight.skywars.listeners.server.PluginMessageListener;
 import org.twightlight.skywars.listeners.server.ServerListener;
 import org.twightlight.skywars.listeners.skywars.SkyWarsDeath;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 public class Listeners implements Listener {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Listeners");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Listeners");
 
     public static void setupListeners() {
         Plugin plugin = Main.getInstance();

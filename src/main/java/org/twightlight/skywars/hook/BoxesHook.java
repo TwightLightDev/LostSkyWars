@@ -9,15 +9,15 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.hook.boxes.BoxNPC;
 import org.twightlight.skywars.hook.boxes.CosmeticReward;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class BoxesHook {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("BoxesHook");
+    public static final Logger LOGGER = Main.LOGGER.getModule("BoxesHook");
 
     public static void setupBoxes() {
-        LOGGER.log(LostLevel.INFO, "LostBoxes found, hooking...");
+        LOGGER.log(Level.INFO, "LostBoxes found, hooking...");
 
         for (Cosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
             if (cosmetic.getType() == CosmeticType.SKYWARS_SYMBOL) {
@@ -37,7 +37,7 @@ public class BoxesHook {
     }
 
     public static void destroyBoxes() {
-        LOGGER.log(LostLevel.INFO, "LostBoxes found, destroying Vaults...");
+        LOGGER.log(Level.INFO, "LostBoxes found, destroying Vaults...");
 
         BoxNPC.listNPCs().forEach(BoxNPC::destroy);
     }

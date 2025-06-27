@@ -8,7 +8,7 @@ import org.twightlight.skywars.Main;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.io.*;
 import java.util.*;
@@ -26,7 +26,7 @@ public class ConfigUtils {
                     String config = Database.getInstance().query("SELECT * FROM `lostskywars_files` WHERE `name` = ?", name).getString("file");
                     this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new ByteArrayInputStream(config.getBytes("UTF-8")), "UTF-8"));
                 } catch (Exception e) {
-                    LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred loading config " + name + ": ", e);
+                    LOGGER.log(Level.SEVERE, "Unexpected error ocurred loading config " + name + ": ", e);
                 }
 
                 return;
@@ -43,7 +43,7 @@ public class ConfigUtils {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating file " + file.getName() + ": ", e);
+                    LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating file " + file.getName() + ": ", e);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class ConfigUtils {
         try {
             this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
         }
     }
 
@@ -135,7 +135,7 @@ public class ConfigUtils {
         try {
             this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
         }
     }
 
@@ -144,7 +144,7 @@ public class ConfigUtils {
             config.save(file);
             return true;
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred saving file " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred saving file " + file.getName() + ": ", e);
             return false;
         }
     }
@@ -157,7 +157,7 @@ public class ConfigUtils {
         return config;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("ConfigUtils");
+    public static final Logger LOGGER = Main.LOGGER.getModule("ConfigUtils");
     private static Map<String, ConfigUtils> cache = new HashMap<>();
 
     public static ConfigUtils getConfig(String name) {

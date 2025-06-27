@@ -25,7 +25,7 @@ public class LostSkyWarsAPI {
             return;
         }
 
-        watcher.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getServerName()));
+        watcher.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
         server.spectate(account, target);
     }
 

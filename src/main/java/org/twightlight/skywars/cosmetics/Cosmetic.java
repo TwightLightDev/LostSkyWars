@@ -11,8 +11,8 @@ import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public abstract class Cosmetic {
 
@@ -83,7 +83,7 @@ public abstract class Cosmetic {
 
     public abstract ItemStack getIcon();
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Cosmetics");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Cosmetics");
 
     public static void setupCosmetics() {
         // cages
@@ -119,7 +119,7 @@ public abstract class Cosmetic {
         for (CosmeticServer server : CosmeticServer.values()) {
             size += server.listCosmetics().size();
         }
-        LOGGER.log(LostLevel.INFO, "Loaded " + size + " cosmetics!");
+        LOGGER.log(Level.INFO, "Loaded " + size + " cosmetics!");
     }
 
     public static Cosmetic findFrom(CosmeticServer server, CosmeticType type, int index, String id) {

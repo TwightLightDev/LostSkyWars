@@ -56,7 +56,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, type);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {
@@ -85,7 +85,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                     if (Core.MODE == CoreMode.MULTI_ARENA) {
                                         for (WorldServer<?> server : this.map.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
                                             if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
-                                                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                                 player.closeInventory();
                                                 account.updateLastSelected();
                                                 server.connect(account);
@@ -131,7 +131,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     for (WorldServer<?> server : this.map.get(mapName)) {
                                         if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
-                                            player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                            player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                             player.closeInventory();
                                             account.updateLastSelected();
                                             server.connect(account);

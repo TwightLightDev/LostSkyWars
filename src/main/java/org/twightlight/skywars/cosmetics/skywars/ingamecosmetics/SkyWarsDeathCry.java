@@ -15,8 +15,8 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,7 +101,7 @@ public class SkyWarsDeathCry extends Cosmetic {
         return coins;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("DeathCries");
+    public static final Logger LOGGER = Main.LOGGER.getModule("DeathCries");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("deathcries");
 
     public static void setupDeathCries() {
@@ -120,7 +120,7 @@ public class SkyWarsDeathCry extends Cosmetic {
             SkyWarsDeathCry cry = new SkyWarsDeathCry(id, name, icon, rarity, buyable, price, sound, volume, pitch);
             if (!cry.isValid()) {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(),
-                        () -> LOGGER.log(LostLevel.WARNING, "Invalid Sound \"" + sound + "\" on DeathCry \"" + key + "\""));
+                        () -> LOGGER.log(Level.WARNING, "Invalid Sound \"" + sound + "\" on DeathCry \"" + key + "\""));
                 continue;
             }
 

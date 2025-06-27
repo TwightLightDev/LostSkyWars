@@ -1,14 +1,14 @@
 package org.twightlight.skywars.utils;
 
 import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.io.*;
 import java.net.URLDecoder;
 
 public class FileUtils {
 
-    private static final LostLogger LOGGER = Core.getCoreLogger().getModule("FileUtils");
+    private static final Logger LOGGER = Core.getCoreLogger().getModule("FileUtils");
 
     public static long readFile(String path) {
         long bytes = 0;
@@ -57,7 +57,7 @@ public class FileUtils {
             try {
                 copyFile(new FileInputStream(in), out);
             } catch (IOException ex) {
-                LOGGER.log(LostLevel.WARNING,
+                LOGGER.log(Level.WARNING,
                         "Unexpected error ocurred copying file \"" + out.getName() + "\"!", ex);
             }
         }
@@ -73,7 +73,7 @@ public class FileUtils {
                 ou.write(buff, 0, len);
             }
         } catch (IOException ex) {
-            LOGGER.log(LostLevel.WARNING, "Unexpected error ocurred copying file \"" + out.getName() + "\"!",
+            LOGGER.log(Level.WARNING, "Unexpected error ocurred copying file \"" + out.getName() + "\"!",
                     ex);
         } finally {
             try {

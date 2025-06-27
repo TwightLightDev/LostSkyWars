@@ -1,6 +1,7 @@
 package org.twightlight.skywars.cmd;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
@@ -14,7 +15,7 @@ import org.twightlight.skywars.hook.citizens.cmd.DeliveryNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.PlayNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.ShopkeeperNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.StatsNPCCommand;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class SkyWarsCommand extends Command {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(LostLevel.SEVERE, "Cannot register command: ", ex);
+            Main.LOGGER.log(Level.SEVERE, "Cannot register command: ", ex);
         }
 
         if (Core.MODE != CoreMode.ARENA) {
@@ -82,7 +83,7 @@ public class SkyWarsCommand extends Command {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (!sender.hasPermission("lostskywars.cmd.skywars")) {
-            sender.sendMessage("§5[LostSkyWars v" + Main.getInstance().getDescription().getVersion() + "] §acreated by §bLostedDev§a.");
+            sender.sendMessage("§fUnknown command. Type \"/help\" for help.");
             return true;
         }
 

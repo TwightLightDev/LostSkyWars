@@ -5,8 +5,8 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.YamlConfiguration;
 import org.twightlight.skywars.bungee.Bungee;
 import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.io.*;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class BungeeConfig {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
-                    LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating file " + file.getName() + ": ", e);
+                    LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating file " + file.getName() + ": ", e);
                 }
             }
         }
@@ -38,7 +38,7 @@ public class BungeeConfig {
         try {
             this.config = YamlConfiguration.getProvider(YamlConfiguration.class).load(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
         }
     }
 
@@ -100,7 +100,7 @@ public class BungeeConfig {
         try {
             this.config = YamlConfiguration.getProvider(YamlConfiguration.class).load(new InputStreamReader(new FileInputStream(file), "UTF-8"));
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred creating config " + file.getName() + ": ", e);
         }
     }
 
@@ -109,7 +109,7 @@ public class BungeeConfig {
             YamlConfiguration.getProvider(YamlConfiguration.class).save(this.config, this.file);
             return true;
         } catch (IOException e) {
-            LOGGER.log(LostLevel.SEVERE, "Unexpected error ocurred saving file " + file.getName() + ": ", e);
+            LOGGER.log(Level.SEVERE, "Unexpected error ocurred saving file " + file.getName() + ": ", e);
             return false;
         }
     }
@@ -122,7 +122,7 @@ public class BungeeConfig {
         return config;
     }
 
-    public static final LostLogger LOGGER = Bungee.LOGGER.getModule("BungeeConfig");
+    public static final Logger LOGGER = Bungee.LOGGER.getModule("BungeeConfig");
     private static Map<String, BungeeConfig> cache = new HashMap<>();
 
     public static BungeeConfig getConfig(String name) {

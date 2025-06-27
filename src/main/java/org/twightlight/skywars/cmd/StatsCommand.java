@@ -10,7 +10,7 @@ import org.twightlight.skywars.Main;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class StatsCommand extends Command {
 
@@ -22,7 +22,7 @@ public class StatsCommand extends Command {
                     .getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(LostLevel.SEVERE, "Could not register command: ", ex);
+            Main.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
     }
 

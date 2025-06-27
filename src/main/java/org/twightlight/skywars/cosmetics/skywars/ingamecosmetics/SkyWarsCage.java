@@ -19,8 +19,8 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.Arrays;
 
@@ -108,7 +108,7 @@ public class SkyWarsCage extends Cosmetic {
         return cloned;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Cages");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Cages");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("cages");
 
     public static void setupCages() {
@@ -124,7 +124,7 @@ public class SkyWarsCage extends Cosmetic {
             try {
                 locations = (JSONArray) new JSONParser().parse(section.getString("data"));
             } catch (ParseException ex) {
-                LOGGER.log(LostLevel.WARNING, "Invalid CageData \"" + key + "\": ", ex);
+                LOGGER.log(Level.WARNING, "Invalid CageData \"" + key + "\": ", ex);
                 continue;
             }
 

@@ -32,7 +32,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
-import org.twightlight.skywars.cosmetics.skywars.sprays.Spray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
@@ -58,8 +58,8 @@ public class DoublesRankedServer extends WorldServer<SkyWarsTeam> {
     private Map<UUID, Integer> kills;
     private Map<UUID, DataContainer> dataContainer;
 
-    public DoublesRankedServer(String yaml, ScanCallback callback) {
-        super(yaml, callback);
+    public DoublesRankedServer(String yaml, ScanCallback callback, boolean isPrivate) {
+        super(yaml, callback, isPrivate);
 
         this.kills = new HashMap<>();
         this.players = new ArrayList<>();
@@ -550,7 +550,9 @@ public class DoublesRankedServer extends WorldServer<SkyWarsTeam> {
                 Sound.PORTAL_TRIGGER.play(player, 1.0F, 1.0F);
             }
         }
-
+        this.setInitialPlayers(getPlayers(false));
+        this.startTime = System.nanoTime();
+        this.startTimeMillis = System.currentTimeMillis();
         Bukkit.getPluginManager().callEvent(new SkyWarsGameStartEvent(this));
         this.updateTags();
         this.check();
@@ -771,7 +773,7 @@ public class DoublesRankedServer extends WorldServer<SkyWarsTeam> {
 
     @Override
     public String getServerName() {
-        return config.getWorld().getName();
+        return config.getId();
     }
 
     @Override

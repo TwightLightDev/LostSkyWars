@@ -10,7 +10,7 @@ import org.twightlight.skywars.leaderboards.objects.HologramLB;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public abstract class LeaderBoard {
     }
 
     private static List<LeaderBoard> leaderboards = new ArrayList<>();
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("LeaderBoard");
+    public static final Logger LOGGER = Main.LOGGER.getModule("LeaderBoard");
 
     public static void setupLeaderBoards() {
         ConfigUtils cu = ConfigUtils.getConfig("leaderboards");

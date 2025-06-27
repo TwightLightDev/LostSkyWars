@@ -4,12 +4,12 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.hook.protocollib.ProtocolListener;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class ProtocolLibHook {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("ProtocolLibHook");
+    public static final Logger LOGGER = Main.LOGGER.getModule("ProtocolLibHook");
 
     private static final ProtocolListener LISTENER = new ProtocolListener();
 
@@ -20,7 +20,7 @@ public class ProtocolLibHook {
     public static void destroyProtocolLib() {
         getProtocolManager().removePacketListener(LISTENER);
 
-        LOGGER.log(LostLevel.INFO, "ProtocolLib found, destroying StatsNPC...");
+        LOGGER.log(Level.INFO, "ProtocolLib found, destroying StatsNPC...");
     }
 
     public static ProtocolManager getProtocolManager() {

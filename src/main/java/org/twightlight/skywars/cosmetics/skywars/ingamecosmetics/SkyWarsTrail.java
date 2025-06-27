@@ -22,7 +22,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.SpiralFactory;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class SkyWarsTrail extends Cosmetic {
         return coins;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("ProjectileTrails");
+    public static final Logger LOGGER = Main.LOGGER.getModule("ProjectileTrails");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("projectiletrails");
 
     public static void setupProjectileTrails() {

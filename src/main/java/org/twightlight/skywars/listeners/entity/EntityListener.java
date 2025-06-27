@@ -24,13 +24,13 @@ import org.twightlight.skywars.cmd.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.MinecraftVersion;
 
 @SuppressWarnings("deprecation")
 public class EntityListener implements Listener {
 
-    public static final LostLogger LOGGER = new LostLogger();
+    public static final Logger LOGGER = new Logger();
 
     @EventHandler
     public void onPlayerFish(EntityDamageByEntityEvent evt) {

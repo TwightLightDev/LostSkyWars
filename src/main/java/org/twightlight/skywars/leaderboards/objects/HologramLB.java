@@ -8,7 +8,7 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
 import org.twightlight.skywars.leaderboards.LeaderBoardStats;
 import org.twightlight.skywars.leaderboards.LeaderBoardType;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
@@ -74,7 +74,7 @@ public class HologramLB extends LeaderBoard {
                 }
             }
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.WARNING, "update(): ", ex);
+            LOGGER.log(Level.WARNING, "update(): ", ex);
         }
     }
 

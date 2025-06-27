@@ -22,7 +22,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -149,7 +149,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return true;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Perks");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Perks");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
     public static void setupPerks() {

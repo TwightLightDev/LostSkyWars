@@ -16,7 +16,7 @@ import org.twightlight.skywars.hook.CitizensHook;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.world.WorldServer;
 
@@ -138,7 +138,7 @@ public class DuelsNPC {
             }
         }.runTaskTimer(Main.getInstance(), 20, 20);
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " DuelsNPCs!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " DuelsNPCs!");
     }
 
     public static void add(String id, Location location) {

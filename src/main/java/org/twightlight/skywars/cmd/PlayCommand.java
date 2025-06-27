@@ -10,7 +10,7 @@ import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.play.PlayRankedMenu;
 import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class PlayCommand extends Command {
 
@@ -21,7 +21,7 @@ public class PlayCommand extends Command {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(LostLevel.SEVERE, "Could not register command: ", ex);
+            Main.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
     }
 

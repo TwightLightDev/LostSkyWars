@@ -103,23 +103,30 @@
             <systemPath>${project.basedir}/libs/Vault.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>io.github.battlepass</groupId>
+            <artifactId>BattlePass</artifactId>
+            <version>4.1.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/BattlePass.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.twightlight</groupId>
             <artifactId>TwightLightCore</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-    <dependency>
-        <groupId>com.yourcompany</groupId>
-        <artifactId>protocollib</artifactId>
-        <version>1.0</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/libs/ProtocolLib.jar</systemPath>
-    </dependency>
-    <dependency>
-        <groupId>com.grinderwolf</groupId>
-        <artifactId>slimeworldmanager-api</artifactId>
-        <version>2.2.1</version>
-    </dependency>
+        <dependency>
+            <groupId>com.yourcompany</groupId>
+            <artifactId>protocollib</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/ProtocolLib.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.jumper251</groupId>
+            <artifactId>replay</artifactId>
+            <version>1.8.13</version>
+        </dependency>
     </dependencies>
 
   

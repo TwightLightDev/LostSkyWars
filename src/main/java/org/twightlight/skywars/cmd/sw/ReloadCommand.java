@@ -10,12 +10,12 @@ import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsTrail;
 import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 @SuppressWarnings("deprecation")
 public class ReloadCommand extends SubCommand {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("LoadCommand");
+    public static final Logger LOGGER = Main.LOGGER.getModule("LoadCommand");
 
     public ReloadCommand() {
         super("reload");

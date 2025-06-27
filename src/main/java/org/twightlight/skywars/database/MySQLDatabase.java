@@ -5,7 +5,7 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
@@ -112,7 +112,7 @@ public class MySQLDatabase extends Database {
                     map.put(key, new StatsContainer(rs.getObject(key)));
                 }
             } catch (SQLException ex) {
-                LOGGER.log(LostLevel.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
+                LOGGER.log(Level.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
             }
 
             return map;
@@ -237,7 +237,7 @@ public class MySQLDatabase extends Database {
         try {
             return new Account(UUID.fromString(rs.getString("id")), name);
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
+            LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
             return null;
         }
     }
@@ -272,7 +272,7 @@ public class MySQLDatabase extends Database {
 
             LOGGER.info("Connected to MySQL!");
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.SEVERE, "Could not open MySQL connection: ", ex);
+            LOGGER.log(Level.SEVERE, "Could not open MySQL connection: ", ex);
         }
     }
 
@@ -281,7 +281,7 @@ public class MySQLDatabase extends Database {
             try {
                 connection.close();
             } catch (SQLException e) {
-                LOGGER.log(LostLevel.WARNING, "Could not close MySQL connection: ", e);
+                LOGGER.log(Level.WARNING, "Could not close MySQL connection: ", e);
             }
         }
     }
@@ -298,7 +298,7 @@ public class MySQLDatabase extends Database {
         try {
             return !(connection == null || connection.isClosed() || !connection.isValid(5));
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.SEVERE, "Could not check MySQL connection: ", ex);
+            LOGGER.log(Level.SEVERE, "Could not check MySQL connection: ", ex);
             return false;
         }
     }
@@ -309,7 +309,7 @@ public class MySQLDatabase extends Database {
             ps.execute();
             ps.close();
         } catch (SQLException e) {
-            LOGGER.log(LostLevel.WARNING, "Could not execute SQL (" + sql + "): ", e);
+            LOGGER.log(Level.WARNING, "Could not execute SQL (" + sql + "): ", e);
         }
     }
 
@@ -327,7 +327,7 @@ public class MySQLDatabase extends Database {
             }
             return ps;
         } catch (SQLException e) {
-            LOGGER.log(LostLevel.WARNING, "Could not Prepare Statement: ", e);
+            LOGGER.log(Level.WARNING, "Could not Prepare Statement: ", e);
         }
 
         return null;
@@ -353,7 +353,7 @@ public class MySQLDatabase extends Database {
                             return crs;
                         }
                     } catch (Exception e) {
-                        LOGGER.log(LostLevel.WARNING, "Could not Execute Query: ", e);
+                        LOGGER.log(Level.WARNING, "Could not Execute Query: ", e);
                     }
 
                     return null;
@@ -364,7 +364,7 @@ public class MySQLDatabase extends Database {
                 rowSet = future.get();
             }
         } catch (Exception e) {
-            LOGGER.log(LostLevel.WARNING, "Could not Call FutureTask: ", e);
+            LOGGER.log(Level.WARNING, "Could not Call FutureTask: ", e);
         }
 
         return rowSet;

@@ -16,6 +16,8 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
@@ -235,6 +237,15 @@ public class WorldTimer {
             }.runTaskTimer(Main.getInstance(), 0, 20);
         } else if (server.getState() == SkyWarsState.ENDED) {
             server.setTimer(10);
+            for (Player player : winners) {
+                Account account = Database.getInstance().getAccount(player.getUniqueId());
+                if (account == null) {return;}
+                Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
+                if (cos instanceof SkyWarsVictoryDance) {
+                    SkyWarsVictoryDance cos1 = (SkyWarsVictoryDance) cos;
+                    cos1.execute(player);
+                }
+            }
             this.task = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -261,18 +272,6 @@ public class WorldTimer {
                             Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart"), 40);
                         }
                         return;
-                    }
-
-                    for (Player player : winners) {
-                        if (player != null && player.getWorld() != null && player.getWorld().equals(server.getWorld())) {
-                            Firework fire = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
-                            FireworkMeta meta = fire.getFireworkMeta();
-                            int random = new Random().nextInt(5) + 1;
-                            Color color = random == 1 ? Color.BLUE : random == 2 ? Color.RED : random == 3 ? Color.GREEN : random == 4 ? Color.MAROON : Color.ORANGE;
-                            meta.addEffect(FireworkEffect.builder().withColor(color).with(FireworkEffect.Type.STAR).build());
-                            meta.setPower(1);
-                            fire.setFireworkMeta(meta);
-                        }
                     }
 
                     server.setTimer(server.getTimer() - 1);

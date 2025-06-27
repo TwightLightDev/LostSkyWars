@@ -34,9 +34,11 @@ public class WorldConfig {
     private List<String> balloons;
 
     private ConfigUtils config;
+    private String worldName;
 
-    public WorldConfig(String yaml) {
+    public WorldConfig(String yaml, boolean isPrivate) {
         this.yaml = yaml;
+        worldName = yaml + "_" + System.nanoTime() + "_temp";
         this.spawns = new ArrayList<>();
         this.chests = new ArrayList<>();
         this.balloons = new ArrayList<>();
@@ -46,9 +48,9 @@ public class WorldConfig {
         this.mode = config.getString("mode");
         this.type = config.getString("type");
         this.minPlayers = config.getInt("min-players");
-        this.cube = new SkyWarsCube(config.getString("cube"));
+        this.cube = new SkyWarsCube(config.getString("cube"), worldName);
         if (this.config.contains("waiting-cube")) {
-            this.waitingCube = new SkyWarsCube(this.config.getString("waiting-cube"));
+            this.waitingCube = new SkyWarsCube(this.config.getString("waiting-cube"), worldName);
             this.waitingLobby = this.config.getString("waiting-lobby");
         }
         this.spawns.addAll(config.getStringList("spawns"));
@@ -59,13 +61,10 @@ public class WorldConfig {
         this.balloons.addAll(config.getStringList("balloons"));
 
         File zipFile = new File("plugins/LostSkyWars/maps", yaml + ".zip");
-        File worldFolder = new File(Bukkit.getWorldContainer(), yaml);
-
-        if ((this.world = Bukkit.getWorld(yaml)) != null) {
-            Bukkit.unloadWorld(world, false);
+        if (isPrivate) {
+            worldName = yaml;
         }
-
-        FileUtils.deleteFile(worldFolder);
+        File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
 
         try {
             ZipUtils.unzip(zipFile, worldFolder);
@@ -74,7 +73,7 @@ public class WorldConfig {
             return;
         }
 
-        WorldCreator wc = WorldCreator.name(yaml);
+        WorldCreator wc = WorldCreator.name(worldName);
         wc.generateStructures(false);
         this.world = wc.createWorld();
 
@@ -93,7 +92,7 @@ public class WorldConfig {
     public void setWaitingLobby(SkyWarsCube waitingCube, Location waitingLobby) {
         this.config.set("waiting-cube", waitingCube.toString());
         this.config.set("waiting-lobby", BukkitUtils.serializeLocation(waitingLobby));
-        this.waitingCube = new SkyWarsCube(this.config.getString("waiting-cube"));
+        this.waitingCube = new SkyWarsCube(this.config.getString("waiting-cube"), worldName);
         this.waitingLobby = this.config.getString("waiting-lobby");
     }
 
@@ -123,11 +122,7 @@ public class WorldConfig {
     }
 
     public void destroy() {
-        if ((this.world = Bukkit.getWorld(yaml)) != null) {
-            Bukkit.unloadWorld(world, false);
-        }
-
-        FileUtils.deleteFile(new File(yaml));
+        Bukkit.unloadWorld(world, false);
         this.yaml = null;
         this.name = null;
         this.mode = null;
@@ -145,14 +140,17 @@ public class WorldConfig {
 
     public void reload() {
         File zipFile = new File("plugins/LostSkyWars/maps", yaml + ".zip");
-        File worldFolder = new File(Bukkit.getWorldContainer(), yaml);
 
-        World loadedWorld = Bukkit.getWorld(yaml);
+        File oldWorldFolder = new File(Bukkit.getWorldContainer(), worldName);
+        World loadedWorld = Bukkit.getWorld(worldName);
         if (loadedWorld != null) {
             Bukkit.unloadWorld(loadedWorld, false);
         }
+        FileUtils.deleteFile(oldWorldFolder);
 
-        FileUtils.deleteFile(worldFolder);
+        worldName = yaml + "_" + System.nanoTime() + "_temp";
+
+        File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
 
         try {
             ZipUtils.unzip(zipFile, worldFolder);
@@ -161,7 +159,7 @@ public class WorldConfig {
             return;
         }
 
-        WorldCreator wc = WorldCreator.name(yaml);
+        WorldCreator wc = WorldCreator.name(worldName);
         wc.generateStructures(false);
         this.world = wc.createWorld();
 
@@ -197,6 +195,14 @@ public class WorldConfig {
         return world;
     }
 
+    public String getWorldName() {
+        return worldName;
+    }
+
+    public String getId() {
+        return yaml;
+    }
+
     public int getMinPlayers() {
         return minPlayers;
     }
@@ -210,7 +216,7 @@ public class WorldConfig {
     }
 
     public Location getWaitingLocation() {
-        return BukkitUtils.deserializeLocation(this.waitingLobby);
+        return BukkitUtils.deserializeLocation(this.waitingLobby, worldName);
     }
 
     public boolean hasWaitingLobby() {

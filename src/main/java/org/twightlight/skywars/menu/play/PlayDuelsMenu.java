@@ -53,7 +53,7 @@ public class PlayDuelsMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.SOLO, SkyWarsType.DUELS);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {
@@ -63,7 +63,7 @@ public class PlayDuelsMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.DOUBLES, SkyWarsType.DUELS);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {

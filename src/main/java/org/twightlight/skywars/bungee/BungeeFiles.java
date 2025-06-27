@@ -5,8 +5,8 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.bungee.utils.BungeeConfig;
 import org.twightlight.skywars.database.MySQLDatabase;
 import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Field;
@@ -17,7 +17,7 @@ import java.util.List;
 @SuppressWarnings("rawtypes")
 public class BungeeFiles {
 
-    public static final LostLogger LOGGER = Bungee.LOGGER.getModule("Files");
+    public static final Logger LOGGER = Bungee.LOGGER.getModule("Files");
     private static final BungeeConfig CONFIG = BungeeConfig.getConfig("lang");
 
     public static void setupFiles() {
@@ -75,7 +75,7 @@ public class BungeeFiles {
                         writer.set(nativeName, value);
                     }
                 } catch (ReflectiveOperationException e) {
-                    LOGGER.log(LostLevel.WARNING, "Unexpected error on language file: ", e);
+                    LOGGER.log(Level.WARNING, "Unexpected error on language file: ", e);
                 }
             }
         }
@@ -113,14 +113,14 @@ public class BungeeFiles {
         BungeeConfig config = BungeeConfig.getConfig("config");
         String type = config.getString("database.name");
         if (!type.equalsIgnoreCase("MYSQL")) {
-            LOGGER.log(LostLevel.WARNING, "ENABLE MYSQL TO USE LOSTSKYWARS BUNGEE MODE!");
+            LOGGER.log(Level.WARNING, "ENABLE MYSQL TO USE LOSTSKYWARS BUNGEE MODE!");
             System.exit(0);
         }
 
         MySQLDatabase database = new MySQLDatabase();
         database.update(
                 "CREATE TABLE IF NOT EXISTS `lostskywars_files` (`name` VARCHAR(32) NOT NULL, `file` TEXT, PRIMARY KEY(name)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
-        LOGGER.log(LostLevel.INFO, "Uploading files to MySQL...");
+        LOGGER.log(Level.INFO, "Uploading files to MySQL...");
         for (BungeeConfig toSave : BungeeConfig.listConfigs()) {
             toSave.reload();
             String name = toSave.getFile().getName().replace(".yml", "");

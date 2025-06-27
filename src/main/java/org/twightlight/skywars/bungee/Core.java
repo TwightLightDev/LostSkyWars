@@ -1,7 +1,7 @@
 package org.twightlight.skywars.bungee;
 
 import org.twightlight.skywars.Main;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -12,7 +12,7 @@ public class Core {
 
     public static CoreMode MODE = CoreMode.MULTI_ARENA;
 
-    public static LostLogger getCoreLogger() {
+    public static Logger getCoreLogger() {
         try {
             Class.forName("net.md_5.bungee.api.plugin.Plugin");
             return Bungee.LOGGER;

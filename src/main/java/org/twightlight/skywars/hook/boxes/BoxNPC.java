@@ -11,7 +11,7 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +111,7 @@ public class BoxNPC {
             }
         }
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " BoxNPCS!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " BoxNPCS!");
     }
 
     public static void add(String id, Location location) {

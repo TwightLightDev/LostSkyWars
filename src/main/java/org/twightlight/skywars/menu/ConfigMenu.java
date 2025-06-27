@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class ConfigMenu {
         return ConfigUtils.getConfig(name, "plugins/LostSkyWars/menus");
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Menus");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Menus");
     private static final List<ConfigMenu> menus = new ArrayList<>();
 
     public static void setupMenus() {
@@ -88,7 +88,7 @@ public class ConfigMenu {
                     ConfigItem item = new ConfigItem(action, stack);
                     cm.items.put(slot, item);
                 } catch (IllegalArgumentException ex) {
-                    LOGGER.log(LostLevel.WARNING, "[" + menu + ".yml] Invalid MenuItem '" + key + "':", ex);
+                    LOGGER.log(Level.WARNING, "[" + menu + ".yml] Invalid MenuItem '" + key + "':", ex);
                 }
             }
 

@@ -17,7 +17,7 @@ import org.twightlight.skywars.ui.SkyWarsCube;
 import org.twightlight.skywars.ui.server.ScanCallback;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.ZipUtils;
 import org.twightlight.skywars.world.WorldServer;
@@ -185,7 +185,7 @@ public class CreateCommand extends SubCommand {
                         }
                     });
                 } catch (Exception ex) {
-                    WorldServer.LOGGER.log(LostLevel.WARNING, "Cannot load a new game: ", ex);
+                    WorldServer.LOGGER.log(Level.WARNING, "Cannot load a new game: ", ex);
                     if (player.isOnline()) {
                         player.sendMessage("§5[LostSkyWars] §cCannot load a new game (see the console)");
                     }

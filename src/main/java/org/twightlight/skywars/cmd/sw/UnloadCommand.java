@@ -6,12 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class UnloadCommand extends SubCommand {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("UnloadCommand");
+    public static final Logger LOGGER = Main.LOGGER.getModule("UnloadCommand");
 
     public UnloadCommand() {
         super("unload");
@@ -30,7 +30,7 @@ public class UnloadCommand extends SubCommand {
                 Bukkit.unloadWorld(world, true);
                 sender.sendMessage("§5[LostSkyWars] §aWorld unloaded successfully!");
             } catch (Exception ex) {
-                LOGGER.log(LostLevel.WARNING, "Cannot unload world \"" + world.getName() + "\": ", ex);
+                LOGGER.log(Level.WARNING, "Cannot unload world \"" + world.getName() + "\": ", ex);
                 sender.sendMessage("§5[LostSkyWars] §cError unloading \"" + world.getName() + "\" (see the console)");
             }
         } else {

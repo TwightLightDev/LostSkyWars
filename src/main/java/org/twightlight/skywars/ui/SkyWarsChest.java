@@ -14,8 +14,8 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.NumberUtils;
 import org.twightlight.skywars.world.WorldServer;
 
@@ -125,7 +125,7 @@ public class SkyWarsChest {
     }
 
     public Location getLocation() {
-        return BukkitUtils.deserializeLocation(serialized);
+        return BukkitUtils.deserializeLocation(serialized, server);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class SkyWarsChest {
 
                 int bound = targetInts.get(targetInts.size()-1);
                 if (bound <= 0 || target.isEmpty()) {
-                    LOGGER.log(LostLevel.WARNING, "ChestType \"" + name + "\" has no valid items to choose from");
+                    LOGGER.log(Level.WARNING, "ChestType \"" + name + "\" has no valid items to choose from");
                     return;
                 }
                 while (itemsToPlace.size() < itemCount) {
@@ -203,7 +203,7 @@ public class SkyWarsChest {
             return name;
         }
 
-        public static final LostLogger LOGGER = Main.LOGGER.getModule("ChestType");
+        public static final Logger LOGGER = Main.LOGGER.getModule("ChestType");
         private static Map<String, ChestType> types = new HashMap<>();
 
         public static void setupTypes() {
@@ -225,7 +225,7 @@ public class SkyWarsChest {
                                 continue;
                             }
                         } catch (NumberFormatException e) {
-                            LOGGER.log(LostLevel.WARNING, "Invalid content percentage key: \"" + percentageStr + "\" in " + name);
+                            LOGGER.log(Level.WARNING, "Invalid content percentage key: \"" + percentageStr + "\" in " + name);
                             continue;
                         }
 
@@ -234,7 +234,7 @@ public class SkyWarsChest {
                             try {
                                 citems.add(new ChestItem(BukkitUtils.fullyDeserializeItemStack(itemStr), percentage));
                             } catch (Exception e) {
-                                LOGGER.log(LostLevel.WARNING, "Invalid ContentItem (name=\"" + name + "\", string=\"" + itemStr + "\")");
+                                LOGGER.log(Level.WARNING, "Invalid ContentItem (name=\"" + name + "\", string=\"" + itemStr + "\")");
                             }
                         }
                     }
@@ -250,7 +250,7 @@ public class SkyWarsChest {
                                 continue;
                             }
                         } catch (NumberFormatException e) {
-                            LOGGER.log(LostLevel.WARNING, "Invalid refill percentage key: \"" + percentageStr + "\" in " + name);
+                            LOGGER.log(Level.WARNING, "Invalid refill percentage key: \"" + percentageStr + "\" in " + name);
                             continue;
                         }
 
@@ -259,7 +259,7 @@ public class SkyWarsChest {
                             try {
                                 ritems.add(new ChestItem(BukkitUtils.fullyDeserializeItemStack(itemStr), percentage));
                             } catch (Exception e) {
-                                LOGGER.log(LostLevel.WARNING, "Invalid RefillItem (name=\"" + name + "\", string=\"" + itemStr + "\")");
+                                LOGGER.log(Level.WARNING, "Invalid RefillItem (name=\"" + name + "\", string=\"" + itemStr + "\")");
                             }
                         }
                     }
@@ -271,7 +271,7 @@ public class SkyWarsChest {
                 types.put(name.toLowerCase(), new ChestType(name.toLowerCase(), ritems, citems, minItems, maxItems));
             }
 
-            LOGGER.log(LostLevel.INFO, "Loaded " + types.size() + " chesttypes!");
+            LOGGER.log(Level.INFO, "Loaded " + types.size() + " chesttypes!");
         }
 
         public static ChestType getFirst() {

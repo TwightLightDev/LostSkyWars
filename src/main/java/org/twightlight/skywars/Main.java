@@ -11,27 +11,25 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.SQLiteDatabase;
 import org.twightlight.skywars.holograms.Holograms;
-import org.twightlight.skywars.hook.BoxesHook;
-import org.twightlight.skywars.hook.CitizensHook;
-import org.twightlight.skywars.hook.PlaceholderAPIHook;
-import org.twightlight.skywars.hook.ProtocolLibHook;
+import org.twightlight.skywars.hook.*;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
-import org.twightlight.skywars.level.Level;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.nms.NMS;
-import org.twightlight.skywars.privategames.PrivateGames;
+import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.rank.Rank;
 import org.twightlight.skywars.rank.TagUtils;
 import org.twightlight.skywars.ranked.Ranked;
+import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
-import org.twightlight.skywars.utils.KanaoUpdater;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.MinecraftVersion;
 import org.twightlight.skywars.well.AngelOfDeath;
 import org.twightlight.skywars.well.WellNPC;
 import org.twightlight.skywars.world.WorldServer;
+
+import java.io.File;
 
 import static org.twightlight.skywars.bungee.Core.MODE;
 
@@ -41,7 +39,7 @@ public class Main extends JavaPlugin {
     private static boolean validInit;
     public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, slimeworldmanager = true, protocollib = true;
     public static Object economy;
-    public static final LostLogger LOGGER = new LostLogger();
+    public static final Logger LOGGER = new Logger();
 
     public Main() {
         instance = this;
@@ -60,8 +58,8 @@ public class Main extends JavaPlugin {
         }
         if (!NMS.setupNMS()) {
             this.setEnabled(false);
-            LOGGER.log(LostLevel.SEVERE, "This server version (" + MinecraftVersion.getCurrentVersion().getVersion() + ") is not compatible with LostSkyWars.");
-            LOGGER.log(LostLevel.INFO, "Compatible builds: v1_8_R3, v1_12_R1");
+            LOGGER.log(Level.SEVERE, "This server version (" + MinecraftVersion.getCurrentVersion().getVersion() + ") is not compatible with LostSkyWars.");
+            LOGGER.log(Level.INFO, "Compatible builds: v1_8_R3, v1_12_R1");
             return;
         }
 
@@ -83,14 +81,18 @@ public class Main extends JavaPlugin {
 
         if (MODE != CoreMode.MULTI_ARENA && !Bukkit.getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
             this.setEnabled(false);
-            LOGGER.log(LostLevel.WARNING, "Enable BungeeCord mode in spigot.yml 'settings.bungeecord'");
+            LOGGER.log(Level.WARNING, "Enable BungeeCord mode in spigot.yml 'settings.bungeecord'");
             return;
         }
-
+        File modules = new File("plugins/LostSkyWars/modules");
+        if (!modules.exists()) {
+            modules.mkdirs();
+        }
         Rank.setupRanks();
-        Level.setupLevels();
+        org.twightlight.skywars.level.Level.setupLevels();
         Ranked.setupRanked();
         PrivateGames.setupPrivateGames();
+        RecentGames.setupRecentGames();
         if (MODE != CoreMode.LOBBY) {
             ChestType.setupTypes();
         }
@@ -111,6 +113,7 @@ public class Main extends JavaPlugin {
         this.setupVault();
         this.setupPlaceholderAPI();
         this.setupBoxes();
+        this.setupBattlePass();
         if (MODE == CoreMode.MULTI_ARENA) {
             this.setupParties();
         } else {
@@ -136,10 +139,9 @@ public class Main extends JavaPlugin {
 
         validInit = true;
         this.getServer().getScheduler().runTask(this, () -> {
-            new KanaoUpdater(this, 1);
-            LOGGER.log(LostLevel.INFO, "Server Mode: " + Core.MODE.name());
+            LOGGER.log(Level.INFO, "Server Mode: " + Core.MODE.name());
         });
-        LOGGER.log(LostLevel.INFO, "The plugin has been enabled!");
+        LOGGER.log(Level.INFO, "The plugin has been enabled!");
     }
 
     @Override
@@ -171,16 +173,16 @@ public class Main extends JavaPlugin {
         }
 
         instance = null;
-        LOGGER.log(LostLevel.INFO, "The plugin has been disabled!");
+        LOGGER.log(Level.INFO, "The plugin has been disabled!");
     }
 
     private void cancelBungee(boolean table) {
         this.setEnabled(false);
         if (!table) {
-            LOGGER.log(LostLevel.WARNING, "You can't use SQLite for Bungee Mode. Use MySQL instead of SQLite!");
+            LOGGER.log(Level.WARNING, "You can't use SQLite for Bungee Mode. Use MySQL instead of SQLite!");
         } else {
-            LOGGER.log(LostLevel.WARNING, "Unable to find Table with BungeeFiles.");
-            LOGGER.log(LostLevel.WARNING, "Setup your BungeeCord with LostSkyWars first before using that!");
+            LOGGER.log(Level.WARNING, "Unable to find Table with BungeeFiles.");
+            LOGGER.log(Level.WARNING, "Setup your BungeeCord with LostSkyWars first before using that!");
         }
     }
 
@@ -190,17 +192,17 @@ public class Main extends JavaPlugin {
             BoxesHook.setupBoxes();
         } catch (ClassNotFoundException ex) {
             lostboxes = false;
-            LOGGER.log(LostLevel.WARNING, "LostBoxes not found, disabling Mystery Boxes.");
+            LOGGER.log(Level.WARNING, "LostBoxes not found, disabling Mystery Boxes.");
         }
     }
 
     private void setupParties() {
         try {
             Class.forName("io.github.losteddev.parties.Main");
-            LOGGER.log(LostLevel.INFO, "[PartiesHook] LostParties found, hooking...");
+            LOGGER.log(Level.INFO, "[PartiesHook] LostParties found, hooking...");
         } catch (ClassNotFoundException ex) {
             lostparties = false;
-            LOGGER.log(LostLevel.WARNING, "LostParties not found, disabling Parties.");
+            LOGGER.log(Level.WARNING, "LostParties not found, disabling Parties.");
         }
     }
 
@@ -210,7 +212,7 @@ public class Main extends JavaPlugin {
             CitizensHook.setupCitizens();
         } catch (ClassNotFoundException ex) {
             citizens = false;
-            LOGGER.log(LostLevel.WARNING, "Citizens not found, disabling NPCs.");
+            LOGGER.log(Level.WARNING, "Citizens not found, disabling NPCs.");
         }
     }
 
@@ -220,7 +222,7 @@ public class Main extends JavaPlugin {
             ProtocolLibHook.setupProtocolLib();
         } catch (ClassNotFoundException ex) {
             protocollib = false;
-            LOGGER.log(LostLevel.WARNING, "ProtocolLib not found, disabling StatsNPCs.");
+            LOGGER.log(Level.WARNING, "ProtocolLib not found, disabling StatsNPCs.");
         }
     }
 
@@ -230,7 +232,17 @@ public class Main extends JavaPlugin {
             PlaceholderAPIHook.setupPlaceHolderAPI();
         } catch (ClassNotFoundException ex) {
             placeholderapi = false;
-            LOGGER.log(LostLevel.WARNING, "PlaceHolderAPI not found, disabling support.");
+            LOGGER.log(Level.WARNING, "PlaceHolderAPI not found, disabling support.");
+        }
+    }
+
+    private void setupBattlePass() {
+        try {
+            Class.forName("io.github.battlepass.BattlePlugin");
+            BattlePassHook.setupBattlePass();
+        } catch (ClassNotFoundException ex) {
+            placeholderapi = false;
+            LOGGER.log(Level.WARNING, "BattlePass not found, disabling support.");
         }
     }
 
@@ -238,16 +250,16 @@ public class Main extends JavaPlugin {
     private void setupVault() {
         try {
             Class.forName("net.milkbowl.vault.economy.Economy");
-            LOGGER.log(LostLevel.INFO, "[VaultHook] Vault found, hooking...");
+            LOGGER.log(Level.INFO, "[VaultHook] Vault found, hooking...");
             try {
                 economy = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class).getProvider();
             } catch (Exception ex) {
                 vault = false;
-                LOGGER.log(LostLevel.WARNING, "[VaultHook] EconomyProvider not found, disabling custom Economy.");
+                LOGGER.log(Level.WARNING, "[VaultHook] EconomyProvider not found, disabling custom Economy.");
             }
         } catch (Exception ex) {
             vault = false;
-            LOGGER.log(LostLevel.WARNING, "Vault not found, disabling custom Economy.");
+            LOGGER.log(Level.WARNING, "Vault not found, disabling custom Economy.");
         }
     }
 

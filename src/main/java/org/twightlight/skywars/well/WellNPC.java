@@ -10,8 +10,8 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +71,7 @@ public class WellNPC {
         return hologram;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("SoulWell");
+    public static final Logger LOGGER = Main.LOGGER.getModule("SoulWell");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
 
     private static List<WellNPC> npcs = new ArrayList<>();
@@ -90,7 +90,7 @@ public class WellNPC {
         }
         WellUpgrade.setupUpgrades();
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " WellNPCS!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " WellNPCS!");
     }
 
     public static void add(String id, Location location) {

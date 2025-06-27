@@ -32,7 +32,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
-import org.twightlight.skywars.cosmetics.skywars.sprays.Spray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
@@ -57,8 +57,8 @@ public class SoloServer extends WorldServer<Player> {
     private Map<UUID, Integer> kills;
     private Map<UUID, DataContainer> dataContainer;
 
-    public SoloServer(String yaml, ScanCallback callback) {
-        super(yaml, callback);
+    public SoloServer(String yaml, ScanCallback callback, boolean isPrivate) {
+        super(yaml, callback, isPrivate);
 
         this.kills = new HashMap<>();
         this.players = new ArrayList<>();
@@ -524,6 +524,9 @@ public class SoloServer extends WorldServer<Player> {
             }
         }
 
+        this.setInitialPlayers(getPlayers(false));
+        this.startTime = System.nanoTime();
+        this.startTimeMillis = System.currentTimeMillis();
         Bukkit.getPluginManager().callEvent(new SkyWarsGameStartEvent(this));
         this.updateTags();
         this.check();
@@ -740,7 +743,7 @@ public class SoloServer extends WorldServer<Player> {
 
     @Override
     public String getServerName() {
-        return config.getWorld().getName();
+        return config.getId();
     }
 
     @Override

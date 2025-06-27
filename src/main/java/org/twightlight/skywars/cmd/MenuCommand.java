@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.menu.lobby.DeliveryManMenu;
 import org.twightlight.skywars.menu.lobby.StatsNPCMenu;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 public class MenuCommand extends Command {
 
@@ -18,7 +18,7 @@ public class MenuCommand extends Command {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(LostLogger.LostLevel.SEVERE, "Could not register command: ", ex);
+            Main.LOGGER.log(Logger.Level.SEVERE, "Could not register command: ", ex);
         }
     }
 

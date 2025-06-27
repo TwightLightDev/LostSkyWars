@@ -4,7 +4,7 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import javax.sql.rowset.CachedRowSet;
 import java.util.Collection;
@@ -30,7 +30,7 @@ public abstract class Database {
     public abstract CachedRowSet query(String query, Object... vars);
 
     private static Database instance;
-    public static final LostLogger LOGGER = Core.getCoreLogger().getModule("Database");
+    public static final Logger LOGGER = Core.getCoreLogger().getModule("Database");
 
     public static void setupDatabase() {
         CoreDatabase config = Core.getCoreDatabase();

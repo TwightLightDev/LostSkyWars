@@ -39,6 +39,17 @@ public class SkyWarsCube implements Iterable<Block> {
         this.zmin = parseInt(split[6]);
     }
 
+    public SkyWarsCube(String serializedCube, String replacedWorld) {
+        String[] split = serializedCube.split(", ");
+        this.world = replacedWorld;
+        this.xmax = parseInt(split[1]);
+        this.xmin = parseInt(split[2]);
+        this.ymax = parseInt(split[3]);
+        this.ymin = parseInt(split[4]);
+        this.zmax = parseInt(split[5]);
+        this.zmin = parseInt(split[6]);
+    }
+
     public CubeIterator iterator() {
         return new CubeIterator(this);
     }

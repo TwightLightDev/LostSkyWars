@@ -12,8 +12,8 @@ import org.twightlight.skywars.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,7 +202,7 @@ public class AngelOfDeath {
         return toSquare * toSquare;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Angels");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Angels");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
 
     private static List<AngelOfDeath> npcs = new ArrayList<>();
@@ -220,7 +220,7 @@ public class AngelOfDeath {
             }
         }
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " Angels!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " Angels!");
     }
 
     public static void add(String id, Location location) {

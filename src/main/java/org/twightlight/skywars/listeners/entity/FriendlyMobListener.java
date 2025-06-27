@@ -16,6 +16,7 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.twightlight.skywars.Main;
+import org.twightlight.skywars.api.event.player.SkyWarsPlayerSpawnEntityEvent;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -57,6 +58,8 @@ public class FriendlyMobListener implements Listener {
                 friendlyMonsters.computeIfAbsent(player, k -> new ArrayList<>());
                 friendlyMonsters.get(player).add((Monster) event.getEntity());
                 event.getEntity().setMetadata("owner", new FixedMetadataValue(Main.getInstance(), player.getUniqueId().toString()));
+                SkyWarsPlayerSpawnEntityEvent e = new SkyWarsPlayerSpawnEntityEvent(player, event.getEntity());
+                Bukkit.getPluginManager().callEvent(e);
                 break;
             }
         }

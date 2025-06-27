@@ -9,8 +9,7 @@ import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.io.File;
@@ -78,7 +77,7 @@ public class Level {
         return levels.stream().filter(level -> level.getLevel() == this.level + 1).findFirst().orElse(null);
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Leveling");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Leveling");
     private static List<Level> levels = new ArrayList<>();
 
     public static void setupLevels() {
@@ -86,7 +85,7 @@ public class Level {
         for (String key : cu.getSection("levels").getKeys(false)) {
             if (!cu.contains("levels." + key + ".reward")) {
                 FileUtils.deleteFile(new File("plugins/LostSkyWars/levels.yml"));
-                LOGGER.log(LostLevel.WARNING, "Deleted old version from levels.yml. Restart the server.");
+                LOGGER.log(Logger.Level.WARNING, "Deleted old version from levels.yml. Restart the server.");
                 System.exit(0);
                 return;
             }
@@ -94,7 +93,7 @@ public class Level {
             levels.add(new Level(cu.getDouble("levels." + key + ".exp"), new LevelReward(cu.getString("levels." + key + ".reward")), cu.getString("levels." + key + ".description")));
         }
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + levels.size() + " levels!");
+        LOGGER.log(Logger.Level.INFO, "Loaded " + levels.size() + " levels!");
     }
 
     public static Level getByLevel(int level) {

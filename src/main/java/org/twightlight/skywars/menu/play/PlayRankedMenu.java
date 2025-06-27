@@ -54,7 +54,7 @@ public class PlayRankedMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.SOLO, SkyWarsType.RANKED);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {
@@ -66,7 +66,7 @@ public class PlayRankedMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.DOUBLES, SkyWarsType.RANKED);
                                     if (server != null) {
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getWorld().getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
                                     }
                                 } else {

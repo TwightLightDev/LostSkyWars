@@ -9,8 +9,8 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +44,15 @@ public class RankedSkyWarsKit extends SkyWarsKit {
         return content;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("RankedKits");
+    public static final Logger LOGGER = Main.LOGGER.getModule("RankedKits");
 
     public static void setupKits() {
         ConfigUtils cu = ConfigUtils.getConfig("rankedkits", "plugins/LostSkyWars/kits");
         Set<String> keys = cu.getKeys(false);
-        LOGGER.log(LostLevel.INFO, "Keys: " + keys);
+        LOGGER.log(Level.INFO, "Keys: " + keys);
 
         for (String key : keys) {
-            LOGGER.log(LostLevel.INFO, "Processing kit: " + key);
+            LOGGER.log(Level.INFO, "Processing kit: " + key);
 
             int id = cu.getInt(key + ".id");
             String name = cu.getString(key + ".name");
@@ -62,7 +62,7 @@ public class RankedSkyWarsKit extends SkyWarsKit {
             ItemStack icon = BukkitUtils.fullyDeserializeItemStack(cu.getString(key + ".icon", null));
 
             if (icon == null) {
-                LOGGER.log(LostLevel.WARNING, "Invalid icon for kit \"" + name + "\"");
+                LOGGER.log(Level.WARNING, "Invalid icon for kit \"" + name + "\"");
                 continue;
             }
 
@@ -72,7 +72,7 @@ public class RankedSkyWarsKit extends SkyWarsKit {
                 if (armorItem != null) {
                     list.add(armorItem);
                 } else {
-                    LOGGER.log(LostLevel.WARNING, "Invalid armor item \"" + armorStr + "\" for kit \"" + name + "\"");
+                    LOGGER.log(Level.WARNING, "Invalid armor item \"" + armorStr + "\" for kit \"" + name + "\"");
                 }
             }
 
@@ -86,7 +86,7 @@ public class RankedSkyWarsKit extends SkyWarsKit {
             ItemStack[] armor = list.toArray(new ItemStack[0]);
             if (armor.length != 4) {
                 armor = null;
-                LOGGER.log(LostLevel.WARNING, "Invalid armor list for kit \"" + name + "\"");
+                LOGGER.log(Level.WARNING, "Invalid armor list for kit \"" + name + "\"");
             }
 
             list.clear();
@@ -95,15 +95,15 @@ public class RankedSkyWarsKit extends SkyWarsKit {
                 if (contentItem != null) {
                     list.add(contentItem);
                 } else {
-                    LOGGER.log(LostLevel.WARNING, "Invalid content item \"" + contentStr + "\" for kit \"" + name + "\"");
+                    LOGGER.log(Level.WARNING, "Invalid content item \"" + contentStr + "\" for kit \"" + name + "\"");
                 }
             }
 
             ItemStack[] content = list.toArray(new ItemStack[0]);
 
-            LOGGER.log(LostLevel.INFO, "Adding kit: " + name);
+            LOGGER.log(Level.INFO, "Adding kit: " + name);
             CosmeticServer.SKYWARS.addCosmetic(new RankedSkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
-            LOGGER.log(LostLevel.INFO, "Kit added: " + name);
+            LOGGER.log(Level.INFO, "Kit added: " + name);
         }
     }
 

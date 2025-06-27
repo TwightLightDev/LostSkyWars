@@ -11,7 +11,7 @@ import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class WatchCommand extends Command {
 
@@ -23,7 +23,7 @@ public class WatchCommand extends Command {
                     .getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(LostLevel.SEVERE, "Could not register command: ", ex);
+            Main.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
     }
 
@@ -60,7 +60,7 @@ public class WatchCommand extends Command {
                     return true;
                 }
 
-                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getServerName()));
+                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                 server.spectate(account, target);
             }
         }

@@ -15,7 +15,7 @@ import org.twightlight.skywars.hook.CitizensHook;
 import org.twightlight.skywars.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -136,7 +136,7 @@ public class ShopkeeperNPC {
 //        npcs.forEach(ShopkeeperNPC::update);
 //      }
 //    }.runTaskTimer(Main.getInstance(), 0, 10);
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " ShopkeeperNPCs!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " ShopkeeperNPCs!");
     }
 
     public static void add(String id, Location location) {

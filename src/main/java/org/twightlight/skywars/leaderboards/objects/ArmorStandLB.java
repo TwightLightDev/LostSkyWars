@@ -11,7 +11,7 @@ import org.twightlight.skywars.leaderboards.LeaderBoardStats;
 import org.twightlight.skywars.leaderboards.LeaderBoardType;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
@@ -93,7 +93,7 @@ public class ArmorStandLB extends LeaderBoard {
                 stand.getEntity().setHelmet(BukkitUtils.deserializeItemStack("SKULL_ITEM:3 : 1 : owner=" + name));
             }
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.WARNING, "update(): ", ex);
+            LOGGER.log(Level.WARNING, "update(): ", ex);
         }
     }
 

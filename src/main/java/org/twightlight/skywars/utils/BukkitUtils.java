@@ -14,7 +14,8 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.nms.NMS;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.world.WorldServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +37,7 @@ import static java.lang.Float.parseFloat;
 @SuppressWarnings("deprecation")
 public class BukkitUtils {
 
-    private static final LostLogger LOGGER = Main.LOGGER.getModule("BukkitUtils");
+    private static final Logger LOGGER = Main.LOGGER.getModule("BukkitUtils");
 
     static {
         List<Field> fields = new ArrayList<>();
@@ -139,7 +140,7 @@ public class BukkitUtils {
                     f.setAccessible(true);
                     f.set(meta, gp);
                 } catch (ReflectiveOperationException ex) {
-                    LOGGER.log(LostLevel.WARNING, "Unexpected error ocurred profile on skull: ", ex);
+                    LOGGER.log(Level.WARNING, "Unexpected error ocurred profile on skull: ", ex);
                 }
             }
 
@@ -300,7 +301,7 @@ public class BukkitUtils {
             f.setAccessible(true);
             f.set(meta, player.getClass().getDeclaredMethod("getProfile").invoke(player));
         } catch (ReflectiveOperationException e) {
-            LOGGER.log(LostLevel.WARNING, "Unexpected error ocurred profile on skull: ", e);
+            LOGGER.log(Level.WARNING, "Unexpected error ocurred profile on skull: ", e);
         }
 
         head.setItemMeta(meta);
@@ -318,7 +319,7 @@ public class BukkitUtils {
             f.setAccessible(true);
             f.set(meta, profile);
         } catch (ReflectiveOperationException e) {
-            LOGGER.log(LostLevel.WARNING, "Unexpected error ocurred profile on skull: ", e);
+            LOGGER.log(Level.WARNING, "Unexpected error ocurred profile on skull: ", e);
         }
 
         head.setItemMeta(meta);
@@ -336,6 +337,22 @@ public class BukkitUtils {
     public static Location deserializeLocation(String serialized) {
         String[] divPoints = serialized.split("; ");
         Location deserialized = new Location(Bukkit.getWorld(divPoints[0]), parseDouble(divPoints[1]), parseDouble(divPoints[2]), parseDouble(divPoints[3]));
+        deserialized.setYaw(parseFloat(divPoints[4]));
+        deserialized.setPitch(parseFloat(divPoints[5]));
+        return deserialized;
+    }
+
+    public static Location deserializeLocation(String serialized, String replacedWorld) {
+        String[] divPoints = serialized.split("; ");
+        Location deserialized = new Location(Bukkit.getWorld(replacedWorld), parseDouble(divPoints[1]), parseDouble(divPoints[2]), parseDouble(divPoints[3]));
+        deserialized.setYaw(parseFloat(divPoints[4]));
+        deserialized.setPitch(parseFloat(divPoints[5]));
+        return deserialized;
+    }
+
+    public static Location deserializeLocation(String serialized, WorldServer<?> server) {
+        String[] divPoints = serialized.split("; ");
+        Location deserialized = new Location(server.getWorld(), parseDouble(divPoints[1]), parseDouble(divPoints[2]), parseDouble(divPoints[3]));
         deserialized.setYaw(parseFloat(divPoints[4]));
         deserialized.setPitch(parseFloat(divPoints[5]));
         return deserialized;

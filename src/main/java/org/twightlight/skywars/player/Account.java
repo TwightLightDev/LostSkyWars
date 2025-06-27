@@ -335,7 +335,7 @@ public class Account {
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
-                        line = line.replace("{world}", server.getServerName());
+                        line = line.replace("{world}", server.getName());
                         line = line.replace("{event}", server.getEvent());
                         line = line.replace("{mode}", server.getType().getColoredName());
                         line = line.replace("{map}", server.getName());

@@ -27,6 +27,7 @@ import java.util.Map;
 public class ConfirmCryMenu extends PlayerMenu {
 
     private static final ConfigMenu config = ConfigMenu.getByName("confirmbuy");
+    private static final ConfigMenu config1 = ConfigMenu.getByName("deathcry");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {
@@ -67,6 +68,8 @@ public class ConfirmCryMenu extends PlayerMenu {
                                 account.removeStat("coins", cosmetic.getCoins());
                                 cosmetic.give(account);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
+                                player.sendMessage(StringUtils.formatColors(config1.getAsString("select").replace("{name}", cosmetic.getRawName())));
+                                account.setSelected(cosmetic);
                                 player.closeInventory();
                             }
                         } else {

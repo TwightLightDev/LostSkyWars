@@ -6,8 +6,8 @@ import org.twightlight.skywars.Main;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class Rank {
         return ordinal;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Ranks");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Ranks");
     private static final List<Rank> ranks = new ArrayList<>();
 
     public static void setupRanks() {
@@ -97,7 +97,7 @@ public class Rank {
             ranks.add(new Rank("Default", "§7Default", "§7", "none", null, 7));
         }
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + ranks.size() + " ranks!");
+        LOGGER.log(Level.INFO, "Loaded " + ranks.size() + " ranks!");
     }
 
     public static Rank getRank(Player player) {

@@ -6,7 +6,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class PlayerLoginListener extends Listeners {
 
@@ -19,7 +19,7 @@ public class PlayerLoginListener extends Listeners {
         } catch (Exception ex) {
             evt.disallow(PlayerLoginEvent.Result.KICK_OTHER,
                     "§c§lSKYWARS\n \n§cCould not load your account.");
-            LOGGER.log(LostLevel.SEVERE, "Could not loadAccount(\"" + player.getName() + "\"): ", ex);
+            LOGGER.log(Level.SEVERE, "Could not loadAccount(\"" + player.getName() + "\"): ", ex);
         }
     }
 

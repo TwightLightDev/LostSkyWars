@@ -20,7 +20,7 @@ import org.twightlight.skywars.nms.NMSBridge;
 import org.twightlight.skywars.nms.v1_12_R1.entity.EntityArmorStand;
 import org.twightlight.skywars.nms.v1_12_R1.entity.*;
 import org.twightlight.skywars.nms.v1_12_R1.entity.EntityArmorStand.CraftArmorStand;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -161,7 +161,7 @@ public class NMS1_12R1 extends NMSBridge {
             b.setAccessible(true);
             b.set(packet, ChatSerializer.a("{\"text\": \"" + footer + "\"}"));
         } catch (ReflectiveOperationException e) {
-            NMS.LOGGER.log(LostLevel.WARNING, "Unexpected error on sendTabHeaderFooter(player, header, footer): ", e);
+            NMS.LOGGER.log(Level.WARNING, "Unexpected error on sendTabHeaderFooter(player, header, footer): ", e);
         }
 
         ep.playerConnection.sendPacket(packet);

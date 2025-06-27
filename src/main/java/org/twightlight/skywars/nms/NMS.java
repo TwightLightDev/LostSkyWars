@@ -10,7 +10,7 @@ import org.twightlight.skywars.holograms.HologramLine;
 import org.twightlight.skywars.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.v1_12_R1.NMS1_12R1;
 import org.twightlight.skywars.nms.v1_8_R3.NMS1_8R3;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.MinecraftVersion;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class NMS {
 
     private static NMSBridge BRIDGE;
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("NMS");
+    public static final Logger LOGGER = Main.LOGGER.getModule("NMS");
 
     public static IArmorStand createArmorStand(Location location, String name, HologramLine line) {
         return BRIDGE.createArmorStand(location, name, line);

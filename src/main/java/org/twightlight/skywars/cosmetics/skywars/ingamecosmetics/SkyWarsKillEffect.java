@@ -16,7 +16,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.killeffects.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -102,7 +102,7 @@ public abstract class SkyWarsKillEffect extends Cosmetic {
         return coins;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("Kill Effects");
+    public static final Logger LOGGER = Main.LOGGER.getModule("Kill Effects");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killeffects");
 
     public static void setupKillEffects() {

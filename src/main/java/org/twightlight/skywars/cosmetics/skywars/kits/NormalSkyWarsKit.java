@@ -9,8 +9,8 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class NormalSkyWarsKit extends SkyWarsKit {
         return content;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("NormalKits");
+    public static final Logger LOGGER = Main.LOGGER.getModule("NormalKits");
 
     public static void setupKits() {
         ConfigUtils cu = ConfigUtils.getConfig("normalkits", "plugins/LostSkyWars/kits");
@@ -68,7 +68,7 @@ public class NormalSkyWarsKit extends SkyWarsKit {
             ItemStack[] armor = list.toArray(new ItemStack[list.size()]);
             if (armor.length != 4) {
                 armor = null;
-                LOGGER.log(LostLevel.WARNING, "Invalid armor list for kit \"" + name + "\"");
+                LOGGER.log(Level.WARNING, "Invalid armor list for kit \"" + name + "\"");
             }
             list.clear();
             for (String content : cu.getStringList(key + ".content")) {

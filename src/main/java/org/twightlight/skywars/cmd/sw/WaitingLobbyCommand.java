@@ -108,8 +108,8 @@ public class WaitingLobbyCommand extends SubCommand {
                 return;
             }
 
-            server.getConfig().setWaitingLobby(new SkyWarsCube(BukkitUtils.deserializeLocation((String) arr[2]), BukkitUtils.deserializeLocation((String) arr[3])),
-                    BukkitUtils.deserializeLocation((String) arr[1]));
+            server.getConfig().setWaitingLobby(new SkyWarsCube(BukkitUtils.deserializeLocation((String) arr[2], server), BukkitUtils.deserializeLocation((String) arr[3], server)),
+                    BukkitUtils.deserializeLocation((String) arr[1], server));
 
             WAITING_LOBBY.remove(player);
             account.refreshPlayer();

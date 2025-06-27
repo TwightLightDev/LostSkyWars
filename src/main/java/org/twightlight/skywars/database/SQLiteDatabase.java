@@ -3,7 +3,7 @@ package org.twightlight.skywars.database;
 import com.google.common.collect.ImmutableList;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
@@ -31,7 +31,7 @@ public class SQLiteDatabase extends Database {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                LOGGER.log(LostLevel.WARNING, "Unexpected error while creating file database.db: ", e);
+                LOGGER.log(Level.WARNING, "Unexpected error while creating file database.db: ", e);
             }
         }
 
@@ -139,7 +139,7 @@ public class SQLiteDatabase extends Database {
                     }
                 }
             } catch (SQLException ex) {
-                LOGGER.log(LostLevel.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
+                LOGGER.log(Level.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
             }
 
             return map;
@@ -264,7 +264,7 @@ public class SQLiteDatabase extends Database {
         try {
             return new Account(UUID.fromString(rs.getString("id")), name);
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
+            LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
             return null;
         }
     }
@@ -297,9 +297,9 @@ public class SQLiteDatabase extends Database {
 
             LOGGER.info("Reconnected on SQLite!");
         } catch (SQLException e) {
-            LOGGER.log(LostLevel.WARNING, "Could not open SQLite connection: ", e);
+            LOGGER.log(Level.WARNING, "Could not open SQLite connection: ", e);
         } catch (ClassNotFoundException e) {
-            LOGGER.log(LostLevel.SEVERE, "Could not find driver of SQLite!");
+            LOGGER.log(Level.SEVERE, "Could not find driver of SQLite!");
         }
     }
 
@@ -308,7 +308,7 @@ public class SQLiteDatabase extends Database {
             try {
                 connection.close();
             } catch (SQLException e) {
-                LOGGER.log(LostLevel.WARNING, "Could not close SQLite connection: ", e);
+                LOGGER.log(Level.WARNING, "Could not close SQLite connection: ", e);
             }
         }
     }
@@ -325,7 +325,7 @@ public class SQLiteDatabase extends Database {
         try {
             return !(connection == null || connection.isClosed());
         } catch (SQLException ex) {
-            LOGGER.log(LostLevel.SEVERE, "Could not check MySQL connection: ", ex);
+            LOGGER.log(Level.SEVERE, "Could not check MySQL connection: ", ex);
             return false;
         }
     }
@@ -336,7 +336,7 @@ public class SQLiteDatabase extends Database {
             ps.execute();
             ps.close();
         } catch (SQLException e) {
-            LOGGER.log(LostLevel.WARNING, "Could not execute SQL: ", e);
+            LOGGER.log(Level.WARNING, "Could not execute SQL: ", e);
         }
     }
 
@@ -354,7 +354,7 @@ public class SQLiteDatabase extends Database {
             }
             return ps;
         } catch (SQLException e) {
-            LOGGER.log(LostLevel.WARNING, "Could not Prepare Statement: ", e);
+            LOGGER.log(Level.WARNING, "Could not Prepare Statement: ", e);
         }
 
         return null;
@@ -380,7 +380,7 @@ public class SQLiteDatabase extends Database {
                             return crs;
                         }
                     } catch (Exception e) {
-                        LOGGER.log(LostLevel.WARNING, "Could not Execute Query: ", e);
+                        LOGGER.log(Level.WARNING, "Could not Execute Query: ", e);
                     }
 
                     return null;
@@ -391,7 +391,7 @@ public class SQLiteDatabase extends Database {
                 rowSet = future.get();
             }
         } catch (Exception e) {
-            LOGGER.log(LostLevel.WARNING, "Could not Call FutureTask: ", e);
+            LOGGER.log(Level.WARNING, "Could not Call FutureTask: ", e);
         }
 
         return rowSet;

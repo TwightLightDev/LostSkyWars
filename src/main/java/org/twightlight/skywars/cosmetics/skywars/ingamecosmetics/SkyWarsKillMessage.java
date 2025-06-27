@@ -14,7 +14,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger;
+import org.twightlight.skywars.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,7 +121,7 @@ public class SkyWarsKillMessage extends Cosmetic {
         return coins;
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("KillMessages");
+    public static final Logger LOGGER = Main.LOGGER.getModule("KillMessages");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killmessages");
 
     public static void setupKM() {

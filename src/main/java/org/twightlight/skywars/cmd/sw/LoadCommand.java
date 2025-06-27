@@ -7,15 +7,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Main;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.io.File;
 
 @SuppressWarnings("deprecation")
 public class LoadCommand extends SubCommand {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("LoadCommand");
+    public static final Logger LOGGER = Main.LOGGER.getModule("LoadCommand");
 
     public LoadCommand() {
         super("load");
@@ -58,7 +58,7 @@ public class LoadCommand extends SubCommand {
             });
         } catch (Exception ex) {
             sender.sendMessage("§5[LostSkyWars] §cError loading \"" + map.getName() + "\" (see the console)");
-            LOGGER.log(LostLevel.WARNING, "Cannot load world \"" + map.getName() + "\": ", ex);
+            LOGGER.log(Level.WARNING, "Cannot load world \"" + map.getName() + "\": ", ex);
         }
     }
 

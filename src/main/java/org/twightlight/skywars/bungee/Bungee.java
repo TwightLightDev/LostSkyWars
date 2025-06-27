@@ -2,13 +2,13 @@ package org.twightlight.skywars.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
 import org.twightlight.skywars.bungee.server.ServerManager;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class Bungee extends Plugin {
 
     private static Bungee instance;
-    public static final LostLogger LOGGER = new LostLogger();
+    public static final Logger LOGGER = new Logger();
 
     public Bungee() {
         instance = this;
@@ -19,13 +19,13 @@ public class Bungee extends Plugin {
         BungeeFiles.setupFiles();
         ServerManager.getManager().enable();
 
-        LOGGER.log(LostLevel.INFO, "The plugin has been enabled!");
+        LOGGER.log(Level.INFO, "The plugin has been enabled!");
     }
 
     @Override
     public void onDisable() {
         instance = null;
-        LOGGER.log(LostLevel.INFO, "The plugin has been disabled!");
+        LOGGER.log(Level.INFO, "The plugin has been disabled!");
     }
 
     public static Bungee getInstance() {

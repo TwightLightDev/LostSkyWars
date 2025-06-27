@@ -11,7 +11,7 @@ import org.twightlight.skywars.Main;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
-import org.twightlight.skywars.cosmetics.skywars.sprays.Spray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
@@ -20,7 +20,7 @@ import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.ui.server.ScanCallback;
 import org.twightlight.skywars.utils.*;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.world.type.*;
 
 import java.io.File;
@@ -41,15 +41,18 @@ public abstract class WorldServer<T> extends SkyWarsServer {
     protected List<SkyWarsChest> chests = new ArrayList<>();
     protected List<Spray> sprays = new ArrayList<>();
     protected Map<Integer, SkyWarsEvent> timeline = new HashMap<>();
+    protected List<Player> initialPlayers = new ArrayList<>();
+    protected long startTime;
+    protected long startTimeMillis;
 
     public WorldServer(String yaml) {
-        this(yaml, null);
+        this(yaml, null, false);
     }
 
-    public WorldServer(String yaml, ScanCallback callback) {
+    public WorldServer(String yaml, ScanCallback callback, boolean isPrivate) {
         super();
         this.timer = Language.game$countdown$start + 1;
-        this.config = new WorldConfig(yaml);
+        this.config = new WorldConfig(yaml, isPrivate);
         this.name = config.getMapName();
         this.task = new WorldTimer(this);
         for (String spawn : this.config.listSpawns()) {
@@ -61,6 +64,8 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         if (callback != null) {
             callback.finish();
         }
+        this.isPrivate = isPrivate;
+
     }
 
     @Override
@@ -73,6 +78,8 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         this.teams = null;
         this.chests.clear();
         this.chests = null;
+        this.initialPlayers.clear();
+        this.initialPlayers = null;
     }
 
     public abstract void start();
@@ -97,6 +104,22 @@ public abstract class WorldServer<T> extends SkyWarsServer {
 
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    public List<Player> getInitialPlayers() {
+        return initialPlayers;
+    }
+
+    public void setInitialPlayers(List<Player> initialPlayers) {
+        this.initialPlayers = initialPlayers;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getStartTimeMillis() {
+        return startTimeMillis;
     }
 
     public List<SkyWarsTeam> getAliveTeams() {
@@ -234,7 +257,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return config.listSpawns().size();
     }
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("WorldServer");
+    public static final Logger LOGGER = Main.LOGGER.getModule("WorldServer");
     private static Map<String, WorldServer<?>> servers = new HashMap<>();
 
     public static void setupServers() {
@@ -247,6 +270,17 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         if (!zipFolder.exists()) {
             zipFolder.mkdirs();
         }
+        File[] files = Bukkit.getWorldContainer().listFiles();
+
+        for (File file : files) {
+            if (file.isDirectory() && file.getName().contains("_temp")) {
+                World loadedWorld = Bukkit.getWorld(file.getName());
+                if (loadedWorld != null) {
+                    Bukkit.unloadWorld(loadedWorld, false);
+                }
+                FileUtils.deleteFile(file);
+            }
+        }
 
         File[] yamlFiles = ymlFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (yamlFiles != null) {
@@ -258,7 +292,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
             }
         }
 
-        LOGGER.log(LostLevel.INFO, "Loaded " + servers.size() + " servers!");
+        LOGGER.log(Level.INFO, "Loaded " + servers.size() + " servers!");
     }
     public static WorldServer<?> loadArena(File yamlFile, ScanCallback callback) {
         return loadArena(yamlFile, callback, false);
@@ -285,21 +319,20 @@ public abstract class WorldServer<T> extends SkyWarsServer {
 
             WorldServer<?> server;
             if ("ranked".equalsIgnoreCase(type)) {
-                server = "solo".equalsIgnoreCase(mode) ? new SoloRankedServer(arenaName, callback)
-                        : new DoublesRankedServer(arenaName, callback);
+                server = "solo".equalsIgnoreCase(mode) ? new SoloRankedServer(arenaName, callback, temp)
+                        : new DoublesRankedServer(arenaName, callback, temp);
             } else if ("duels".equalsIgnoreCase(type)) {
-                server = new DuelsServer(arenaName, callback);
+                server = new DuelsServer(arenaName, callback, temp);
             } else {
-                server = "solo".equalsIgnoreCase(mode) ? new SoloServer(arenaName, callback)
-                        : new DoublesServer(arenaName, callback);
+                server = "solo".equalsIgnoreCase(mode) ? new SoloServer(arenaName, callback, temp)
+                        : new DoublesServer(arenaName, callback, temp);
             }
 
             server.getWorld().getEntities().forEach(Entity::remove);
-            server.isPrivate = temp;
             if (!server.isPrivate()) servers.put(arenaName, server);
             return server;
         } catch (Exception ex) {
-            LOGGER.log(LostLevel.WARNING, "loadArena(\"" + yamlFile + "\")", ex);
+            LOGGER.log(Level.WARNING, "loadArena(\"" + yamlFile + "\")", ex);
         }
         return null;
     }
@@ -312,9 +345,18 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         FileUtils.deleteFile(server.getConfig().getConfig().getFile());
         File zipFile = new File("plugins/LostSkyWars/maps", server.getServerName() + ".zip");
         FileUtils.deleteFile(zipFile);
-        File loadedWorldFolder = new File(Bukkit.getWorldContainer(), server.getServerName());
-        FileUtils.deleteFile(loadedWorldFolder);
-
+        File baseWorldFolder = new File(Bukkit.getWorldContainer(), server.getServerName());
+        World loadedWorld = Bukkit.getWorld(server.getServerName());
+        if (loadedWorld != null) {
+            Bukkit.unloadWorld(loadedWorld, false);
+        }
+        FileUtils.deleteFile(baseWorldFolder);
+        File currentWorldFolder = new File(Bukkit.getWorldContainer(), server.config.getWorld().getName());
+        loadedWorld = Bukkit.getWorld(server.config.getWorld().getName());
+        if (loadedWorld != null) {
+            Bukkit.unloadWorld(loadedWorld, false);
+        }
+        FileUtils.deleteFile(currentWorldFolder);
         server.destroy();
     }
 
@@ -366,29 +408,29 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         cu.set("name", getName());
         cu.set("mode", getMode().name().toLowerCase());
         cu.set("type", getType().name().toLowerCase());
-        cu.set("cube", getConfig().getWorldCube().toString().replace(getWorld().getName(), worldName));
+        cu.set("cube", getConfig().getWorldCube().toString().replace(getConfig().getId(), worldName));
         cu.set("min-players", getConfig().getMinPlayers());
         if (getConfig().getConfig().contains("waiting-cube")) {
-            cu.set("waiting-cube", getConfig().getWaitingCube().toString().replace(getWorld().getName(), worldName));
-            cu.set("waiting-lobby", BukkitUtils.serializeLocation(getConfig().getWaitingLocation()).replace(getWorld().getName(), worldName));
+            cu.set("waiting-cube", getConfig().getWaitingCube().toString().replace(getConfig().getId(), worldName));
+            cu.set("waiting-lobby", BukkitUtils.serializeLocation(getConfig().getWaitingLocation()).replace(getConfig().getId(), worldName));
         }
         List<String> spawns = new ArrayList<>();
         for (String spawn : getConfig().listSpawns()) {
-            spawns.add(spawn.replace(getWorld().getName(), worldName));
+            spawns.add(spawn.replace(getConfig().getId(), worldName));
         }
         cu.set("spawns", spawns);
         List<String> chests = new ArrayList<>();
         for (String chest : getConfig().listChests()) {
-            chests.add(chest.replace(getWorld().getName(), worldName));
+            chests.add(chest.replace(getConfig().getId(), worldName));
         }
         cu.set("chests", chests);
         List<String> balloons = new ArrayList<>();
         for (String balloon : getConfig().listBalloons()) {
-            balloons.add(balloon.replace(getWorld().getName(), worldName));
+            balloons.add(balloon.replace(getConfig().getId(), worldName));
         }
         cu.set("balloons", balloons);
 
-        FileUtils.copyFiles(new File("plugins/LostSkyWars/maps/" + getWorld().getName() + ".zip"), new File("plugins/LostSkyWars/maps/" + worldName + ".zip"));
+        FileUtils.copyFiles(new File("plugins/LostSkyWars/maps/" + getConfig().getId() + ".zip"), new File("plugins/LostSkyWars/maps/" + worldName + ".zip"));
 
         return WorldServer.loadArena(cu.getFile(), null, temp);
     }

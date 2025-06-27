@@ -64,7 +64,7 @@ public class SkyWarsTeam {
                 }
 
                 if (cosmetic != null) {
-                    this.ballon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized), cosmetic);
+                    this.ballon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized, server), cosmetic);
                 }
             }
         }
@@ -115,7 +115,7 @@ public class SkyWarsTeam {
     }
 
     public Location getLocation() {
-        return BukkitUtils.deserializeLocation(this.getSerializedLocation());
+        return BukkitUtils.deserializeLocation(this.getSerializedLocation(), server);
     }
 
     public String getSerializedLocation() {

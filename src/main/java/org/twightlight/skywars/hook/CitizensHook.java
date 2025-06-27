@@ -20,17 +20,17 @@ import org.twightlight.skywars.menu.play.PlayRankedMenu;
 import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.utils.LostLogger;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.utils.Logger.Level;
 
 public class CitizensHook {
 
-    public static final LostLogger LOGGER = Main.LOGGER.getModule("CitizensHook");
+    public static final Logger LOGGER = Main.LOGGER.getModule("CitizensHook");
 
     private static NPCRegistry registry;
 
     public static void setupCitizens() {
-        LOGGER.log(LostLevel.INFO, "Citizens found, hooking...");
+        LOGGER.log(Level.INFO, "Citizens found, hooking...");
 
         registry = CitizensAPI.createNamedNPCRegistry("LostSkyWars", new EmptyDatastore());
 
@@ -97,7 +97,7 @@ public class CitizensHook {
     }
 
     public static void destroyCitizens() {
-        LOGGER.log(LostLevel.INFO, "Citizens found, destroying NPCs...");
+        LOGGER.log(Level.INFO, "Citizens found, destroying NPCs...");
 
         PlayNPC.listNPCs().forEach(PlayNPC::destroy);
         RankedNPC.listNPCs().forEach(RankedNPC::destroy);

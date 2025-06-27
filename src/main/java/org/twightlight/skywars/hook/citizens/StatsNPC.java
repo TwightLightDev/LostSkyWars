@@ -14,7 +14,7 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.hook.CitizensHook;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.LostLogger.LostLevel;
+import org.twightlight.skywars.utils.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,7 +130,7 @@ public class StatsNPC {
                 npcs.forEach(StatsNPC::update);
             }
         }.runTaskTimer(Main.getInstance(), 0, 20);
-        LOGGER.log(LostLevel.INFO, "Loaded " + npcs.size() + " StatsNPCs!");
+        LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " StatsNPCs!");
     }
 
     public static void add(String id, Location location) {

@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class SpraysMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("killmessage");
+    private static final ConfigMenu config = ConfigMenu.getByName("spray");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {
