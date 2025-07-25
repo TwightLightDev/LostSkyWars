@@ -31,6 +31,8 @@ public class PrivateGamesUser {
         PrivateGames.getStorage().getDatabase().pullData(p, 0, "isEnable");
         gameSpeedSetting = new GameSpeedSetting(GameSpeedSetting.getBaseValue(p), p);
         gameTimeSetting = new GameTimeSetting(GameTimeSetting.getBaseValue(p), p);
+        gameSpeedSetting = new GameSpeedSetting(GameSpeedSetting.getBaseValue(p), p);
+        gameTimeSetting = new GameTimeSetting(GameTimeSetting.getBaseValue(p), p);
 
     }
 
@@ -56,6 +58,11 @@ public class PrivateGamesUser {
         } else if (booleanInt == 1) {
             PrivateGames.getStorage().getDatabase().pullData(p, 0, "isEnable");
             p.sendMessage(Language.privategames$toggle$off);
+
+
+            PrivateGames.getStorage().getDatabase().pullData(p, 1, "isEnable");
+        } else if (booleanInt == 1) {
+            PrivateGames.getStorage().getDatabase().pullData(p, 0, "isEnable");
 
         }
     }
