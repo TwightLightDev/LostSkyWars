@@ -1,7 +1,7 @@
 package org.twightlight.skywars.modules.privategames.database;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ public class Storage {
     private SQLite database;
 
     public Storage() {
-        database = new SQLite(Main.getInstance(), "privategames");
+        database = new SQLite(SkyWars.getInstance(), "privategames");
     }
 
     public PrivateGamesUser getUser(Player p) {

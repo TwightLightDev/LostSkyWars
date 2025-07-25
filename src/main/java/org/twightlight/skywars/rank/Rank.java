@@ -2,7 +2,7 @@ package org.twightlight.skywars.rank;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -76,7 +76,7 @@ public class Rank {
         return ordinal;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Ranks");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Ranks");
     private static final List<Rank> ranks = new ArrayList<>();
 
     public static void setupRanks() {

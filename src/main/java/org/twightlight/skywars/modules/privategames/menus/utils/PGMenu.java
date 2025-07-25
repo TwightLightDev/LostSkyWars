@@ -1,8 +1,9 @@
-package org.twightlight.skywars.modules.privategames.menus;
+package org.twightlight.skywars.modules.privategames.menus.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.HashMap;
@@ -20,14 +21,14 @@ public class PGMenu {
         return new PGMenu(size);
     }
 
-    public void open(Player p) {
+    public void open(PrivateGamesUser p) {
         inv.clear();
 
         for (int i : contents.keySet()) {
-            inv.setItem(i, contents.get(i).getItem(p));
+            inv.setItem(i, contents.get(i).getItem(p.getPlayer()));
         }
 
-        p.openInventory(inv);
+        p.getPlayer().openInventory(inv);
     }
 
     public void addContent(int slot, Item i) {
@@ -48,4 +49,5 @@ public class PGMenu {
         }
         return null;
     }
+
 }

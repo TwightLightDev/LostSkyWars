@@ -10,7 +10,7 @@ import com.comphenix.protocol.wrappers.WrappedSignedProperty;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.holograms.entity.IArmorStand;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ProtocolListener extends PacketAdapter {
 
     public ProtocolListener() {
-        super(params(Main.getInstance(), PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.PLAYER_INFO));
+        super(params(SkyWars.getInstance(), PacketType.Play.Server.ENTITY_METADATA, PacketType.Play.Server.PLAYER_INFO));
     }
 
     @Override

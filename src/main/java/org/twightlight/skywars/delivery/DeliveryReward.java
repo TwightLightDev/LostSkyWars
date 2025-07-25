@@ -1,7 +1,7 @@
 package org.twightlight.skywars.delivery;
 
 import org.bukkit.Bukkit;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.player.Account;
 
 public class DeliveryReward {
@@ -44,7 +44,7 @@ public class DeliveryReward {
                 account.getContainers("skywars").get("souls").set(account.getContainers("account").get("sw_maxsouls").getAsInt());
             }
         } else if (type == RewardType.MYSTERY_BOX) {
-            if (Main.lostboxes) {
+            if (SkyWars.lostboxes) {
                 for (int i = 0; i < Integer.parseInt(this.value); i++) {
                     io.github.losteddev.boxes.api.box.Box box = io.github.losteddev.boxes.api.LostBoxesAPI.randomBox(7);
                     io.github.losteddev.boxes.database.Database.getInstance().getAccount(account.getUniqueId()).addBox(box);

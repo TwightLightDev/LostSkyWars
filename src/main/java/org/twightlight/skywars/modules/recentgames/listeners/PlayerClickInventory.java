@@ -4,8 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.twightlight.skywars.modules.recentgames.menu.RGMenu;
-import org.twightlight.skywars.modules.recentgames.menu.RGMenuHolder;
+import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
+import org.twightlight.skywars.modules.recentgames.menus.RGMenuHolder;
 
 public class PlayerClickInventory implements Listener {
     @EventHandler

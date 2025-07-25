@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -48,6 +48,6 @@ public class ExplosionEffect extends SkyWarsKillEffect {
                     return;
                 }
             }
-        }).runTaskTimer(Main.getInstance(), 0L, 0L);
+        }).runTaskTimer(SkyWars.getInstance(), 0L, 0L);
     }
 }

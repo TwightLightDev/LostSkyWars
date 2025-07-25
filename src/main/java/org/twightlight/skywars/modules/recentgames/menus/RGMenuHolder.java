@@ -1,4 +1,4 @@
-package org.twightlight.skywars.modules.recentgames.menu;
+package org.twightlight.skywars.modules.recentgames.menus;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;

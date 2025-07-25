@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.holograms.Hologram;
 import org.twightlight.skywars.holograms.HologramLine;
 import org.twightlight.skywars.holograms.entity.IArmorStand;
@@ -19,7 +19,7 @@ import java.util.List;
 public class NMS {
 
     private static NMSBridge BRIDGE;
-    public static final Logger LOGGER = Main.LOGGER.getModule("NMS");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("NMS");
 
     public static IArmorStand createArmorStand(Location location, String name, HologramLine line) {
         return BRIDGE.createArmorStand(location, name, line);

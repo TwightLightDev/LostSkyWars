@@ -3,7 +3,7 @@ package org.twightlight.skywars.nms;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.utils.Logger.Level;
 
 public enum Sound {
@@ -225,7 +225,7 @@ public enum Sound {
         }
 
         if (localSound == null) {
-            Main.LOGGER.log(Level.SEVERE, "SOUND \"" + name() + "\" is null!");
+            SkyWars.LOGGER.log(Level.SEVERE, "SOUND \"" + name() + "\" is null!");
         }
         return localSound;
     }

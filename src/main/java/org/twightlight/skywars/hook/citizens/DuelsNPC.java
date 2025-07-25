@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -136,7 +136,7 @@ public class DuelsNPC {
             public void run() {
                 npcs.forEach(DuelsNPC::update);
             }
-        }.runTaskTimer(Main.getInstance(), 20, 20);
+        }.runTaskTimer(SkyWars.getInstance(), 20, 20);
 
         LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " DuelsNPCs!");
     }

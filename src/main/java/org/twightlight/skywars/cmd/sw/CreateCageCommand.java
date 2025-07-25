@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
@@ -27,7 +27,7 @@ public class CreateCageCommand extends SubCommand implements Listener {
 
     public CreateCageCommand() {
         super("createcage");
-        Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, SkyWars.getInstance());
     }
 
     @Override

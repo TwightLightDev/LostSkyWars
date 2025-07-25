@@ -3,7 +3,7 @@ package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.killeffects;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.particles.ParticleEffect;
@@ -44,6 +44,6 @@ public class VolcanoEffect extends SkyWarsKillEffect {
                 ParticleEffect.SMOKE_NORMAL.display(0.6F, 0.2F, 0.6F, 0.01F, 8, this.location, location.getWorld().getPlayers());
                 ParticleEffect.SMOKE_LARGE.display(0.6F, 0.2F, 0.6F, 0.0075F, 3, this.location, location.getWorld().getPlayers());
             }
-        }).runTaskTimer(Main.getInstance(), 0L, 0L);
+        }).runTaskTimer(SkyWars.getInstance(), 0L, 0L);
     }
 }

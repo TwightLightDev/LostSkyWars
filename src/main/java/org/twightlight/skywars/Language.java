@@ -276,12 +276,16 @@ public class Language {
     public static String cosmetics$sprays$holograms = "§eClick!";
     public static List<String> recentgames$lore = Arrays.asList("&7Result: &a{result}", "&7Start Time: &a{startTime}",
             "&7Duration: &a{duration}", "", "&eClick to watch replay!");
+    public static String privategames$party$not_leader = "§cOnly the Party leader can find a match.";
+    public static String privategames$party$not_found = "§cYou must in a party in order to start private match.";
+    public static String privategames$toggle$on = "§aYou have turned on private match.";
+    public static String privategames$toggle$off = "§cYou have turned off private match.";
 
     public static Logger LOGGER;
     private static ConfigUtils CONFIG;
 
     public static void setupLanguage() {
-        LOGGER = Main.LOGGER.getModule("Language");
+        LOGGER = SkyWars.LOGGER.getModule("Language");
         CONFIG = ConfigUtils.getConfig("lang");
 
         boolean save = false;
@@ -395,14 +399,8 @@ public class Language {
 
         writer.write();
     }
-    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type) {
-        return getSkyWarsEventTimeline(type, 1);
-    }
 
-    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type, int multiplier) {
-        if (multiplier == 0) {
-            multiplier = 1;
-        }
+    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type) {
         Map<Integer, SkyWarsEvent> timeline = new TreeMap<>(Comparator.reverseOrder());
         int begin;
         int doom;
@@ -424,10 +422,10 @@ public class Language {
         }
 
         for (Integer integer : refills) {
-            timeline.putIfAbsent(integer * multiplier, SkyWarsEvent.Refill);
+            timeline.putIfAbsent(integer, SkyWarsEvent.Refill);
         }
-        timeline.put(begin * multiplier, SkyWarsEvent.Begin);
-        timeline.put(doom * multiplier, SkyWarsEvent.Doom);
+        timeline.put(begin, SkyWarsEvent.Begin);
+        timeline.put(doom, SkyWarsEvent.Doom);
         timeline.put(0, SkyWarsEvent.End);
         return timeline;
     }

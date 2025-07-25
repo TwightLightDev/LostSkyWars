@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -45,6 +45,6 @@ public class BurningShoesEffect extends SkyWarsKillEffect {
                     }
                 }
             }
-        }).runTaskTimer(Main.getInstance(), 1L, 1L);
+        }).runTaskTimer(SkyWars.getInstance(), 1L, 1L);
     }
 }

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.modules.privategames.menus;
+package org.twightlight.skywars.modules.recentgames.menus;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -3,7 +3,7 @@ package org.twightlight.skywars.leaderboards;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.leaderboards.objects.ArmorStandLB;
 import org.twightlight.skywars.leaderboards.objects.HologramLB;
@@ -48,7 +48,7 @@ public abstract class LeaderBoard {
     }
 
     private static List<LeaderBoard> leaderboards = new ArrayList<>();
-    public static final Logger LOGGER = Main.LOGGER.getModule("LeaderBoard");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("LeaderBoard");
 
     public static void setupLeaderBoards() {
         ConfigUtils cu = ConfigUtils.getConfig("leaderboards");
@@ -78,7 +78,7 @@ public abstract class LeaderBoard {
                 Database.getInstance().listAccounts().forEach(Account::save);
                 leaderboards.forEach(LeaderBoard::update);
             }
-        }.runTaskTimer(Main.getInstance(), 0, Language.options$leaderboard$update_time_minutes * 1200);
+        }.runTaskTimer(SkyWars.getInstance(), 0, Language.options$leaderboard$update_time_minutes * 1200);
     }
 
     public static void add(LeaderBoard board) {

@@ -8,7 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.holograms.Hologram;
 import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.hook.CitizensHook;
@@ -129,7 +129,7 @@ public class StatsNPC {
             public void run() {
                 npcs.forEach(StatsNPC::update);
             }
-        }.runTaskTimer(Main.getInstance(), 0, 20);
+        }.runTaskTimer(SkyWars.getInstance(), 0, 20);
         LOGGER.log(Level.INFO, "Loaded " + npcs.size() + " StatsNPCs!");
     }
 

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsCube;
@@ -160,9 +160,9 @@ public class CreateCommand extends SubCommand {
             config.set("balloons", new ArrayList<>());
             world.save();
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> player.sendMessage("§5[LostSkyWars] §aCreating backup of world..."), 20);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> player.sendMessage("§5[LostSkyWars] §aCreating backup of world..."), 20);
 
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                 File source = new File(Bukkit.getWorldContainer(), world.getName());
                 File zipDest = new File("plugins/LostSkyWars/maps/" + world.getName() + ".zip");
                 try {

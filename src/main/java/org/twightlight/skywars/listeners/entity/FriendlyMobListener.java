@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSpawnEntityEvent;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.database.Database;
@@ -57,8 +57,8 @@ public class FriendlyMobListener implements Listener {
                 event.getEntity().setCustomName(ChatColor.translateAlternateColorCodes( '&', "&c" + player.getName() + " " + event.getEntity().getName()));
                 friendlyMonsters.computeIfAbsent(player, k -> new ArrayList<>());
                 friendlyMonsters.get(player).add((Monster) event.getEntity());
-                event.getEntity().setMetadata("owner", new FixedMetadataValue(Main.getInstance(), player.getUniqueId().toString()));
-                SkyWarsPlayerSpawnEntityEvent e = new SkyWarsPlayerSpawnEntityEvent(player, event.getEntity());
+                event.getEntity().setMetadata("owner", new FixedMetadataValue(SkyWars.getInstance(), player.getUniqueId().toString()));
+                SkyWarsPlayerSpawnEntityEvent e = new SkyWarsPlayerSpawnEntityEvent(player, event.getEntity(), Database.getInstance().getAccount(player.getUniqueId()).getServer());
                 Bukkit.getPluginManager().callEvent(e);
                 break;
             }

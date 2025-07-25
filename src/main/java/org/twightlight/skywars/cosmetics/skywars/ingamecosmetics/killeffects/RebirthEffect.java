@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.particles.ParticleEffect;
@@ -43,6 +43,6 @@ public class RebirthEffect extends SkyWarsKillEffect {
                     cancel();
                 }
             }
-        }).runTaskTimer(Main.getInstance(), 2L, 1L);
+        }).runTaskTimer(SkyWars.getInstance(), 2L, 1L);
     }
 }

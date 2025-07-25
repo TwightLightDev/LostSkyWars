@@ -3,7 +3,7 @@ package org.twightlight.skywars.cosmetics.skywars.kits;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
@@ -43,7 +43,7 @@ public class NormalSkyWarsKit extends SkyWarsKit {
         return content;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("NormalKits");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("NormalKits");
 
     public static void setupKits() {
         ConfigUtils cu = ConfigUtils.getConfig("normalkits", "plugins/LostSkyWars/kits");

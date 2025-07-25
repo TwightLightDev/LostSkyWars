@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -67,7 +67,7 @@ public class SoulWellMenu extends PlayerMenu {
                             } else if (menu.equalsIgnoreCase("settings")) {
                                 new SoulWellSettingsMenu(player, back);
                             } else if (menu.equalsIgnoreCase("closeinv")) {
-                                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> player.closeInventory());
+                                Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> player.closeInventory());
                             }
                         } else {
                             player.closeInventory();

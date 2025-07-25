@@ -36,7 +36,11 @@ public class SQLite {
     }
 
     public Connection getConnection() {
-        File dataFile = new File(plugin.getDataFolder().getPath() + "/modules", dbname + ".db");
+        File modules = new File(plugin.getDataFolder().getPath() + "/modules/recentgames");
+        if (!modules.exists()) {
+            modules.mkdirs();
+        }
+        File dataFile = new File(plugin.getDataFolder().getPath() + "/modules/recentgames", dbname + ".db");
         if (!dataFile.exists())
             try {
                 dataFile.createNewFile();

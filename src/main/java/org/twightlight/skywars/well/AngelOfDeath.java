@@ -7,7 +7,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.util.EulerAngle;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -202,7 +202,7 @@ public class AngelOfDeath {
         return toSquare * toSquare;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Angels");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Angels");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
 
     private static List<AngelOfDeath> npcs = new ArrayList<>();

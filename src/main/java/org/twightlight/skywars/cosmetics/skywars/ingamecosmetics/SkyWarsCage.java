@@ -12,7 +12,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -108,7 +108,7 @@ public class SkyWarsCage extends Cosmetic {
         return cloned;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Cages");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Cages");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("cages");
 
     public static void setupCages() {

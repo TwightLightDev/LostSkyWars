@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.citizens.*;
 import org.twightlight.skywars.menu.lobby.DeliveryManMenu;
@@ -25,7 +25,7 @@ import org.twightlight.skywars.utils.Logger.Level;
 
 public class CitizensHook {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("CitizensHook");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("CitizensHook");
 
     private static NPCRegistry registry;
 
@@ -39,7 +39,7 @@ public class CitizensHook {
         DuelsNPC.setupDuelsNPCs();
         DeliveryNPC.setupDeliveryNPCs();
         ShopkeeperNPC.setupShopkeeperNPCs();
-        if (Main.protocollib) {
+        if (SkyWars.protocollib) {
             StatsNPC.setupStatsNPCs();
         }
 
@@ -93,7 +93,7 @@ public class CitizensHook {
                     new StatsNPCMenu(player);
                 }
             }
-        }, Main.getInstance());
+        }, SkyWars.getInstance());
     }
 
     public static void destroyCitizens() {

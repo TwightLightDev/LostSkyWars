@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -56,8 +56,8 @@ public class SadFaceBannerEffect extends SkyWarsKillEffect {
             public void run() {
                 block.setType(Material.AIR);
             }
-        }).runTaskLater(Main.getInstance(), 300L);
-        block.setMetadata("cosmetic.block", (MetadataValue)new FixedMetadataValue(Main.getInstance(), Boolean.valueOf(true)));
+        }).runTaskLater(SkyWars.getInstance(), 300L);
+        block.setMetadata("cosmetic.block", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), Boolean.valueOf(true)));
     }
 
     private Location getBlockUnder(Location location) {

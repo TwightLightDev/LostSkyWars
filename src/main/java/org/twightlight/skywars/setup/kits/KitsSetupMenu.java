@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.setup.ChatSession;
 import org.twightlight.skywars.setup.ContentsMenu;
@@ -75,7 +75,7 @@ public class KitsSetupMenu extends Menu {
                     sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!"}), (input) -> {
                         if (input.equals("cancel")) {
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -85,7 +85,7 @@ public class KitsSetupMenu extends Menu {
                         } else if (!StringCheckerUtils.isInteger(input)) {
                             p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid Value! Cancel the action!"));
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -94,7 +94,7 @@ public class KitsSetupMenu extends Menu {
                             return;
                         }
                         sessions.end();
-                        Bukkit.getScheduler().runTask(Main.getInstance(),
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                 () -> {
                                     config.setNotSave(path + ".id", Integer.valueOf(input));
                                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully set value to: &e" + input));
@@ -111,7 +111,7 @@ public class KitsSetupMenu extends Menu {
                     sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!"}), (input) -> {
                         if (input.equals("cancel")) {
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -120,7 +120,7 @@ public class KitsSetupMenu extends Menu {
                             return;
                         }
                         sessions.end();
-                        Bukkit.getScheduler().runTask(Main.getInstance(),
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                 () -> {
                                     config.setNotSave(path + ".name", input);
                                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully set value to: &e" + input));
@@ -137,7 +137,7 @@ public class KitsSetupMenu extends Menu {
                     sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!"}), (input) -> {
                         if (input.equals("cancel")) {
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -147,7 +147,7 @@ public class KitsSetupMenu extends Menu {
                         } else if (!StringCheckerUtils.isInteger(input)) {
                             p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid Value! Cancel the action!"));
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -156,7 +156,7 @@ public class KitsSetupMenu extends Menu {
                             return;
                         }
                         sessions.end();
-                        Bukkit.getScheduler().runTask(Main.getInstance(),
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                 () -> {
                                     config.setNotSave(path + ".price", Integer.valueOf(input));
                                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully set value to: &e" + input));
@@ -194,7 +194,7 @@ public class KitsSetupMenu extends Menu {
                     sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!"}), (input) -> {
                         if (input.equals("cancel")) {
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         setItems(holder);
                                         p.openInventory(holder.getInventory());
@@ -203,7 +203,7 @@ public class KitsSetupMenu extends Menu {
                             return;
                         }
                         sessions.end();
-                        Bukkit.getScheduler().runTask(Main.getInstance(),
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                 () -> {
                                     config.setNotSave(path + ".permission", input);
                                     p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully set value to: &e" + input));
@@ -293,7 +293,7 @@ public class KitsSetupMenu extends Menu {
                         sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!", "&aThe format should be '<Potion> : <Duration> : <Amplifier> : <Ambient> : <hasParticle>'"}), (input) -> {
                             if (input.equals("cancel")) {
                                 sessions.end();
-                                Bukkit.getScheduler().runTask(Main.getInstance(),
+                                Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                         () -> {
                                             setItems(holder);
                                             p.openInventory(holder.getInventory());
@@ -303,7 +303,7 @@ public class KitsSetupMenu extends Menu {
                             } else if (BukkitUtils.deserializePotionEffect(input) == null) {
                                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid Value! Cancel the action!"));
                                 sessions.end();
-                                Bukkit.getScheduler().runTask(Main.getInstance(),
+                                Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                         () -> {
                                             setItems(holder);
                                             p.openInventory(holder.getInventory());
@@ -312,7 +312,7 @@ public class KitsSetupMenu extends Menu {
                                 return;
                             }
                             sessions.end();
-                            Bukkit.getScheduler().runTask(Main.getInstance(),
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                     () -> {
                                         List<String> lore1 = config.getStringList(path + ".potion-effects");
                                         lore1.add(input);
@@ -323,7 +323,7 @@ public class KitsSetupMenu extends Menu {
                                     });
                         });
                     } else if (e.isRightClick()) {
-                        Bukkit.getScheduler().runTask(Main.getInstance(),
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                 () -> {
                                     List<String> lore1 = config.getStringList(path + ".potion-effects");
                                     lore1.remove(lore1.size()-1);

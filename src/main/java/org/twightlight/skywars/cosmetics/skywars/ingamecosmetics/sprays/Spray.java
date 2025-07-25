@@ -14,7 +14,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsSpray;
 import org.twightlight.skywars.utils.RenderUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -55,7 +55,7 @@ public class Spray {
         hologram.setVisible(false);
         hologram.setGravity(false);
         hologram.setCustomName(StringUtils.formatColors(Language.cosmetics$sprays$holograms));
-        hologram.setMetadata("HOLO_ITEM_FRAME", (MetadataValue)new FixedMetadataValue(Main.getInstance(), ""));
+        hologram.setMetadata("HOLO_ITEM_FRAME", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), ""));
         hologram.setCustomNameVisible(true);
         hologram.setMarker(true);
         hologram.setSmall(true);
@@ -85,7 +85,7 @@ public class Spray {
         destroyHolo();
         usable = false;
 
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             usable = true;
         }, 60);
     }

@@ -2,7 +2,7 @@ package org.twightlight.skywars.api;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.level.Level;
 import org.twightlight.skywars.player.Account;
@@ -28,7 +28,7 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return Main.getInstance().getDescription().getVersion();
+        return SkyWars.getInstance().getDescription().getVersion();
     }
 
     @Override

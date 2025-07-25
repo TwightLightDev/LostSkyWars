@@ -2,11 +2,10 @@ package org.twightlight.skywars.world;
 
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.game.SkyWarsChestRefillEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsDoomEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
@@ -16,7 +15,6 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
@@ -28,7 +26,6 @@ import org.twightlight.skywars.ui.SkyWarsType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class WorldTimer {
 
@@ -105,7 +102,7 @@ public class WorldTimer {
                 server.updateScoreboards();
                 server.setTimer(server.getTimer() - 1);
             }
-        }.runTaskTimer(Main.getInstance(), 0, 20);
+        }.runTaskTimer(SkyWars.getInstance(), 0, 20);
     }
 
     public void switchTask(Player... winners) {
@@ -153,7 +150,7 @@ public class WorldTimer {
                     server.updateScoreboards();
                     server.setTimer(server.getTimer() - 1);
                 }
-            }.runTaskTimer(Main.getInstance(), 0, 20);
+            }.runTaskTimer(SkyWars.getInstance(), 0, 20);
         } else if (server.getState() == SkyWarsState.INGAME) {
             for (Entity entity : server.getWorld().getEntities()) {
                 if (entity instanceof Player || entity instanceof ItemFrame) {
@@ -183,7 +180,7 @@ public class WorldTimer {
                                     NMS.sendTitle(player, Language.game$player$ingame$titles$refill$up, Language.game$player$ingame$titles$refill$bottom, 10, 60, 10);
                                 });
                                 Bukkit.getPluginManager().callEvent(new SkyWarsChestRefillEvent(server));
-                                if (server.getNextEventTime() == 0) {
+                                if (server.getEventTime(true) == 0) {
                                     server.chests.forEach(SkyWarsChest::destroy);
                                 }
                             } else if (server.getTimeline().get(eventTime) == SkyWarsEvent.Doom) {
@@ -214,7 +211,7 @@ public class WorldTimer {
                                             }
                                         }
                                     }
-                                }.runTaskTimer(Main.getInstance(), 0L, 1L);
+                                }.runTaskTimer(SkyWars.getInstance(), 0L, 1L);
 
 
                                 for (Player p : server.getPlayers(false)) {
@@ -234,7 +231,7 @@ public class WorldTimer {
                     server.chests.forEach(SkyWarsChest::update);
                     server.setTimer(server.getTimer() - 1);
                 }
-            }.runTaskTimer(Main.getInstance(), 0, 20);
+            }.runTaskTimer(SkyWars.getInstance(), 0, 20);
         } else if (server.getState() == SkyWarsState.ENDED) {
             server.setTimer(10);
             for (Player player : winners) {
@@ -250,7 +247,7 @@ public class WorldTimer {
                 @Override
                 public void run() {
                     if (server.getTimer() <= 0) {
-                        for (Player player : server.getWorld().getPlayers()) {
+                        for (Player player : server.getPlayers(true)) {
                             Account account = Database.getInstance().getAccount(player.getUniqueId());
                             if (account == null) {
                                 continue;
@@ -269,14 +266,14 @@ public class WorldTimer {
                         if (Core.MODE == CoreMode.MULTI_ARENA) {
                             server.reset();
                         } else {
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart"), 40);
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart"), 40);
                         }
                         return;
                     }
 
                     server.setTimer(server.getTimer() - 1);
                 }
-            }.runTaskTimer(Main.getInstance(), 0, 20);
+            }.runTaskTimer(SkyWars.getInstance(), 0, 20);
         }
     }
 }

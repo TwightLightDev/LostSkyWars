@@ -15,6 +15,8 @@ import org.twightlight.skywars.hook.*;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.ConfigMenu;
+import org.twightlight.skywars.modules.friends.Friends;
+import org.twightlight.skywars.modules.friends.friend.Friend;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.rank.Rank;
@@ -33,15 +35,15 @@ import java.io.File;
 
 import static org.twightlight.skywars.bungee.Core.MODE;
 
-public class Main extends JavaPlugin {
+public class SkyWars extends JavaPlugin {
 
-    private static Main instance;
+    private static SkyWars instance;
     private static boolean validInit;
     public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, slimeworldmanager = true, protocollib = true;
     public static Object economy;
     public static final Logger LOGGER = new Logger();
 
-    public Main() {
+    public SkyWars() {
         instance = this;
     }
 
@@ -91,15 +93,16 @@ public class Main extends JavaPlugin {
         Rank.setupRanks();
         org.twightlight.skywars.level.Level.setupLevels();
         Ranked.setupRanked();
-        PrivateGames.setupPrivateGames();
-        RecentGames.setupRecentGames();
+        new PrivateGames();
+        new RecentGames();
+        new Friends();
         if (MODE != CoreMode.LOBBY) {
             ChestType.setupTypes();
         }
         ConfigMenu.setupMenus();
         Language.setupLanguage();
 
-        Holograms.setup(Main.getInstance());
+        Holograms.setup(SkyWars.getInstance());
         if (MODE != CoreMode.LOBBY) {
             WorldServer.setupServers();
         }
@@ -263,7 +266,7 @@ public class Main extends JavaPlugin {
         }
     }
 
-    public static Main getInstance() {
+    public static SkyWars getInstance() {
         return instance;
     }
 }

@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -106,7 +106,7 @@ public class SkyWarsSpray extends Cosmetic {
         return coins;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Sprays");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Sprays");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("sprays");
 
     public static void setupSprays() {
@@ -131,7 +131,7 @@ public class SkyWarsSpray extends Cosmetic {
             String fileStr = sec.getString("file", null);
             if (fileStr != null) {
                 try {
-                    File imageFile = new File(Main.getInstance().getDataFolder().getPath() + "/sprays/" + fileStr);
+                    File imageFile = new File(SkyWars.getInstance().getDataFolder().getPath() + "/sprays/" + fileStr);
                     img = RenderUtils.loadImage(imageFile);
                 } catch (IOException e) {
                     throw new RuntimeException("§cFailed to load image: " + e.getMessage());

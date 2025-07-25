@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.json.simple.JSONArray;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cmd.sw.SetLobbyCommand;
@@ -131,7 +131,7 @@ public class Account {
     }
 
     public void addMysteryDusts(int dusts) {
-        if (Main.lostboxes) {
+        if (SkyWars.lostboxes) {
             io.github.losteddev.boxes.api.LostBoxesAPI.addMysteryDusts(this.getPlayer(), dusts);
         }
     }
@@ -314,7 +314,7 @@ public class Account {
                 Collections.reverse(clone);
                 for (int i = 0; i < clone.size(); i++) {
                     String line = clone.get(i);
-                    if (Main.placeholderapi) {
+                    if (SkyWars.placeholderapi) {
                         line = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(getPlayer(), line);
                     }
 
@@ -386,12 +386,12 @@ public class Account {
     }
 
     public void addStat(String key, int amount) {
-        if (Main.vault && Main.economy != null && key.equalsIgnoreCase("coins")) {
-            ((net.milkbowl.vault.economy.Economy) Main.economy).depositPlayer(this.getPlayer(), amount);
+        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
+            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).depositPlayer(this.getPlayer(), amount);
             return;
         }
 
-        if (Main.lostboxes && Rank.getRank(getPlayer()).receiveBox() && (key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
+        if (SkyWars.lostboxes && Rank.getRank(getPlayer()).receiveBox() && (key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
             io.github.losteddev.boxes.player.Account bc = io.github.losteddev.boxes.database.Database.getInstance().getAccount(id);
             if (bc != null) {
                 io.github.losteddev.boxes.api.box.Box box = io.github.losteddev.boxes.api.LostBoxesAPI.randomBox(7);
@@ -404,8 +404,8 @@ public class Account {
     }
 
     public void removeStat(String key, int amount) {
-        if (Main.vault && Main.economy != null && key.equalsIgnoreCase("coins")) {
-            ((net.milkbowl.vault.economy.Economy) Main.economy).withdrawPlayer(this.getPlayer(), amount);
+        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
+            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).withdrawPlayer(this.getPlayer(), amount);
             return;
         }
 
@@ -421,8 +421,8 @@ public class Account {
     }
 
     public int getInt(String key) {
-        if (Main.vault && Main.economy != null && key.equalsIgnoreCase("coins")) {
-            return (int) ((net.milkbowl.vault.economy.Economy) Main.economy).getBalance(this.getPlayer());
+        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
+            return (int) ((net.milkbowl.vault.economy.Economy) SkyWars.economy).getBalance(this.getPlayer());
         }
 
         return skywars.get(key).getAsInt();

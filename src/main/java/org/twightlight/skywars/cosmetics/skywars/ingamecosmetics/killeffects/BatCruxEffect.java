@@ -6,7 +6,7 @@ import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -41,14 +41,14 @@ public class BatCruxEffect extends SkyWarsKillEffect {
             bat.setCustomName(StringUtils.formatColors("&7" + victim.getName() + "'s horcrux #" + number));
             bats.add(bat);
         }
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             if (!bats.isEmpty())
                 for (Bat bat : bats) {
                     Location batLocation = bat.getLocation().clone();
                     ParticleType.of("SMOKE_LARGE").spawn(batLocation.getWorld(), batLocation, 15, 3, 3, 3, 1);
                 }
         }, 5L);
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             for (Bat bat : bats)
                 bat.remove();
             bats.clear();

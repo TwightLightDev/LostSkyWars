@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
@@ -35,7 +35,7 @@ public class ArrowRecovery extends SkyWarsPerk {
 
         this.percentage = CONFIG.getInt("arrowrecovery.percentage");
 
-        this.register(Main.getInstance());
+        this.register(SkyWars.getInstance());
     }
 
     @EventHandler

@@ -5,7 +5,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
@@ -15,7 +15,7 @@ import java.io.File;
 @SuppressWarnings("deprecation")
 public class LoadCommand extends SubCommand {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("LoadCommand");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("LoadCommand");
 
     public LoadCommand() {
         super("load");
@@ -41,7 +41,7 @@ public class LoadCommand extends SubCommand {
 
         try {
             sender.sendMessage("§5[LostSkyWars] §aLoading...");
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                 WorldCreator wc = WorldCreator.name(map.getName());
                 World world = wc.createWorld();
                 world.setTime(0l);

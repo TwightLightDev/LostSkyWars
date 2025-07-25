@@ -9,13 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.recentgames.GameData;
 import org.twightlight.skywars.modules.recentgames.GameResult;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.modules.recentgames.User;
-import org.twightlight.skywars.modules.recentgames.menu.Item;
-import org.twightlight.skywars.modules.recentgames.menu.RGMenu;
+import org.twightlight.skywars.modules.recentgames.menus.Item;
+import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.Logger.Level;
 
@@ -31,7 +31,7 @@ public class RecentGamesCommand extends Command {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
+            SkyWars.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
     }
 

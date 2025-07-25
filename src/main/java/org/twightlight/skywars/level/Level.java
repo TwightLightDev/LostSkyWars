@@ -1,7 +1,7 @@
 package org.twightlight.skywars.level;
 
 import com.google.common.collect.ImmutableList;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -77,7 +77,7 @@ public class Level {
         return levels.stream().filter(level -> level.getLevel() == this.level + 1).findFirst().orElse(null);
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Leveling");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Leveling");
     private static List<Level> levels = new ArrayList<>();
 
     public static void setupLevels() {

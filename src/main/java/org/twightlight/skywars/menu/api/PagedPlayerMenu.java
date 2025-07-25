@@ -3,7 +3,7 @@ package org.twightlight.skywars.menu.api;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 
 public class PagedPlayerMenu extends PagedMenu implements Listener {
 
@@ -23,7 +23,7 @@ public class PagedPlayerMenu extends PagedMenu implements Listener {
     }
 
     public void register() {
-        Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, SkyWars.getInstance());
     }
 
     public void openPrevious() {

@@ -1,7 +1,7 @@
 package org.twightlight.skywars.menu;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger;
@@ -72,7 +72,7 @@ public class ConfigMenu {
         return ConfigUtils.getConfig(name, "plugins/LostSkyWars/menus");
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Menus");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Menus");
     private static final List<ConfigMenu> menus = new ArrayList<>();
 
     public static void setupMenus() {

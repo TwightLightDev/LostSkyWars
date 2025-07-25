@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 
 public abstract class UpdatablePlayerMenu extends UpdatableMenu implements Listener {
 
@@ -26,13 +26,13 @@ public abstract class UpdatablePlayerMenu extends UpdatableMenu implements Liste
     }
 
     public void register(long updateEveryTicks) {
-        Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, SkyWars.getInstance());
         this.task = new BukkitRunnable() {
             @Override
             public void run() {
                 update();
             }
-        }.runTaskTimer(Main.getInstance(), 0, updateEveryTicks);
+        }.runTaskTimer(SkyWars.getInstance(), 0, updateEveryTicks);
     }
 
     public void cancel() {

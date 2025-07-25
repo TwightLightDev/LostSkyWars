@@ -1,6 +1,6 @@
 package org.twightlight.skywars.bungee;
 
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.utils.Logger;
 
 import java.lang.reflect.Array;
@@ -17,7 +17,7 @@ public class Core {
             Class.forName("net.md_5.bungee.api.plugin.Plugin");
             return Bungee.LOGGER;
         } catch (Exception ex) {
-            return Main.LOGGER;
+            return SkyWars.LOGGER;
         }
     }
 
@@ -135,7 +135,7 @@ public class Core {
                 };
             } catch (Exception ex) {
                 try {
-                    Object main = Class.forName("org.twightlight.skywars.Main").getDeclaredMethod("getInstance").invoke(null);
+                    Object main = Class.forName("org.twightlight.skywars.SkyWars").getDeclaredMethod("getInstance").invoke(null);
                     Object fileConfiguration = Class.forName("org.bukkit.plugin.java.JavaPlugin").getDeclaredMethod("getConfig").invoke(main);
                     Method get = Class.forName("org.bukkit.configuration.ConfigurationSection").getDeclaredMethod("get", String.class);
                     DATABASE = new CoreDatabase() {

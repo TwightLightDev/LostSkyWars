@@ -5,7 +5,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -38,6 +38,6 @@ public class RektEffect extends SkyWarsKillEffect {
             public void run() {
                 stand.remove();
             }
-        }).runTaskLater(Main.getInstance(), 200L);
+        }).runTaskLater(SkyWars.getInstance(), 200L);
     }
 }

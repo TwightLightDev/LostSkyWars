@@ -1,15 +1,11 @@
 package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.killeffects.guild;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.holograms.Hologram;
@@ -17,10 +13,6 @@ import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CandleEffect extends SkyWarsKillEffect {
 
@@ -56,7 +48,7 @@ public class CandleEffect extends SkyWarsKillEffect {
                 hologram1.despawn();
                 hologram.despawn();
             }
-        }).runTaskLater(Main.getInstance(), 100L);
+        }).runTaskLater(SkyWars.getInstance(), 100L);
     }
 
     private Location getBlockUnder(Location location) {

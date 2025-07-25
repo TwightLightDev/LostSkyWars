@@ -3,7 +3,7 @@ package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.killeffects.ch
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.particles.ParticleEffect;
@@ -63,6 +63,6 @@ public class ChristmasHatEffect extends SkyWarsKillEffect {
                 for (i = 0; i < 7; i++)
                     ParticleEffect.REDSTONE.display((ParticleEffect.ParticleColor)new ParticleEffect.OrdinaryColor(255, 255, 255), loc.clone().add((Math.random() - 0.5D) / 10.0D, 0.6D, (Math.random() - 0.5D) / 10.0D), 120.0D);
             }
-        }).runTaskTimer(Main.getInstance(), 0L, 1L);
+        }).runTaskTimer(SkyWars.getInstance(), 0L, 1L);
     }
 }

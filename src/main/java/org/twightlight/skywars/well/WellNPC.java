@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.holograms.Hologram;
 import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.nms.NMS;
@@ -71,7 +71,7 @@ public class WellNPC {
         return hologram;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("SoulWell");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("SoulWell");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
 
     private static List<WellNPC> npcs = new ArrayList<>();

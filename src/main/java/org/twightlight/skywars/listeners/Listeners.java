@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.listeners.entity.EntityListener;
@@ -18,10 +18,10 @@ import org.twightlight.skywars.utils.Logger;
 
 public class Listeners implements Listener {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Listeners");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Listeners");
 
     public static void setupListeners() {
-        Plugin plugin = Main.getInstance();
+        Plugin plugin = SkyWars.getInstance();
         PluginManager pm = Bukkit.getPluginManager();
 
         pm.registerEvents(new EntityListener(), plugin);

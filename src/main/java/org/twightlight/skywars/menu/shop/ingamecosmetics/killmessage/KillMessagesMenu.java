@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -69,14 +69,14 @@ public class KillMessagesMenu extends PagedPlayerMenu {
                             sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!"}), (input) -> {
                                 if (input.equals("cancel")) {
                                     sessions.end();
-                                    Bukkit.getScheduler().runTask(Main.getInstance(),
+                                    Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                             () -> {
                                                 new KillMessagesMenu(player, order, filter, searchQuery);
                                             });
                                     return;
                                 }
                                 sessions.end();
-                                Bukkit.getScheduler().runTask(Main.getInstance(),
+                                Bukkit.getScheduler().runTask(SkyWars.getInstance(),
                                         () -> {
                                             new KillMessagesMenu(player, order, filter, input);
                                         });

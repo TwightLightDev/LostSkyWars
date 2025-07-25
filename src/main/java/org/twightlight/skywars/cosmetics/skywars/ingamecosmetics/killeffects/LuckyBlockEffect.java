@@ -12,7 +12,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleData;
 import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -36,7 +36,7 @@ public class LuckyBlockEffect extends SkyWarsKillEffect {
 
     public void execute(Player killer, Player victim, Location location) {
         final ArmorStand stand = (ArmorStand)victim.getLocation().getWorld().spawn(victim.getLocation().subtract(0.0D, 1.54D, 0.0D), ArmorStand.class);
-        stand.setMetadata("cosmetic.entity", (MetadataValue)new FixedMetadataValue(Main.getInstance(), Boolean.valueOf(true)));
+        stand.setMetadata("cosmetic.entity", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), Boolean.valueOf(true)));
         stand.setMarker(true);
         ItemStack[] head = { (new ItemBuilder(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal())).setSkullOwnerNMS("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGI5MmNiNDMzMzNhYTYyMWM3MGVlZjRlYmYyOTliYTQxMmI0NDZmZTEyZTM0MWNjYzU4MmYzMTkyMTg5In19fQ==").toItemStack() };
         stand.setHelmet(head[0]);
@@ -72,6 +72,6 @@ public class LuckyBlockEffect extends SkyWarsKillEffect {
                     stand.getWorld().playSound(stand.getEyeLocation(), Sound.NOTE_PLING, 0.6F, this.pitch);
                 this.pitch = (float)(this.pitch + 0.05D);
             }
-        }).runTaskTimer(Main.getInstance(),0L, 1L);
+        }).runTaskTimer(SkyWars.getInstance(),0L, 1L);
     }
 }

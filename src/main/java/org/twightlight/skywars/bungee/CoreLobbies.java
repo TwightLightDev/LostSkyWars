@@ -5,7 +5,7 @@ import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
@@ -42,8 +42,8 @@ CoreLobbies {
         if (account != null) {
             account.save();
         }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
-            player.sendPluginMessage(Main.getInstance(), "LostSWAPI", out.toByteArray());
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
+            player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
         }, 15);
     }
 
@@ -55,7 +55,7 @@ CoreLobbies {
             out.writeUTF("Count");
             out.writeUTF(serverType);
 
-            faker.sendPluginMessage(Main.getInstance(), "LostSWAPI", out.toByteArray());
+            faker.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
         }
     }
 
@@ -70,8 +70,8 @@ CoreLobbies {
         if (account != null) {
             account.save();
         }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
-            player.sendPluginMessage(Main.getInstance(), "LostSWAPI", out.toByteArray());
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
+            player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
         }, 15);
     }
 
@@ -83,12 +83,12 @@ CoreLobbies {
             out.writeUTF("MapSelector");
             out.writeUTF(serverType);
 
-            faker.sendPluginMessage(Main.getInstance(), "LostSWAPI", out.toByteArray());
+            faker.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
         }
     }
 
     public static void setupLobbies() {
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(Main.getInstance(), "LostSWAPI");
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(SkyWars.getInstance(), "LostSWAPI");
 
         new BukkitRunnable() {
             @Override
@@ -105,6 +105,6 @@ CoreLobbies {
                     }
                 }
             }
-        }.runTaskTimer(Main.getInstance(), 0, 40);
+        }.runTaskTimer(SkyWars.getInstance(), 0, 40);
     }
 }

@@ -3,7 +3,7 @@ package org.twightlight.skywars.world;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class WorldRegeneration {
     private static final List<WorldServer<?>> queue = new ArrayList<>();
 
     public static void rollBack(WorldServer<?> server) {
-        if (queue.contains(server) && server.isPrivate()) return;
+        if (queue.contains(server)) return;
 
         queue.add(server);
 
@@ -27,13 +27,18 @@ public class WorldRegeneration {
                 @Override
                 public void run() {
                     if (rollbacking != null) {
-                        rollbacking.setState(SkyWarsState.ROLLBACKING);
-                        rollbacking.getConfig().reload();
-                        rollbacking.setTimer(Language.game$countdown$start + 1);
-                        rollbacking.getTask().reset();
-                        rollbacking.setState(SkyWarsState.WAITING);
-                        rollbacking = null;
-                        return;
+                        if (!server.isPrivate()) {
+                            rollbacking.setState(SkyWarsState.ROLLBACKING);
+                            rollbacking.getConfig().reload();
+                            rollbacking.setTimer(Language.game$countdown$start + 1);
+                            rollbacking.getTask().reset();
+                            rollbacking.setState(SkyWarsState.WAITING);
+                            rollbacking = null;
+                            return;
+                        } else {
+                            WorldServer.removeArena(server);
+
+                        }
                     }
 
                     if (!queue.isEmpty()) {
@@ -43,7 +48,7 @@ public class WorldRegeneration {
                         task = null;
                     }
                 }
-            }.runTaskTimer(Main.getInstance(), 0, 1);
+            }.runTaskTimer(SkyWars.getInstance(), 0, 1);
         }
     }
 

@@ -2,14 +2,14 @@ package org.twightlight.skywars.hook;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.protocollib.ProtocolListener;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
 
 public class ProtocolLibHook {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("ProtocolLibHook");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("ProtocolLibHook");
 
     private static final ProtocolListener LISTENER = new ProtocolListener();
 

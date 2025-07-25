@@ -3,7 +3,7 @@ package org.twightlight.skywars.world;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.ui.SkyWarsCube;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -38,7 +38,11 @@ public class WorldConfig {
 
     public WorldConfig(String yaml, boolean isPrivate) {
         this.yaml = yaml;
-        worldName = yaml + "_" + System.nanoTime() + "_temp";
+        if (!isPrivate) {
+            worldName = yaml + "_" + System.nanoTime() + "_temp";
+        } else {
+            worldName = yaml;
+        }
         this.spawns = new ArrayList<>();
         this.chests = new ArrayList<>();
         this.balloons = new ArrayList<>();
@@ -110,14 +114,14 @@ public class WorldConfig {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                         Iterator<Block> iterator = WorldConfig.this.waitingCube.iterator();
                         while (iterator.hasNext()) {
                             iterator.next().setType(Material.AIR);
                         }
                     });
                 }
-            }.runTaskAsynchronously(Main.getInstance());
+            }.runTaskAsynchronously(SkyWars.getInstance());
         }
     }
 

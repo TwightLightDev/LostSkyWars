@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -106,7 +106,7 @@ public class SkyWarsBalloon extends Cosmetic {
         return coins;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Ballons");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Ballons");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("balloons");
 
     public static void setupBallons() {
@@ -123,7 +123,7 @@ public class SkyWarsBalloon extends Cosmetic {
 
             SkyWarsBalloon balloon = new SkyWarsBalloon(id, name, permission, icon, rarity, buyable, price, textures);
             if (!balloon.isValid()) {
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> LOGGER.log(Level.WARNING, "Invalid FrameList on Balloon \"" + key + "\""));
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> LOGGER.log(Level.WARNING, "Invalid FrameList on Balloon \"" + key + "\""));
                 continue;
             }
 

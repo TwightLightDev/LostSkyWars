@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.libs.xseries.XSound;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -63,6 +63,6 @@ public class SquidMissileEffect extends SkyWarsKillEffect {
                     cancel();
                 }
             }
-        }).runTaskTimer(Main.getInstance(), 4L, 1L);
+        }).runTaskTimer(SkyWars.getInstance(), 4L, 1L);
     }
 }

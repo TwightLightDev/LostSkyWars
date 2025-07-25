@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.game.SkyWarsGameEndEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
@@ -227,7 +227,7 @@ public class SoloRankedServer extends WorldServer<Player> {
         }
 
         final Player killerFinal = killer;
-        Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
             player.teleport(returns);
             account.refreshPlayer();
             NMS.sendTitle(player, killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$up_killed) : Language.game$player$ingame$titles$die$up,
@@ -296,7 +296,7 @@ public class SoloRankedServer extends WorldServer<Player> {
         }
 
         if (skipParty.length == 0) {
-            if (Main.lostparties) {
+            if (SkyWars.lostparties) {
                 io.github.losteddev.parties.api.Party party = io.github.losteddev.parties.api.Party.getPartyByMember(player);
                 if (party != null) {
                     if (!party.getOwnerName().equalsIgnoreCase(player.getName())) {
@@ -308,7 +308,7 @@ public class SoloRankedServer extends WorldServer<Player> {
                         return;
                     }
 
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> party.getPlayers(false).forEach(member -> {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> party.getPlayers(false).forEach(member -> {
                         Account accounts = Database.getInstance().getAccount(member.getUniqueId());
                         if (accounts != null) {
                             connect(accounts, "");
@@ -584,7 +584,7 @@ public class SoloRankedServer extends WorldServer<Player> {
                 }
 
                 dataContainer.get(player.getUniqueId()).addXp(expAmount);
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                     for (String line : Language.game$player$ingame$reward_summary) {
                         line = line.replace("{totalCoins}", "" + dataContainer.get(player.getUniqueId()).getCoinsEarned());
                         line = line.replace("{totalExp}", "" + dataContainer.get(player.getUniqueId()).getXpEarned());

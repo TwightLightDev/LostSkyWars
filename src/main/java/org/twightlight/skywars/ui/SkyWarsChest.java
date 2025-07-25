@@ -8,7 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.holograms.Hologram;
 import org.twightlight.skywars.holograms.Holograms;
 import org.twightlight.skywars.nms.NMS;
@@ -203,7 +203,7 @@ public class SkyWarsChest {
             return name;
         }
 
-        public static final Logger LOGGER = Main.LOGGER.getModule("ChestType");
+        public static final Logger LOGGER = SkyWars.LOGGER.getModule("ChestType");
         private static Map<String, ChestType> types = new HashMap<>();
 
         public static void setupTypes() {

@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.NMS;
@@ -169,7 +169,7 @@ public class BoxOpener {
                                         }
                                         count--;
                                     }
-                                }.runTaskTimer(Main.getInstance(), 0, 1);
+                                }.runTaskTimer(SkyWars.getInstance(), 0, 1);
                             }
                             endAtRun--;
                             return;
@@ -225,6 +225,6 @@ public class BoxOpener {
                     Sound.NOTE_BASS_DRUM.play(loc.getWorld(), loc, 1.0f, 1.0f);
                 }
             }
-        }.runTaskTimer(Main.getInstance(), 0, 1);
+        }.runTaskTimer(SkyWars.getInstance(), 0, 1);
     }
 }

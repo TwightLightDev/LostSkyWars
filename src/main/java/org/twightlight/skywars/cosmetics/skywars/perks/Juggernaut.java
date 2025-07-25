@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
@@ -32,7 +32,7 @@ public class Juggernaut extends SkyWarsPerk {
 
         this.seconds = CONFIG.getInt("juggernaut.time");
 
-        this.register(Main.getInstance());
+        this.register(SkyWars.getInstance());
     }
 
     @EventHandler

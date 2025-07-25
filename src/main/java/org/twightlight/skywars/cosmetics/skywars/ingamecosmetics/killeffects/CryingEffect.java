@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.twightlight.libs.fastparticles.ParticleType;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -84,6 +84,6 @@ public class CryingEffect extends SkyWarsKillEffect {
                     ex.printStackTrace();
                 }
             }
-        }).runTaskTimer(Main.getInstance(), 0L, 3L);
+        }).runTaskTimer(SkyWars.getInstance(), 0L, 3L);
     }
 }

@@ -2,7 +2,7 @@ package org.twightlight.skywars.api;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -30,7 +30,7 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return Main.getInstance().getDescription().getVersion();
+        return SkyWars.getInstance().getDescription().getVersion();
     }
 
     @Override

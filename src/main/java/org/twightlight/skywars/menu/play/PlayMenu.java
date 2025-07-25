@@ -17,6 +17,8 @@ import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
+import org.twightlight.skywars.modules.privategames.PrivateGames;
+import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
@@ -53,9 +55,13 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.NORMAL);
                                     if (server != null) {
+                                        PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                        if (user != null && user.isEnablePrivateGame()) {
+                                            user.connect(account, server);
+                                        } else {
+                                            server.connect(account);
+                                        }
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-                                        WorldServer<?> privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
-                                        privateServer.connect(account);
                                     }
                                 } else {
                                     CoreLobbies.writeMinigame(player, mode.name() + "_NORMAL", "all");
@@ -66,8 +72,13 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.INSANE);
                                     if (server != null) {
+                                        PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                        if (user != null && user.isEnablePrivateGame()) {
+                                            user.connect(account, server);
+                                        } else {
+                                            server.connect(account);
+                                        }
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-                                        server.connect(account);
                                     }
                                 } else {
                                     CoreLobbies.writeMinigame(player, mode.name() + "_INSANE", "all");

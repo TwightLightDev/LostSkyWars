@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.Logger;
 
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Holograms {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Holograms");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Holograms");
 
     private static Plugin plugin;
     private static final List<Hologram> holograms = new ArrayList<>();

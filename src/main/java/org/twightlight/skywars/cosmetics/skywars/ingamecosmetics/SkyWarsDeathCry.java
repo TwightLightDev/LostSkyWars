@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -101,7 +101,7 @@ public class SkyWarsDeathCry extends Cosmetic {
         return coins;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("DeathCries");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("DeathCries");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("deathcries");
 
     public static void setupDeathCries() {
@@ -119,7 +119,7 @@ public class SkyWarsDeathCry extends Cosmetic {
 
             SkyWarsDeathCry cry = new SkyWarsDeathCry(id, name, icon, rarity, buyable, price, sound, volume, pitch);
             if (!cry.isValid()) {
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getInstance(),
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(),
                         () -> LOGGER.log(Level.WARNING, "Invalid Sound \"" + sound + "\" on DeathCry \"" + key + "\""));
                 continue;
             }

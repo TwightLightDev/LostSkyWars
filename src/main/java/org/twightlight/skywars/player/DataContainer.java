@@ -1,5 +1,7 @@
 package org.twightlight.skywars.player;
 
+import org.twightlight.skywars.world.WorldServer;
+
 public class DataContainer {
     private int coinsEarned = 0;
     private double xpEarned = 0;
@@ -19,8 +21,11 @@ public class DataContainer {
     }
 
     public void addCoins(int amount) {
-        account.addStat("coins", amount);
-        this.coinsEarned += amount;
+        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        if (!server.isPrivate()) {
+            account.addStat("coins", amount);
+            this.coinsEarned += amount;
+        }
     }
 
     public double getXpEarned() {
@@ -28,8 +33,11 @@ public class DataContainer {
     }
 
     public void addXp(double amount) {
-        account.addExp(amount);
-        this.xpEarned += amount;
+        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        if (!server.isPrivate()) {
+            account.addExp(amount);
+            this.xpEarned += amount;
+        }
     }
 
     public int getSoulsEarned() {
@@ -37,7 +45,10 @@ public class DataContainer {
     }
 
     public void addSouls(int amount) {
-        account.addStat("souls", amount);
-        this.soulsEarned += amount;
+        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        if (!server.isPrivate()) {
+            account.addStat("souls", amount);
+            this.soulsEarned += amount;
+        }
     }
 }

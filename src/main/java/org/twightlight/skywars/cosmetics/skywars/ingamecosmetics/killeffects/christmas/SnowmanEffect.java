@@ -8,7 +8,7 @@ import org.bukkit.entity.Snowman;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.particles.ParticleEffect;
@@ -32,10 +32,10 @@ public class SnowmanEffect extends SkyWarsKillEffect {
 
     public void execute(Player killer, Player victim, Location location) {
         Snowman stand = (Snowman)victim.getLocation().getWorld().spawn(victim.getLocation().add(0.0D, 1.54D, 0.0D), Snowman.class);
-        stand.setMetadata("cosmetic.entity", (MetadataValue)new FixedMetadataValue(Main.getInstance(), Boolean.valueOf(true)));
+        stand.setMetadata("cosmetic.entity", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), Boolean.valueOf(true)));
         stand.setVelocity(new Vector(0.0D, 0.85D, 0.0D));
         stand.getWorld().playSound(stand.getLocation(), Sound.FIREWORK_LAUNCH, 2.0F, 0.0F);
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             ParticleEffect.SNOW_SHOVEL.display(0.0F, 0.0F, 0.0F, 0.5F, 25, stand.getLocation());
             ParticleEffect.SNOWBALL.display(0.0F, 0.0F, 0.0F, 0.5F, 25, stand.getLocation());
             stand.getWorld().playSound(stand.getLocation(), Sound.ITEM_PICKUP, 1.0F, 0.0F);

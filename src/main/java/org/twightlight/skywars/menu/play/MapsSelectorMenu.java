@@ -17,6 +17,8 @@ import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
 import org.twightlight.skywars.menu.api.UpdatablePlayerPagedMenu;
+import org.twightlight.skywars.modules.privategames.PrivateGames;
+import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
@@ -56,8 +58,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, type);
                                     if (server != null) {
+                                        PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                        if (user != null && user.isEnablePrivateGame()) {
+                                            user.connect(account, server);
+                                        } else {
+                                            server.connect(account);
+                                        }
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-                                        server.connect(account);
                                     }
                                 } else {
                                     CoreLobbies.writeMinigame(player, mode.name() + "_" + type.name(), "all");
@@ -87,8 +94,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                             if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                                 player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                                 player.closeInventory();
-                                                account.updateLastSelected();
-                                                server.connect(account);
+                                                PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                                if (user != null && user.isEnablePrivateGame()) {
+                                                    user.connect(account, server);
+                                                } else {
+                                                    account.updateLastSelected();
+                                                    server.connect(account);
+                                                }
                                                 break;
                                             }
                                         }
@@ -133,8 +145,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                         if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                             player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                             player.closeInventory();
-                                            account.updateLastSelected();
-                                            server.connect(account);
+                                            PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                            if (user != null && user.isEnablePrivateGame()) {
+                                                user.connect(account, server);
+                                            } else {
+                                                account.updateLastSelected();
+                                                server.connect(account);
+                                            }
                                             break;
                                         }
                                     }

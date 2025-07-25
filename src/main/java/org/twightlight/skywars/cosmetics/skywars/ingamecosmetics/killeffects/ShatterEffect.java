@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
 import org.twightlight.skywars.particles.ParticleEffect;
@@ -48,6 +48,6 @@ public class ShatterEffect extends SkyWarsKillEffect {
                 this.location.getWorld().playSound(this.location, Sound.GLASS, 0.5F + (float)this.size / 2.0F, 0.8F);
                 this.size += 0.3D;
             }
-        }).runTaskTimer(Main.getInstance(), 3L, 3L);
+        }).runTaskTimer(SkyWars.getInstance(), 3L, 3L);
     }
 }

@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
@@ -32,7 +32,7 @@ public class PlayerDeathListener extends Listeners {
             if (server == null) {
                 evt.setDroppedExp(0);
                 player.setHealth(20.0);
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> account.refreshPlayer(), 3);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> account.refreshPlayer(), 3);
             } else {
                 player.setHealth(20.0);
                 List<Account> hitters = account.getLastHitters();

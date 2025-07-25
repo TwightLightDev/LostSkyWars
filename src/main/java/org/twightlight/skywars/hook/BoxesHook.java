@@ -3,7 +3,7 @@ package org.twightlight.skywars.hook;
 import io.github.losteddev.boxes.api.LostBoxesAPI;
 import io.github.losteddev.boxes.api.box.RewardRarity;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -14,7 +14,7 @@ import org.twightlight.skywars.utils.Logger.Level;
 
 public class BoxesHook {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("BoxesHook");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("BoxesHook");
 
     public static void setupBoxes() {
         LOGGER.log(Level.INFO, "LostBoxes found, hooking...");

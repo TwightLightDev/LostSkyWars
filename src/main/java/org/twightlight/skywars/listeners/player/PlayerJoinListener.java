@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
@@ -43,7 +43,7 @@ public class PlayerJoinListener extends Listeners {
 
         Rank rank = Rank.getRank(player);
         if (rank != null && rank.getOnJoin() != null) {
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                 Database.getInstance().listAccounts().stream()
                         .filter(a -> a.inLobby())
                         .forEach(a -> a.getPlayer().sendMessage(StringUtils.formatColors(PlayerUtils.replaceAll(player, rank.getOnJoin()))));

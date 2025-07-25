@@ -2,7 +2,7 @@ package org.twightlight.skywars.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -24,7 +24,7 @@ public class PlayerUtils {
             }
         }
 
-        if (Main.placeholderapi) {
+        if (SkyWars.placeholderapi) {
             return replaceAll(player,
             PlaceholderAPI.setPlaceholders(player2, string.replace("{player2}", player2.getName())
                             .replace("{display2}", StringUtils.formatColors("%vault_prefix%%player_name%%vault_suffix%"))
@@ -51,7 +51,7 @@ public class PlayerUtils {
             }
         }
 
-        if (Main.placeholderapi) {
+        if (SkyWars.placeholderapi) {
             return PlaceholderAPI.setPlaceholders(player,  string.replace("{player}", player.getName())
                     .replace("{display}", StringUtils.formatColors("%vault_prefix%%player_name%%vault_suffix%"))
                     .replace("{colored}", lastColor + player.getName() + (lastColor.contains("§k") ? "§r" : "")));

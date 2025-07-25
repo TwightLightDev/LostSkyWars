@@ -7,11 +7,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
+import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
@@ -40,10 +42,11 @@ public abstract class WorldServer<T> extends SkyWarsServer {
     protected List<SkyWarsTeam> teams = new ArrayList<>();
     protected List<SkyWarsChest> chests = new ArrayList<>();
     protected List<Spray> sprays = new ArrayList<>();
-    protected Map<Integer, SkyWarsEvent> timeline = new HashMap<>();
+    protected Map<Integer, SkyWarsEvent> timeline = new TreeMap<>();
     protected List<Player> initialPlayers = new ArrayList<>();
     protected long startTime;
     protected long startTimeMillis;
+    protected PrivateGamesUser serverOwner;
 
     public WorldServer(String yaml) {
         this(yaml, null, false);
@@ -60,6 +63,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         }
         this.config.listChests().forEach(chest -> chests.add(new SkyWarsChest(this, chest)));
         this.timeline = Language.getSkyWarsEventTimeline(this.getType());
+
         this.state = SkyWarsState.WAITING;
         if (callback != null) {
             callback.finish();
@@ -140,6 +144,11 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return null;
     }
 
+    public void setServerOwner(PrivateGamesUser p) {
+        if (isPrivate)
+            serverOwner = p;
+    }
+
     public SkyWarsTeam getAvaibleTeam(Player player) {
         return getAvaibleTeam(player, 1);
     }
@@ -194,23 +203,10 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return target + new SimpleDateFormat("mm:ss").format((getTimer() - eventTime) * 1000);
     }
 
-    public String getEventTime() {
-        int eventTime = getEventTime(true);
-        return new SimpleDateFormat("mm:ss").format((getTimer() - eventTime) * 1000);
-    }
 
     public int getEventTime(boolean flag) {
         for (Integer integer : timeline.keySet()) {
             if (getTimer() >= (flag ? integer + 1 : integer)) {
-                return integer;
-            }
-        }
-        return 0;
-    }
-
-    public int getNextEventTime() {
-        for (Integer integer : timeline.keySet()) {
-            if (getTimer() > integer) {
                 return integer;
             }
         }
@@ -247,6 +243,16 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return timeline;
     }
 
+    public void setTimeline(Map<Integer, SkyWarsEvent> timeline) {
+        this.timeline = timeline;
+    }
+
+    public void applyPrivateSettings() {
+        if (isPrivate) {
+            config.getWorld().setTime(GameTimeSetting.GameTime.valueOf(serverOwner.getGameTimeSetting().getValue()).getTime());
+        }
+    }
+
     @Override
     public SkyWarsType getType() {
         return SkyWarsType.fromName(this.config.getServerType());
@@ -257,7 +263,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return config.listSpawns().size();
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("WorldServer");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("WorldServer");
     private static Map<String, WorldServer<?>> servers = new HashMap<>();
 
     public static void setupServers() {

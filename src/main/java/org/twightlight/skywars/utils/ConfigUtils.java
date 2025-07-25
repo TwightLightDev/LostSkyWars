@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.jline.internal.InputStreamReader;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
@@ -36,7 +36,7 @@ public class ConfigUtils {
         this.file = new File(path + "/" + name + ".yml");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            InputStream in = Main.getInstance().getResource(name + ".yml");
+            InputStream in = SkyWars.getInstance().getResource(name + ".yml");
             if (in != null) {
                 FileUtils.copyFile(in, file);
             } else {
@@ -157,7 +157,7 @@ public class ConfigUtils {
         return config;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("ConfigUtils");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("ConfigUtils");
     private static Map<String, ConfigUtils> cache = new HashMap<>();
 
     public static ConfigUtils getConfig(String name) {

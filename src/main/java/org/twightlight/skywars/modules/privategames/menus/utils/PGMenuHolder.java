@@ -1,8 +1,7 @@
-package org.twightlight.skywars.modules.privategames.menus;
+package org.twightlight.skywars.modules.privategames.menus.utils;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.twightlight.skywars.modules.recentgames.menu.RGMenu;
 
 public class PGMenuHolder implements InventoryHolder {
     private PGMenu menu;

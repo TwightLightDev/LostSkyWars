@@ -3,4 +3,8 @@ name: LostSkyWars
 version: 2.4.26
 softdepend: [ Vault, Citizens, LostParties, LostBoxes, TwightLightCore ]
 
-main: org.twightlight.skywars.Main
+main: org.twightlight.skywars.SkyWars
+commands:
+  friend:
+    aliases: [friends, f]
+    description: ''

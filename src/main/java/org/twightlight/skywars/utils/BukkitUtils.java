@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.world.WorldServer;
@@ -37,7 +37,7 @@ import static java.lang.Float.parseFloat;
 @SuppressWarnings("deprecation")
 public class BukkitUtils {
 
-    private static final Logger LOGGER = Main.LOGGER.getModule("BukkitUtils");
+    private static final Logger LOGGER = SkyWars.LOGGER.getModule("BukkitUtils");
 
     static {
         List<Field> fields = new ArrayList<>();

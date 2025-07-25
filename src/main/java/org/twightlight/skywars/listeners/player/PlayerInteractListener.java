@@ -189,7 +189,7 @@ public class PlayerInteractListener extends Listeners {
                         if (evt.getAction().name().contains("RIGHT")) {
                             if (block.getState() instanceof Chest) {
                                 SkyWarsChest chest = ((WorldServer<?>) server).getChest(block);
-                                if (chest != null && ((WorldServer<?>) server).getNextEventTime() != 0) {
+                                if (chest != null && ((WorldServer<?>) server).getEventTime(true) != 0) {
                                     chest.createHologram();
                                 }
                             }

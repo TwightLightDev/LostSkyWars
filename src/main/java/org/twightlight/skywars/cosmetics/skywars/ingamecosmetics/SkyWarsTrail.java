@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -113,7 +113,7 @@ public class SkyWarsTrail extends Cosmetic {
         return coins;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("ProjectileTrails");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("ProjectileTrails");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("projectiletrails");
 
     public static void setupProjectileTrails() {
@@ -150,11 +150,11 @@ public class SkyWarsTrail extends Cosmetic {
                         double spacing = sec.getDouble("options.spacing", .1);
 
                         if (type == TrailType.PARTICLE) {
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) ->
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) ->
                                             finalParticle.spawn(e.getEntity().getWorld(), loc, count, 0, 0, 0, 0), e.getEntity(), p
                             , 0, rotationSpeed, radius, spacing, false);
                         } else if (type == TrailType.DROPPED_ITEM) {
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) -> {
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
                                 World world = loc.getWorld();
                                 if (world != null) {
                                     Item dropped = world.dropItem(loc, finalItem);
@@ -162,7 +162,7 @@ public class SkyWarsTrail extends Cosmetic {
 
                                     dropped.setPickupDelay(Integer.MAX_VALUE);
 
-                                    Bukkit.getScheduler().runTaskLater(Main.getInstance(), dropped::remove, 100L);
+                                    Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                 }
                             }, e.getEntity(), p
                                     , 0, rotationSpeed, radius, spacing, false);
@@ -173,14 +173,14 @@ public class SkyWarsTrail extends Cosmetic {
                         double spacing = sec.getDouble("options.spacing", .1);
 
                         if (type == TrailType.PARTICLE) {
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) ->
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) ->
                                             finalParticle.spawn(e.getEntity().getWorld(), loc, count, 0, 0, 0, 0), e.getEntity(), p
                                     , 0, rotationSpeed, radius, spacing, false);
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) ->
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) ->
                                             finalParticle.spawn(e.getEntity().getWorld(), loc, count, 0, 0, 0, 0), e.getEntity(), p
                                     , 0, rotationSpeed, radius, spacing, true);
                         } else if (type == TrailType.DROPPED_ITEM) {
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) -> {
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
                                         World world = loc.getWorld();
                                         if (world != null) {
                                             Item dropped = world.dropItem(loc, finalItem);
@@ -188,11 +188,11 @@ public class SkyWarsTrail extends Cosmetic {
 
                                             dropped.setPickupDelay(Integer.MAX_VALUE);
 
-                                            Bukkit.getScheduler().runTaskLater(Main.getInstance(), dropped::remove, 100L);
+                                            Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                         }
                                     }, e.getEntity(), p
                                     , 0, rotationSpeed, radius, spacing, false);
-                            SpiralFactory.createNewSpiral(Main.getInstance(), (loc, shooter) -> {
+                            SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
                                         World world = loc.getWorld();
                                         if (world != null) {
                                             Item dropped = world.dropItem(loc, finalItem);
@@ -200,7 +200,7 @@ public class SkyWarsTrail extends Cosmetic {
 
                                             dropped.setPickupDelay(Integer.MAX_VALUE);
 
-                                            Bukkit.getScheduler().runTaskLater(Main.getInstance(), dropped::remove, 100L);
+                                            Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                         }
                                     }, e.getEntity(), p
                                     , 0, rotationSpeed, radius, spacing, true);
@@ -218,7 +218,7 @@ public class SkyWarsTrail extends Cosmetic {
                                     }
                                     finalParticle.spawn(e.getEntity().getWorld(), e.getEntity().getLocation(), 1, 0, 0, 0, 0);
                                 }
-                            }.runTaskTimer(Main.getInstance(), 2, 0L);
+                            }.runTaskTimer(SkyWars.getInstance(), 2, 0L);
 
                         } else if (type == TrailType.DROPPED_ITEM) {
                             new BukkitRunnable() {
@@ -237,10 +237,10 @@ public class SkyWarsTrail extends Cosmetic {
 
                                         dropped.setPickupDelay(Integer.MAX_VALUE);
 
-                                        Bukkit.getScheduler().runTaskLater(Main.getInstance(), dropped::remove, 100L);
+                                        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                     }
                                 }
-                            }.runTaskTimer(Main.getInstance(), 2, 0L);
+                            }.runTaskTimer(SkyWars.getInstance(), 2, 0L);
                         }
                     }
                 }

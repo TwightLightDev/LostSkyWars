@@ -2,7 +2,7 @@ package org.twightlight.skywars.cosmetics;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.*;
@@ -83,7 +83,7 @@ public abstract class Cosmetic {
 
     public abstract ItemStack getIcon();
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Cosmetics");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Cosmetics");
 
     public static void setupCosmetics() {
         // cages

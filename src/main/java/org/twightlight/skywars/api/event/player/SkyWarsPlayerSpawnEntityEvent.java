@@ -9,10 +9,11 @@ public class SkyWarsPlayerSpawnEntityEvent extends SkyWarsEvent {
 
     private Player player;
     private Entity mob;
-
-    public SkyWarsPlayerSpawnEntityEvent(Player player, Entity mob) {
+    private SkyWarsServer server;
+    public SkyWarsPlayerSpawnEntityEvent(Player player, Entity mob, SkyWarsServer server) {
         this.player = player;
         this.mob = mob;
+        this.server = server;
     }
 
     public Player getPlayer() {
@@ -21,5 +22,9 @@ public class SkyWarsPlayerSpawnEntityEvent extends SkyWarsEvent {
 
     public Entity getEntity() {
         return mob;
+    }
+
+    public SkyWarsServer getServer() {
+        return server;
     }
 }

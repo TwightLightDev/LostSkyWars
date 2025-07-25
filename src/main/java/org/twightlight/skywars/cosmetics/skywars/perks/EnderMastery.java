@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
@@ -29,7 +29,7 @@ public class EnderMastery extends SkyWarsPerk {
 
         this.percentage = CONFIG.getInt("endermastery.percentage");
 
-        this.register(Main.getInstance());
+        this.register(SkyWars.getInstance());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

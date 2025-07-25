@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.database.Database;
@@ -23,7 +23,7 @@ public class WatchCommand extends Command {
                     .getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
+            SkyWars.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
     }
 

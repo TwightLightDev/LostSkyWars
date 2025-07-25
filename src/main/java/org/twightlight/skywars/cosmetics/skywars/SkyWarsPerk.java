@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cosmetics.Cosmetic;
@@ -149,7 +149,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return true;
     }
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("Perks");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("Perks");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
     public static void setupPerks() {
@@ -257,7 +257,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         }
 
         try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(Main.getInstance().getResource("perks.yml"), "UTF-8"));
+            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("perks.yml"), "UTF-8"));
             for (String dataKey : config.getConfigurationSection(key).getKeys(false)) {
                 CONFIG.set(key + "." + dataKey, config.get(key + "." + dataKey));
             }

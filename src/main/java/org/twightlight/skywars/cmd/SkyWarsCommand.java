@@ -1,12 +1,11 @@
 package org.twightlight.skywars.cmd;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cmd.sw.*;
@@ -32,21 +31,21 @@ public class SkyWarsCommand extends Command {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);
         } catch (ReflectiveOperationException ex) {
-            Main.LOGGER.log(Level.SEVERE, "Cannot register command: ", ex);
+            SkyWars.LOGGER.log(Level.SEVERE, "Cannot register command: ", ex);
         }
 
         if (Core.MODE != CoreMode.ARENA) {
             commands.add(new SetLobbyCommand());
             commands.add(new BuildCommand());
-            if (Main.citizens) {
+            if (SkyWars.citizens) {
                 commands.add(new PlayNPCCommand());
                 commands.add(new DeliveryNPCCommand());
                 commands.add(new ShopkeeperNPCCommand());
-                if (Main.protocollib) {
+                if (SkyWars.protocollib) {
                     commands.add(new StatsNPCCommand());
                 }
             }
-            if (Main.lostboxes) {
+            if (SkyWars.lostboxes) {
                 commands.add(new BoxNPCCommand());
             }
             commands.add(new WellNPCCommand());

@@ -3,7 +3,7 @@ package org.twightlight.skywars.cmd.sw;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsTrail;
@@ -15,7 +15,7 @@ import org.twightlight.skywars.utils.Logger;
 @SuppressWarnings("deprecation")
 public class ReloadCommand extends SubCommand {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("LoadCommand");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("LoadCommand");
 
     public ReloadCommand() {
         super("reload");

@@ -4,14 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Main;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
 
 public class UnloadCommand extends SubCommand {
 
-    public static final Logger LOGGER = Main.LOGGER.getModule("UnloadCommand");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("UnloadCommand");
 
     public UnloadCommand() {
         super("unload");
