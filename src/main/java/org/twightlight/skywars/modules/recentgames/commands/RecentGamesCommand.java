@@ -19,6 +19,7 @@ import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.Logger.Level;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class RecentGamesCommand extends Command {
 
     public RecentGamesCommand() {
         super("recentgames");
-
+        this.setAliases(Arrays.asList("rg"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

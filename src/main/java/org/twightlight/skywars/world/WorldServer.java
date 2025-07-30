@@ -250,7 +250,15 @@ public abstract class WorldServer<T> extends SkyWarsServer {
     public void applyPrivateSettings() {
         if (isPrivate) {
             config.getWorld().setTime(GameTimeSetting.GameTime.valueOf(serverOwner.getGameTimeSetting().getValue()).getTime());
+            getPlayers(false).forEach(player -> {
+                player.setMaxHealth(serverOwner.getHealthMultiplySetting().getValue());
+                player.setHealth(player.getMaxHealth());
+            });
         }
+    }
+
+    public PrivateGamesUser getServerOwner() {
+        return serverOwner;
     }
 
     @Override

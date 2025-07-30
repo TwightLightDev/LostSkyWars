@@ -36,6 +36,6 @@ public class User {
             newData.add(game);
         }
 
-        RecentGames.getDatabase().pullData(p, newData, "games");
+        RecentGames.getDatabase().updateData(p, newData, "games");
     }
 }

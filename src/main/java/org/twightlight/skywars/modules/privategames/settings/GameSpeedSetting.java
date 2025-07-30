@@ -21,7 +21,7 @@ public class GameSpeedSetting extends PrivateGamesSetting<Double>{
     public void setValue(Double value) {
         super.setValue(value);
         PrivateGames.getStorage().getDatabase().
-        pullData(p, value, type.getColumn());
+                updateData(p, value, type.getColumn());
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.twightlight.skywars.modules.friends.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.twightlight.skywars.modules.YamlWrapper;
 
 
 public class MainConfig extends YamlWrapper {

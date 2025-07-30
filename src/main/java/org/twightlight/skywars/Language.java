@@ -256,6 +256,7 @@ public class Language {
                     "   &f• &6{totalCoins} SkyWars Coins",
                     "",
                     "&7You earned &d{totalExp} SkyWars Experience",
+                    "&7You earned &2{totalGExp} Guild Experience",
                     "&7You harvested &b{totalSouls} Souls",
                     "",
                     "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");

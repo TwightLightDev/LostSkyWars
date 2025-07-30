@@ -39,7 +39,7 @@ public class SkyWars extends JavaPlugin {
 
     private static SkyWars instance;
     private static boolean validInit;
-    public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, slimeworldmanager = true, protocollib = true;
+    public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, guilds = true;
     public static Object economy;
     public static final Logger LOGGER = new Logger();
 
@@ -117,6 +117,7 @@ public class SkyWars extends JavaPlugin {
         this.setupPlaceholderAPI();
         this.setupBoxes();
         this.setupBattlePass();
+        this.setupGuilds();
         if (MODE == CoreMode.MULTI_ARENA) {
             this.setupParties();
         } else {
@@ -244,8 +245,18 @@ public class SkyWars extends JavaPlugin {
             Class.forName("io.github.battlepass.BattlePlugin");
             BattlePassHook.setupBattlePass();
         } catch (ClassNotFoundException ex) {
-            placeholderapi = false;
+            battlepass = false;
             LOGGER.log(Level.WARNING, "BattlePass not found, disabling support.");
+        }
+    }
+
+    private void setupGuilds() {
+        try {
+            Class.forName("me.leoo.guilds.bukkit.Guilds");
+            GuildsHook.setupGuilds();
+        } catch (ClassNotFoundException ex) {
+            guilds = false;
+            LOGGER.log(Level.WARNING, "Guilds not found, disabling support.");
         }
     }
 

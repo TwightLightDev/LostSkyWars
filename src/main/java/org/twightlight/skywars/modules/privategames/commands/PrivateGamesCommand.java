@@ -12,13 +12,14 @@ import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
 import org.twightlight.skywars.utils.Logger.Level;
 
+import java.util.Arrays;
 
 
 public class PrivateGamesCommand extends Command {
 
     public PrivateGamesCommand() {
         super("p");
-
+        this.setAliases(Arrays.asList("privategames"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

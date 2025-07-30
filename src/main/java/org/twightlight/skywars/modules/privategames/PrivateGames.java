@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Modules;
 import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
+import org.twightlight.skywars.modules.YamlWrapper;
+import org.twightlight.skywars.modules.privategames.config.LangConfig;
 import org.twightlight.skywars.modules.privategames.database.Storage;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerClickInventory;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerJoin;
@@ -12,11 +14,13 @@ import org.twightlight.skywars.modules.privategames.listeners.ServerManagement;
 public class PrivateGames extends Modules {
 
     private static Storage storage;
+    private static YamlWrapper lang;
 
     public PrivateGames() {
         initListeners();
         initDatabase();
         initCommands();
+        initConfig();
     }
 
 
@@ -37,5 +41,13 @@ public class PrivateGames extends Modules {
 
     public static Storage getStorage() {
         return storage;
+    }
+
+    private void initConfig() {
+        lang = new LangConfig(getPlugin(), "language", getPlugin().getDataFolder().getPath() + "/modules/privategames");
+    }
+
+    public static YamlWrapper getLanguage() {
+        return lang;
     }
 }

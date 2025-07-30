@@ -19,7 +19,7 @@ public class GameTimeSetting extends PrivateGamesSetting<String>{
     public void setValue(GameTime value) {
         super.setValue(value.getName());
         PrivateGames.getStorage().getDatabase().
-        pullData(p, value.getName(), type.getColumn());
+                updateData(p, value.getName(), type.getColumn());
     }
 
     @Override

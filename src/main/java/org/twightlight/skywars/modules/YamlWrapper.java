@@ -1,4 +1,4 @@
-package org.twightlight.skywars.modules.friends.config;
+package org.twightlight.skywars.modules;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;

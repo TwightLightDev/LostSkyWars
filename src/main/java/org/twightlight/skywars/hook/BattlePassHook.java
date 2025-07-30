@@ -8,7 +8,7 @@ import org.twightlight.skywars.utils.Logger;
 
 public class BattlePassHook {
     private static ActionRegistry actionRegistry = BattlePlugin.getPlugin().getActionRegistry();
-    public static final Logger LOGGER = SkyWars.LOGGER.getModule("BattlePass Hook");
+    public static final Logger LOGGER = SkyWars.LOGGER.getModule("BattlePassHook");
 
     public static void setupBattlePass() {
         LOGGER.log(Logger.Level.INFO, "BattlePass found, hooking...");

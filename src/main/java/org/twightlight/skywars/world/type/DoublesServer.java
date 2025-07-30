@@ -1,5 +1,6 @@
 package org.twightlight.skywars.world.type;
 
+import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -34,6 +35,7 @@ import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
 import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.hook.GuildsHook;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
@@ -255,11 +257,21 @@ public class DoublesServer extends WorldServer<SkyWarsTeam> {
             NMS.sendTitle(player, killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$up_killed) : Language.game$player$ingame$titles$die$up,
                     killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$bottom_killed) : Language.game$player$ingame$titles$die$bottom, 20, 60,
                     20);
+            if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
+                int gxp = dataContainer.get(player.getUniqueId()).getGxpEarned();
+                GuildsManager.getByPlayer(player).getLevel().addXp(gxp);
+            }
             for (String line : Language.game$player$ingame$reward_summary) {
                 line = line.replace("{totalCoins}", "" + dataContainer.get(player.getUniqueId()).getCoinsEarned());
                 line = line.replace("{totalExp}", "" + dataContainer.get(player.getUniqueId()).getXpEarned());
                 line = line.replace("{totalSouls}", "" + dataContainer.get(player.getUniqueId()).getSoulsEarned());
-
+                if (line.contains("{totalGExp}")) {
+                    if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
+                        line = line.replace("{totalGExp}", "" + (dataContainer.get(player.getUniqueId()).getGxpEarned()));
+                    } else {
+                        continue;
+                    }
+                }
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
             }
         }, 3);
@@ -633,12 +645,22 @@ public class DoublesServer extends WorldServer<SkyWarsTeam> {
                     }
 
                     dataContainer.get(player.getUniqueId()).addXp(expAmount);
+                    if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
+                        int gxp = dataContainer.get(player.getUniqueId()).getGxpEarned();
+                        GuildsManager.getByPlayer(player).getLevel().addXp(gxp);
+                    }
                     Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                         for (String line : Language.game$player$ingame$reward_summary) {
                             line = line.replace("{totalCoins}", "" + dataContainer.get(player.getUniqueId()).getCoinsEarned());
                             line = line.replace("{totalExp}", "" + dataContainer.get(player.getUniqueId()).getXpEarned());
                             line = line.replace("{totalSouls}", "" + dataContainer.get(player.getUniqueId()).getSoulsEarned());
-
+                            if (line.contains("{totalGExp}")) {
+                                if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
+                                    line = line.replace("{totalGExp}", "" + (dataContainer.get(player.getUniqueId()).getGxpEarned()));
+                                } else {
+                                    continue;
+                                }
+                            }
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
                         }
                     }, 20);

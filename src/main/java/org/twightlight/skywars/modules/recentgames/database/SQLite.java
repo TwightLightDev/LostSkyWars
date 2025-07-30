@@ -114,7 +114,7 @@ public class SQLite {
     }
 
 
-    public <T> boolean pullData(OfflinePlayer player, T data, String column) {
+    public <T> boolean updateData(OfflinePlayer player, T data, String column) {
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement("UPDATE " + dbname + " SET " + column + "=? WHERE player=?")) {
 

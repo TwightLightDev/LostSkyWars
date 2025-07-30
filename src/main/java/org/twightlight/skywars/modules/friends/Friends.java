@@ -26,6 +26,7 @@ public class Friends extends Modules {
     private StorageUtil storageUtil;
 
     private MainConfig mainConfig;
+
     private static Friends instance;
 
     public Friends() {

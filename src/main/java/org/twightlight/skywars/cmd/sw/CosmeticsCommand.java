@@ -1,7 +1,6 @@
 package org.twightlight.skywars.cmd.sw;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cmd.SubCommand;
@@ -9,9 +8,6 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.setup.Menu;
-import org.twightlight.skywars.setup.kits.KitsSetupMenu;
-import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 public class CosmeticsCommand extends SubCommand {

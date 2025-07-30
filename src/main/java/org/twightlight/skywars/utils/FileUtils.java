@@ -6,6 +6,7 @@ import org.twightlight.skywars.utils.Logger.Level;
 import java.io.*;
 import java.net.URLDecoder;
 
+
 public class FileUtils {
 
     private static final Logger LOGGER = Core.getCoreLogger().getModule("FileUtils");
