@@ -97,6 +97,12 @@ public abstract class LostScoreboard {
         return this;
     }
 
+    public void hide() {
+        if (player != null) {
+            player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        }
+    }
+
     public LostScoreboard display(String display) {
         this.display = StringUtils.translateAlternateColorCodes('&', display);
         if (objective != null) {

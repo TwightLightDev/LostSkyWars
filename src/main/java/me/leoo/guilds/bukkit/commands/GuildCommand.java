@@ -26,6 +26,7 @@ import me.leoo.guilds.libs.utils.common.number.NumberUtil;
 import me.leoo.guilds.libs.utils.common.string.StringUtil;
 import me.leoo.guilds.libs.utils.common.time.TimeUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -72,7 +73,13 @@ public class GuildCommand extends VCommand {
         }
         Objects.requireNonNull(paramPlayer);
         parse(LANGUAGE.getList("guilds.commands.accept.joined-player"), guild2, (GuildRank)null, (OfflinePlayer)null).forEach(paramPlayer::sendMessage);
-        guild2.broadcast(parse(LANGUAGE.getList("guilds.commands.accept.joined-broadcast"), guild2, (GuildRank)null, (OfflinePlayer)paramPlayer));
+        List<String> list = LANGUAGE.getList("guilds.commands.accept.joined-broadcast");
+        guild2.getMembers().forEach(mem -> {
+            if (mem.isOnline()) {
+                list.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+            }
+        });
+
         guild2.addMember(paramPlayer.getUniqueId());
     }
 
@@ -289,7 +296,13 @@ public class GuildCommand extends VCommand {
                 return;
             Objects.requireNonNull(paramPlayer);
             parse(LANGUAGE.getList("guilds.commands.join.joined-player"), paramGuild, (GuildRank)null, (OfflinePlayer)null).forEach(paramPlayer::sendMessage);
-            paramGuild.broadcast(parse(LANGUAGE.getList("guilds.commands.join.joined-broadcast"), paramGuild, (GuildRank)null, (OfflinePlayer)paramPlayer));
+            List<String> joinMsgs = parse(LANGUAGE.getList("guilds.commands.join.joined-broadcast"), paramGuild, (GuildRank)null, (OfflinePlayer)paramPlayer);
+            paramGuild.getMembers().forEach(mem -> {
+                if (mem.isOnline()) {
+                    joinMsgs.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+                }
+            });
+
             paramGuild.addMember(paramPlayer.getUniqueId());
         } else {
             paramPlayer.sendMessage(LANGUAGE.getString("guilds.commands.join.cant-join"));
@@ -326,7 +339,11 @@ public class GuildCommand extends VCommand {
             guildKickEvent.setReason(LANGUAGE.getString("guilds.commands.kick.default-reason"));
         List<String> list = parse(LANGUAGE.getList("guilds.commands.kick.success"), guild, (GuildRank)null, (OfflinePlayer)paramPlayer);
         list.replaceAll(paramString -> paramString.replace("{playerTarget}", guildPlayer2.getFormattedName()).replace("{message}", guildKickEvent.getReason()));
-        guild.broadcast(list);
+        guild.getMembers().forEach(mem -> {
+            if (mem.isOnline()) {
+                list.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+            }
+        });
         guild.removeMember(guildPlayer2.getUuid());
     }
 
@@ -350,7 +367,12 @@ public class GuildCommand extends VCommand {
         guild.removeMember(paramPlayer.getUniqueId());
         Objects.requireNonNull(paramPlayer);
         parse(LANGUAGE.getList("guilds.commands.leave.success-player"), guild, (GuildRank)null, (OfflinePlayer)null).forEach(paramPlayer::sendMessage);
-        guild.broadcast(parse(LANGUAGE.getList("guilds.commands.leave.success-broadcast"), guild, (GuildRank)null, (OfflinePlayer)paramPlayer));
+        List<String> msg = parse(LANGUAGE.getList("guilds.commands.leave.success-broadcast"), guild, (GuildRank)null, (OfflinePlayer)paramPlayer);
+        guild.getMembers().forEach(mem -> {
+            if (mem.isOnline()) {
+                msg.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+            }
+        });
     }
 
     @SubCommand({"members", "list"})
@@ -467,7 +489,11 @@ public class GuildCommand extends VCommand {
             guild.muteAll(l);
             List<String> list = parse(LANGUAGE.getList("guilds.commands.mute.success-everyone"), (Guild)null, (GuildRank)null, (OfflinePlayer)paramPlayer);
             list.replaceAll(paramString3 -> paramString3.replace("{time}", paramString2));
-            guild.broadcast(list);
+            guild.getMembers().forEach(mem -> {
+                if (mem.isOnline()) {
+                    list.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+                }
+            });
         } else {
             OfflinePlayer offlinePlayer = GuildUtils.getOfflinePlayerByName(paramString1);
             if (paramPlayer == offlinePlayer)
@@ -483,7 +509,11 @@ public class GuildCommand extends VCommand {
             guildPlayer1.mute(l, true);
             List<String> list = parse(LANGUAGE.getList("guilds.commands.mute.success-player"), (Guild)null, (GuildRank)null, (OfflinePlayer)paramPlayer);
             list.replaceAll(paramString3 -> paramString2.replace("{playerTarget}", guildPlayer1.getFormattedName()).replace("{time}", paramString2));
-            guild.broadcast(list);
+            guild.getMembers().forEach(mem -> {
+                if (mem.isOnline()) {
+                    list.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+                }
+            });
         }
     }
 
@@ -808,7 +838,12 @@ public class GuildCommand extends VCommand {
             return;
         if (paramString.equals("everyone")) {
             guild.unmuteAll();
-            guild.broadcast(parse(LANGUAGE.getList("guilds.commands.unmute.success-everyone"), guild, (GuildRank)null, (OfflinePlayer)paramPlayer));
+            List<String> list = LANGUAGE.getList("guilds.commands.unmute.success-everyone");
+            guild.getMembers().forEach(mem -> {
+                if (mem.isOnline()) {
+                    list.forEach(line -> mem.sendMessage(ChatColor.translateAlternateColorCodes('&', line).replace("{player}", paramPlayer.getDisplayName())) );
+                }
+            });
         } else {
             OfflinePlayer offlinePlayer = GuildUtils.getOfflinePlayerByName(paramString);
             if (paramPlayer == offlinePlayer)

@@ -170,7 +170,6 @@ public class Account {
         player.getInventory().setArmorContents(new ItemStack[4]);
         if (inLobby()) {
             player.setGameMode(GameMode.ADVENTURE);
-            player.setAllowFlight(player.hasPermission("lostskywars.lobby.fly"));
             int slot = Language.lobby$hotbar$profile$slot;
             if (slot < 9 && slot > -1) {
                 player.getInventory().setItem(slot,

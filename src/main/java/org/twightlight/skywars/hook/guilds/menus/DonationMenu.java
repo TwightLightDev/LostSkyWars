@@ -13,7 +13,6 @@ import org.twightlight.skywars.hook.GuildsHook;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.hook.guilds.menus.api.GMenu;
 import org.twightlight.skywars.hook.guilds.menus.api.Item;
-import org.twightlight.skywars.hook.guilds.shop.ShopMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.TimeUtils;
 
@@ -34,7 +33,7 @@ public class DonationMenu {
         menu.addContent(40, back);
 
         Item shop = new Item((e) -> {
-            ShopMenu.open(donator);
+            ((Player) e.getWhoClicked()).chat("/guildshop");
         }, (p) -> {
             return new ItemBuilder(XMaterial.EMERALD).setName("&aGuild Shop").setLore(Arrays.asList("&eClick to browse!")).toItemStack();
         });

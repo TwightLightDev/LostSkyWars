@@ -2,6 +2,7 @@ package org.twightlight.skywars.player;
 
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
+import org.twightlight.skywars.api.event.player.SkyWarsPlayerSoulEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
 import org.twightlight.skywars.world.WorldServer;
 
@@ -71,10 +72,15 @@ public class DataContainer {
     }
 
     public void addSouls(int amount) {
+
         WorldServer<?> server = (WorldServer<?>) account.getServer();
+        SkyWarsPlayerSoulEarnEvent e = new SkyWarsPlayerSoulEarnEvent(server, account.getPlayer(), amount);
+        Bukkit.getPluginManager().callEvent(e);
+        int final_amount = e.getAmount();
+
         if (!server.isPrivate()) {
-            account.addStat("souls", amount);
-            this.soulsEarned += amount;
+            account.addStat("souls", final_amount);
+            this.soulsEarned += final_amount;
         }
     }
 }

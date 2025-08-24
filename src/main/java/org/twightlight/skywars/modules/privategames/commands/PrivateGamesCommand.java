@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 
 import org.twightlight.skywars.modules.privategames.PrivateGames;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
 import org.twightlight.skywars.utils.Logger.Level;
 
@@ -32,7 +32,7 @@ public class PrivateGamesCommand extends Command {
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+            User user = PrivateGames.getStorage().getUser(player);
             if (args.length == 0) {
                 user.togglePrivateGame();
                 return true;

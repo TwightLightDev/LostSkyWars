@@ -2,24 +2,24 @@ package org.twightlight.skywars.modules.privategames.database;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.privategames.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Storage {
-    private Map<Player, PrivateGamesUser> users = new HashMap<>();
+    private Map<Player, User> users = new HashMap<>();
     private SQLite database;
 
     public Storage() {
         database = new SQLite(SkyWars.getInstance(), "privategames");
     }
 
-    public PrivateGamesUser getUser(Player p) {
+    public User getUser(Player p) {
         return users.getOrDefault(p, null);
     }
 
-    public void addUser(Player p, PrivateGamesUser u) {
+    public void addUser(Player p, User u) {
         users.put(p, u);
     }
 

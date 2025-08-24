@@ -13,7 +13,7 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.killeffects.*;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.killeffects.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger;

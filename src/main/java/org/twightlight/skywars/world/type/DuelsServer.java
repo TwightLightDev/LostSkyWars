@@ -32,7 +32,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;

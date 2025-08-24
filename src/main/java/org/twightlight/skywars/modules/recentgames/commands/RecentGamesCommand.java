@@ -10,11 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.modules.libs.menus.Item;
 import org.twightlight.skywars.modules.recentgames.GameData;
 import org.twightlight.skywars.modules.recentgames.GameResult;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.modules.recentgames.User;
-import org.twightlight.skywars.modules.recentgames.menus.Item;
 import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.Logger.Level;
@@ -27,7 +27,7 @@ public class RecentGamesCommand extends Command {
 
     public RecentGamesCommand() {
         super("recentgames");
-        this.setAliases(Arrays.asList("rg"));
+        this.setAliases(Arrays.asList("rg", "recentgame"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

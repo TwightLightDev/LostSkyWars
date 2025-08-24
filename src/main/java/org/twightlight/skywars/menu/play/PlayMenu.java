@@ -18,7 +18,7 @@ import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
@@ -55,7 +55,7 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.NORMAL);
                                     if (server != null) {
-                                        PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                        User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
                                             user.connect(account, server);
                                         } else {
@@ -72,7 +72,7 @@ public class PlayMenu extends PlayerMenu {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
                                     WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.INSANE);
                                     if (server != null) {
-                                        PrivateGamesUser user = PrivateGames.getStorage().getUser(player);
+                                        User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
                                             user.connect(account, server);
                                         } else {

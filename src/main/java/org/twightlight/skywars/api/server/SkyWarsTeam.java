@@ -7,7 +7,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsBalloon;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.balloons.Balloon;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.balloons.Balloon;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;

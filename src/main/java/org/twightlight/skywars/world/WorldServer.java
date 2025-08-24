@@ -11,8 +11,8 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.sprays.Spray;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
+import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsChest;
@@ -46,7 +46,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
     protected List<Player> initialPlayers = new ArrayList<>();
     protected long startTime;
     protected long startTimeMillis;
-    protected PrivateGamesUser serverOwner;
+    protected User serverOwner;
 
     public WorldServer(String yaml) {
         this(yaml, null, false);
@@ -144,7 +144,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         return null;
     }
 
-    public void setServerOwner(PrivateGamesUser p) {
+    public void setServerOwner(User p) {
         if (isPrivate)
             serverOwner = p;
     }
@@ -257,7 +257,7 @@ public abstract class WorldServer<T> extends SkyWarsServer {
         }
     }
 
-    public PrivateGamesUser getServerOwner() {
+    public User getServerOwner() {
         return serverOwner;
     }
 

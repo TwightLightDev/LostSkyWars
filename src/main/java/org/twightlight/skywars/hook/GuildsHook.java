@@ -4,16 +4,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.guilds.commands.GuildCoinsCommand;
-import org.twightlight.skywars.hook.guilds.commands.GuildsCommand;
+import org.twightlight.skywars.hook.guilds.commands.GuildsDonationCommand;
 import org.twightlight.skywars.hook.guilds.config.LangConfig;
 import org.twightlight.skywars.hook.guilds.config.LevelConfig;
 import org.twightlight.skywars.hook.guilds.database.GuildDonationDB;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.hook.guilds.listeners.InventoryClick;
 import org.twightlight.skywars.hook.guilds.listeners.InventoryManager;
-import org.twightlight.skywars.hook.guilds.listeners.Player;
+import org.twightlight.skywars.hook.guilds.listeners.PlayerEvent;
 import org.twightlight.skywars.hook.guilds.papi.GuildsDonationExpansion;
-import org.twightlight.skywars.modules.YamlWrapper;
+import org.twightlight.skywars.hook.guilds.papi.GuildsShopExpansion;
+import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.utils.Logger;
 
 import java.io.File;
@@ -23,12 +24,12 @@ public class GuildsHook {
     private static GuildDonationDB external_db;
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("GuildsHook");
     public static BukkitTask autoSave;
-    public static org.twightlight.skywars.modules.YamlWrapper levelConfig;
-    public static org.twightlight.skywars.modules.YamlWrapper langConfig;
+    public static YamlWrapper levelConfig;
+    public static YamlWrapper langConfig;
     public static void setupGuilds() {
         LOGGER.log(Logger.Level.INFO, "Guilds found, hooking...");
         Bukkit.getPluginManager().registerEvents(new org.twightlight.skywars.hook.guilds.listeners.SkyWars(), SkyWars.getInstance());
-        Bukkit.getPluginManager().registerEvents(new Player(), SkyWars.getInstance());
+        Bukkit.getPluginManager().registerEvents(new PlayerEvent(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new InventoryClick(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new InventoryManager(), SkyWars.getInstance());
 
@@ -69,11 +70,12 @@ public class GuildsHook {
     private static void setupPlaceHolderAPI() {
         if (SkyWars.placeholderapi) {
             new GuildsDonationExpansion().register();
+            new GuildsShopExpansion().register();
         }
     }
 
     private static void initCommands() {
-        new GuildsCommand();
+        new GuildsDonationCommand();
         new GuildCoinsCommand();
     }
 }

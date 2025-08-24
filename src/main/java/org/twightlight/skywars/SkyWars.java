@@ -17,6 +17,7 @@ import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.modules.friends.friend.Friend;
+import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.rank.Rank;
@@ -96,6 +97,7 @@ public class SkyWars extends JavaPlugin {
         new PrivateGames();
         new RecentGames();
         new Friends();
+        new LobbySettings();
         if (MODE != CoreMode.LOBBY) {
             ChestType.setupTypes();
         }

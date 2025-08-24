@@ -35,4 +35,12 @@ public class VectorUtils {
         rotateAroundAxisY(v, yaw);
         rotateAroundAxisZ(v, roll);
     }
+
+    public static Vector randomVector() {
+        Vector vec = Vector.getRandom().multiply(2);
+        vec.setX(vec.getX() - 1.0D);
+        vec.setY(vec.getY() - 1.0D);
+        vec.setZ(vec.getZ() - 1.0D);
+        return vec;
+    }
 }

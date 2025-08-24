@@ -22,7 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class KitsSetupMenu extends Menu {
+public class
+KitsSetupMenu extends Menu {
 
     private ConfigUtils config;
     private String path;

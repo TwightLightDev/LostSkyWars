@@ -1,21 +1,22 @@
 package org.twightlight.skywars.modules.recentgames;
 
 import com.google.common.reflect.TypeToken;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class User {
-    private Player p;
+    private UUID uuid;
 
     private static Map<Player, User> userMap = new HashMap<>();
     public User(Player p) {
-        this.p = p;
+        this.uuid = p.getUniqueId();
         userMap.put(p, this);
     }
 
     public Player getPlayer() {
-        return p;
+        return Bukkit.getPlayer(uuid);
     }
 
     public static User getUser(Player p) {
@@ -23,7 +24,7 @@ public class User {
     }
 
     public List<GameData> getData() {
-        return RecentGames.getDatabase().getData(p, "games", new TypeToken<List<GameData>>() {}, Collections.emptyList());
+        return RecentGames.getDatabase().getData(getPlayer(), "games", new TypeToken<List<GameData>>() {}, Collections.emptyList());
     }
 
     public void addGame(GameData data, int cap) {
@@ -36,6 +37,6 @@ public class User {
             newData.add(game);
         }
 
-        RecentGames.getDatabase().updateData(p, newData, "games");
+        RecentGames.getDatabase().updateData(getPlayer(), newData, "games");
     }
 }

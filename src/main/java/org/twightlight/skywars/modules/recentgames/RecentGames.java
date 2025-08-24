@@ -16,6 +16,7 @@ public class RecentGames extends Modules {
     public static Logger LOGGER = new Logger();
 
     public RecentGames() {
+        super();
         initHooks();
         initListeners();
         initDatabase();

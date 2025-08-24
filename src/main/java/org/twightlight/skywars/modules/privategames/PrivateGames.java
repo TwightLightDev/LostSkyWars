@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Modules;
 import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
-import org.twightlight.skywars.modules.YamlWrapper;
+import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.privategames.config.LangConfig;
 import org.twightlight.skywars.modules.privategames.database.Storage;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerClickInventory;
@@ -17,6 +17,7 @@ public class PrivateGames extends Modules {
     private static YamlWrapper lang;
 
     public PrivateGames() {
+        super();
         initListeners();
         initDatabase();
         initCommands();

@@ -13,12 +13,14 @@ import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
+import java.util.Arrays;
+
 
 public class GuildCoinsCommand extends Command {
 
     public GuildCoinsCommand() {
         super("guildcoins");
-
+        setAliases(Arrays.asList("guildscoins", "guildcoin", "guildscoin", "gcoin", "gcoins"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

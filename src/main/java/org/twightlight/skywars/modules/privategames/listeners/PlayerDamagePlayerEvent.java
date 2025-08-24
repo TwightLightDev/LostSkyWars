@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.world.WorldServer;
 
@@ -24,7 +24,7 @@ public class PlayerDamagePlayerEvent implements Listener {
         WorldServer<?> server = (WorldServer<?>) account.getServer();
 
         if (server.isPrivate()) {
-            PrivateGamesUser owner = server.getServerOwner();
+            User owner = server.getServerOwner();
             if (owner.getInstantKillSetting().getValue() == 1) {
                 ((Player) e.getEntity()).damage(Integer.MAX_VALUE, attacker);
             }

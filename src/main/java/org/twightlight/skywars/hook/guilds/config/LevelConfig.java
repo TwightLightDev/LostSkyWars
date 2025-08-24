@@ -2,7 +2,7 @@ package org.twightlight.skywars.hook.guilds.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.modules.YamlWrapper;
+import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

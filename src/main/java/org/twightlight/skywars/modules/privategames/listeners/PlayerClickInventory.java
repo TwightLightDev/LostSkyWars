@@ -4,6 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.twightlight.skywars.modules.libs.menus.ModulesMenu;
+import org.twightlight.skywars.modules.libs.menus.ModulesMenuHolder;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenuHolder;
 

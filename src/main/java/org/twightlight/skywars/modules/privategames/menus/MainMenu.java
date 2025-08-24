@@ -1,19 +1,16 @@
 package org.twightlight.skywars.modules.privategames.menus;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.twightlight.libs.xseries.XMaterial;
-import org.twightlight.skywars.modules.privategames.PrivateGamesUser;
+import org.twightlight.skywars.modules.libs.menus.Item;
+import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.submenus.GameSpeed;
 import org.twightlight.skywars.modules.privategames.menus.submenus.GameTime;
 import org.twightlight.skywars.modules.privategames.menus.submenus.HealthMultiply;
-import org.twightlight.skywars.modules.privategames.menus.utils.Item;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
 
 public class MainMenu {
-    public static void open(PrivateGamesUser p) {
+    public static void open(User p) {
         PGMenu menu = PGMenu.createMenu(36);
 
         Item back = new Item( (e) -> {
@@ -52,6 +49,6 @@ public class MainMenu {
             return new ItemBuilder(XMaterial.APPLE).setName("&aSet Health Multiply").setLore("&bCurrent Multiply: " + p.getHealthMultiplySetting().getValue(), "", "&eClick to change!").toItemStack();
         });
         menu.addContent(16, healthMultiply);
-        menu.open(p);
+        menu.open(p.getPlayer());
     }
 }
