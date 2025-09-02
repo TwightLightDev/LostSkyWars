@@ -100,7 +100,7 @@ public class DeathCriesMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmCryMenu(player, cry, DeathCriesMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, cry, DeathCriesMenu.class, order, filter, searchQuery);
                             return;
                         }
 

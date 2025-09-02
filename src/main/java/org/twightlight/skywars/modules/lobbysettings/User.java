@@ -26,6 +26,7 @@ public class User {
     private boolean vanish;
     private boolean showScoreboard;
     private boolean showParticles;
+    private boolean showChat;
 
     public User(Player p) {
         uuid = p.getUniqueId();
@@ -42,6 +43,18 @@ public class User {
         }, "true"));
         showParticles = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showParticles", new TypeToken<String>() {
         }, "true"));
+        showChat = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showChat", new TypeToken<String>() {
+        }, "true"));
+    }
+    public boolean isChatVisible() {
+        return showChat;
+    }
+
+    public void setChatVisibility(boolean showChat, boolean modify) {
+        this.showChat = showChat;
+        if (modify) {
+            LobbySettings.getDatabase().updateData(Bukkit.getPlayer(uuid), String.valueOf(showChat), "showChat");
+        }
     }
 
     public boolean isParticlesVisible() {
@@ -152,6 +165,8 @@ public class User {
         }, "true"));
         boolean showParticles = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showParticles", new TypeToken<String>() {
         }, "true"));
+        boolean showChat = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showChat", new TypeToken<String>() {
+        }, "true"));
 
         setScoreboardVisibility(showScoreboard, false);
         setVanishState(vanish, false);
@@ -159,6 +174,7 @@ public class User {
         setJumpBoost(jumpboost, false);
         setFlyEnable(fly, false);
         setParticlesVisibility(showParticles, false);
+        setChatVisibility(showChat, false);
     }
 
     public void disable() {
@@ -168,6 +184,8 @@ public class User {
         setSpeed(0, false);
         setVanishState(false, false);
         setParticlesVisibility(true, false);
+        setChatVisibility(true, false);
+
     }
 
     public UUID getUUID() {

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSoulEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.Arrays;
 
@@ -28,7 +28,7 @@ public class DataContainer {
     }
 
     public void addCoins(int amount) {
-        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        Arena<?> server = (Arena<?>) account.getServer();
         SkyWarsPlayerCoinEarnEvent e = new SkyWarsPlayerCoinEarnEvent(server, account.getPlayer(), amount);
         Bukkit.getPluginManager().callEvent(e);
         int final_amount = e.getAmount();
@@ -44,7 +44,7 @@ public class DataContainer {
     }
 
     public void addXp(double amount) {
-        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        Arena<?> server = (Arena<?>) account.getServer();
 
 
         SkyWarsPlayerXpGainEvent e = new SkyWarsPlayerXpGainEvent(server, account.getPlayer(), amount);
@@ -73,7 +73,7 @@ public class DataContainer {
 
     public void addSouls(int amount) {
 
-        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        Arena<?> server = (Arena<?>) account.getServer();
         SkyWarsPlayerSoulEarnEvent e = new SkyWarsPlayerSoulEarnEvent(server, account.getPlayer(), amount);
         Bukkit.getPluginManager().callEvent(e);
         int final_amount = e.getAmount();

@@ -1,27 +1,35 @@
 package org.twightlight.skywars.modules.boosters;
 
-import org.twightlight.skywars.modules.Modules;
+import org.twightlight.skywars.modules.Module;
+import org.twightlight.skywars.modules.boosters.config.BoostersConfig;
 import org.twightlight.skywars.modules.boosters.config.MainConfig;
+import org.twightlight.skywars.modules.boosters.database.Collections;
+import org.twightlight.skywars.modules.boosters.users.ServerUser;
 import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.boosters.config.LangConfig;
 import org.twightlight.skywars.modules.boosters.database.SQLite;
 import org.twightlight.skywars.modules.boosters.listeners.PlayerJoin;
 import org.twightlight.skywars.modules.boosters.listeners.SkyWars;
+import org.twightlight.skywars.utils.Logger;
 
-public class Boosters extends Modules {
+public class Boosters extends Module {
     private static SQLite database;
     private static YamlWrapper lang;
     private static YamlWrapper config;
+    private static YamlWrapper bconfig;
+
     private static Boosters instance;
 
     public Boosters() {
-        super();
+        super("Boosters");
         instance = this;
+        initConfig();
         initListeners();
         initDatabase();
         initCommands();
-        initConfig();
-        initServerManager();
+        initServerUser();
+        LOGGER.log(Logger.Level.INFO, "Boosters module has been successfully loaded!");
+
     }
 
     public static Boosters getInstance() {
@@ -30,16 +38,20 @@ public class Boosters extends Modules {
 
 
     private void initListeners() {
+        LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
         this.registerEvents(new PlayerJoin());
         this.registerEvents(new SkyWars());
     }
 
     private void initDatabase() {
+        LOGGER.log(Logger.Level.INFO, "Loading Database...");
         database = new SQLite(getPlugin(), "boosters");
         database.createServerData();
+        Collections.init();
     }
 
     private void initCommands() {
+        LOGGER.log(Logger.Level.INFO, "Loading Commands...");
 
     }
 
@@ -47,13 +59,16 @@ public class Boosters extends Modules {
         return database;
     }
 
-    private static void initServerManager() {
-        ServerManager.init();
+    private static void initServerUser() {
+        ServerUser.init();
     }
 
     private void initConfig() {
+        LOGGER.log(Logger.Level.INFO, "Loading Configs...");
         lang = new LangConfig(getPlugin(), "language", getPlugin().getDataFolder().getPath() + "/modules/boosters");
         config = new MainConfig(getPlugin(), "config", getPlugin().getDataFolder().getPath() + "/modules/boosters");
+        bconfig = new BoostersConfig(getPlugin(), "boosters", getPlugin().getDataFolder().getPath() + "/modules/boosters");
+
     }
 
     public static YamlWrapper getLanguage() {
@@ -62,5 +77,9 @@ public class Boosters extends Modules {
 
     public static YamlWrapper getConfig() {
         return config;
+    }
+
+    public static YamlWrapper getBoostersConfig() {
+        return bconfig;
     }
 }

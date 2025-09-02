@@ -22,7 +22,7 @@ import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class PlayDuelsMenu extends PlayerMenu {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("playsolo")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.SOLO, SkyWarsType.DUELS);
+                                    Arena<?> server = Arena.findRandom(SkyWarsMode.SOLO, SkyWarsType.DUELS);
                                     if (server != null) {
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
@@ -61,7 +61,7 @@ public class PlayDuelsMenu extends PlayerMenu {
                                 }
                             } else if (menu.equalsIgnoreCase("playdoubles")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    WorldServer<?> server = WorldServer.findRandom(SkyWarsMode.DOUBLES, SkyWarsType.DUELS);
+                                    Arena<?> server = Arena.findRandom(SkyWarsMode.DOUBLES, SkyWarsType.DUELS);
                                     if (server != null) {
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                         server.connect(account);
@@ -89,7 +89,7 @@ public class PlayDuelsMenu extends PlayerMenu {
 
         int playing_solo = CoreLobbies.SOLO_DUELS, playing_doubles = CoreLobbies.DOUBLES_DUELS;
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (WorldServer<?> server : WorldServer.listServers()) {
+            for (Arena<?> server : Arena.listServers()) {
                 if (server.getType().equals(SkyWarsType.DUELS)) {
                     if (server.getMode().equals(SkyWarsMode.SOLO)) {
                         playing_solo += server.getOnline();

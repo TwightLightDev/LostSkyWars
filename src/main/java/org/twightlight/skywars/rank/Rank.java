@@ -37,7 +37,7 @@ public class Rank {
     public void apply(Player player) {
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            account.getContainers("account").get("lastRank").set(StringUtils.deformatColors(StringUtils.getLastColor(this.prefix)));
+            account.getContainer("account").get("lastRank").set(StringUtils.deformatColors(StringUtils.getLastColor(this.prefix)));
             account = null;
         }
         if (Language.options$ranks$chat) {

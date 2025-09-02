@@ -135,7 +135,7 @@ public class KillMessagesMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmKMMenu(player, km, KillMessagesMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, km, KillMessagesMenu.class, order, filter, searchQuery);
                             return;
                         }
 

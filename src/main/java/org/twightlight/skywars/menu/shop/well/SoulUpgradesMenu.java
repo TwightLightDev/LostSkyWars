@@ -47,18 +47,18 @@ public class SoulUpgradesMenu extends PlayerMenu {
                             int coins = account.getInt("coins");
 
                             if (menu.equalsIgnoreCase("soulwin")) {
-                                WellUpgrade nextW = WellUpgrade.getNextWin(account.getContainers("account").get("sw_soulswin").getAsInt());
+                                WellUpgrade nextW = WellUpgrade.getNextWin(account.getContainer("account").get("sw_soulswin").getAsInt());
                                 if (nextW != null && coins >= nextW.getPrice()) {
                                     account.removeStat("coins", nextW.getPrice());
-                                    account.getContainers("account").get("sw_soulswin").set(nextW.getAmount());
+                                    account.getContainer("account").get("sw_soulswin").set(nextW.getAmount());
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", nextW.getName())));
                                     new SoulUpgradesMenu(player, back);
                                 }
                             } else if (menu.equalsIgnoreCase("soulmax")) {
-                                WellUpgrade nextM = WellUpgrade.getNextMax(account.getContainers("account").get("sw_maxsouls").getAsInt());
+                                WellUpgrade nextM = WellUpgrade.getNextMax(account.getContainer("account").get("sw_maxsouls").getAsInt());
                                 if (nextM != null && coins >= nextM.getPrice()) {
                                     account.removeStat("coins", nextM.getPrice());
-                                    account.getContainers("account").get("sw_maxsouls").set(nextM.getAmount());
+                                    account.getContainer("account").get("sw_maxsouls").set(nextM.getAmount());
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", nextM.getName())));
                                     new SoulUpgradesMenu(player, back);
                                 }
@@ -89,8 +89,8 @@ public class SoulUpgradesMenu extends PlayerMenu {
                 String stack = entry.getValue().getStack();
                 String action = entry.getValue().getAction().getValue();
 
-                WellUpgrade nextW = WellUpgrade.getNextWin(account.getContainers("account").get("sw_soulswin").getAsInt());
-                WellUpgrade nextM = WellUpgrade.getNextMax(account.getContainers("account").get("sw_maxsouls").getAsInt());
+                WellUpgrade nextW = WellUpgrade.getNextWin(account.getContainer("account").get("sw_soulswin").getAsInt());
+                WellUpgrade nextM = WellUpgrade.getNextMax(account.getContainer("account").get("sw_maxsouls").getAsInt());
                 if ((action.equalsIgnoreCase("soulwin") && nextW == null) || (action.equalsIgnoreCase("soulmax") && nextM == null)) {
                     this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(config.getAsString("max-item")));
                     continue;

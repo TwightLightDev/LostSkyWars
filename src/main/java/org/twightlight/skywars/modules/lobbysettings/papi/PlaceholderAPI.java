@@ -45,7 +45,9 @@ public class PlaceholderAPI extends PlaceholderExpansion {
             return String.valueOf(user.isScoreboardVisible());
         } else if (params.equals("showparticles")) {
             return String.valueOf(user.isParticlesVisible());
-        } else {
+        } else if (params.equals("showchat")) {
+            return String.valueOf(user.isChatVisible());
+        }  else {
             return "";
         }
     }

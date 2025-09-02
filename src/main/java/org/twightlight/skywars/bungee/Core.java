@@ -24,11 +24,11 @@ public class Core {
     private static CoreSender SENDER;
     public static final String[] menusArray = new String[]{"profile", "leveling", "statistics", "settings", "shop", "cells", "play", "playduels", "playranked", "kitsandperks",
             "nkits", "ikits", "rkits", "viewkit", "confirmbuy", "kitselector", "mapselector", "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "balloon", "statsnpc", "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics", "victorydance"};
+            "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "balloon", "statsnpc", "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics", "victorydance", "title"};
     public static final List<String> filesSaved = Arrays.asList("profile", "leveling", "statistics", "settings", "shop", "cells", "play", "playduels", "playranked", "kitsandperks",
             "nkits", "ikits", "rkits", "viewkit", "confirmbuy", "kitselector", "mapselector", "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
             "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "projectiletrail", "killmessage", "spray", "balloon", "statsnpc", "symbol", "normalkits", "insanekits", "rankedkits",
-            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails", "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "deliveries", "levels", "perks", "ranked", "ranks", "symbols", "lang", "cosmetics");
+            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails", "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title", "deliveries", "levels", "perks", "ranked", "ranks", "symbols", "lang", "cosmetics");
 
     public static CoreSender getCoreSender() {
         if (SENDER == null) {

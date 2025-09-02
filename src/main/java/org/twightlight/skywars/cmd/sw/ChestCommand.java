@@ -12,7 +12,7 @@ import org.twightlight.skywars.ui.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import static org.twightlight.skywars.listeners.player.PlayerInteractListener.CHEST;
 
@@ -33,7 +33,7 @@ public class ChestCommand extends SubCommand {
             return;
         }
 
-        if (WorldServer.getByWorldName(player.getWorld().getName()) == null) {
+        if (Arena.getByWorldName(player.getWorld().getName()) == null) {
             player.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
         }
@@ -80,7 +80,7 @@ public class ChestCommand extends SubCommand {
         if (display.startsWith("§aMagic Wand")) {
             evt.setCancelled(true);
             ChestType type = CHEST.get(player);
-            WorldServer<?> server = WorldServer.getByWorldName(player.getWorld().getName());
+            Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
             if (server == null) {
                 return;
             }

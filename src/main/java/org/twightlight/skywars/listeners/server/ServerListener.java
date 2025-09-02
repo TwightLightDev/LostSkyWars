@@ -13,7 +13,7 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class ServerListener implements Listener {
 
@@ -27,7 +27,7 @@ public class ServerListener implements Listener {
             if (Core.MODE == CoreMode.LOBBY) {
                 evt.setMotd("LOBBY; ");
             } else {
-                WorldServer<?> server = WorldServer.listServers().stream().findFirst().orElse(null);
+                Arena<?> server = Arena.listServers().stream().findFirst().orElse(null);
                 if (server == null) {
                     evt.setMotd("");
                     return;
@@ -40,7 +40,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent evt) {
-        WorldServer<?> server = WorldServer.getByWorldName(evt.getBlock().getWorld().getName());
+        Arena<?> server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {
@@ -50,7 +50,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent evt) {
-        WorldServer<?> server = WorldServer.getByWorldName(evt.getBlock().getWorld().getName());
+        Arena<?> server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {
@@ -65,7 +65,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent evt) {
-        WorldServer<?> server = WorldServer.getByWorldName(evt.getEntity().getWorld().getName());
+        Arena<?> server = Arena.getByWorldName(evt.getEntity().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {

@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.recentgames;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.modules.recentgames.hook.ReplayData;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,11 +18,11 @@ public class GameData {
     private ReplayData replayData;
     private long startTime;
 
-    private GameData(WorldServer<?> server) {
+    private GameData(Arena<?> server) {
 
     }
 
-    public static GameData createGameData(Player p, WorldServer<?> server, List<Player> winners, ReplayData replay) {
+    public static GameData createGameData(Player p, Arena<?> server, List<Player> winners, ReplayData replay) {
         GameData data = new GameData(server);
         if (winners == null || winners.isEmpty()) {
             data.result = GameResult.NO_RESULT;

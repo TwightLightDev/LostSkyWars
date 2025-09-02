@@ -35,7 +35,8 @@ public class SQLite {
                     "personal_activating TEXT DEFAULT '', " +
                     "personal_queue TEXT DEFAULT '', " +
                     "personal_storage TEXT DEFAULT '', " +
-                    "server_storage TEXT DEFAULT ''" +
+                    "server_storage TEXT DEFAULT '', " +
+                    "total_activated INTEGER DEFAULT 0" +
                     "); ");
             statement.close();
         } catch (SQLException e) {
@@ -48,7 +49,7 @@ public class SQLite {
                     + dbname+"_server" +
                     " ( " +
                     "server_activating TEXT DEFAULT '', " +
-                    "server_queue TEXT DEFAULT ''," +
+                    "server_queue TEXT DEFAULT ''" +
                     "); ");
             statement.close();
         } catch (SQLException e) {
@@ -83,7 +84,7 @@ public class SQLite {
         try (Connection connection = getConnection();
              PreparedStatement checkPs = connection.prepareStatement("SELECT player FROM " + dbname + " WHERE player = ?");
              PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname +
-                     " (player, personal_activating, personal_queue, personal_storage, server_storage) VALUES (?, ?, ?, ?, ?)")) {
+                     " (player, personal_activating, personal_queue, personal_storage, server_storage, total_activated) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             checkPs.setString(1, p.getUniqueId().toString());
             ResultSet rs = checkPs.executeQuery();
@@ -91,9 +92,11 @@ public class SQLite {
             if (!rs.next()) {
                 insertPs.setString(1, p.getUniqueId().toString());
                 insertPs.setString(2, "{}");
-                insertPs.setString(3, "{}");
-                insertPs.setString(4, "{}");
-                insertPs.setString(5, "{}");
+                insertPs.setString(3, "[]");
+                insertPs.setString(4, "[]");
+                insertPs.setString(5, "[]");
+                insertPs.setInt(6, 0);
+
                 insertPs.executeUpdate();
             }
         } catch (SQLException e) {
@@ -103,14 +106,14 @@ public class SQLite {
 
     public void createServerData() {
         try (Connection connection = getConnection();
-             PreparedStatement checkPs = connection.prepareStatement("SELECT server_activating FROM " + dbname);
+             PreparedStatement checkPs = connection.prepareStatement("SELECT server_activating FROM " + dbname + "_server");
 
              PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname+"_server" +
                      " (server_activating, server_queue) VALUES (?, ?)")) {
             ResultSet rs = checkPs.executeQuery();
             if (!rs.next()) {
                 insertPs.setString(1, "{}");
-                insertPs.setString(2, "{}");
+                insertPs.setString(2, "[]");
                 insertPs.executeUpdate();
             }
         } catch (SQLException e) {

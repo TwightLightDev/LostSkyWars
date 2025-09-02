@@ -85,7 +85,7 @@ public class StatisticsMenu extends PlayerMenu {
                 stack = stack.replace("{games}", StringUtils.formatNumber(account.getIntegers("soloplays", "teamplays") + Ranked.getInt(account, "plays")));
                 stack = stack.replace("{coins}", account.getFormatted("coins"));
                 stack = stack.replace("{souls}", account.getFormatted("souls"));
-                stack = stack.replace("{maxsouls}", StringUtils.formatNumber(account.getContainers("account").get("sw_maxsouls").getAsInt()));
+                stack = stack.replace("{maxsouls}", StringUtils.formatNumber(account.getContainer("account").get("sw_maxsouls").getAsInt()));
 
                 // Solo
                 stack = stack.replace("{solowins}", account.getFormatted("solowins"));

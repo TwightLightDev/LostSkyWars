@@ -43,7 +43,7 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
         } else if (params.equals("souls")) {
             return account.getFormatted("souls");
         } else if (params.equals("max_souls")) {
-            return StringUtils.formatNumber(account.getContainers("account").get("sw_maxsouls").getAsInt());
+            return StringUtils.formatNumber(account.getContainer("account").get("sw_maxsouls").getAsInt());
         } else if (params.startsWith("solo_")) {
             if (params.equals("solo_games")) {
                 return account.getFormatted("soloplays");

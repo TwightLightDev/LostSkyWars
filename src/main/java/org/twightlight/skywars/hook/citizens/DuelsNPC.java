@@ -18,7 +18,7 @@ import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +74,7 @@ public class DuelsNPC {
     public void update() {
         int playing = CoreLobbies.SOLO_DUELS + CoreLobbies.DOUBLES_DUELS;
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (WorldServer<?> server : WorldServer.listServers()) {
+            for (Arena<?> server : Arena.listServers()) {
                 if (server.getType().equals(SkyWarsType.DUELS)) {
                     playing += server.getOnline();
                 }

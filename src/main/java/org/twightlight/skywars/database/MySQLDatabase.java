@@ -12,10 +12,7 @@ import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class MySQLDatabase extends Database {
@@ -78,7 +75,7 @@ public class MySQLDatabase extends Database {
     private void createRankedTable() {
         this.update("CREATE TABLE IF NOT EXISTS ranked_lostedskywars (" + "id VARCHAR(36) NOT NULL," + "name VARCHAR(32) NOT NULL," + "kills INTEGER NOT NULL,"
                 + "wins INTEGER NOT NULL," + "assists INTEGER NOT NULL," + "deaths INTEGER NOT NULL," + "melee INTEGER NOT NULL," + "bow INTEGER NOT NULL," + "mob INTEGER NOT NULL," + "void INTEGER NOT NULL,"
-                + "plays INTEGER NOT NULL," + "points INTEGER NOT NULL," + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+                + "plays INTEGER NOT NULL," + "points INTEGER NOT NULL," + "brave_points INTEGER NOT NULL," + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
     }
 
     private void createSkyWarsTable() {
@@ -87,7 +84,7 @@ public class MySQLDatabase extends Database {
                 + "solomob INTEGER NOT NULL," + "solovoid INTEGER NOT NULL," + "soloplays INTEGER NOT NULL," + "teamkills INTEGER NOT NULL," + "teamwins INTEGER NOT NULL," + "teamassists INTEGER NOT NULL,"
                 + "teamdeaths INTEGER NOT NULL," + "teammelee INTEGER NOT NULL," + "teambow INTEGER NOT NULL," + "teammob INTEGER NOT NULL," + "teamvoid INTEGER NOT NULL," + "teamplays INTEGER NOT NULL,"
                 + "coins INTEGER NOT NULL," + "souls INTEGER NOT NULL," + "level INTEGER NOT NULL," + "exp DOUBLE NOT NULL," + "kits TEXT DEFAULT NULL," + "perks TEXT DEFAULT NULL,"
-                + "cages TEXT DEFAULT NULL," + "deathcry TEXT DEFAULT NULL," + "trail TEXT DEFAULT NULL," + "ballons TEXT DEFAULT NULL," + "killmessage TEXT DEFAULT NULL," + "killeffect TEXT DEFAULT NULL," + "spray TEXT DEFAULT NULL," + "victorydance TEXT DEFAULT NULL," + "selected TEXT DEFAULT NULL," + "lastSelected LONG," + "favorites TEXT,"
+                + "cages TEXT DEFAULT NULL," + "deathcry TEXT DEFAULT NULL," + "trail TEXT DEFAULT NULL," + "ballons TEXT DEFAULT NULL," + "killmessage TEXT DEFAULT NULL," + "killeffect TEXT DEFAULT NULL," + "spray TEXT DEFAULT NULL," + "victorydance TEXT DEFAULT NULL," + "title TEXT DEFAULT NULL," + "selected TEXT DEFAULT NULL," + "lastSelected LONG," + "favorites TEXT,"
                 + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
     }
 
@@ -150,6 +147,7 @@ public class MySQLDatabase extends Database {
             map.put("killeffect", new StatsContainer("{}"));
             map.put("spray", new StatsContainer("{}"));
             map.put("victorydance", new StatsContainer("{}"));
+            map.put("title", new StatsContainer("{}"));
             map.put("ballons", new StatsContainer("{}"));
             map.put("selected", new StatsContainer("0:0:0 : 0"));
             map.put("lastSelected", new StatsContainer(0L));
@@ -165,6 +163,7 @@ public class MySQLDatabase extends Database {
             map.put("void", new StatsContainer(0));
             map.put("plays", new StatsContainer(0));
             map.put("points", new StatsContainer(0));
+            map.put("brave_points", new StatsContainer(0));
         } else {
             map.put("lastRank", new StatsContainer("&7"));
             map.put("mysterydusts", new StatsContainer(0));
@@ -228,18 +227,18 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
-    public Account loadOffline(String name) {
-        CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?", name.toLowerCase());
-        if (rs == null) {
-            return null;
-        }
-
-        try {
-            return new Account(UUID.fromString(rs.getString("id")), name);
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
-            return null;
-        }
+    public CompletableFuture<Account> loadOffline(String name) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?", name.toLowerCase())) {
+                if (rs == null || !rs.next()) {
+                    return null;
+                }
+                return new Account(UUID.fromString(rs.getString("id")), name);
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\") error: ", ex);
+                return null;
+            }
+        });
     }
 
     @Override

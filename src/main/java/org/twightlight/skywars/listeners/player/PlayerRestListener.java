@@ -12,7 +12,7 @@ import org.twightlight.skywars.cmd.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 @SuppressWarnings("deprecation")
 public class PlayerRestListener implements Listener {
@@ -58,7 +58,7 @@ public class PlayerRestListener implements Listener {
                 if (server.getState() != SkyWarsState.INGAME || server.isSpectator(evt.getPlayer())) {
                     evt.setCancelled(true);
                 } else {
-                    WorldServer<?> ws = (WorldServer<?>) server;
+                    Arena<?> ws = (Arena<?>) server;
                     if (ws.getConfig().isBalloon(BukkitUtils.serializeLocation(evt.getBlock().getLocation()))) {
                         evt.setCancelled(true);
                     } else if (!ws.getConfig().getWorldCube().contains(evt.getBlock().getLocation())) {
@@ -79,7 +79,7 @@ public class PlayerRestListener implements Listener {
             } else {
                 if (server.getState() != SkyWarsState.INGAME || server.isSpectator(evt.getPlayer())) {
                     evt.setCancelled(true);
-                } else if (!((WorldServer<?>) server).getConfig().getWorldCube().contains(evt.getBlock().getLocation())) {
+                } else if (!((Arena<?>) server).getConfig().getWorldCube().contains(evt.getBlock().getLocation())) {
                     evt.setCancelled(true);
                 }
             }

@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.privategames;
 
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.Modules;
+import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
 import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.privategames.config.LangConfig;
@@ -10,22 +10,27 @@ import org.twightlight.skywars.modules.privategames.database.Storage;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerClickInventory;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerJoin;
 import org.twightlight.skywars.modules.privategames.listeners.ServerManagement;
+import org.twightlight.skywars.utils.Logger;
 
-public class PrivateGames extends Modules {
+public class PrivateGames extends Module {
 
     private static Storage storage;
     private static YamlWrapper lang;
 
     public PrivateGames() {
-        super();
+        super("PrivateGames");
         initListeners();
         initDatabase();
         initCommands();
         initConfig();
+        LOGGER.log(Logger.Level.INFO, "PrivateGames module has been successfully loaded!");
+
     }
 
 
     private void initListeners() {
+        LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
+
         Bukkit.getPluginManager().registerEvents(new ServerManagement(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerClickInventory(), SkyWars.getInstance());
@@ -33,10 +38,14 @@ public class PrivateGames extends Modules {
     }
 
     private void initDatabase() {
+        LOGGER.log(Logger.Level.INFO, "Loading Database...");
+
         storage = new Storage();
     }
 
     private void initCommands() {
+        LOGGER.log(Logger.Level.INFO, "Loading Commands...");
+
         new PrivateGamesCommand();
     }
 
@@ -45,6 +54,8 @@ public class PrivateGames extends Modules {
     }
 
     private void initConfig() {
+        LOGGER.log(Logger.Level.INFO, "Loading Configs...");
+
         lang = new LangConfig(getPlugin(), "language", getPlugin().getDataFolder().getPath() + "/modules/privategames");
     }
 

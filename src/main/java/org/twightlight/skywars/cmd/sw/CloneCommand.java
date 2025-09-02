@@ -2,14 +2,13 @@ package org.twightlight.skywars.cmd.sw;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.ui.server.ScanCallback;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +26,13 @@ public class CloneCommand extends SubCommand {
         }
 
         String worldName = args[1];
-        WorldServer<?> server = WorldServer.getByWorldName(args[0]);
+        Arena<?> server = Arena.getByWorldName(args[0]);
         if (server == null) {
             sender.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
         }
 
-        if (WorldServer.getByWorldName(worldName) != null) {
+        if (Arena.getByWorldName(worldName) != null) {
             sender.sendMessage("§5[LostSkyWars] §cThis world already is a arena");
             return;
         }
@@ -65,9 +64,9 @@ public class CloneCommand extends SubCommand {
         }
         cu.set("balloons", balloons);
 
-        FileUtils.copyFiles(new File("plugins/LostSkyWars/maps/" + args[0]), new File("plugins/LostSkyWars/maps/" + worldName));
+        SkyWars.getInstance().getWorldLoader().cloneArenaWorld(args[0], worldName);
 
-        WorldServer.loadArena(cu.getFile(), new ScanCallback() {
+        Arena.loadArena(cu.getFile(), new ScanCallback() {
 
             @Override
             public void finish() {

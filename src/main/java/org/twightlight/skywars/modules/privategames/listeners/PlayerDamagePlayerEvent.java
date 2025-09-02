@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class PlayerDamagePlayerEvent implements Listener {
     @EventHandler
@@ -20,8 +20,8 @@ public class PlayerDamagePlayerEvent implements Listener {
         Account account = Database.getInstance().getAccount(attacker.getUniqueId());
         if (account == null) return;
 
-        if (!(account.getServer() instanceof WorldServer<?>)) return;
-        WorldServer<?> server = (WorldServer<?>) account.getServer();
+        if (!(account.getServer() instanceof Arena<?>)) return;
+        Arena<?> server = (Arena<?>) account.getServer();
 
         if (server.isPrivate()) {
             User owner = server.getServerOwner();

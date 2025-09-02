@@ -11,10 +11,11 @@ public class MainConfig extends YamlWrapper {
         yml.addDefault("general.active.cap.3", "boosters.active.3");
         yml.addDefault("general.active.cap.2", "boosters.active.2");
         yml.addDefault("general.active.cap.1", "boosters.active.1");
+        yml.addDefault("general.queue.cap.20", "boosters.queue.20");
+        yml.addDefault("general.queue.cap.12", "boosters.queue.12");
+        yml.addDefault("general.queue.cap.8", "boosters.queue.8");
+        yml.addDefault("general.queue.cap.5", "boosters.queue.5");
         yml.addDefault("general.queue.cap.3", "boosters.queue.3");
-        yml.addDefault("general.queue.cap.2", "boosters.queue.2");
-        yml.addDefault("general.queue.cap.1", "boosters.queue.1");
-
         yml.options().copyDefaults(true);
         save();
     }

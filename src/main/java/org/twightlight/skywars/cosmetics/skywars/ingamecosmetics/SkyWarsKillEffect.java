@@ -9,10 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.killeffects.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class SkyWarsKillEffect extends Cosmetic {
+public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
 
     private String name;
     private String permission;
@@ -39,6 +36,11 @@ public abstract class SkyWarsKillEffect extends Cosmetic {
         this.icon = icon;
         this.coins = coins;
         this.buyable = buyable;
+
+    }
+
+    @Override
+    public void preview(Player player) {
 
     }
 

@@ -99,7 +99,7 @@ public class RecentGamesCommand extends Command {
             int index = (page - 1) * amountPerPage + i;
             Item paper = new Item((e) -> {
                 if (RecentGames.hasReplayHook()) {
-                    RecentGames.getReplayHook().play(dataList.get(index), (Player) e.getWhoClicked());
+                    RecentGames.getReplayHook().play(dataList.get(index), User.getUser((Player) e.getWhoClicked()));
                 }
             }, (p) -> {
                 if (index > dataList.size() - 1) {

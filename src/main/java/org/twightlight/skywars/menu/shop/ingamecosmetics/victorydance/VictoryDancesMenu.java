@@ -96,7 +96,7 @@ public class VictoryDancesMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmVDMenu(player, cos, VictoryDancesMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, cos, VictoryDancesMenu.class, order, filter, searchQuery);
                             return;
                         }
 

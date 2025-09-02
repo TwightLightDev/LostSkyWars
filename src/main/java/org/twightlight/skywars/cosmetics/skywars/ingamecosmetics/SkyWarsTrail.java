@@ -15,10 +15,7 @@ import org.bukkit.util.Vector;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -30,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SkyWarsTrail extends Cosmetic {
+public class SkyWarsTrail extends PreviewableCosmetic {
 
     private String name;
     private boolean buyable;
@@ -49,7 +46,10 @@ public class SkyWarsTrail extends Cosmetic {
         this.icon = icon;
         this.consumer = consumer;
     }
+    @Override
+    public void preview(Player player) {
 
+    }
 
     public boolean canBeSold() {
         return buyable;

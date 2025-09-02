@@ -24,7 +24,7 @@ import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class PlayMenu extends PlayerMenu {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("playnormal")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.NORMAL);
+                                    Arena<?> server = Arena.findRandom(mode, SkyWarsType.NORMAL);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -61,7 +61,7 @@ public class PlayMenu extends PlayerMenu {
                                         } else {
                                             server.connect(account);
                                         }
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getConfig().getWorldName()));
                                     }
                                 } else {
                                     CoreLobbies.writeMinigame(player, mode.name() + "_NORMAL", "all");
@@ -70,7 +70,7 @@ public class PlayMenu extends PlayerMenu {
                                 new MapsSelectorMenu(player, mode, SkyWarsType.NORMAL);
                             } else if (menu.equalsIgnoreCase("playinsane")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    WorldServer<?> server = WorldServer.findRandom(mode, SkyWarsType.INSANE);
+                                    Arena<?> server = Arena.findRandom(mode, SkyWarsType.INSANE);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -108,7 +108,7 @@ public class PlayMenu extends PlayerMenu {
         int playing_normal = mode.equals(SkyWarsMode.SOLO) ? CoreLobbies.SOLO_NORMAL : CoreLobbies.DOUBLES_NORMAL,
                 playing_insane = mode.equals(SkyWarsMode.SOLO) ? CoreLobbies.SOLO_INSANE : CoreLobbies.DOUBLES_INSANE;
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (WorldServer<?> server : WorldServer.listServers()) {
+            for (Arena<?> server : Arena.listServers()) {
                 if (server.getMode().equals(mode)) {
                     if (server.getType().equals(SkyWarsType.NORMAL)) {
                         playing_normal += server.getOnline();

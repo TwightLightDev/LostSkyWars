@@ -12,10 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class SQLiteDatabase extends Database {
@@ -83,7 +80,7 @@ public class SQLiteDatabase extends Database {
     private void createRankedTable() {
         this.update("CREATE TABLE IF NOT EXISTS ranked_lostedskywars (" + "id VARCHAR(36) NOT NULL," + "name VARCHAR(32) NOT NULL," + "kills INTEGER NOT NULL,"
                 + "wins INTEGER NOT NULL," + "assists INTEGER NOT NULL," + "deaths INTEGER NOT NULL," + "melee INTEGER NOT NULL," + "bow INTEGER NOT NULL," + "mob INTEGER NOT NULL," + "void INTEGER NOT NULL,"
-                + "plays INTEGER NOT NULL," + "points INTEGER NOT NULL," + "PRIMARY KEY(id));");
+                + "plays INTEGER NOT NULL," + "points INTEGER NOT NULL," + "brave_points INTEGER NOT NULL," + "PRIMARY KEY(id));");
     }
 
     private void createSkyWarsTable() {
@@ -92,7 +89,7 @@ public class SQLiteDatabase extends Database {
                 + "solomob INTEGER DEFAULT 0," + "solovoid INTEGER DEFAULT 0," + "soloplays INTEGER DEFAULT 0," + "teamkills INTEGER DEFAULT 0," + "teamwins INTEGER DEFAULT 0," + "teamassists INTEGER DEFAULT 0,"
                 + "teamdeaths INTEGER DEFAULT 0," + "teammelee INTEGER DEFAULT 0," + "teambow INTEGER DEFAULT 0," + "teammob INTEGER DEFAULT 0," + "teamvoid INTEGER DEFAULT 0," + "teamplays INTEGER DEFAULT 0,"
                 + "coins INTEGER DEFAULT 0," + "souls INTEGER DEFAULT 0," + "level INTEGER DEFAULT 0," + "exp DOUBLE NOT NULL," + "kits TEXT DEFAULT NULL," + "perks TEXT DEFAULT NULL,"
-                + "cages TEXT DEFAULT NULL," + "deathcry TEXT DEFAULT NULL,"+ "trail TEXT DEFAULT NULL," + "ballons TEXT DEFAULT NULL," + "killmessage TEXT DEFAULT NULL," + "killeffect TEXT DEFAULT NULL," + "spray TEXT DEFAULT NULL," + "victorydance TEXT DEFAULT NULL," + "selected TEXT DEFAULT NULL," + "lastSelected LONG," + "favorites TEXT," + " PRIMARY KEY(id));");
+                + "cages TEXT DEFAULT NULL," + "deathcry TEXT DEFAULT NULL," + "trail TEXT DEFAULT NULL," + "ballons TEXT DEFAULT NULL," + "killmessage TEXT DEFAULT NULL," + "killeffect TEXT DEFAULT NULL," + "spray TEXT DEFAULT NULL," + "victorydance TEXT DEFAULT NULL," + "title TEXT DEFAULT NULL," + "selected TEXT DEFAULT NULL," + "lastSelected LONG," + "favorites TEXT," + " PRIMARY KEY(id));");
     }
 
     boolean fieldExists(String table, String name) {
@@ -178,6 +175,7 @@ public class SQLiteDatabase extends Database {
             map.put("spray", new StatsContainer("{}"));
             map.put("ballons", new StatsContainer("{}"));
             map.put("victorydance", new StatsContainer("{}"));
+            map.put("title", new StatsContainer("{}"));
             map.put("selected", new StatsContainer("0:0:0 : 0"));
             map.put("lastSelected", new StatsContainer(0L));
             map.put("favorites", new StatsContainer("[]"));
@@ -192,6 +190,7 @@ public class SQLiteDatabase extends Database {
             map.put("void", new StatsContainer(0));
             map.put("plays", new StatsContainer(0));
             map.put("points", new StatsContainer(0));
+            map.put("brave_points", new StatsContainer(0));
         } else {
             map.put("lastRank", new StatsContainer("&7"));
             map.put("mysterydusts", new StatsContainer(0));
@@ -255,18 +254,21 @@ public class SQLiteDatabase extends Database {
     }
 
     @Override
-    public Account loadOffline(String name) {
-        CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?", name.toLowerCase());
-        if (rs == null) {
-            return null;
-        }
+    public CompletableFuture<Account> loadOffline(String name) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (CachedRowSet rs = query(
+                    "SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?",
+                    name.toLowerCase())) {
 
-        try {
-            return new Account(UUID.fromString(rs.getString("id")), name);
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\"): ", ex);
-            return null;
-        }
+                if (rs == null || !rs.next()) {
+                    return null;
+                }
+
+                return new Account(UUID.fromString(rs.getString("id")), name);
+            } catch (SQLException ex) {
+                throw new CompletionException(ex);
+            }
+        });
     }
 
     @Override

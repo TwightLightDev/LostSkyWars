@@ -40,8 +40,8 @@ public class DeliveryReward {
             account.addStat("coins", Integer.parseInt(this.value));
         } else if (type == RewardType.SOULS) {
             account.addStat("souls", Integer.parseInt(this.value));
-            if (account.getInt("souls") > account.getContainers("account").get("sw_maxsouls").getAsInt()) {
-                account.getContainers("skywars").get("souls").set(account.getContainers("account").get("sw_maxsouls").getAsInt());
+            if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
+                account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
             }
         } else if (type == RewardType.MYSTERY_BOX) {
             if (SkyWars.lostboxes) {

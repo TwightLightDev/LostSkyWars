@@ -34,7 +34,7 @@ import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.well.WellNPC;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -107,7 +107,7 @@ public class PlayerInteractListener extends Listeners {
                 CoreLobbies.writeLobby(player);
             }
         } else if (display.equals(Language.game$hotbar$compass$name)) {
-            new TeleporterMenu(player, (WorldServer<?>) server);
+            new TeleporterMenu(player, (Arena<?>) server);
         } else if (display.equals(Language.game$hotbar$play_again$name)) {
             if (server.getType() == SkyWarsType.RANKED) {
                 new PlayRankedMenu(player);
@@ -188,13 +188,13 @@ public class PlayerInteractListener extends Listeners {
 
                         if (evt.getAction().name().contains("RIGHT")) {
                             if (block.getState() instanceof Chest) {
-                                SkyWarsChest chest = ((WorldServer<?>) server).getChest(block);
-                                if (chest != null && ((WorldServer<?>) server).getEventTime(true) != 0) {
+                                SkyWarsChest chest = ((Arena<?>) server).getChest(block);
+                                if (chest != null && ((Arena<?>) server).getEventTime(true) != 0) {
                                     chest.createHologram();
                                 }
                             }
 
-                            WorldServer<?> ws = (WorldServer<?>) server;
+                            Arena<?> ws = (Arena<?>) server;
                             if (!ws.getConfig().getWorldCube().contains(block.getLocation()) || !ws.getConfig().getWorldCube().contains(block.getRelative(BlockFace.UP).getLocation())
                                     || ws.getConfig().isBalloon(BukkitUtils.serializeLocation(block.getLocation()))) {
                                 evt.setCancelled(true);

@@ -8,6 +8,8 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.StringUtils;
 
+import java.util.concurrent.CompletableFuture;
+
 public class RemoveCommand extends SubCommand {
 
     public RemoveCommand() {
@@ -30,40 +32,43 @@ public class RemoveCommand extends SubCommand {
             }
 
             Player target = Bukkit.getPlayerExact(args[1]);
-            Account account = null;
-            boolean save = false;
-            if (target == null || (account = Database.getInstance().getAccount(target.getUniqueId())) == null) {
+            CompletableFuture<Account> account1;
+            account1 = Database.getInstance().loadOffline(args[1]);
+
+            boolean save;
+            if (target == null || !target.isOnline()) {
                 save = true;
-                account = Database.getInstance().loadOffline(args[1]);
+            } else {
+                save = false;
             }
 
-            if (account == null) {
+            if (account1 == null) {
                 sender.sendMessage("§5[LostSkyWars] §cUser not found!");
                 return;
             }
+            account1.thenAccept((account -> {
+                try {
+                    if (args[2].startsWith("-") || args[2].equals("0")) {
+                        throw new NumberFormatException();
+                    }
 
-            try {
-                if (args[2].startsWith("-") || args[2].equals("0")) {
-                    throw new NumberFormatException();
+                    int amount = Integer.parseInt(args[2]);
+                    account.removeStat(type.toLowerCase(), amount);
+                    if (account.getInt(type.toLowerCase()) < 0) {
+                        account.getContainer("skywars").get(type.toLowerCase()).set(0);
+                    }
+
+                    sender.sendMessage(
+                            "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
+
+                    if (save) {
+                        account.save();
+                        account.destroy();
+                    }
+                } catch (NumberFormatException ex) {
+                    sender.sendMessage("§5[LostSkyWars] §cInvalid amount (amount > 0 & amount < " + Integer.MAX_VALUE + ")");
                 }
-
-                int amount = Integer.parseInt(args[2]);
-                account.removeStat(type.toLowerCase(), amount);
-                if (account.getInt(type.toLowerCase()) < 0) {
-                    account.getContainers("skywars").get(type.toLowerCase()).set(0);
-                }
-
-                sender.sendMessage(
-                        "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
-
-                // Salva usu§rio caso n§o esteja online.
-                if (save) {
-                    account.save();
-                    account.destroy();
-                }
-            } catch (NumberFormatException ex) {
-                sender.sendMessage("§5[LostSkyWars] §cInvalid amount (amount > 0 & amount < " + Integer.MAX_VALUE + ")");
-            }
+            }));
         } else {
             sender.sendMessage(
                     " \n§dRemove - Help\n \n§6/lsw remove coins <player> <amount> §f- §7Remove coins from a player.\n§6/lsw remove souls <player> <amount> §f- §7Remove souls from a player.\n ");

@@ -12,7 +12,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,10 +46,10 @@ public class TeleporterMenu extends UpdatablePlayerMenu {
         }
     }
 
-    private WorldServer<?> server;
+    private Arena<?> server;
     private Map<Integer, Player> map = new HashMap<>();
 
-    public TeleporterMenu(Player player, WorldServer<?> server) {
+    public TeleporterMenu(Player player, Arena<?> server) {
         super(player, config.getTitle(), Math.min(server.getAlive() / 9, 1));
         this.server = server;
 

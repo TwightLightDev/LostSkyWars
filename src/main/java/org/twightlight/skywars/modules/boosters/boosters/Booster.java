@@ -1,6 +1,11 @@
 package org.twightlight.skywars.modules.boosters.boosters;
 
 import com.google.gson.Gson;
+import org.twightlight.skywars.modules.boosters.users.User;
+import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.player.Account;
+
+import java.util.concurrent.CompletableFuture;
 
 public class Booster {
     private static Gson gson = new Gson();
@@ -9,14 +14,26 @@ public class Booster {
     private Currency currency;
     private float amplifier;
     private BoosterType type;
+    private CompletableFuture<Account> owner;
+    private float affiliateRate;
 
-    public static Booster createBooster(int time, Currency currency, float amplifier, BoosterType type) {
+    public static Booster createBooster(int time, Currency currency, float amplifier, float affiliateRate, BoosterType type) {
         Booster booster = new Booster();
         booster.amplifier = amplifier;
+        booster.affiliateRate = affiliateRate;
         booster.duration = time;
         booster.currency = currency;
         booster.type = type;
         return booster;
+    }
+
+    public static Booster parseFromYaml(YamlWrapper wrapper, String path) {
+        return createBooster(wrapper.getInt(path+".duration", 3600),
+                Currency.valueOf(wrapper.getString(path+".currency", "COINS")),
+                wrapper.getFloat(path + ".amplifier"),
+                wrapper.getFloat(path + ".affiliate"),
+                BoosterType.valueOf(wrapper.getString(path+".type", "PERSONAL"))
+        );
     }
 
     public String parseToJson() {
@@ -43,15 +60,43 @@ public class Booster {
         return amplifier;
     }
 
+    public void setOwner(CompletableFuture<Account> owner) {
+        this.owner = owner;
+    }
+
+    public CompletableFuture<Account> getOwner() {
+        return owner;
+    }
+
+    public float getAffiliateRate() {
+        return affiliateRate;
+    }
+
     public enum Currency {
-        COINS,
-        EXP,
-        SOULS
+        COINS("Coins", "&e"),
+        EXP("Exp", "&b"),
+        SOULS("Souls", "&d");
+
+        private String name;
+        private String cc;
+        Currency(String name, String colorcode) {
+            this.name = name;
+            this.cc = colorcode;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getColorCode() {
+            return cc;
+        }
     }
 
     public enum BoosterType {
         PERSONAL("personal_activating", "personal_queue", "personal_storage"),
-        SERVER("server_activating", "server_queue", "server_activating");
+        GLOBAL("server_activating", "server_queue", "server_storage");
+
 
         String activating;
         String queue;

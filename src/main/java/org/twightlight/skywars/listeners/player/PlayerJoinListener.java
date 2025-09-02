@@ -16,7 +16,7 @@ import org.twightlight.skywars.rank.Rank;
 import org.twightlight.skywars.rank.TagUtils;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class PlayerJoinListener extends Listeners {
 
@@ -28,8 +28,8 @@ public class PlayerJoinListener extends Listeners {
         TagUtils.sendTeams(player);
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (Core.MODE == CoreMode.ARENA) {
-            if (WorldServer.listServers().size() > 0) {
-                WorldServer.listServers().stream().findFirst().get().connect(account);
+            if (Arena.listServers().size() > 0) {
+                Arena.listServers().stream().findFirst().get().connect(account);
             }
         } else {
             account.reloadScoreboard();

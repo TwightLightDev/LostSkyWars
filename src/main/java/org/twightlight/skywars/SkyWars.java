@@ -2,7 +2,11 @@ package org.twightlight.skywars;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
+import org.twightlight.skywars.arena.worldloaders.InternalLoader;
+import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -15,8 +19,8 @@ import org.twightlight.skywars.hook.*;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.ConfigMenu;
+import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.friends.Friends;
-import org.twightlight.skywars.modules.friends.friend.Friend;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
@@ -30,7 +34,7 @@ import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.MinecraftVersion;
 import org.twightlight.skywars.well.AngelOfDeath;
 import org.twightlight.skywars.well.WellNPC;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.io.File;
 
@@ -43,6 +47,7 @@ public class SkyWars extends JavaPlugin {
     public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, guilds = true;
     public static Object economy;
     public static final Logger LOGGER = new Logger();
+    private WorldLoaderAdapter adapter;
 
     public SkyWars() {
         instance = this;
@@ -87,6 +92,7 @@ public class SkyWars extends JavaPlugin {
             LOGGER.log(Level.WARNING, "Enable BungeeCord mode in spigot.yml 'settings.bungeecord'");
             return;
         }
+        setupAdapter();
         File modules = new File("plugins/LostSkyWars/modules");
         if (!modules.exists()) {
             modules.mkdirs();
@@ -98,6 +104,7 @@ public class SkyWars extends JavaPlugin {
         new RecentGames();
         new Friends();
         new LobbySettings();
+        new Boosters();
         if (MODE != CoreMode.LOBBY) {
             ChestType.setupTypes();
         }
@@ -106,7 +113,7 @@ public class SkyWars extends JavaPlugin {
 
         Holograms.setup(SkyWars.getInstance());
         if (MODE != CoreMode.LOBBY) {
-            WorldServer.setupServers();
+            Arena.setupServers();
         }
 
         if (MODE != CoreMode.MULTI_ARENA) {
@@ -277,6 +284,20 @@ public class SkyWars extends JavaPlugin {
             vault = false;
             LOGGER.log(Level.WARNING, "Vault not found, disabling custom Economy.");
         }
+    }
+
+    private void setupAdapter() {
+        Plugin swmPlugin = Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
+        if (swmPlugin == null) {
+            adapter = new InternalLoader(this);
+
+        } else {
+            adapter = new SlimeLoader(this);
+        }
+    }
+
+    public WorldLoaderAdapter getWorldLoader() {
+        return adapter;
     }
 
     public static SkyWars getInstance() {

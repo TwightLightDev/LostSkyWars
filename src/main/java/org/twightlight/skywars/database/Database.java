@@ -10,6 +10,7 @@ import javax.sql.rowset.CachedRowSet;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class Database {
 
@@ -19,7 +20,7 @@ public abstract class Database {
 
     public abstract Account loadAccount(UUID id, String name);
 
-    public abstract Account loadOffline(String name);
+    public abstract CompletableFuture<Account> loadOffline(String name);
 
     public abstract Account unloadAccount(UUID id);
 

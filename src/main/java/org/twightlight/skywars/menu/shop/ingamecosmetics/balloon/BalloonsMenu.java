@@ -99,7 +99,7 @@ public class BalloonsMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmBalloonMenu(player, balloon, BalloonsMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, balloon, BalloonsMenu.class, order, filter, searchQuery);
                             return;
                         }
 

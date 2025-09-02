@@ -46,7 +46,7 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(evt.getInventory()) && item != null && item.getType() != Material.AIR) {
                     Delivery delivery = deliveries.get(item);
                     if (delivery != null) {
-                        DeliveryContainer dc = account.getContainers("account").get("deliveries").getDelivery();
+                        DeliveryContainer dc = account.getContainer("account").get("deliveries").getDelivery();
                         if (dc.get(delivery.getId()) > System.currentTimeMillis()) {
                             Sound.ANVIL_LAND.play(player, 1.0f, 1.0f);
                             player.sendMessage(StringUtils.formatColors(config.getAsString("warn-claimed").replace("{time}", TimeUtils.getTimeUntil(dc.get(delivery.getId())))));
@@ -99,7 +99,7 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
             return;
         }
 
-        DeliveryContainer dc = account.getContainers("account").get("deliveries").getDelivery();
+        DeliveryContainer dc = account.getContainer("account").get("deliveries").getDelivery();
         for (Delivery delivery : Delivery.listDeliveries()) {
             String stack = delivery.getIcon();
             if (dc.get(delivery.getId()) > System.currentTimeMillis() || !delivery.hasPermission(player)) {

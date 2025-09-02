@@ -20,7 +20,7 @@ import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.ZipUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class CreateCommand extends SubCommand {
             return;
         }
 
-        if (WorldServer.getByWorldName(player.getWorld().getName()) != null) {
+        if (Arena.getByWorldName(player.getWorld().getName()) != null) {
             player.sendMessage("§5[LostSkyWars] §cThis world already has an arena");
             return;
         }
@@ -175,7 +175,7 @@ public class CreateCommand extends SubCommand {
                 try {
                     account.refreshPlayer();
                     player.sendMessage("§5[LostSkyWars] §aAdding to server list...");
-                    WorldServer.loadArena(config.getFile(), new ScanCallback() {
+                    Arena.loadArena(config.getFile(), new ScanCallback() {
 
                         @Override
                         public void finish() {
@@ -185,7 +185,7 @@ public class CreateCommand extends SubCommand {
                         }
                     });
                 } catch (Exception ex) {
-                    WorldServer.LOGGER.log(Level.WARNING, "Cannot load a new game: ", ex);
+                    Arena.LOGGER.log(Level.WARNING, "Cannot load a new game: ", ex);
                     if (player.isOnline()) {
                         player.sendMessage("§5[LostSkyWars] §cCannot load a new game (see the console)");
                     }

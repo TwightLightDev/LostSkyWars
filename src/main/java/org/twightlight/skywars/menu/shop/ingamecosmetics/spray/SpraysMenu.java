@@ -96,7 +96,7 @@ public class SpraysMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmSprayMenu(player, cos, SpraysMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, cos, SpraysMenu.class, order, filter, searchQuery);
                             return;
                         }
 

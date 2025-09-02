@@ -15,7 +15,7 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.Logger.Level;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -350,7 +350,7 @@ public class BukkitUtils {
         return deserialized;
     }
 
-    public static Location deserializeLocation(String serialized, WorldServer<?> server) {
+    public static Location deserializeLocation(String serialized, Arena<?> server) {
         String[] divPoints = serialized.split("; ");
         Location deserialized = new Location(server.getWorld(), parseDouble(divPoints[1]), parseDouble(divPoints[2]), parseDouble(divPoints[3]));
         deserialized.setYaw(parseFloat(divPoints[4]));

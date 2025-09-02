@@ -9,6 +9,8 @@ import java.util.*;
 public class User {
     private UUID uuid;
 
+    private GameData viewingGame = null;
+
     private static Map<Player, User> userMap = new HashMap<>();
     public User(Player p) {
         this.uuid = p.getUniqueId();
@@ -38,5 +40,13 @@ public class User {
         }
 
         RecentGames.getDatabase().updateData(getPlayer(), newData, "games");
+    }
+
+    public void setViewingGame(GameData data) {
+        viewingGame = data;
+    }
+
+    public GameData getViewingGame() {
+        return viewingGame;
     }
 }

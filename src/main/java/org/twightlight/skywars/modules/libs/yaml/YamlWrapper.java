@@ -88,6 +88,10 @@ public class YamlWrapper {
         return this.yml.getDouble(path);
     }
 
+    public float getFloat(String path) {
+        return (float) this.yml.getDouble(path);
+    }
+
     public String getString(String path) {
         return this.yml.getString(path);
     }

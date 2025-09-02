@@ -8,10 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -22,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkyWarsBalloon extends Cosmetic {
+public class SkyWarsBalloon extends PreviewableCosmetic {
 
     private String name;
     private boolean buyable;
@@ -39,6 +36,10 @@ public class SkyWarsBalloon extends Cosmetic {
         this.coins = coins;
         this.textures = textures;
         this.icon = icon;
+    }
+    @Override
+    public void preview(Player player) {
+
     }
 
     public boolean isValid() {

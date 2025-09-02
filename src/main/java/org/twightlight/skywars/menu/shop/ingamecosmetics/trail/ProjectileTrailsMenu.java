@@ -96,7 +96,7 @@ public class ProjectileTrailsMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmTrailMenu(player, trail, ProjectileTrailsMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, trail, ProjectileTrailsMenu.class, order, filter, searchQuery);
                             return;
                         }
 

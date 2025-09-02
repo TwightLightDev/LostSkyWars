@@ -27,15 +27,17 @@ public class SkyWarsDeathCry extends Cosmetic {
     private String name;
     private boolean buyable;
     private int coins;
+    private String permission;
     private Sound sound;
     private float volume;
     private float pitch;
     private ItemStack icon;
 
-    public SkyWarsDeathCry(int id, String name, ItemStack icon, CosmeticRarity rarity, boolean buyable, int coins, String sound, float volume, float pitch) {
+    public SkyWarsDeathCry(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity, boolean buyable, int coins, String sound, float volume, float pitch) {
         super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, rarity);
         this.name = name;
         this.buyable = buyable;
+        this.permission = permission;
         this.coins = coins;
         this.sound = Sound.valueOf(sound);
         this.volume = volume;
@@ -65,7 +67,15 @@ public class SkyWarsDeathCry extends Cosmetic {
 
     @Override
     public boolean canBeFoundInBox(Player player) {
-        return true;
+        return !isPermissible() || !this.hasByPermission(player);
+    }
+
+    public boolean isPermissible() {
+        return !this.permission.isEmpty() && !this.permission.equals("none");
+    }
+
+    public boolean hasByPermission(Player player) {
+        return !isPermissible() || player.hasPermission(this.permission);
     }
 
     @Override
@@ -114,10 +124,11 @@ public class SkyWarsDeathCry extends Cosmetic {
             boolean buyable = sec.getBoolean("buyable");
             int price = sec.getInt("price");
             String sound = sec.getString("sound").toUpperCase();
+            String permission = sec.getString("permission");
             float volume = (float) sec.getDouble("volume");
             float pitch = (float) sec.getDouble("pitch");
 
-            SkyWarsDeathCry cry = new SkyWarsDeathCry(id, name, icon, rarity, buyable, price, sound, volume, pitch);
+            SkyWarsDeathCry cry = new SkyWarsDeathCry(id, name, permission, icon, rarity, buyable, price, sound, volume, pitch);
             if (!cry.isValid()) {
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(),
                         () -> LOGGER.log(Level.WARNING, "Invalid Sound \"" + sound + "\" on DeathCry \"" + key + "\""));
@@ -160,12 +171,13 @@ public class SkyWarsDeathCry extends Cosmetic {
         sec.set("rarity", rarity.name());
         sec.set("buyable", buyable);
         sec.set("sound", sound);
+        sec.set("permission", "none");
         sec.set("volume", volume);
         sec.set("pitch", pitch);
         sec.set("icon", "BARRIER : 1 : display=" + arr[0] + " : lore=&7Change that on deathcries.yml\\n ");
         CONFIG.save();
 
-        CosmeticServer.SKYWARS.addCosmetic(new SkyWarsDeathCry(id, (String) arr[0],
+        CosmeticServer.SKYWARS.addCosmetic(new SkyWarsDeathCry(id, (String) arr[0], "none",
                 BukkitUtils.deserializeItemStack("BARRIER : 1 : display=" + arr[0] + " : lore=&7Change that on deathcries.yml\\n "), rarity, buyable, price, sound, volume, pitch));
     }
 }

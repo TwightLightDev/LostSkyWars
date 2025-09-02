@@ -12,6 +12,8 @@ import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.Logger.Level;
 
+import java.util.concurrent.CompletableFuture;
+
 public class StatsCommand extends Command {
 
     public StatsCommand() {
@@ -40,19 +42,19 @@ public class StatsCommand extends Command {
                 return true;
             }
 
-            Account account = null;
+            CompletableFuture<Account> account = null;
             Player target = Bukkit.getPlayer(args[0]);
-            if (target == null
-                    || (account = Database.getInstance().getAccount(target.getUniqueId())) == null) {
-                account = Database.getInstance().loadOffline(args[0]);
-            }
+            account = Database.getInstance().loadOffline(args[0]);
+
 
             if (account == null) {
                 player.sendMessage(Language.command$stats$user_not_found);
                 return true;
             }
+            account.thenAccept((account1) -> {
+                new StatisticsMenu(player, account1);
+            });
 
-            new StatisticsMenu(player, account);
             return true;
         }
 

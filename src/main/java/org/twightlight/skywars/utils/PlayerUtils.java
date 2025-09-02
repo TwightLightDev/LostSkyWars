@@ -6,7 +6,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.world.type.DuelsServer;
+import org.twightlight.skywars.arena.type.Duels;
 
 public class PlayerUtils {
 
@@ -17,8 +17,8 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player2.getUniqueId());
-        if (account != null && account.getServer() != null && account.getServer() instanceof DuelsServer) {
-            DuelsServer duels = (DuelsServer) account.getServer();
+        if (account != null && account.getServer() != null && account.getServer() instanceof Duels) {
+            Duels duels = (Duels) account.getServer();
             if (duels.getState() == SkyWarsState.WAITING || duels.getState() == SkyWarsState.STARTING) {
                 lastColor += "§k";
             }
@@ -44,8 +44,8 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account != null && account.getServer() != null && account.getServer() instanceof DuelsServer) {
-            DuelsServer duels = (DuelsServer) account.getServer();
+        if (account != null && account.getServer() != null && account.getServer() instanceof Duels) {
+            Duels duels = (Duels) account.getServer();
             if (duels.getState() == SkyWarsState.WAITING || duels.getState() == SkyWarsState.STARTING) {
                 lastColor += "§k";
             }

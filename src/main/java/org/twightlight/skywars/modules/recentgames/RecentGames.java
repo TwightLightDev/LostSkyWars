@@ -2,28 +2,30 @@ package org.twightlight.skywars.modules.recentgames;
 
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.Modules;
+import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.recentgames.commands.RecentGamesCommand;
 import org.twightlight.skywars.modules.recentgames.database.SQLite;
 import org.twightlight.skywars.modules.recentgames.hook.ReplayHook;
 import org.twightlight.skywars.modules.recentgames.listeners.*;
 import org.twightlight.skywars.utils.Logger;
 
-public class RecentGames extends Modules {
+public class RecentGames extends Module {
 
     private static SQLite database;
     private static ReplayHook replayHook = null;
-    public static Logger LOGGER = new Logger();
 
     public RecentGames() {
-        super();
+        super("RecentGames");
         initHooks();
         initListeners();
         initDatabase();
         initCommands();
+        LOGGER.log(Logger.Level.INFO, "RecentGame module has been successfully loaded!");
     }
 
-    private static void initListeners() {
+    private void initListeners() {
+        LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
+
         Bukkit.getPluginManager().registerEvents(new GameEndEvent(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerJoinEvent(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new GameStartEvent(), SkyWars.getInstance());
@@ -33,18 +35,23 @@ public class RecentGames extends Modules {
 
     }
 
-    private static void initDatabase() {
+    private void initDatabase() {
+        LOGGER.log(Logger.Level.INFO, "Loading Database...");
+
         database = new SQLite(SkyWars.getInstance(), "recentgames");
     }
 
-    private static void initHooks() {
+    private void initHooks() {
+        LOGGER.log(Logger.Level.INFO, "Loading Available Integrations...");
+
         if (Bukkit.getPluginManager().getPlugin("AdvancedReplay") != null) {
             replayHook = new ReplayHook();
             LOGGER.log(Logger.Level.INFO, "[AdvancedReplayHook] AdvancedReplay found, hooking...");
         }
     }
 
-    private static void initCommands() {
+    private void initCommands() {
+        LOGGER.log(Logger.Level.INFO, "Loading Commands...");
         new RecentGamesCommand();
     }
 

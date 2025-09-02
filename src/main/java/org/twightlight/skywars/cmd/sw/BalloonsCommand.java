@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import static org.twightlight.skywars.listeners.player.PlayerInteractListener.BALLOONS;
 
@@ -23,7 +23,7 @@ public class BalloonsCommand extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        WorldServer<?> server = WorldServer.getByWorldName(player.getWorld().getName());
+        Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
         if (server == null) {
             player.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
@@ -80,7 +80,7 @@ public class BalloonsCommand extends SubCommand {
 
     public static void handleClick(Player player, Account account, String display, PlayerInteractEvent evt) {
         Object[] arr = BALLOONS.get(player);
-        WorldServer<?> server = WorldServer.getByWorldName(player.getWorld().getName());
+        Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
         if (server == null) {
             return;
         }

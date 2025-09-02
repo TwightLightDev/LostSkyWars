@@ -13,10 +13,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger;
@@ -25,7 +22,7 @@ import org.twightlight.skywars.utils.Logger.Level;
 import java.util.Arrays;
 
 @SuppressWarnings("deprecation")
-public class SkyWarsCage extends Cosmetic {
+public class SkyWarsCage extends PreviewableCosmetic {
 
     private String name;
     private String permission;
@@ -57,6 +54,11 @@ public class SkyWarsCage extends Cosmetic {
                 state.update(true);
             }
         }
+    }
+
+    @Override
+    public void preview(Player player) {
+
     }
 
     public boolean canBeSold() {

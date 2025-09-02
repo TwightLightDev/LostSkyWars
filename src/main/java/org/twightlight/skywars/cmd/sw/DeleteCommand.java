@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class DeleteCommand extends SubCommand {
 
@@ -19,7 +19,7 @@ public class DeleteCommand extends SubCommand {
             return;
         }
 
-        WorldServer<?> server = WorldServer.getByWorldName(args[0]);
+        Arena<?> server = Arena.getByWorldName(args[0]);
         if (server == null) {
             sender.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
@@ -30,7 +30,7 @@ public class DeleteCommand extends SubCommand {
             return;
         }
 
-        WorldServer.removeArena(server);
+        Arena.removeArena(server);
         sender.sendMessage("§5[LostSkyWars] §aArena deleted.");
     }
 

@@ -13,20 +13,20 @@ import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
 import org.twightlight.skywars.player.DataContainer;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.*;
 
 public class SkyWars implements Listener {
-    private static final Map<WorldServer<?>, List<Player>> xp_multiplier = new HashMap<>();
-    private static final Map<WorldServer<?>, List<Player>> coins_multiplier = new HashMap<>();
+    private static final Map<Arena<?>, List<Player>> xp_multiplier = new HashMap<>();
+    private static final Map<Arena<?>, List<Player>> coins_multiplier = new HashMap<>();
 
     @EventHandler
     public void onStart(SkyWarsGameStartEvent e) {
         if (e == null)
             return;
-        if (e.getServer() instanceof WorldServer) {
-            WorldServer<?> server = ((WorldServer<?>) e.getServer());
+        if (e.getServer() instanceof Arena) {
+            Arena<?> server = ((Arena<?>) e.getServer());
             for (Player player : server.getPlayers(false)) {
                 Guild guild = GuildsManager.getByPlayer(player);
                 if (guild == null)
@@ -52,8 +52,8 @@ public class SkyWars implements Listener {
 
     @EventHandler
     public void onEnd(SkyWarsGameEndEvent e) {
-        if (e.getServer() instanceof WorldServer) {
-            WorldServer<?> server = ((WorldServer<?>) e.getServer());
+        if (e.getServer() instanceof Arena) {
+            Arena<?> server = ((Arena<?>) e.getServer());
             xp_multiplier.remove(server);
         }
     }
@@ -61,9 +61,9 @@ public class SkyWars implements Listener {
     public void onXpGain(SkyWarsPlayerXpGainEvent e) {
         Player player = e.getPlayer();
         Guild guild = GuildsManager.getByPlayer(player);
-        if (guild == null || !(e.getServer() instanceof WorldServer))
+        if (guild == null || !(e.getServer() instanceof Arena))
             return;
-        WorldServer<?> server = ((WorldServer<?>) e.getServer());
+        Arena<?> server = ((Arena<?>) e.getServer());
         if (Optional.ofNullable(xp_multiplier.get(server)).isPresent() && xp_multiplier.get(server).contains(player) ) {
             e.setAmount(e.getAmount() * 2);
             guild.sendDoubleXpMessage(player);
@@ -79,9 +79,9 @@ public class SkyWars implements Listener {
     public void onCoinEarn(SkyWarsPlayerCoinEarnEvent e) {
         Player player = e.getPlayer();
         Guild guild = GuildsManager.getByPlayer(player);
-        if (guild == null || !(e.getServer() instanceof WorldServer))
+        if (guild == null || !(e.getServer() instanceof Arena))
             return;
-        WorldServer<?> server = ((WorldServer<?>) e.getServer());
+        Arena<?> server = ((Arena<?>) e.getServer());
         if (Optional.ofNullable(coins_multiplier.get(server)).isPresent() && coins_multiplier.get(server).contains(player)) {
             e.setAmount(e.getAmount() * 2);
             List<String> var10000 = Guilds.get().getLanguage().getList("guilds.settings.boosters.double-coins.reward-message");

@@ -14,8 +14,8 @@ public enum CosmeticType {
     SKYWARS_KILLMESSAGE(8, "killmessage", 7),
     SKYWARS_SPRAY(9, "spray", 8),
     SKYWARS_KILLEFFECT(10, "killeffect", 9),
-    SKYWARS_VICTORYDANCE(11, "victorydance", 10);
-
+    SKYWARS_VICTORYDANCE(11, "victorydance", 10),
+    SKYWARS_TITLE(12, "title", 11);
 
 
     private int uniqueId;
@@ -43,6 +43,8 @@ public enum CosmeticType {
                 : this == SKYWARS_SPRAY ? Language.options$cosmetic$prefix + Language.options$cosmetic$spray
                 : this == SKYWARS_KILLEFFECT ? Language.options$cosmetic$prefix + Language.options$cosmetic$killeffect
                 : this == SKYWARS_VICTORYDANCE ? Language.options$cosmetic$prefix + Language.options$cosmetic$victorydance
+                : this == SKYWARS_TITLE ? Language.options$cosmetic$prefix + Language.options$cosmetic$title
+
                 : Language.options$cosmetic$prefix + Language.options$cosmetic$ballon;
     }
 

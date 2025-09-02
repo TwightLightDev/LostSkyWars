@@ -49,14 +49,14 @@ public class SoulWellMenu extends PlayerMenu {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("roll")) {
-                                if (account.getInt("souls") < (10 * account.getContainers("account").get("sw_wellroll").getAsInt())) {
+                                if (account.getInt("souls") < (10 * account.getContainer("account").get("sw_wellroll").getAsInt())) {
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("dont-have-enough-souls")));
                                     return;
                                 }
 
-                                new RollSoulWellMenu(player, back, account.getContainers("account").get("sw_wellroll").getAsInt());
+                                new RollSoulWellMenu(player, back, account.getContainer("account").get("sw_wellroll").getAsInt());
                             } else if (menu.equalsIgnoreCase("harvesters")) {
-                                if (account.getInt("souls") >= account.getContainers("account").get("sw_maxsouls").getAsInt()) {
+                                if (account.getInt("souls") >= account.getContainer("account").get("sw_maxsouls").getAsInt()) {
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("max-souls")));
                                     return;
                                 }
@@ -88,7 +88,7 @@ public class SoulWellMenu extends PlayerMenu {
     public SoulWellMenu(Player player, boolean back) {
         super(player, config.getTitle(), config.getRows());
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        int cost = account.getContainers("account").get("sw_wellroll").getAsInt() * 10;
+        int cost = account.getContainer("account").get("sw_wellroll").getAsInt() * 10;
         this.back = back;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {

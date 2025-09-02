@@ -20,7 +20,7 @@ public class LostPlayer {
     }
 
     public void setCoins(int coins) {
-        a.getContainers("skywars").get("coins").set(coins);
+        a.getContainer("skywars").get("coins").set(coins);
     }
 
     public void addCoins(int coins) {
@@ -32,13 +32,13 @@ public class LostPlayer {
     }
 
     public void setSouls(int souls) {
-        a.getContainers("skywars").get("souls").set(souls);
+        a.getContainer("skywars").get("souls").set(souls);
     }
 
     public void addSouls(int souls) {
         a.addStat("souls", souls);
-        if (this.getSouls() > a.getContainers("account").get("sw_maxsouls").getAsInt()) {
-            this.setSouls(a.getContainers("account").get("sw_maxsouls").getAsInt());
+        if (this.getSouls() > a.getContainer("account").get("sw_maxsouls").getAsInt()) {
+            this.setSouls(a.getContainer("account").get("sw_maxsouls").getAsInt());
         }
     }
 

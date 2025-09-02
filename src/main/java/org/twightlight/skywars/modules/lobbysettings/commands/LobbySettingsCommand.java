@@ -43,6 +43,8 @@ public class LobbySettingsCommand extends Command {
 
         registerSubCommand(new Particles(new Permission("lobbysettings.particles.toggle")));
 
+        registerSubCommand(new Chat(new Permission("lobbysettings.chat.toggle")));
+
     }
 
     @Override

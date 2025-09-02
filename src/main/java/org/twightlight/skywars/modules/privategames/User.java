@@ -8,12 +8,13 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.privategames.settings.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsEvent;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class User {
 
@@ -89,18 +90,20 @@ public class User {
         return false;
     }
 
-    public void connect(Account account, WorldServer<?> server) {
-        WorldServer<?> privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
-        privateServer.setServerOwner(this);
-        Map<Integer, SkyWarsEvent> newTimeLine = new TreeMap<>(Comparator.reverseOrder());
-        Double multiplier = getGameSpeedSetting().getValue();
-        Map<Integer, SkyWarsEvent> oldTimeLine = server.getTimeline();
-        oldTimeLine.forEach((i, e) -> {
-            int newPoint = (int) Math.round(i / multiplier);
-            newTimeLine.put(newPoint, e);
-        });
-        privateServer.setTimeline(newTimeLine);
-        privateServer.connect(account);
+    public void connect(Account account, Arena<?> server) {
+        Arena<?> privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
+        privateServer.getConfig().getCompletableWorld().thenAccept((world -> {
+            privateServer.setServerOwner(this);
+            Map<Integer, SkyWarsEvent> newTimeLine = new TreeMap<>(Comparator.reverseOrder());
+            Double multiplier = getGameSpeedSetting().getValue();
+            Map<Integer, SkyWarsEvent> oldTimeLine = server.getTimeline();
+            oldTimeLine.forEach((i, e) -> {
+                int newPoint = (int) Math.round(i / multiplier);
+                newTimeLine.put(newPoint, e);
+            });
+            privateServer.setTimeline(newTimeLine);
+            privateServer.connect(account);
+        }));
     }
 
     public Player getPlayer() {

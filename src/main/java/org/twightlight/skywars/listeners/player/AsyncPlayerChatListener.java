@@ -92,7 +92,7 @@ public class AsyncPlayerChatListener extends Listeners {
                                 .replace("{points}", StringUtils.formatNumber(Ranked.getPoints(account))).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else if (server.getType() == SkyWarsType.DUELS) {
                         players
-                                .sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
+                                .sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_duels.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else {
                         players
                                 .sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));

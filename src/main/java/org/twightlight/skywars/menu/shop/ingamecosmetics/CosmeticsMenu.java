@@ -25,6 +25,7 @@ import org.twightlight.skywars.menu.shop.ingamecosmetics.cry.DeathCriesMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.killeffect.KillEffectsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.killmessage.KillMessagesMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.spray.SpraysMenu;
+import org.twightlight.skywars.menu.shop.ingamecosmetics.title.TitlesMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.trail.ProjectileTrailsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.victorydance.VictoryDancesMenu;
 import org.twightlight.skywars.player.Account;
@@ -72,7 +73,9 @@ public class CosmeticsMenu extends PlayerMenu {
                                 new BalloonsMenu(player);
                             } else if (menu.equalsIgnoreCase("victorydance")) {
                                  new VictoryDancesMenu(player);
-                             } else if (menu.equalsIgnoreCase("symbols")) {
+                            } else if (menu.equalsIgnoreCase("title")) {
+                                 new TitlesMenu(player);
+                            }  else if (menu.equalsIgnoreCase("symbols")) {
                                 new SymbolsMenu(player);
                             } else if (menu.equalsIgnoreCase("closeinv")) {
                                 player.closeInventory();
@@ -176,6 +179,16 @@ public class CosmeticsMenu extends PlayerMenu {
                 stack = stack.replace("{balloons_max}", String.valueOf(max));
                 stack = stack.replace("{balloons_percentage}", percentage + "%");
                 stack = stack.replace("{balloons_current}", c == null || !(c instanceof SkyWarsBalloon) ? config.getAsString("empty") : ((SkyWarsBalloon) c).getRawName());
+
+                // Titles
+                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TITLE).size();
+                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TITLE).stream().filter(cosmetic -> ((SkyWarsTitle) cosmetic).has(account)).count();
+                percentage = (int) ((100.0 * amount) / max);
+                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TITLE, 1);
+                stack = stack.replace("{titles_has}", String.valueOf(amount));
+                stack = stack.replace("{titles_max}", String.valueOf(max));
+                stack = stack.replace("{titles_percentage}", percentage + "%");
+                stack = stack.replace("{titles_current}", c == null || !(c instanceof SkyWarsTitle) ? config.getAsString("empty") : ((SkyWarsTitle) c).getRawName());
 
                 // Symbols
                 Level level = Level.getByLevel(account.getLevel());

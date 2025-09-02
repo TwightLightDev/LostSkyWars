@@ -17,7 +17,7 @@ import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.NumberUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,13 +34,13 @@ public class SkyWarsChest {
         }
     }
 
-    private WorldServer<?> server;
+    private Arena<?> server;
     private String serialized;
     private String chestType;
 
     private Hologram hologram = null;
 
-    public SkyWarsChest(WorldServer<?> server, String serialized) {
+    public SkyWarsChest(Arena<?> server, String serialized) {
         this.server = server;
         this.serialized = serialized;
         this.chestType = serialized.split("; ")[6];

@@ -4,7 +4,9 @@ import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.modules.boosters.Boosters;
-import org.twightlight.skywars.modules.boosters.User;
+import org.twightlight.skywars.modules.boosters.users.PlayerUser;
+import org.twightlight.skywars.modules.boosters.api.event.BoosterActiveEvent;
+import org.twightlight.skywars.modules.boosters.users.User;
 
 import java.util.*;
 
@@ -21,11 +23,12 @@ public class Activating {
         this.type = type;
         this.user = user;
         if (type == Booster.BoosterType.PERSONAL) {
+            PlayerUser playerUser = (PlayerUser) user;
             this.list = Boosters.getDatabase().getData(
-                    Bukkit.getPlayer(user.getUUID()), Booster.BoosterType.PERSONAL.getActivatingColumn(),
+                    Bukkit.getPlayer(playerUser.getUUID()), Booster.BoosterType.PERSONAL.getActivatingColumn(),
                     new TypeToken<TreeMap<Long, Booster>>() {}, new TreeMap<>());
         } else {
-            this.list = Boosters.getDatabase().getServerData(Booster.BoosterType.SERVER.getActivatingColumn(),
+            this.list = Boosters.getDatabase().getServerData(Booster.BoosterType.GLOBAL.getActivatingColumn(),
                     new TypeToken<TreeMap<Long, Booster>>() {}, new TreeMap<>());
         }
 
@@ -37,6 +40,8 @@ public class Activating {
             list.put(System.currentTimeMillis() + booster.getDuration(), booster);
             check();
             update(type.getQueueColumn());
+            BoosterActiveEvent e = new BoosterActiveEvent(booster, user);
+            Bukkit.getPluginManager().callEvent(e);
         }
     }
 
@@ -62,7 +67,8 @@ public class Activating {
 
     public void update(String column) {
         if (type == Booster.BoosterType.PERSONAL) {
-            Boosters.getDatabase().updateData(Bukkit.getPlayer(user.getUUID()), list, column);
+            PlayerUser playerUser = (PlayerUser) user;
+            Boosters.getDatabase().updateData(Bukkit.getPlayer(playerUser.getUUID()), list, column);
         } else {
             Boosters.getDatabase().updateServerData(list, column);
         }
@@ -103,4 +109,7 @@ public class Activating {
         return list.isEmpty();
     }
 
+    public User getUser() {
+        return user;
+    }
 }

@@ -23,7 +23,7 @@ import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("random")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    WorldServer<?> server = WorldServer.findRandom(mode, type);
+                                    Arena<?> server = Arena.findRandom(mode, type);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -72,7 +72,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                             } else if (menu.equalsIgnoreCase("favorites")) {
                                 if (can) {
                                     List<String> favorites = new ArrayList<>();
-                                    for (Object object : account.getContainers("skywars").get("favorites").getAsJsonArray()) {
+                                    for (Object object : account.getContainer("skywars").get("favorites").getAsJsonArray()) {
                                         if (object instanceof String) {
                                             boolean canPlay = map.containsKey((String) object) && !map.get((String) object).isEmpty();
                                             if (Core.MODE != CoreMode.MULTI_ARENA) {
@@ -90,7 +90,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                     }
 
                                     if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                        for (WorldServer<?> server : this.map.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
+                                        for (Arena<?> server : this.map.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
                                             if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                                 player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                                 player.closeInventory();
@@ -141,7 +141,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
 
                             if (can) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    for (WorldServer<?> server : this.map.get(mapName)) {
+                                    for (Arena<?> server : this.map.get(mapName)) {
                                         if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                             player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                             player.closeInventory();
@@ -170,7 +170,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
     private SkyWarsType type;
     private boolean tick = true, can = true;
     private Map<ItemStack, String> maps = new HashMap<>();
-    private Map<String, List<WorldServer<?>>> map = new HashMap<>();
+    private Map<String, List<Arena<?>>> map = new HashMap<>();
     private Map<ItemStack, ConfigAction> actions = new HashMap<>();
 
     public MapsSelectorMenu(Player player, SkyWarsMode mode, SkyWarsType type) {
@@ -222,9 +222,9 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
             } catch (Exception ex) {
             }
         } else {
-            this.map = WorldServer.getAsMap(mode, type);
-            for (Map.Entry<String, List<WorldServer<?>>> entry : map.entrySet()) {
-                List<WorldServer<?>> ss = entry.getValue();
+            this.map = Arena.getAsMap(mode, type);
+            for (Map.Entry<String, List<Arena<?>>> entry : map.entrySet()) {
+                List<Arena<?>> ss = entry.getValue();
                 if (ss.isEmpty()) {
                     continue;
                 }

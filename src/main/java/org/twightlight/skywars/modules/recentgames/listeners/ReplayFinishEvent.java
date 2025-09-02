@@ -2,9 +2,13 @@ package org.twightlight.skywars.modules.recentgames.listeners;
 
 import me.jumper251.replay.api.ReplaySessionFinishEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.modules.recentgames.GameData;
+import org.twightlight.skywars.modules.recentgames.User;
 import org.twightlight.skywars.utils.FileUtils;
 
 import java.io.File;
@@ -14,10 +18,16 @@ public class ReplayFinishEvent implements Listener {
     public void onReplayFinish(ReplaySessionFinishEvent e) {
         Player p = e.getPlayer();
 
-        if (p.getWorld().getPlayers().isEmpty()) {
-            File oldWorldFolder = new File(Bukkit.getWorldContainer(), p.getWorld().getName());
-            Bukkit.unloadWorld(e.getPlayer().getWorld(), false);
-            FileUtils.deleteFile(oldWorldFolder);
-        }
+        User user = User.getUser(p);
+        if (user == null) return;
+
+        GameData viewingGame = user.getViewingGame();
+
+        if (viewingGame == null) return;
+
+        World world = Bukkit.getWorld(viewingGame.getReplay().getWorldName());
+        if (world == null || !world.getPlayers().isEmpty()) return;
+        SkyWars.getInstance().getWorldLoader().deleteWorld(viewingGame.getReplay().getWorldName());
+        user.setViewingGame(null);
     }
 }

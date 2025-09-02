@@ -74,6 +74,7 @@ public class Language {
     public static String options$cosmetic$killmessage = "Kill Message ";
     public static String options$cosmetic$killeffect = "Kill Effect ";
     public static String options$cosmetic$victorydance = "Victory Dance ";
+    public static String options$cosmetic$title = "Title ";
     public static String options$cosmetic$ballon = "Ballon ";
     public static String options$cosmetic$spray = "Spray ";
     public static int options$leaderboard$update_time_minutes = 30;
@@ -100,7 +101,7 @@ public class Language {
     public static int lobby$chat$delay_time = 3;
     public static String lobby$chat$delay_message = "§cYou must wait §a{time}s §cbetween send other message!";
     public static String lobby$chat$format = "§7[§a{level}§7] {display}{color}: {message}";
-    public static String lobby$chat$format_ranked = "§7[{league}({points})§7] {colored}{color}: {message}";
+    public static String lobby$chat$format_ranked = "§7[{league}({points})§7] {display}{color}: {message}";
     public static String lobby$chat$format_duels = "§a[GAME] §7{colored}{color}: {message}";
     public static String lobby$chat$format_spectator = "§7[SPECTATOR] §7[§a{level}§7] {display}{color}: {message}";
 
@@ -261,6 +262,7 @@ public class Language {
                     "",
                     "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
     public static String game$player$ranked$action_bar$points = "§6+{points} League Points!";
+    public static String game$player$ranked$action_bar$brave_points = "§c+{points} Brave Points!";
 
     public static String command$stats$args = "§cUse /stats <username>";
     public static String command$stats$permission = "§cYou must be §bMVP §cor higher to use this command!";

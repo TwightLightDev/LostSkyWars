@@ -7,10 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -24,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkyWarsSpray extends Cosmetic {
+public class SkyWarsSpray extends PreviewableCosmetic {
 
     private String name;
     private boolean buyable;
@@ -42,6 +39,11 @@ public class SkyWarsSpray extends Cosmetic {
         this.coins = coins;
         this.icon = icon;
         this.img = img;
+    }
+
+    @Override
+    public void preview(Player player) {
+
     }
 
 
@@ -142,5 +144,7 @@ public class SkyWarsSpray extends Cosmetic {
             CosmeticServer.SKYWARS.addCosmetic(spray);
         }
     }
+
+
 }
 

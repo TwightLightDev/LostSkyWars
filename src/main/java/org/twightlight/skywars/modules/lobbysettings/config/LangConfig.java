@@ -86,6 +86,18 @@ public class LangConfig extends YamlWrapper {
                 "&9&l-------------------------------------------"
         ));
 
+        yml.addDefault("lobbysettings.chat.on", list(
+                "&9&l-------------------------------------------",
+                "&aChat are now visible.!",
+                "&9&l-------------------------------------------"
+        ));
+
+        yml.addDefault("lobbysettings.chat.off", list(
+                "&9&l-------------------------------------------",
+                "&aChat has been hidden!",
+                "&9&l-------------------------------------------"
+        ));
+
 
         yml.options().copyDefaults(true);
         save();

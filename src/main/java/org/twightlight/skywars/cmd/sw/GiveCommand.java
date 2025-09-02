@@ -8,6 +8,8 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.StringUtils;
 
+import java.util.concurrent.CompletableFuture;
+
 public class GiveCommand extends SubCommand {
 
     public GiveCommand() {
@@ -30,48 +32,50 @@ public class GiveCommand extends SubCommand {
             }
 
             Player target = Bukkit.getPlayerExact(args[1]);
-            Account account = null;
-            boolean save = false;
-            if (target == null || (account = Database.getInstance().getAccount(target.getUniqueId())) == null) {
-                save = true;
-                account = Database.getInstance().loadOffline(args[1]);
-            }
+            CompletableFuture<Account> account1;
+            boolean save;
+            account1 = Database.getInstance().loadOffline(args[1]);
 
-            if (account == null) {
+            if (account1 == null) {
                 sender.sendMessage("§5[LostSkyWars] §cUser not found!");
                 return;
             }
-
-            try {
-                if (args[2].startsWith("-") || args[2].equals("0")) {
-                    throw new NumberFormatException();
-                }
-
-                int amount = Integer.parseInt(args[2]);
-                account.addStat(type.toLowerCase(), amount);
-                if (account.getInt(type.toLowerCase()) < 0) {
-                    account.getContainers("skywars").get(type.toLowerCase()).set(0);
-                }
-
-                // § almas
-                if (type.equalsIgnoreCase("souls")) {
-                    // Passou do limite de almas, colocar o m§ximo do usu§rio apenas.
-                    if (account.getInt("souls") > account.getContainers("account").get("sw_maxsouls").getAsInt()) {
-                        account.getContainers("skywars").get("souls").set(account.getContainers("account").get("sw_maxsouls").getAsInt());
-                    }
-                }
-
-                sender.sendMessage(
-                        "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
-
-                // Salva usu§rio caso n§o esteja online.
-                if (save) {
-                    account.save();
-                    account.destroy();
-                }
-            } catch (NumberFormatException ex) {
-                sender.sendMessage("§5[LostSkyWars] §cInvalid amount (amount > 0 & amount < " + Integer.MAX_VALUE + ")");
+            if (target == null || !target.isOnline()) {
+                save = true;
+            } else {
+                save = false;
             }
+
+            account1.thenAccept((account -> {
+                try {
+                    if (args[2].startsWith("-") || args[2].equals("0")) {
+                        throw new NumberFormatException();
+                    }
+
+                    int amount = Integer.parseInt(args[2]);
+                    account.addStat(type.toLowerCase(), amount);
+                    if (account.getInt(type.toLowerCase()) < 0) {
+                        account.getContainer("skywars").get(type.toLowerCase()).set(0);
+                    }
+
+                    if (type.equalsIgnoreCase("souls")) {
+                        if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
+                            account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
+                        }
+                    }
+
+                    sender.sendMessage(
+                            "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
+
+                    if (save) {
+                        account.save();
+                        account.destroy();
+                    }
+                } catch (NumberFormatException ex) {
+                    sender.sendMessage("§5[LostSkyWars] §cInvalid amount (amount > 0 & amount < " + Integer.MAX_VALUE + ")");
+                }
+            }));
+
         } else {
             sender.sendMessage(
                     " \n§dGive - Help\n \n§6/lsw give coins <player> <amount> §f- §7Give coins to a player.\n§6/lsw give souls <player> <amount> §f- §7Give souls to a player.\n ");

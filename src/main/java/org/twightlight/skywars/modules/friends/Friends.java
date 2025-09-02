@@ -5,18 +5,19 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.Modules;
+import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.friends.commands.FriendCmd;
-import org.twightlight.skywars.modules.friends.config.MainConfig;
+import org.twightlight.skywars.modules.friends.config.LangConfig;
 import org.twightlight.skywars.modules.friends.friend.FriendRequestManager;
 import org.twightlight.skywars.modules.friends.listeners.PlayerJoinEvent;
 import org.twightlight.skywars.modules.friends.user.UserManager;
 import org.twightlight.skywars.modules.friends.utils.MessageUtil;
 import org.twightlight.skywars.modules.friends.utils.StorageUtil;
+import org.twightlight.skywars.utils.Logger;
 
 import java.io.File;
 
-public class Friends extends Modules {
+public class Friends extends Module {
     private FriendRequestManager friendRequestManager;
 
     private UserManager hfUserManager;
@@ -25,19 +26,23 @@ public class Friends extends Modules {
 
     private StorageUtil storageUtil;
 
-    private MainConfig mainConfig;
+    private LangConfig mainConfig;
 
     private static Friends instance;
 
     public Friends() {
+        super("Friends");
         loadUtils();
         loadConfig();
         loadCommands();
         loadListeners();
         instance = this;
+        LOGGER.log(Logger.Level.INFO, "Friends module has been successfully loaded!");
+
     }
 
     private void loadUtils() {
+        LOGGER.log(Logger.Level.INFO, "Loading Utils...");
         this.friendRequestManager = new FriendRequestManager(this);
         this.storageUtil = new StorageUtil(this);
         this.hfUserManager = new UserManager(this);
@@ -45,18 +50,21 @@ public class Friends extends Modules {
     }
 
     private void loadConfig() {
+        LOGGER.log(Logger.Level.INFO, "Loading Configs...");
         File modules = new File(getPlugin().getDataFolder().getPath() + "/modules/friends");
         if (!modules.exists()) {
             modules.mkdirs();
         }
-        mainConfig = new MainConfig(getPlugin(), "config", getPlugin().getDataFolder().getPath() + "/modules/friends");
+        mainConfig = new LangConfig(getPlugin(), "config", getPlugin().getDataFolder().getPath() + "/modules/friends");
     }
 
     private void loadCommands() {
+        LOGGER.log(Logger.Level.INFO, "Loading Commands...");
         getPlugin().getCommand("friend").setExecutor((CommandExecutor)new FriendCmd(this));
     }
 
     private void loadListeners() {
+        LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
         PluginManager pluginManager = SkyWars.getInstance().getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerJoinEvent(this), (Plugin)this.getPlugin());
     }

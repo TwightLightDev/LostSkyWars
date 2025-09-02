@@ -33,7 +33,7 @@ public abstract class Cosmetic {
     }
 
     public void give(Account account, int mode) {
-        account.getContainers(this.getServer().name().toLowerCase()).get(this.getType().getStats()).getCosmetics(type).add(String.valueOf(this.getId()), mode);
+        account.getContainer(this.getServer().name().toLowerCase()).get(this.getType().getStats()).getCosmetics(type).add(String.valueOf(this.getId()), mode);
     }
 
     public boolean has(Account account) {
@@ -41,7 +41,7 @@ public abstract class Cosmetic {
     }
 
     public boolean has(Account account, int mode) {
-        return account.getContainers(this.getServer().name().toLowerCase()).get(this.getType().getStats()).getCosmetics(type).contains(String.valueOf(this.getId()), mode);
+        return account.getContainer(this.getServer().name().toLowerCase()).get(this.getType().getStats()).getCosmetics(type).contains(String.valueOf(this.getId()), mode);
     }
 
     public boolean selected(Account account) {

@@ -12,7 +12,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 public class SkyWarsTeam {
 
     private int id;
-    private WorldServer<?> server;
+    private Arena<?> server;
     private String alphabetical;
     private String location;
     private Balloon ballon;
     private List<UUID> members;
 
-    public SkyWarsTeam(WorldServer<?> server, int spawns, String serialized) {
+    public SkyWarsTeam(Arena<?> server, int spawns, String serialized) {
         this.id = spawns;
         this.server = server;
         this.location = serialized;

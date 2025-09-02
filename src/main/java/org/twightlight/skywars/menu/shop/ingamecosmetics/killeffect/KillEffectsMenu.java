@@ -96,7 +96,7 @@ public class KillEffectsMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            new ConfirmKEMenu(player, cos, KillEffectsMenu.class, order, filter, searchQuery);
+                            new ConfirmMenu(player, cos, KillEffectsMenu.class, order, filter, searchQuery);
                             return;
                         }
 

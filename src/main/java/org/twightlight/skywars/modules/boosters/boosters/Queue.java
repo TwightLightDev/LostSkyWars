@@ -3,7 +3,9 @@ package org.twightlight.skywars.modules.boosters.boosters;
 import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.modules.boosters.Boosters;
-import org.twightlight.skywars.modules.boosters.User;
+import org.twightlight.skywars.modules.boosters.api.event.BoosterQueueEvent;
+import org.twightlight.skywars.modules.boosters.users.PlayerUser;
+import org.twightlight.skywars.modules.boosters.users.User;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -19,11 +21,13 @@ public class Queue {
         this.type = type;
         this.user = user;
         if (type == Booster.BoosterType.PERSONAL) {
+            PlayerUser playerUser = (PlayerUser) user;
             this.queue = Boosters.getDatabase().getData(
-                    Bukkit.getPlayer(user.getUUID()), Booster.BoosterType.PERSONAL.getQueueColumn(),
+
+                    Bukkit.getPlayer(playerUser.getUUID()), Booster.BoosterType.PERSONAL.getQueueColumn(),
                     new TypeToken<ConcurrentLinkedDeque<Booster>>() {}, new ConcurrentLinkedDeque<>());
         } else {
-            this.queue = Boosters.getDatabase().getServerData(Booster.BoosterType.SERVER.getQueueColumn(),
+            this.queue = Boosters.getDatabase().getServerData(Booster.BoosterType.GLOBAL.getQueueColumn(),
                     new TypeToken<ConcurrentLinkedDeque<Booster>>() {}, new ConcurrentLinkedDeque<>());
         }
     }
@@ -32,6 +36,8 @@ public class Queue {
         if (queue.size() < cap) {
             queue.add(booster);
             update(type.getQueueColumn());
+            BoosterQueueEvent e = new BoosterQueueEvent(booster, user);
+            Bukkit.getPluginManager().callEvent(e);
         }
     }
 
@@ -66,7 +72,8 @@ public class Queue {
 
     public void update(String column) {
         if (type == Booster.BoosterType.PERSONAL) {
-            Boosters.getDatabase().updateData(Bukkit.getPlayer(user.getUUID()), queue, column);
+            PlayerUser playerUser = (PlayerUser) user;
+            Boosters.getDatabase().updateData(Bukkit.getPlayer(playerUser.getUUID()), queue, column);
         } else {
             Boosters.getDatabase().updateServerData(queue, column);
         }
@@ -90,4 +97,8 @@ public class Queue {
             i++;
         }
     }
+    public User getUser() {
+        return user;
+    }
+
 }

@@ -6,7 +6,7 @@ import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class ForceStartCommand extends SubCommand {
 
@@ -22,7 +22,7 @@ public class ForceStartCommand extends SubCommand {
     public void perform(Player player, String[] args) {
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            WorldServer<?> server = (WorldServer<?>) account.getServer();
+            Arena<?> server = (Arena<?>) account.getServer();
             if (server != null) {
                 if (server.getState() != SkyWarsState.WAITING && server.getState() != SkyWarsState.STARTING) {
                     return;

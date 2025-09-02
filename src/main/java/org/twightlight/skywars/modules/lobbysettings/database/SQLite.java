@@ -37,7 +37,8 @@ public class SQLite {
                     "jumpboost INTEGER DEFAULT 0, " +
                     "vanish TEXT DEFAULT 'false', " +
                     "showParticles TEXT DEFAULT 'true', " +
-                    "showScoreboard TEXT DEFAULT 'true'" +
+                    "showScoreboard TEXT DEFAULT 'true', " +
+                    "showChat TEXT DEFAULT 'true'" +
                     "); ");
             statement.close();
         } catch (SQLException e) {
@@ -72,7 +73,7 @@ public class SQLite {
         try (Connection connection = getConnection();
              PreparedStatement checkPs = connection.prepareStatement("SELECT player FROM " + dbname + " WHERE player = ?");
              PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname +
-                     " (player, fly, speed, jumpboost, vanish, showParticles, showScoreboard) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                     " (player, fly, speed, jumpboost, vanish, showParticles, showScoreboard, showChat) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")) {
 
             checkPs.setString(1, p.getUniqueId().toString());
             ResultSet rs = checkPs.executeQuery();
@@ -85,6 +86,8 @@ public class SQLite {
                 insertPs.setString(5, "false");
                 insertPs.setString(6, "true");
                 insertPs.setString(7, "true");
+                insertPs.setString(8, "true");
+
                 insertPs.executeUpdate();
             }
         } catch (SQLException e) {

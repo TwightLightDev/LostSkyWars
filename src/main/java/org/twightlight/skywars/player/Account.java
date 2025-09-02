@@ -30,7 +30,7 @@ import org.twightlight.skywars.ui.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.TimeUtils;
-import org.twightlight.skywars.world.type.DuelsServer;
+import org.twightlight.skywars.arena.type.Duels;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -341,8 +341,8 @@ public class Account {
                         line = line.replace("{on}", String.valueOf(server.getAlive()));
 
                         //
-                        if (server instanceof DuelsServer) {
-                            DuelsServer duels = (DuelsServer) server;
+                        if (server instanceof Duels) {
+                            Duels duels = (Duels) server;
                             line = line.replace("{timeLeft}", new SimpleDateFormat("mm:ss").format((server.getTimer()) * 1000));
                             line = line.replace("{kit}", "None");
 
@@ -449,7 +449,7 @@ public class Account {
         return amount;
     }
 
-    public Map<String, StatsContainer> getContainers(String field) {
+    public Map<String, StatsContainer> getContainer(String field) {
         if (field.equals("skywars")) {
             return skywars;
         } else if (field.equals("ranked")) {
@@ -468,13 +468,13 @@ public class Account {
     }
 
     public void setSelected(CosmeticServer server, CosmeticType type, int index, int id) {
-        SelectedContainer container = getContainers(server.name().toLowerCase()).get("selected").getSelected(server);
+        SelectedContainer container = getContainer(server.name().toLowerCase()).get("selected").getSelected(server);
         container.set(type, index, String.valueOf(id));
-        getContainers(server.name().toLowerCase()).get("selected").set(container.build());
+        getContainer(server.name().toLowerCase()).get("selected").set(container.build());
     }
 
     public Cosmetic getSelected(CosmeticServer server, CosmeticType type, int index) {
-        Cosmetic c = Cosmetic.findFrom(server, type, index, getContainers(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
+        Cosmetic c = Cosmetic.findFrom(server, type, index, getContainer(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
         if (c != null) {
             if (c instanceof SkyWarsKit) {
                 if (!c.has(this, index) || !((SkyWarsKit) c).hasByPermission(getPlayer())) {

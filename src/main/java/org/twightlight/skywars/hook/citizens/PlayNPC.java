@@ -19,7 +19,7 @@ import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +79,7 @@ public class PlayNPC {
     public void update() {
         int playing = mode.equals(SkyWarsMode.SOLO) ? (CoreLobbies.SOLO_NORMAL + CoreLobbies.SOLO_INSANE) : (CoreLobbies.DOUBLES_NORMAL + CoreLobbies.DOUBLES_INSANE);
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (WorldServer<?> server : WorldServer.listServers()) {
+            for (Arena<?> server : Arena.listServers()) {
                 if (server.getMode().equals(mode) && (server.getType() == SkyWarsType.NORMAL || server.getType() == SkyWarsType.INSANE)) {
                     playing += server.getOnline();
                 }

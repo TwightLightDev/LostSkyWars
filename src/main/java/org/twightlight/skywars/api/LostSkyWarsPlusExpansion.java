@@ -9,7 +9,7 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.rank.Rank;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
 
@@ -39,7 +39,7 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
         if (params.equals("players_solo")) {
             int playing = CoreLobbies.SOLO_NORMAL + CoreLobbies.SOLO_INSANE;
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (WorldServer<?> server : WorldServer.listServers()) {
+                for (Arena<?> server : Arena.listServers()) {
                     if (server.getMode().equals(SkyWarsMode.SOLO) && (server.getType() == SkyWarsType.NORMAL || server.getType() == SkyWarsType.INSANE)) {
                         playing += server.getOnline();
                     }
@@ -49,7 +49,7 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
         } else if (params.equals("players_doubles")) {
             int playing = CoreLobbies.DOUBLES_NORMAL + CoreLobbies.DOUBLES_INSANE;
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (WorldServer<?> server : WorldServer.listServers()) {
+                for (Arena<?> server : Arena.listServers()) {
                     if (server.getMode().equals(SkyWarsMode.DOUBLES) && (server.getType() == SkyWarsType.NORMAL || server.getType() == SkyWarsType.INSANE)) {
                         playing += server.getOnline();
                     }
@@ -59,7 +59,7 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
         } else if (params.equals("players_ranked")) {
             int playing = CoreLobbies.DOUBLES_RANKED + CoreLobbies.SOLO_RANKED;
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (WorldServer<?> server : WorldServer.listServers()) {
+                for (Arena<?> server : Arena.listServers()) {
                     if (server.getType().equals(SkyWarsType.RANKED)) {
                         playing += server.getOnline();
                     }
@@ -69,7 +69,7 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
         } else if (params.equals("players_duels")) {
             int playing = CoreLobbies.SOLO_DUELS + CoreLobbies.DOUBLES_DUELS;
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (WorldServer<?> server : WorldServer.listServers()) {
+                for (Arena<?> server : Arena.listServers()) {
                     if (server.getType().equals(SkyWarsType.DUELS)) {
                         playing += server.getOnline();
                     }

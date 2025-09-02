@@ -10,7 +10,7 @@ import org.twightlight.skywars.api.event.game.SkyWarsGameEndEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSpawnEntityEvent;
-import org.twightlight.skywars.world.WorldServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsQuests extends ExternalActionContainer {
     public SkyWarsQuests(JavaPlugin plugin) {
@@ -19,8 +19,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onGameEnd(SkyWarsGameEndEvent e) {
-        if (e.getServer() instanceof WorldServer<?>) {
-            WorldServer<?> server = (WorldServer<?>) e.getServer();
+        if (e.getServer() instanceof Arena<?>) {
+            Arena<?> server = (Arena<?>) e.getServer();
 
             if (e.hasWinner() && !server.isPrivate()) {
                 for (Player p : e.getWinnerTeam().getMembers()) {
@@ -39,8 +39,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerKill(SkyWarsPlayerDeathEvent e) {
-        if (e.getServer() instanceof WorldServer<?>) {
-            WorldServer<?> server = (WorldServer<?>) e.getServer();
+        if (e.getServer() instanceof Arena<?>) {
+            Arena<?> server = (Arena<?>) e.getServer();
             if (!server.isPrivate()) {
                 executionBuilder("kill")
                         .player(e.getKiller())
@@ -55,8 +55,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onGameStart(SkyWarsGameStartEvent e) {
-        if (e.getServer() instanceof WorldServer<?>) {
-            WorldServer<?> server = (WorldServer<?>) e.getServer();
+        if (e.getServer() instanceof Arena<?>) {
+            Arena<?> server = (Arena<?>) e.getServer();
             if (!server.isPrivate()) {
                 for (Player p : server.getPlayers(false)) {
                     executionBuilder("play")
@@ -73,8 +73,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMobSummon(SkyWarsPlayerSpawnEntityEvent e) {
-        if (e.getServer() instanceof WorldServer<?>) {
-            WorldServer<?> server = (WorldServer<?>) e.getServer();
+        if (e.getServer() instanceof Arena<?>) {
+            Arena<?> server = (Arena<?>) e.getServer();
             if (!server.isPrivate()) {
                 executionBuilder("spawnmob")
                         .player(e.getPlayer())

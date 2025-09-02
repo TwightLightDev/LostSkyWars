@@ -52,8 +52,8 @@ public class ConfirmHarvestMenu extends PlayerMenu {
 
                                 account.removeStat("coins", price);
                                 account.addStat("souls", amount);
-                                if (account.getInt("souls") > account.getContainers("account").get("sw_maxsouls").getAsInt()) {
-                                    account.getContainers("skywars").get("souls").set(account.getContainers("account").get("sw_maxsouls").getAsInt());
+                                if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
+                                    account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
                                 }
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", name)));
                                 player.closeInventory();

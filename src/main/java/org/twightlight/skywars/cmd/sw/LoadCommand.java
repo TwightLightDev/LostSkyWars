@@ -42,18 +42,7 @@ public class LoadCommand extends SubCommand {
         try {
             sender.sendMessage("§5[LostSkyWars] §aLoading...");
             Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-                WorldCreator wc = WorldCreator.name(map.getName());
-                World world = wc.createWorld();
-                world.setTime(0l);
-                world.setStorm(false);
-                world.setThundering(false);
-                world.setAutoSave(false);
-                world.setAnimalSpawnLimit(0);
-                world.setWaterAnimalSpawnLimit(0);
-                world.setKeepSpawnInMemory(false);
-                world.setGameRuleValue("doMobSpawning", "false");
-                world.setGameRuleValue("doDaylightCycle", "false");
-                world.setGameRuleValue("mobGriefing", "false");
+
                 sender.sendMessage("§5[LostSkyWars] §aWorld loaded successfully!");
             });
         } catch (Exception ex) {
