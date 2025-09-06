@@ -39,7 +39,7 @@ import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.DataContainer;
 import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.ui.SkyWarsChest;
+import org.twightlight.skywars.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.server.ScanCallback;
 import org.twightlight.skywars.utils.FontUtils;
@@ -356,16 +356,13 @@ public class Duels extends Arena<SkyWarsTeam> {
         account.setServer(this);
 
         if (team.getMembers().size() == 1) {
-            if (this.getMode().getTeamSize() > 1) {
-                SkyWarsCage.def(team.getLocation(), true);
+            Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
+            if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
+                ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation(), this.getMode().getTeamSize() > 1);
             } else {
-                Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
-                if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
-                    ((SkyWarsCage) cosmetic).apply(team.getLocation());
-                } else {
-                    SkyWarsCage.def(team.getLocation(), false);
-                }
+                SkyWarsCage.defaultCage(team.getLocation(), this.getMode().getTeamSize() > 1);
             }
+            team.setCageOwner(account.getUniqueId());
         }
 
         player.teleport(this.getConfig().hasWaitingLobby() ? this.getConfig().getWaitingLocation() : team.getLocation().add(0, 1, 0));

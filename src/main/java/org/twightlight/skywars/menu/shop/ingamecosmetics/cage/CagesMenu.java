@@ -83,7 +83,7 @@ public class CagesMenu extends PagedPlayerMenu {
 
                         }
                     } else if (cage != null) {
-                        if (!cage.has(account) && !cage.hasByPermission(player)) {
+                        if (!cage.has(account)) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             return;
                         }

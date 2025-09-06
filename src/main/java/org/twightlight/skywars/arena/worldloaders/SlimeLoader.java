@@ -21,13 +21,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class SlimeLoader extends WorldLoaderAdapter {
     private final SlimePlugin slime;
-    private final Map<String, SlimeWorld> baseWorldMap;
+    private final Map<String, SlimeWorld> worlds;
 
 
     public SlimeLoader(Plugin owner) {
         super(owner);
         this.slime = (SlimePlugin)Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
-        this.baseWorldMap = new HashMap<>();
+        this.worlds = new HashMap<>();
         LOGGER.log(Logger.Level.INFO, "SlimeWorldManager found! Using SlimeLoader...");
 
     }
@@ -52,7 +52,7 @@ public class SlimeLoader extends WorldLoaderAdapter {
                     slimeWorld = slime.createEmptyWorld(sLoader, worldName, true, spm);
                 }
 
-                baseWorldMap.put(worldName, slimeWorld);
+                worlds.put(worldName, slimeWorld);
 
                 Bukkit.getScheduler().runTask(getOwner(), () -> {
                     slime.generateWorld(slimeWorld);
@@ -71,7 +71,7 @@ public class SlimeLoader extends WorldLoaderAdapter {
     public void unload(String world) {
         if (Bukkit.getWorld(world) != null) {
             Bukkit.unloadWorld(world, true);
-            baseWorldMap.remove(world);
+            worlds.remove(world);
         }
     }
 
@@ -132,10 +132,10 @@ public class SlimeLoader extends WorldLoaderAdapter {
 
         Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
             try {
-                SlimeWorld world = baseWorldMap.get(name1);
+                SlimeWorld world = worlds.get(name1);
                 if (world == null) {
                     future.completeExceptionally(
-                            new IllegalArgumentException("Base world " + name1 + " not found!")
+                            new IllegalArgumentException("Original world " + name1 + " not found! Maybe it was renamed or loaded incorrectly!")
                     );
                     return;
                 }

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsTrail;
 import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
@@ -24,7 +25,7 @@ public class ReloadCommand extends SubCommand {
     @Override
     public void perform(CommandSender sender, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(" \n§dReload - Help\n \n§6/lsw reload kits §f- §7Reload all kits cache. \n§6/lsw reload projectiletrails §f- §7Reload all projectiletrails. ");
+            sender.sendMessage(" \n§dReload - Help\n \n§6/lsw reload kits §f- §7Reload all kits cache. \n§6/lsw reload projectiletrails §f- §7Reload all projectiletrails. \n§6/lsw reload cages §f- §7Reload all cages. ");
             return;
         }
 
@@ -42,6 +43,11 @@ public class ReloadCommand extends SubCommand {
 
             SkyWarsTrail.setupProjectileTrails();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all projectile trails!"));
+        } else if (args[0].equalsIgnoreCase("cages")) {
+            CosmeticServer.SKYWARS.removeByType(SkyWarsCage.class);
+
+            SkyWarsCage.setupCages();
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all cages!"));
         }
     }
 

@@ -10,19 +10,19 @@ public abstract class User {
 
     public User() {}
 
-    public void activateBooster(Booster booster) {
-        activating.add(booster);
+    public boolean activateBooster(Booster booster) {
+        return activating.add(booster);
     }
 
     public void deactivateBooster(int booster) {
         activating.remove(booster);
     }
 
-    public void addToQueue(Booster booster) {
+    public boolean addToQueue(Booster booster) {
         if (activating.isEmpty()) {
-            activateBooster(booster);
+            return activateBooster(booster);
         } else {
-            queue.add(booster);
+            return queue.add(booster);
         }
     }
 

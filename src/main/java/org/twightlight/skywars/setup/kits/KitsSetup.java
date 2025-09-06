@@ -22,8 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class
-KitsSetupMenu extends Menu {
+public class KitsSetup extends Menu {
 
     private ConfigUtils config;
     private String path;
@@ -31,7 +30,7 @@ KitsSetupMenu extends Menu {
             .map(CosmeticRarity::getUncoloredName)
             .collect(Collectors.toList());
 
-    private KitsSetupMenu(ConfigUtils config, String path) {
+    private KitsSetup(ConfigUtils config, String path) {
         super(45, true);
         this.config = config;
         this.path = path;
@@ -275,7 +274,7 @@ KitsSetupMenu extends Menu {
                 (e) -> {
                     Player p = (Player) e.getWhoClicked();
                     Menu menu = ContentsMenu.init(config, (player) -> {
-                        Menu menu1 = KitsSetupMenu.init(config, path);
+                        Menu menu1 = KitsSetup.init(config, path);
                         menu1.open(player);
                     }, path + ".content");
                     menu.open(p);
@@ -338,7 +337,7 @@ KitsSetupMenu extends Menu {
     }
 
     public static Menu init(ConfigUtils config, String path) {
-        return new KitsSetupMenu(config, path);
+        return new KitsSetup(config, path);
     }
 
 

@@ -5,6 +5,7 @@ import de.myzelyam.api.vanish.VanishAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.twightlight.skywars.database.Database;
@@ -104,14 +105,25 @@ public class User {
         return vanish;
     }
 
+    private boolean isVanish(Player player) {
+        for (MetadataValue meta : player.getMetadata("vanished")) {
+            if (meta.asBoolean()) return true;
+        }
+        return false;
+    }
+
     public void setVanishState(boolean vanish, boolean modify) {
         this.vanish = vanish;
 
         Player p = Bukkit.getPlayer(uuid);
         if (vanish) {
-            VanishAPI.getPlugin().visibilityChanger.hidePlayer(p);
+            if (!isVanish(p)) {
+                VanishAPI.getPlugin().visibilityChanger.hidePlayer(p);
+            }
         } else {
-            VanishAPI.getPlugin().visibilityChanger.showPlayer(p);
+            if (isVanish(p)) {
+                VanishAPI.getPlugin().visibilityChanger.showPlayer(p);
+            }
         }
         if (modify) {
             LobbySettings.getDatabase().updateData(p, String.valueOf(vanish), "vanish");

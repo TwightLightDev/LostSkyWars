@@ -47,6 +47,8 @@ public class InsaneSkyWarsKit extends SkyWarsKit {
     public static void setupKits() {
         ConfigUtils cu = ConfigUtils.getConfig("insanekits", "plugins/LostSkyWars/kits");
         for (String key : cu.getKeys(false)) {
+            LOGGER.log(Level.INFO, "Loading kit: " + key);
+
             int id = cu.getInt(key + ".id");
             String name = cu.getString(key + ".name");
             int price = cu.getInt(key + ".price");
@@ -82,6 +84,8 @@ public class InsaneSkyWarsKit extends SkyWarsKit {
             list = null;
 
             CosmeticServer.SKYWARS.addCosmetic(new InsaneSkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
+
+            LOGGER.log(Level.INFO, "Kit loaded: " + name);
         }
     }
 

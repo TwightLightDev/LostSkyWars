@@ -58,14 +58,13 @@ public class InventoryClickListener extends Listeners {
     @EventHandler
     public void onInventoryClick_2(InventoryClickEvent e) {
         if (!(e.getInventory().getHolder() instanceof InventoryHolder)) return;
-
+        e.setCancelled(true);
         InventoryHolder holder = (InventoryHolder) e.getInventory().getHolder();
         int slot = e.getRawSlot();
 
         if (slot < 0 || slot >= e.getInventory().getSize()) return;
 
         if (holder.getButtonsMap().containsKey(slot)) {
-            e.setCancelled(true);
             holder.getButtonsMap().get(slot).execute(e);
         } else {
             e.setCancelled(holder.willCancelEvent());

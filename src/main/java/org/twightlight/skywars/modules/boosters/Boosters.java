@@ -46,7 +46,7 @@ public class Boosters extends Module {
     private void initDatabase() {
         LOGGER.log(Logger.Level.INFO, "Loading Database...");
         database = new SQLite(getPlugin(), "boosters");
-        database.createServerData();
+        database.createNetworkData();
         Collections.init();
     }
 

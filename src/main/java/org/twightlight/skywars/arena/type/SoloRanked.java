@@ -41,7 +41,7 @@ import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.DataContainer;
 import org.twightlight.skywars.rank.Rank;
 import org.twightlight.skywars.ranked.Ranked;
-import org.twightlight.skywars.ui.SkyWarsChest;
+import org.twightlight.skywars.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.server.ScanCallback;
 import org.twightlight.skywars.utils.FontUtils;
@@ -355,10 +355,11 @@ public class SoloRanked extends Arena<Player> {
 
         Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
         if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
-            ((SkyWarsCage) cosmetic).apply(team.getLocation());
+            ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation());
         } else {
-            SkyWarsCage.def(team.getLocation(), false);
+            SkyWarsCage.defaultCage(team.getLocation(), false);
         }
+        team.setCageOwner(account.getUniqueId());
 
         player.teleport(this.getConfig().hasWaitingLobby() ? this.getConfig().getWaitingLocation() : team.getLocation().add(0, 1, 0));
         account.reloadScoreboard();

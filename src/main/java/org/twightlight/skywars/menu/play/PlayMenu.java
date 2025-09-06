@@ -61,7 +61,7 @@ public class PlayMenu extends PlayerMenu {
                                         } else {
                                             server.connect(account);
                                         }
-                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getConfig().getWorldName()));
+                                        player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                     }
                                 } else {
                                     CoreLobbies.writeMinigame(player, mode.name() + "_NORMAL", "all");

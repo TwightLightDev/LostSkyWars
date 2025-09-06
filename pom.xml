@@ -36,6 +36,10 @@
         <url>https://repo.codemc.io/repository/maven-public/</url>
         <layout>default</layout>
     </repository>
+    <repository>
+        <id>jitpack</id>
+        <url>https://jitpack.io/</url>
+    </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -45,11 +49,11 @@
             <scope>provided</scope>
         </dependency>
 
-  	<dependency>
-  		<groupId>org.spigotmc</groupId>
-  		<artifactId>spigot-api</artifactId>
-  		<version>${spigot-api.version}</version>
-  	</dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot-api.version}</version>
+        </dependency>
 
         <!--  1_12_R1  -->
         <dependency>
@@ -147,9 +151,27 @@
             <systemPath>${project.basedir}/libs/LostVanish-1.0.0.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.github.decentsoftware-eu</groupId>
+            <artifactId>decentholograms</artifactId>
+            <version>2.9.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.grinderwolf</groupId>
             <artifactId>slimeworldmanager-api</artifactId>
             <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>6.1.9</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

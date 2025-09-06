@@ -2,14 +2,17 @@ package org.twightlight.skywars.utils;
 
 import java.text.DecimalFormat;
 import java.util.Collection;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtils {
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     private static final DecimalFormat df = new DecimalFormat("#,###"), df2 = new DecimalFormat("###.#");
     private static final Pattern COLOR_PATTERN = Pattern.compile("(?i)(§)[0-9A-FK-OR]");
 
+    private static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
     public static String stripColors(final String input) {
         if (input == null) {
             return null;
@@ -115,5 +118,15 @@ public class StringUtils {
 
     public static <T> String join(Collection<T> collection, String separator) {
         return join(collection.toArray(new Object[collection.size()]), separator);
+    }
+
+
+    public static String generateRandomString(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = RANDOM.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+        return sb.toString();
     }
 }

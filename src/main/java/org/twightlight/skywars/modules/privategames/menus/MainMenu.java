@@ -18,19 +18,19 @@ public class MainMenu {
         }, (player) -> {
             return new ItemBuilder(XMaterial.BARRIER).setName("&aBack").toItemStack();
         });
-        menu.addContent(31, back);
+        menu.setItem(31, back);
         Item gameSpeed = new Item( (e) -> {
             GameSpeed.open(p);
         }, (player) -> {
             return new ItemBuilder(XMaterial.CLOCK).setName("&aSet Game Speed").setLore("&bCurrent Speed: " + p.getGameSpeedSetting().getValue(), "", "&eClick to change!").toItemStack();
         });
-        menu.addContent(10, gameSpeed);
+        menu.setItem(10, gameSpeed);
         Item gameTime = new Item( (e) -> {
             GameTime.open(p);
         }, (player) -> {
             return new ItemBuilder(XMaterial.CLOCK).setName("&aSet Game Time").setLore("&bCurrent Time: " + p.getGameTimeSetting().getValue(), "", "&eClick to change!").toItemStack();
         });
-        menu.addContent(12, gameTime);
+        menu.setItem(12, gameTime);
         Item instantKill = new Item( (e) -> {
             if (p.getInstantKillSetting().getValue() == 1) {
                 p.getInstantKillSetting().setValue(0);
@@ -41,14 +41,14 @@ public class MainMenu {
         }, (player) -> {
             return new ItemBuilder(XMaterial.DIAMOND_SWORD).setName("&aSet Instant Kill").setLore(p.getInstantKillSetting().getValue() == 1 ? "&aEnable" : "&cDisable", "", "&eClick to toggle!").toItemStack();
         });
-        menu.addContent(14, instantKill);
+        menu.setItem(14, instantKill);
         Item healthMultiply = new Item( (e) -> {
             HealthMultiply.open(p);
             HealthMultiply.open(p);
         }, (player) -> {
             return new ItemBuilder(XMaterial.APPLE).setName("&aSet Health Multiply").setLore("&bCurrent Multiply: " + p.getHealthMultiplySetting().getValue(), "", "&eClick to change!").toItemStack();
         });
-        menu.addContent(16, healthMultiply);
+        menu.setItem(16, healthMultiply);
         menu.open(p.getPlayer());
     }
 }

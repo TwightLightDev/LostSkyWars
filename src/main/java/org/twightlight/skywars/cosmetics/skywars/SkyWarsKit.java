@@ -50,6 +50,14 @@ public abstract class SkyWarsKit extends Cosmetic {
     }
 
     @Override
+    public boolean has(Account account) {
+        if (isPermissible()) {
+            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
+        }
+        return this.has(account, this.getMode());
+    }
+
+    @Override
     public boolean canBeFoundInBox(Player player) {
         return Language.options$ranked$freekitsandperks ? this.getMode() != 3 && (!isPermissible() || hasByPermission(player)) : (!isPermissible() || hasByPermission(player));
     }

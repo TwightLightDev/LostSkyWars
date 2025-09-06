@@ -49,10 +49,9 @@ public class RankedSkyWarsKit extends SkyWarsKit {
     public static void setupKits() {
         ConfigUtils cu = ConfigUtils.getConfig("rankedkits", "plugins/LostSkyWars/kits");
         Set<String> keys = cu.getKeys(false);
-        LOGGER.log(Level.INFO, "Keys: " + keys);
 
         for (String key : keys) {
-            LOGGER.log(Level.INFO, "Processing kit: " + key);
+            LOGGER.log(Level.INFO, "Loading kit: " + key);
 
             int id = cu.getInt(key + ".id");
             String name = cu.getString(key + ".name");
@@ -101,9 +100,8 @@ public class RankedSkyWarsKit extends SkyWarsKit {
 
             ItemStack[] content = list.toArray(new ItemStack[0]);
 
-            LOGGER.log(Level.INFO, "Adding kit: " + name);
             CosmeticServer.SKYWARS.addCosmetic(new RankedSkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
-            LOGGER.log(Level.INFO, "Kit added: " + name);
+            LOGGER.log(Level.INFO, "Kit loaded: " + name);
         }
     }
 

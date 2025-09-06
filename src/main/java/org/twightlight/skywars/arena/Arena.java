@@ -14,8 +14,8 @@ import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.S
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsChest;
-import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
+import org.twightlight.skywars.ui.chest.ChestType;
+import org.twightlight.skywars.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsEvent;
 import org.twightlight.skywars.ui.SkyWarsMode;
 import org.twightlight.skywars.ui.SkyWarsType;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public abstract class Arena<T> extends SkyWarsServer {
+    protected static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
     protected int timer;
     protected ArenaConfig config;
@@ -237,6 +238,10 @@ public abstract class Arena<T> extends SkyWarsServer {
         }
 
         return null;
+    }
+
+    public List<SkyWarsChest> getChests() {
+        return chests;
     }
 
     public Map<Integer, SkyWarsEvent> getTimeline() {

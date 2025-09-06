@@ -9,6 +9,8 @@ import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 
+import java.util.Optional;
+
 public class WorldChangeEvent implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
@@ -17,10 +19,11 @@ public class WorldChangeEvent implements Listener {
         String worldName = wrapper.getString("lobby").split("; ")[0];
         if (e.getPlayer().getWorld().getName().equalsIgnoreCase(worldName)) {
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
-                User.getFromUUID(e.getPlayer().getUniqueId()).enable();
+                Optional.ofNullable(User.getFromUUID(e.getPlayer().getUniqueId())).orElse(new User(e.getPlayer())).enable();
             }, 5L);
             return;
         }
-        User.getFromUUID(e.getPlayer().getUniqueId()).disable();
+        if (User.getFromUUID(e.getPlayer().getUniqueId()) != null)
+            User.getFromUUID(e.getPlayer().getUniqueId()).disable();
     }
 }

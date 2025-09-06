@@ -67,12 +67,12 @@ public class GameTime {
             return new ItemBuilder(XMaterial.CLOCK).setName("&aNight").toItemStack();
         });
 
-        menu.addContent(10, a);
-        menu.addContent(12, b);
-        menu.addContent(14, c);
-        menu.addContent(16, d);
+        menu.setItem(10, a);
+        menu.setItem(12, b);
+        menu.setItem(14, c);
+        menu.setItem(16, d);
 
-        menu.addContent(27, back);
+        menu.setItem(27, back);
         menu.open(p.getPlayer());
     }
 }

@@ -55,11 +55,11 @@ public class HealthMultiply {
         });
 
 
-        menu.addContent(11, a);
-        menu.addContent(13, b);
-        menu.addContent(15, c);
+        menu.setItem(11, a);
+        menu.setItem(13, b);
+        menu.setItem(15, c);
 
-        menu.addContent(27, back);
+        menu.setItem(27, back);
         menu.open(p.getPlayer());
     }
 }

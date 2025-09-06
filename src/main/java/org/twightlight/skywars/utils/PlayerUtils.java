@@ -1,6 +1,8 @@
 package org.twightlight.skywars.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
@@ -60,5 +62,11 @@ public class PlayerUtils {
         return string.replace("{player}", player.getName())
                 .replace("{display}", player.getDisplayName())
                 .replace("{colored}", lastColor + player.getName() + (lastColor.contains("§k") ? "§r" : ""));
+    }
+
+    public static void sendSuggestText(Player player, String displayText, String suggestedText) {
+        TextComponent message = new TextComponent(displayText);
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, suggestedText));
+        player.spigot().sendMessage(message);
     }
 }

@@ -10,7 +10,7 @@ import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 
 public class PlayerJoinEvent implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent e) {
         Player p = e.getPlayer();
         LobbySettings.getDatabase().createPlayerData(p);

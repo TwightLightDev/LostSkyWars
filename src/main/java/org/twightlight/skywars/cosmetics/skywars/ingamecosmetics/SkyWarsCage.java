@@ -8,37 +8,85 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.*;
+import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.hook.WorldEditHook;
+import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class SkyWarsCage extends PreviewableCosmetic {
 
     private String name;
     private String permission;
+    private CageType type;
     private ItemStack icon;
-    private JSONArray locations;
+    private JSONArray smallCage;
+    private JSONArray bigCage;
+    private List<JSONArray> smallFrames;
+    private List<JSONArray> bigFrames;
+    private long refresh;
 
-    public SkyWarsCage(int id, CosmeticRarity rarity, String name, String permission, ItemStack icon, JSONArray locations) {
+    private static Map<UUID, BukkitTask> tasks = new HashMap<>();
+
+    public SkyWarsCage(int id,
+                       CosmeticRarity rarity,
+                       String name,
+                       String permission,
+                       ItemStack icon,
+                       CageType type,
+                       JSONArray smallCage,
+                       JSONArray bigCage,
+                       List<JSONArray> smallFrames,
+                       List<JSONArray> bigFrames,
+                       long refreshInterval) {
         super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, rarity);
         this.name = name;
         this.permission = permission;
         this.icon = icon;
-        this.locations = locations;
+        this.smallCage = smallCage;
+        this.bigCage = bigCage;
+        this.smallFrames = smallFrames;
+        this.bigFrames = bigFrames;
+        this.refresh = refreshInterval;
+        this.type = type;
+    }
+    public void apply(Player p, Location location) {
+        apply(p, location, false);
+    }
+    public void apply(Player p, Location location, boolean isBig) {
+        if (type == CageType.STATIC) {
+            applyStatic(location, isBig);
+        } else {
+            applyDynamic(p, location, isBig);
+        }
     }
 
-    public void apply(Location location) {
-        for (Object object : this.locations) {
+    public void applyStatic(Location location, boolean isBig) {
+        JSONArray array;
+        if (!isBig) {
+            array = smallCage;
+        } else {
+            array = bigCage;
+        }
+
+        if (array.isEmpty()) {
+            SkyWarsCage.defaultCage(location, isBig);
+        }
+        for (Object object : array) {
             if (object instanceof String) {
                 String offset = (String) object;
                 double offsetX = Double.parseDouble(offset.split("; ")[0]);
@@ -54,6 +102,59 @@ public class SkyWarsCage extends PreviewableCosmetic {
                 state.update(true);
             }
         }
+    }
+
+    public void applyDynamic(Player p, Location location, boolean isBig) {
+        List<JSONArray> frames;
+        if (!isBig) {
+            frames = smallFrames;
+        } else {
+            frames = bigFrames;
+        }
+
+        if (frames.isEmpty()) {
+            SkyWarsCage.defaultCage(location, isBig);
+            return;
+        }
+
+        BukkitTask task = new BukkitRunnable() {
+            int i = 0;
+            @Override
+            public void run() {
+                JSONArray array = frames.get(i % frames.size());
+                i = (i + 1) % frames.size();
+                if (array.isEmpty()) {
+                    SkyWarsCage.defaultCage(location, isBig);
+                    this.cancel();
+                    return;
+                }
+                if (Database.getInstance().getAccount(p.getUniqueId()) == null || Database.getInstance().getAccount(p.getUniqueId()).getServer() == null) {
+                    this.cancel();
+                    return;
+                }
+                for (Object object : array) {
+                    if (object instanceof String) {
+                        String offset = (String) object;
+                        double offsetX = Double.parseDouble(offset.split("; ")[0]);
+                        double offsetY = Double.parseDouble(offset.split("; ")[1]);
+                        double offsetZ = Double.parseDouble(offset.split("; ")[2]);
+                        Material blockMaterial = Material.matchMaterial(offset.split("; ")[3]);
+                        byte data = Byte.parseByte(offset.split("; ")[4]);
+
+                        Block block = location.clone().add(offsetX, offsetY, offsetZ).getBlock();
+                        block.setType(blockMaterial);
+                        BlockState state = block.getState();
+                        state.getData().setData(data);
+                        state.update(true);
+                    }
+                }
+            }
+        }.runTaskTimer(SkyWars.getInstance(), 0L, refresh);
+        if (tasks.get(p.getUniqueId()) != null) {
+            tasks.get(p.getUniqueId()).cancel();
+            tasks.remove(p.getUniqueId());
+        }
+        tasks.put(p.getUniqueId(), task);
     }
 
     @Override
@@ -116,63 +217,137 @@ public class SkyWarsCage extends PreviewableCosmetic {
     public static void setupCages() {
         for (String key : CONFIG.getSection("cages").getKeys(false)) {
             ConfigurationSection section = CONFIG.getSection("cages." + key);
-
+            LOGGER.log(Level.INFO, "Loading " + key + " cage...");
             int id = section.getInt("id");
             String name = section.getString("name");
             CosmeticRarity rarity = CosmeticRarity.fromName(section.getString("rarity"));
             String permission = section.getString("permission");
             String icon = section.getString("icon");
-            JSONArray locations = null;
-            try {
-                locations = (JSONArray) new JSONParser().parse(section.getString("data"));
-            } catch (ParseException ex) {
-                LOGGER.log(Level.WARNING, "Invalid CageData \"" + key + "\": ", ex);
-                continue;
+            CageType type = CageType.valueOf(section.getString("type", "STATIC"));
+            long refreshInterval = section.getLong("refresh_interval", 0L);
+            JSONArray smallCage;
+            JSONArray bigCage;
+            List<JSONArray> smallFrames;
+            List<JSONArray> bigFrames;
+
+            if (type == CageType.STATIC) {
+                try {
+                    if (section.contains("small.data")) {
+                        smallCage = (JSONArray) new JSONParser().parse(section.getString("small.data"));
+                    } else {
+                        smallCage = new JSONArray();
+                        LOGGER.log(Level.WARNING, "Small cage data for \"" + key + "\" not found, leave it empty!");
+
+                    }
+                    if (section.contains("big.data")) {
+                        bigCage = (JSONArray) new JSONParser().parse(section.getString("big.data"));
+                    } else {
+                        bigCage = new JSONArray();
+                        LOGGER.log(Level.WARNING, "Big cage data for \"" + key + "\" not found, leave it empty!");
+                    }
+                } catch (ParseException ex) {
+                    LOGGER.log(Level.WARNING, "Invalid CageData \"" + key + "\": ", ex);
+                    continue;
+                }
+
+                smallFrames = Collections.emptyList();
+                bigFrames = Collections.emptyList();
+            } else {
+                try {
+                    smallFrames = new ArrayList<>();
+                    if (section.contains("small.frames")) {
+                        for (String jsonData : section.getStringList("small.frames")) {
+                            smallFrames.add((JSONArray) new JSONParser().parse(jsonData));
+                        }
+                    } else {
+                        LOGGER.log(Level.WARNING, "Small cage data for \"" + key + "\" not found, leave it empty!");
+                    }
+
+                    bigFrames = new ArrayList<>();
+                    if (section.contains("big.frames")) {
+                        for (String jsonData : section.getStringList("big.frames")) {
+                            bigFrames.add((JSONArray) new JSONParser().parse(jsonData));
+                        }
+                    } else {
+                        LOGGER.log(Level.WARNING, "Big cage data for \"" + key + "\" not found, leave it empty!");
+                    }
+                } catch (ParseException ex) {
+                    LOGGER.log(Level.WARNING, "Invalid CageData \"" + key + "\": ", ex);
+                    continue;
+                }
+
+                smallCage = new JSONArray();
+                bigCage = new JSONArray();
             }
 
-            CosmeticServer.SKYWARS.addCosmetic(new SkyWarsCage(id, rarity, name, permission, BukkitUtils.deserializeItemStack(icon), locations));
+
+            CosmeticServer.SKYWARS.addCosmetic(new SkyWarsCage(id, rarity, name, permission, BukkitUtils.fullyDeserializeItemStack(icon), type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
         }
     }
 
-    public static void createNew(Object[] arr) {
-        // 0 = name
-        // 1 = key
-        // 2 = array
-        // 3 = permission
-        // 4 = rarity
+    public static void createNew(CageSetupSession setupSession) {
         int id = 1;
-        String name = (String) arr[0];
-        String key = (String) arr[1];
-        JSONArray array = (JSONArray) arr[2];
-        String permission = (String) arr[3];
-        CosmeticRarity rarity = (CosmeticRarity) arr[4];
+        String name = setupSession.getName();
+        String key = setupSession.getKey();
+        CageType type = setupSession.getCageType();
+        JSONArray smallCage;
+        JSONArray bigCage;
+        List<JSONArray> smallFrames;
+        List<JSONArray> bigFrames;
+        String permission = setupSession.getPermission();
+        CosmeticRarity rarity = setupSession.getRarity();
+        ItemStack icon = setupSession.getIcon();
+        long refreshInterval = setupSession.getRefreshInterval();
 
+        if (type == CageType.STATIC) {
+            smallCage = !setupSession.getSmallFrames().isEmpty() ? setupSession.getSmallFrames().get(0) : new JSONArray();
+            bigCage = !setupSession.getBigFrames().isEmpty() ? setupSession.getBigFrames().get(0) : new JSONArray();
+            smallFrames = new ArrayList<>();
+            bigFrames = new ArrayList<>();
+        } else {
+            smallCage = new JSONArray();
+            bigCage = new JSONArray();
+            smallFrames = setupSession.getSmallFrames();
+            bigFrames = setupSession.getBigFrames();
+        }
         CONFIG.createSection("cages." + key);
         ConfigurationSection sec = CONFIG.getSection("cages." + key);
-        Cosmetic c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
-        while (c != null) {
-            id++;
-            int copyId = id;
-            c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
+        if (!setupSession.isExisted()) {
+            Cosmetic c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
+            while (c != null) {
+                id++;
+                int copyId = id;
+                c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
+            }
+            sec.set("id", id);
         }
-        sec.set("id", id);
         sec.set("name", name);
         sec.set("rarity", rarity.name());
+        sec.set("type", type.name());
+        sec.set("refresh_interval", refreshInterval);
         sec.set("permission", permission);
-        sec.set("icon", "BARRIER : 1 : display=" + name + " Cage (change that in cages.yml)");
-        sec.set("data", array.toString());
+        sec.set("icon", BukkitUtils.fullySerializeItemStack(icon));
+        if (type == CageType.STATIC) {
+            sec.set("small.data", smallCage.toString());
+            sec.set("big.data", bigCage.toString());
+        } else {
+            sec.set("small.frames", smallFrames.stream().map(JSONArray::toString).collect(Collectors.toList()));
+            sec.set("big.frames", bigFrames.stream().map(JSONArray::toString).collect(Collectors.toList()));
+        }
         CONFIG.save();
-        CosmeticServer.SKYWARS.addCosmetic(
-                new SkyWarsCage(id, rarity, name, permission, BukkitUtils.deserializeItemStack("BARRIER : 1 : display=" + name + " Cage : lore=&7Change that on cages.yml"), array));
+        if (!setupSession.isExisted())
+            CosmeticServer.SKYWARS.addCosmetic(
+                new SkyWarsCage(id, rarity, name, permission, icon, type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
     }
 
     @SuppressWarnings("unchecked")
-    public static JSONArray createCage(Location location) {
+    public static JSONArray createFrame(Location location, boolean isBig) {
         JSONArray cageData = new JSONArray();
+        int offset = isBig ? 2 : 1;
         location = location.getBlock().getLocation().clone().add(0.5, -1, 0.5);
         for (double y = 0; y <= 4; y++) {
-            for (double x = -1; x <= 1; x++) {
-                for (double z = -1; z <= 1; z++) {
+            for (double x = -offset; x <= offset; x++) {
+                for (double z = -offset; z <= offset; z++) {
                     if (y > 0 && y < 4) {
                         if (x == 0 && z == 0) {
                             continue;
@@ -190,7 +365,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
         return cageData;
     }
 
-    public static void def(Location location, boolean big) {
+    public static void defaultCage(Location location, boolean big) {
         location = location.clone();
         if (big) {
             location.add(0.0D, -1.0D, 0.0D);
@@ -241,7 +416,27 @@ public class SkyWarsCage extends PreviewableCosmetic {
         }
     }
 
-    public static void remove(Location location, boolean big) {
+    public static void remove(UUID owner, Location location, boolean big) {
+        if (tasks.get(owner) != null) {
+            tasks.get(owner).cancel();
+            tasks.remove(owner);
+        }
+        if (SkyWars.we) {
+            int radius;
+            int height;
+
+            if (big) {
+                radius = 2;
+                height = 5;
+                location = location.clone().add(0.0D, -1.0D, 0.0D);
+            } else {
+                radius = 1;
+                height = 4;
+            }
+
+            WorldEditHook.getHelper().removeRegion(location, radius, height);
+            return;
+        }
         if (big) {
             location.add(0.0D, -1.0D, 0.0D);
             Location[] downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
@@ -287,7 +482,11 @@ public class SkyWarsCage extends PreviewableCosmetic {
                     }
                 }
             }
-
         }
+    }
+
+    public enum CageType {
+        STATIC,
+        ANIMATED
     }
 }

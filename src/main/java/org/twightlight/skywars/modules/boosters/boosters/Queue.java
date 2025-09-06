@@ -27,26 +27,28 @@ public class Queue {
                     Bukkit.getPlayer(playerUser.getUUID()), Booster.BoosterType.PERSONAL.getQueueColumn(),
                     new TypeToken<ConcurrentLinkedDeque<Booster>>() {}, new ConcurrentLinkedDeque<>());
         } else {
-            this.queue = Boosters.getDatabase().getServerData(Booster.BoosterType.GLOBAL.getQueueColumn(),
+            this.queue = Boosters.getDatabase().getNetworkData(Booster.BoosterType.NETWORK.getQueueColumn(),
                     new TypeToken<ConcurrentLinkedDeque<Booster>>() {}, new ConcurrentLinkedDeque<>());
         }
     }
 
-    public void add(Booster booster) {
+    public boolean add(Booster booster) {
         if (queue.size() < cap) {
             queue.add(booster);
             update(type.getQueueColumn());
             BoosterQueueEvent e = new BoosterQueueEvent(booster, user);
             Bukkit.getPluginManager().callEvent(e);
+            return true;
         }
+        return false;
     }
 
     public void setCap(int cap) {
         this.cap = cap;
     }
 
-    public void remove(int pos) {
-        if (pos < 0 || pos >= queue.size()) return;
+    public boolean remove(int pos) {
+        if (pos < 0 || pos >= queue.size()) return false;
         int i = 0;
         for (Booster booster : queue) {
             if (i == pos) {
@@ -56,6 +58,7 @@ public class Queue {
             }
             i++;
         }
+        return true;
     }
 
     public Booster.BoosterType getType() {
@@ -75,7 +78,7 @@ public class Queue {
             PlayerUser playerUser = (PlayerUser) user;
             Boosters.getDatabase().updateData(Bukkit.getPlayer(playerUser.getUUID()), queue, column);
         } else {
-            Boosters.getDatabase().updateServerData(queue, column);
+            Boosters.getDatabase().updateNetworkData(queue, column);
         }
     }
 

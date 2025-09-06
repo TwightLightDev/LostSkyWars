@@ -26,7 +26,7 @@ public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.U
         activating = new Activating(this, getCap("active"), Booster.BoosterType.PERSONAL, queue);
         personal_storage = Boosters.getDatabase().getData(p, Booster.BoosterType.PERSONAL.getStorageColumn(), new TypeToken<List<Booster>>() {
         }, new ArrayList<>());
-        server_storage = Boosters.getDatabase().getData(p, Booster.BoosterType.GLOBAL.getStorageColumn(), new TypeToken<List<Booster>>() {
+        server_storage = Boosters.getDatabase().getData(p, Booster.BoosterType.NETWORK.getStorageColumn(), new TypeToken<List<Booster>>() {
         }, new ArrayList<>());
     }
 

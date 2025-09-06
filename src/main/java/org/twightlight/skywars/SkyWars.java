@@ -28,7 +28,7 @@ import org.twightlight.skywars.rank.Rank;
 import org.twightlight.skywars.rank.TagUtils;
 import org.twightlight.skywars.ranked.Ranked;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
-import org.twightlight.skywars.ui.SkyWarsChest.ChestType;
+import org.twightlight.skywars.ui.chest.ChestType;
 import org.twightlight.skywars.utils.Logger;
 import org.twightlight.skywars.utils.Logger.Level;
 import org.twightlight.skywars.utils.MinecraftVersion;
@@ -44,7 +44,7 @@ public class SkyWars extends JavaPlugin {
 
     private static SkyWars instance;
     private static boolean validInit;
-    public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, guilds = true;
+    public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, guilds = true, we = true;
     public static Object economy;
     public static final Logger LOGGER = new Logger();
     private WorldLoaderAdapter adapter;
@@ -127,6 +127,7 @@ public class SkyWars extends JavaPlugin {
         this.setupBoxes();
         this.setupBattlePass();
         this.setupGuilds();
+        this.setupWE();
         if (MODE == CoreMode.MULTI_ARENA) {
             this.setupParties();
         } else {
@@ -293,6 +294,16 @@ public class SkyWars extends JavaPlugin {
 
         } else {
             adapter = new SlimeLoader(this);
+        }
+    }
+
+    private void setupWE() {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
+        if (plugin != null) {
+            WorldEditHook.setupWorldEdit();
+        } else {
+            we = false;
+            LOGGER.log(Level.WARNING, "WorldEdit not found, disabling support...");
         }
     }
 

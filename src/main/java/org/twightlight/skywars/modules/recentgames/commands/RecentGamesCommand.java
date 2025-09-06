@@ -50,14 +50,14 @@ public class RecentGamesCommand extends Command {
             }, (p) -> {
                 return new ItemBuilder(XMaterial.BARRIER).setName("&cClose").toItemStack();
             });
-            menu.addContent(31, close);
+            menu.setItem(31, close);
             if (dataList.isEmpty()) {
                 Item noGame = new Item((e) -> {
                     return;
                 }, (p) -> {
                     return new ItemBuilder(XMaterial.BEDROCK).setName("&cYou don't have any recent game!").toItemStack();
                 });
-                menu.addContent(13, noGame);
+                menu.setItem(13, noGame);
                 menu.open(player);
                 return true;
             }
@@ -71,7 +71,7 @@ public class RecentGamesCommand extends Command {
                 }
                 return new ItemBuilder(XMaterial.ARROW).setName("&aNext page").toItemStack();
             });
-            menu.addContent(35, nextPage);
+            menu.setItem(35, nextPage);
             Item previousPage = new Item((e) -> {
                 if (page[0] > 1) {
                     page[0] -= 1;
@@ -84,7 +84,7 @@ public class RecentGamesCommand extends Command {
                 }
                 return new ItemBuilder(XMaterial.ARROW).setName("&aPrevious page").toItemStack();
             });
-            menu.addContent(27, previousPage);
+            menu.setItem(27, previousPage);
 
             addContents(menu, page[0], amountPerPage, dataList, slots);
 
@@ -111,7 +111,7 @@ public class RecentGamesCommand extends Command {
                                 .replace("{startTime}", dataList.get(index).getFormattedStartTime()).replace("{duration}", dataList.get(index).getFormattedDuration())).collect(Collectors.toList())).toItemStack();
             });
 
-            menu.addContent(slots[i], paper);
+            menu.setItem(slots[i], paper);
         }
     }
 }

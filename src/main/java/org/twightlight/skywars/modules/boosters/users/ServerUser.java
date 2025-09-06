@@ -9,8 +9,8 @@ public class ServerUser extends User {
 
     public static void init() {
         user = new ServerUser();
-        user.queue = new Queue(user, 20, Booster.BoosterType.GLOBAL);
-        user.activating = new Activating(user, 1, Booster.BoosterType.GLOBAL, user.queue);
+        user.queue = new Queue(user, 20, Booster.BoosterType.NETWORK);
+        user.activating = new Activating(user, 1, Booster.BoosterType.NETWORK, user.queue);
     }
 
     public static ServerUser getServerUser() {

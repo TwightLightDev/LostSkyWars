@@ -28,33 +28,39 @@ public class Activating {
                     Bukkit.getPlayer(playerUser.getUUID()), Booster.BoosterType.PERSONAL.getActivatingColumn(),
                     new TypeToken<TreeMap<Long, Booster>>() {}, new TreeMap<>());
         } else {
-            this.list = Boosters.getDatabase().getServerData(Booster.BoosterType.GLOBAL.getActivatingColumn(),
+            this.list = Boosters.getDatabase().getNetworkData(Booster.BoosterType.NETWORK.getActivatingColumn(),
                     new TypeToken<TreeMap<Long, Booster>>() {}, new TreeMap<>());
         }
 
         this.queue = queue;
     }
 
-    public void add(Booster booster) {
+    public boolean add(Booster booster) {
         if (list.keySet().size() < cap) {
             list.put(System.currentTimeMillis() + booster.getDuration(), booster);
             check();
             update(type.getQueueColumn());
             BoosterActiveEvent e = new BoosterActiveEvent(booster, user);
             Bukkit.getPluginManager().callEvent(e);
+            return true;
         }
+        return false;
     }
 
-    public void remove(long pos) {
-        list.remove(pos);
+    public boolean remove(long pos) {
+        Booster b = list.remove(pos);
         check();
         update(type.getQueueColumn());
+        return b != null;
     }
 
-    public void remove(int pos) {
-        long target = list.keySet().toArray(new Long[0])[pos];
-        remove(target);
-
+    public boolean remove(int pos) {
+        try {
+            long target = list.keySet().toArray(new Long[0])[pos];
+            return remove(target);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
     }
 
     public void setCap(int cap) {
@@ -70,7 +76,7 @@ public class Activating {
             PlayerUser playerUser = (PlayerUser) user;
             Boosters.getDatabase().updateData(Bukkit.getPlayer(playerUser.getUUID()), list, column);
         } else {
-            Boosters.getDatabase().updateServerData(list, column);
+            Boosters.getDatabase().updateNetworkData(list, column);
         }
     }
 

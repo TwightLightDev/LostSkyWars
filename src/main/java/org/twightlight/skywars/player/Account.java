@@ -477,12 +477,12 @@ public class Account {
         Cosmetic c = Cosmetic.findFrom(server, type, index, getContainer(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
         if (c != null) {
             if (c instanceof SkyWarsKit) {
-                if (!c.has(this, index) || !((SkyWarsKit) c).hasByPermission(getPlayer())) {
+                if (!((SkyWarsKit) c).has(this)) {
                     setSelected(server, type, index, 0);
                     return null;
                 }
             } else if (c instanceof SkyWarsCage) {
-                if (!c.has(this) || !((SkyWarsCage) c).hasByPermission(getPlayer())) {
+                if (!c.has(this)) {
                     setSelected(server, type, index, 0);
                     return null;
                 }

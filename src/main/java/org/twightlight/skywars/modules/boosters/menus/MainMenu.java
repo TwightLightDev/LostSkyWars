@@ -16,7 +16,7 @@ public class MainMenu {
             return new ItemBuilder(XMaterial.BARRIER).setName("&cClose").toItemStack();
         });
 
-        menu.addContent(31, back);
+        menu.setItem(31, back);
 
 
         menu.open(p.getPlayer());

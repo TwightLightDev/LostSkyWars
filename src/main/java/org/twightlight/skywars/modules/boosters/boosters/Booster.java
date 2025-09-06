@@ -1,7 +1,6 @@
 package org.twightlight.skywars.modules.boosters.boosters;
 
 import com.google.gson.Gson;
-import org.twightlight.skywars.modules.boosters.users.User;
 import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
 import org.twightlight.skywars.player.Account;
 
@@ -95,7 +94,7 @@ public class Booster {
 
     public enum BoosterType {
         PERSONAL("personal_activating", "personal_queue", "personal_storage"),
-        GLOBAL("server_activating", "server_queue", "server_storage");
+        NETWORK("network_activating", "network_queue", "network_storage");
 
 
         String activating;

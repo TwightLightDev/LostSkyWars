@@ -5,6 +5,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.ui.chest.SkyWarsChest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class RollBackManager {
                         if (!server.isPrivate()) {
                             rollbacking.setState(SkyWarsState.ROLLBACKING);
                             rollbacking.getConfig().reload(rollbacking);
+                            rollbacking.getChests().forEach(SkyWarsChest::reset);
                             rollbacking.setTimer(Language.game$countdown$start + 1);
                             rollbacking.getTimerTask().reset();
                             rollbacking = null;

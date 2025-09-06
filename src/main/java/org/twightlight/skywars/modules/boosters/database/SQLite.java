@@ -35,7 +35,7 @@ public class SQLite {
                     "personal_activating TEXT DEFAULT '', " +
                     "personal_queue TEXT DEFAULT '', " +
                     "personal_storage TEXT DEFAULT '', " +
-                    "server_storage TEXT DEFAULT '', " +
+                    "network_storage TEXT DEFAULT '', " +
                     "total_activated INTEGER DEFAULT 0" +
                     "); ");
             statement.close();
@@ -46,10 +46,10 @@ public class SQLite {
         try {
             Statement statement = getConnection().createStatement();
             statement.executeUpdate(" CREATE TABLE IF NOT EXISTS "
-                    + dbname+"_server" +
+                    + dbname+"_network" +
                     " ( " +
-                    "server_activating TEXT DEFAULT '', " +
-                    "server_queue TEXT DEFAULT ''" +
+                    "network_activating TEXT DEFAULT '', " +
+                    "network_queue TEXT DEFAULT ''" +
                     "); ");
             statement.close();
         } catch (SQLException e) {
@@ -84,7 +84,7 @@ public class SQLite {
         try (Connection connection = getConnection();
              PreparedStatement checkPs = connection.prepareStatement("SELECT player FROM " + dbname + " WHERE player = ?");
              PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname +
-                     " (player, personal_activating, personal_queue, personal_storage, server_storage, total_activated) VALUES (?, ?, ?, ?, ?, ?)")) {
+                     " (player, personal_activating, personal_queue, personal_storage, network_storage, total_activated) VALUES (?, ?, ?, ?, ?, ?)")) {
 
             checkPs.setString(1, p.getUniqueId().toString());
             ResultSet rs = checkPs.executeQuery();
@@ -104,12 +104,12 @@ public class SQLite {
         }
     }
 
-    public void createServerData() {
+    public void createNetworkData() {
         try (Connection connection = getConnection();
-             PreparedStatement checkPs = connection.prepareStatement("SELECT server_activating FROM " + dbname + "_server");
+             PreparedStatement checkPs = connection.prepareStatement("SELECT network_activating FROM " + dbname + "_network");
 
-             PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname+"_server" +
-                     " (server_activating, server_queue) VALUES (?, ?)")) {
+             PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname+"_network" +
+                     " (network_activating, network_queue) VALUES (?, ?)")) {
             ResultSet rs = checkPs.executeQuery();
             if (!rs.next()) {
                 insertPs.setString(1, "{}");
@@ -179,9 +179,9 @@ public class SQLite {
         }
     }
 
-    public <T> T getServerData(String column, TypeToken<T> typeToken, T fallback) {
+    public <T> T getNetworkData(String column, TypeToken<T> typeToken, T fallback) {
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + dbname + "_server")) {
+             PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + dbname + "_network")) {
 
             ResultSet rs = ps.executeQuery();
 
@@ -215,9 +215,9 @@ public class SQLite {
     }
 
 
-    public <T> boolean updateServerData(T data, String column) {
+    public <T> boolean updateNetworkData(T data, String column) {
         try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement("UPDATE " + dbname + "_server" + " SET " + column + "=?")) {
+             PreparedStatement ps = c.prepareStatement("UPDATE " + dbname + "_network" + " SET " + column + "=?")) {
 
             if (data instanceof Integer || data instanceof Double) {
                 ps.setObject(1, data);

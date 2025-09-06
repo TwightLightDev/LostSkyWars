@@ -20,7 +20,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsChest;
+import org.twightlight.skywars.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.ui.SkyWarsEvent;
 import org.twightlight.skywars.ui.SkyWarsType;
 
@@ -174,7 +174,7 @@ public class Timer {
 
                         if (!server.getType().equals(SkyWarsType.DUELS)) {
                             if (server.getTimeline().get(eventTime) == SkyWarsEvent.Refill) {
-                                server.chests.forEach(SkyWarsChest::refill);
+                                server.chests.forEach(SkyWarsChest::fill);
                                 server.getPlayers(false).forEach(player -> {
                                     Sound.CHEST_OPEN.play(player, 1.0F, 1.0F);
                                     NMS.sendTitle(player, Language.game$player$ingame$titles$refill$up, Language.game$player$ingame$titles$refill$bottom, 10, 60, 10);
