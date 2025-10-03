@@ -7,14 +7,10 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.privategames.settings.*;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsEvent;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.arena.Arena;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
 
 public class User {
 
@@ -125,4 +121,18 @@ public class User {
     public InstantKillSetting getInstantKillSetting() {
         return instantKillSetting;
     }
+
+    public void sendMessage(String msg) {
+        Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+
+    }
+
+    public void sendMessage(List<String> msgs) {
+        Player p = Bukkit.getPlayer(uuid);
+        msgs.forEach(line -> {
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
+        });
+    }
+
+
 }

@@ -29,11 +29,11 @@ import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.menu.shop.SoulWellMenu;
 import org.twightlight.skywars.menu.shop.kits.KitSelectorMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.chest.ChestType;
-import org.twightlight.skywars.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.chest.ChestType;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.well.WellNPC;
+import org.twightlight.skywars.systems.well.WellNPC;
 import org.twightlight.skywars.arena.Arena;
 
 import java.text.DecimalFormat;

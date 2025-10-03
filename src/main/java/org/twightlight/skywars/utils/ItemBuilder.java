@@ -6,6 +6,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -469,6 +470,48 @@ public class ItemBuilder {
     }
 
     public static ItemBuilder parse(YamlConfiguration yml, String path) {
+        XMaterial material = XMaterial.valueOf(yml.getString(path + ".material", "BEDROCK"));
+        ItemBuilder builder = new ItemBuilder(material);
+        if (yml.contains(path + ".name")) {
+            builder = builder.setName(yml.getString(path + ".name"));
+        }
+        if (yml.contains(path + ".data")) {
+            builder = builder.setDurability(Short.parseShort(yml.getString(path + ".name")));
+        }
+        if (yml.contains(path + ".dye_color")) {
+            builder = builder.setDyeColor(DyeColor.valueOf(yml.getString(path + ".dye_color")));
+        }
+        if (yml.contains(path + ".head_url")) {
+            builder = builder.setSkullOwnerNMS(yml.getString(path + ".head_url"));
+        }
+        if (yml.contains(path + ".unbreakable")) {
+            if (yml.getBoolean(path + ".unbreakable"))
+                builder = builder.unbreakable();
+        }
+        if (yml.contains(path + ".amount")) {
+            builder = builder.setAmount(Integer.parseInt(yml.getString(path + ".amount")));
+        }
+        if (yml.contains(path + ".lore")) {
+            builder = builder.setLore(yml.getStringList(path + ".lore"));
+        }
+        if (yml.contains(path + ".enchantments")) {
+            Map<Enchantment, Integer> enchsMap = new HashMap<>();
+            yml.getStringList(path + ".enchantments").forEach(line -> {
+                String[] elements = line.split(":", 2);
+                enchsMap.put(Enchantment.getByName(elements[0]), Integer.parseInt(elements[1]));
+            });
+            builder = builder.addEnchantments(enchsMap);
+        }
+        if (yml.contains(path + ".flags")) {
+            for (String line : yml.getStringList(path + ".flags")) {
+                builder = builder.addItemFlag(ItemFlag.valueOf(line));
+            }
+        }
+
+        return builder;
+    }
+
+    public static ItemBuilder parse(ConfigurationSection yml, String path) {
         XMaterial material = XMaterial.valueOf(yml.getString(path + ".material", "BEDROCK"));
         ItemBuilder builder = new ItemBuilder(material);
         if (yml.contains(path + ".name")) {

@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -22,6 +22,7 @@ import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
+import org.twightlight.skywars.menu.shop.ingamecosmetics.spray.SpraysMenu;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.setup.ChatSession;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 
 public class KillEffectsMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("killmessage");
+    private static final ConfigMenu config = ConfigMenu.getByName("killeffect");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {
@@ -83,7 +84,10 @@ public class KillEffectsMenu extends PagedPlayerMenu {
 
                         }
                     } else if (cos != null) {
-
+                        if (evt.getClick().name().contains("RIGHT")) {
+                            cos.playPreview(player, 100L, KillEffectsMenu.class, order, filter, searchQuery);
+                            return;
+                        }
                         if (!cos.has(account)) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             if (!cos.canBeSold()) {

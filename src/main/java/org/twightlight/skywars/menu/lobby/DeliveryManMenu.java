@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.DeliveryContainer;
-import org.twightlight.skywars.delivery.Delivery;
+import org.twightlight.skywars.systems.delivery.Delivery;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;

@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsTrail;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsTrail;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -22,6 +22,7 @@ import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
+import org.twightlight.skywars.menu.shop.ingamecosmetics.spray.SpraysMenu;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.setup.ChatSession;
@@ -83,7 +84,10 @@ public class ProjectileTrailsMenu extends PagedPlayerMenu {
 
                         }
                     } else if (trail != null) {
-
+                        if (evt.getClick().name().contains("RIGHT")) {
+                            trail.playPreview(player, 60L, ProjectileTrailsMenu.class, order, filter, searchQuery);
+                            return;
+                        }
                         if (!trail.has(account)) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             if (!trail.canBeSold()) {

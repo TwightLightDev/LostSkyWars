@@ -11,10 +11,9 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.GuildsHook;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.hook.guilds.menus.DonationMenu;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 
@@ -22,7 +21,7 @@ public class GuildsDonationCommand extends Command {
 
     public GuildsDonationCommand() {
         super("guilddonation");
-        setAliases(Arrays.asList("guildsdonation", "gdonation"));
+        setAliases(Arrays.asList("guildsdonation", "gdonation", "clansdonation", "clandonation", "cdonation"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

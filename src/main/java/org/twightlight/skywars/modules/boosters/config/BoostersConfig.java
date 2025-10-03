@@ -3,7 +3,7 @@ package org.twightlight.skywars.modules.boosters.config;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 
 public class BoostersConfig extends YamlWrapper {
 
@@ -22,6 +22,7 @@ public class BoostersConfig extends YamlWrapper {
                     String path3 = path2 + "_" + (int) (a * 100);
                     for (int d : durations) {
                         String path4 = path3 + "_" + d;
+                        yml.addDefault(path4 + ".id", path4.replace("boosters.", ""));
                         yml.addDefault(path4 + ".duration", d);
                         yml.addDefault(path4 + ".currency", c.name());
                         yml.addDefault(path4 + ".amplifier", a);

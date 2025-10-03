@@ -10,7 +10,7 @@ import org.twightlight.skywars.leaderboards.objects.HologramLB;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

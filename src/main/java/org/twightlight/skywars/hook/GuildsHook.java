@@ -14,8 +14,8 @@ import org.twightlight.skywars.hook.guilds.listeners.InventoryManager;
 import org.twightlight.skywars.hook.guilds.listeners.PlayerEvent;
 import org.twightlight.skywars.hook.guilds.papi.GuildsDonationExpansion;
 import org.twightlight.skywars.hook.guilds.papi.GuildsShopExpansion;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
+import org.twightlight.skywars.Logger;
 
 import java.io.File;
 import java.util.ArrayList;

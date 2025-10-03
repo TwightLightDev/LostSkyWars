@@ -4,11 +4,12 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
@@ -49,5 +50,30 @@ public class ExplosionEffect extends SkyWarsKillEffect {
                 }
             }
         }).runTaskTimer(SkyWars.getInstance(), 0L, 0L);
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+        final TNTPrimed tnt = location.getWorld().spawn(location.add(0.0D, 6.0D, 0.0D), TNTPrimed.class);
+        tnt.setFuseTicks(2147483647);
+        (new BukkitRunnable() {
+            public void run() {
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
+                if (!tnt.isValid()) {
+                    cancel();
+                    return;
+                }
+                if (tnt.getLocation().getY() < location.getY()) {
+                    ParticleType.of("EXPLOSION_HUGE").spawn(player, tnt.getLocation(), 1, 0.0F, 0.0F, 0.0F, 0.0F);
+                    player.playSound(tnt.getLocation(), Sound.EXPLODE, 1.5F, 1.0F);
+                    tnt.remove();
+                    cancel();
+                    return;
+                }
+            }
+        }).runTaskTimer(SkyWars.getInstance(), 20L, 0L);
     }
 }

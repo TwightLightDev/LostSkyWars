@@ -15,7 +15,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsSpray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsSpray;
 import org.twightlight.skywars.utils.RenderUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -88,6 +88,7 @@ public class Spray {
         Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             usable = true;
         }, 60);
+
     }
 
 

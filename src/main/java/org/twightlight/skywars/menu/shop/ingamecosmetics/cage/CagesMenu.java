@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -84,7 +84,7 @@ public class CagesMenu extends PagedPlayerMenu {
                         }
                     } else if (cage != null) {
                         if (!cage.has(account)) {
-                            Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
+                            cage.playPreview(player, 100L, CagesMenu.class, order, filter, searchQuery, evt.isRightClick());
                             return;
                         }
 

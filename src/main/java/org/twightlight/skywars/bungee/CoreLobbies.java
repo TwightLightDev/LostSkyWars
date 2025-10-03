@@ -8,8 +8,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 
 import java.util.HashMap;
 import java.util.Map;

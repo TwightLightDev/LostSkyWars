@@ -15,14 +15,14 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsVictoryDance;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.ui.SkyWarsEvent;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,7 +236,9 @@ public class Timer {
             server.setTimer(10);
             for (Player player : winners) {
                 Account account = Database.getInstance().getAccount(player.getUniqueId());
-                if (account == null) {return;}
+                if (account == null) {
+                    return;
+                }
                 Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
                 if (cos instanceof SkyWarsVictoryDance) {
                     SkyWarsVictoryDance cos1 = (SkyWarsVictoryDance) cos;

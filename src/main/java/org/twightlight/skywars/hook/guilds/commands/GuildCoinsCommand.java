@@ -1,6 +1,5 @@
 package org.twightlight.skywars.hook.guilds.commands;
 
-import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.GuildsHook;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
 import java.util.Arrays;
@@ -20,7 +19,7 @@ public class GuildCoinsCommand extends Command {
 
     public GuildCoinsCommand() {
         super("guildcoins");
-        setAliases(Arrays.asList("guildscoins", "guildcoin", "guildscoin", "gcoin", "gcoins"));
+        setAliases(Arrays.asList("guildscoins", "guildcoin", "guildscoin", "gcoin", "gcoins", "clanscoins", "clancoins", "ccoins", "clanscoin", "clancoin", "ccoin"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

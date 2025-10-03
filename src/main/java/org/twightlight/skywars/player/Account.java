@@ -1,6 +1,7 @@
 package org.twightlight.skywars.player;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,22 +12,23 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.cmd.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.StatsContainer;
-import org.twightlight.skywars.level.Level;
-import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.ranked.Ranked;
-import org.twightlight.skywars.scoreboard.LostScoreboard;
-import org.twightlight.skywars.scoreboard.ScoreboardScroller;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.player.level.Level;
+import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.player.ranked.Ranked;
+import org.twightlight.skywars.systems.scoreboard.LostScoreboard;
+import org.twightlight.skywars.systems.scoreboard.ScoreboardScroller;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.TimeUtils;
@@ -304,7 +306,6 @@ public class Account {
         this.scoreboard = new LostScoreboard() {
             @Override
             public void update() {
-                this.updateHealth();
                 List<String> clone = new ArrayList<>(server == null ? Language.scoreboards$lines$lobby
                         : server.getState().canJoin() ? server.getType().equals(SkyWarsType.DUELS) ? Language.scoreboards$lines$waiting_duels : Language.scoreboards$lines$waiting
                         : server.getMode().equals(SkyWarsMode.SOLO)
@@ -334,7 +335,7 @@ public class Account {
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
-                        line = line.replace("{world}", server.getName());
+                        line = line.replace("{world}", server instanceof Arena<?> ? ((Arena<?>) server).isPrivate() ? ChatColor.translateAlternateColorCodes('&', "&7[P]") : server.getName() : server.getName());
                         line = line.replace("{event}", server.getEvent());
                         line = line.replace("{mode}", server.getType().getColoredName());
                         line = line.replace("{map}", server.getName());
@@ -371,12 +372,6 @@ public class Account {
             }
         }.to(this.getPlayer()).scroller(new ScoreboardScroller(Language.scoreboards$animation$title)).build();
         this.scoreboard.update();
-        if (!this.inLobby()) {
-            this.scoreboard.health();
-            if (this.server.getState() == SkyWarsState.INGAME) {
-                this.scoreboard.healthTab();
-            }
-        }
         this.scoreboard.scroll();
     }
 

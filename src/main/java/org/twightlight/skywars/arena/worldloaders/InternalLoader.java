@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.ZipUtils;
 
 import java.io.File;
@@ -180,6 +180,17 @@ public class InternalLoader extends WorldLoaderAdapter {
         return worlds;
     }
 
+    public boolean importWorld(World world) {
+        File source = new File(Bukkit.getWorldContainer(), world.getName());
+        File zipDest = new File("plugins/LostSkyWars/maps/" + world.getName() + ".zip");
+        try {
+            ZipUtils.zip(source, zipDest);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public String getDisplayName() {

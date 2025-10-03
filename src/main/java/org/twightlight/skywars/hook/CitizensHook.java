@@ -19,9 +19,9 @@ import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.play.PlayRankedMenu;
 import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 public class CitizensHook {
 

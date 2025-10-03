@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.level.Level;
+import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
@@ -18,7 +18,7 @@ import org.twightlight.skywars.menu.profile.LevelingMenu;
 import org.twightlight.skywars.menu.profile.SettingsMenu;
 import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.rank.Rank;
+import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 

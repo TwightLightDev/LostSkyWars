@@ -1,17 +1,18 @@
 package org.twightlight.skywars.api.server;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsBalloon;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsBalloon;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.balloons.Balloon;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.arena.Arena;
 
@@ -27,8 +28,9 @@ public class SkyWarsTeam {
     private int id;
     private Arena<?> server;
     private String alphabetical;
+    private ChatColor color;
     private String location;
-    private Balloon ballon;
+    private Balloon balloon;
     private List<UUID> members;
     private UUID cageOwner;
 
@@ -37,6 +39,10 @@ public class SkyWarsTeam {
         this.server = server;
         this.location = serialized;
         this.alphabetical = alphabet[spawns];
+        if (spawns >= server.getTeamColors().size()) {
+            this.color = ChatColor.AQUA;
+        } else
+            this.color = server.getTeamColors().get(spawns);
         this.members = new ArrayList<>(server.getMode().getTeamSize());
     }
 
@@ -52,7 +58,7 @@ public class SkyWarsTeam {
                     List<Account> accounts = new ArrayList<>();
                     for (Player member : this.getMembers()) {
                         Account account = Database.getInstance().getAccount(member.getUniqueId());
-                        if (account != null && account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLON, 1) != null) {
+                        if (account != null && account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1) != null) {
                             accounts.add(account);
                         }
                     }
@@ -63,11 +69,11 @@ public class SkyWarsTeam {
                 }
 
                 if (unique != null) {
-                    cosmetic = (SkyWarsBalloon) unique.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLON, 1);
+                    cosmetic = (SkyWarsBalloon) unique.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1);
                 }
 
                 if (cosmetic != null) {
-                    this.ballon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized, server), cosmetic);
+                    this.balloon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized, server), cosmetic);
                 }
             }
         }
@@ -75,11 +81,12 @@ public class SkyWarsTeam {
 
     public void reset() {
         this.members.clear();
-        if (this.ballon != null) {
-            this.ballon.despawn();
-            this.ballon = null;
+        if (this.balloon != null) {
+            this.balloon.despawn();
+            this.balloon = null;
         }
         this.cageOwner = null;
+        this.color = null;
     }
 
     public void addMember(Player player) {
@@ -128,7 +135,7 @@ public class SkyWarsTeam {
     }
 
     public String getAlphabeticalTag() {
-        return "[" + this.alphabetical + "]";
+        return color + "[" + this.alphabetical + "]" + ChatColor.RESET;
     }
 
     public Location getLocation() {

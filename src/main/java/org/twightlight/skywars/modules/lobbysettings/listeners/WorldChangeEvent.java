@@ -5,8 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
-import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.lobbysettings.User;
 
 import java.util.Optional;

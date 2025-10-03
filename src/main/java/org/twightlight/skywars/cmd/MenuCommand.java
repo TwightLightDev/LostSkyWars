@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.menu.lobby.DeliveryManMenu;
 import org.twightlight.skywars.menu.lobby.StatsNPCMenu;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class MenuCommand extends Command {
 

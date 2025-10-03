@@ -11,10 +11,11 @@ public class User {
 
     private GameData viewingGame = null;
 
-    private static Map<Player, User> userMap = new HashMap<>();
+    private static Map<UUID, User> userMap = new HashMap<>();
+
     public User(Player p) {
         this.uuid = p.getUniqueId();
-        userMap.put(p, this);
+        userMap.put(uuid, this);
     }
 
     public Player getPlayer() {
@@ -22,7 +23,7 @@ public class User {
     }
 
     public static User getUser(Player p) {
-        return userMap.getOrDefault(p, null);
+        return userMap.getOrDefault(p.getUniqueId(), null);
     }
 
     public List<GameData> getData() {
@@ -48,5 +49,13 @@ public class User {
 
     public GameData getViewingGame() {
         return viewingGame;
+    }
+
+    public static User removeUser(User user) {
+        return userMap.remove(user.uuid);
+    }
+
+    public static Map<UUID, User> getUsers() {
+        return userMap;
     }
 }

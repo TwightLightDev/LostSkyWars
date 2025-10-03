@@ -4,13 +4,14 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.privategames.config.LangConfig;
 import org.twightlight.skywars.modules.privategames.database.Storage;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerClickInventory;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerJoin;
+import org.twightlight.skywars.modules.privategames.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.privategames.listeners.ServerManagement;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class PrivateGames extends Module {
 
@@ -27,6 +28,13 @@ public class PrivateGames extends Module {
 
     }
 
+    public static void disable() {
+        storage.getUsers().clear();
+        storage = null;
+
+        lang = null;
+    }
+
 
     private void initListeners() {
         LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
@@ -34,6 +42,7 @@ public class PrivateGames extends Module {
         Bukkit.getPluginManager().registerEvents(new ServerManagement(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), SkyWars.getInstance());
         Bukkit.getPluginManager().registerEvents(new PlayerClickInventory(), SkyWars.getInstance());
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitEvent(), SkyWars.getInstance());
 
     }
 

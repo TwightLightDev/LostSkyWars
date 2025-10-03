@@ -9,8 +9,8 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.hook.boxes.BoxNPC;
 import org.twightlight.skywars.hook.boxes.CosmeticReward;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 public class BoxesHook {
 

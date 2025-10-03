@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsTrail;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsTrail;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 

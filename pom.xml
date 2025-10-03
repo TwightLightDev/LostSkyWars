@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>tk.kanaostore.losteddev.skywars</groupId>
+  <groupId>org.twightlight.skywars</groupId>
   <artifactId>LostSkyWars</artifactId>
-  <version>2.4.24</version>
+  <version>2.4.60</version>
   
   <name>LostSkyWars</name>
-  <description>LostSkyWars premium version.</description>
-  <inceptionYear>2019</inceptionYear>
+  <description>LostSkyWars ultimate version.</description>
+  <inceptionYear>2025</inceptionYear>
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,28 +79,28 @@
             <systemPath>${project.basedir}/libs/Citizens.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany</groupId>
+            <groupId>org.twightlight</groupId>
             <artifactId>lostboxes</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/LostBoxes.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany</groupId>
+            <groupId>org.twightlight</groupId>
             <artifactId>lostparties</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/LostParties.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany</groupId>
+            <groupId>org.twightlight</groupId>
             <artifactId>bungeecord</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/BungeeCord.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany</groupId>
+            <groupId>org.twightlight</groupId>
             <artifactId>vault</artifactId>
             <version>1.0</version>
             <scope>system</scope>
@@ -120,7 +120,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany</groupId>
+            <groupId>org.twightlight</groupId>
             <artifactId>protocollib</artifactId>
             <version>1.0</version>
             <scope>system</scope>
@@ -171,6 +171,25 @@
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.1.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.pixelstudios</groupId>
+            <artifactId>achievements</artifactId>
+            <version>2.5.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/EpicAchievements-2.5.3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>de.tr7zw</groupId>
+            <artifactId>item-nbt-api-plugin</artifactId>
+            <version>2.15.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.retrooper</groupId>
+            <artifactId>packetevents-spigot</artifactId>
+            <version>2.9.5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

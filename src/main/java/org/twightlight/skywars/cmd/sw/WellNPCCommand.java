@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.well.WellNPC;
+import org.twightlight.skywars.systems.well.WellNPC;
 
 public class WellNPCCommand extends SubCommand {
 

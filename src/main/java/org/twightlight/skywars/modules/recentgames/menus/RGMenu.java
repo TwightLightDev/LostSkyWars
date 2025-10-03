@@ -1,19 +1,18 @@
 package org.twightlight.skywars.modules.recentgames.menus;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.twightlight.skywars.modules.libs.menus.ModulesMenu;
+import org.twightlight.skywars.modules.api.menus.ModulesMenu;
+import org.twightlight.skywars.modules.api.menus.ModulesMenuHolder;
+import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.utils.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class RGMenu extends ModulesMenu {
 
     private RGMenu() {
         super(36);
-        inv = Bukkit.createInventory(new RGMenuHolder(this), 36, StringUtils.formatColors("&7Recent Games"));
+        inv = Bukkit.createInventory(new ModulesMenuHolder(this),
+                RecentGames.getMenuConfig().getInt("menu.size"),
+                StringUtils.formatColors(RecentGames.getMenuConfig().getString("menu.name")));
     }
 
     public static RGMenu createMenu() {

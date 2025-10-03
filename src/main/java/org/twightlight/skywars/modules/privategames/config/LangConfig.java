@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.privategames.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 
 import java.util.Arrays;
 
@@ -38,6 +38,21 @@ public class LangConfig extends YamlWrapper {
                 "&7{player} &cdisabled Private Game",
                 "&9&l&m----------------------------"
         ));
+        yml.addDefault("privategames.help", list(
+                "§dPrivateGames - Help",
+                "&6/privategames help &f- &7Prints this help message.",
+                "&6/privategames gui &f- &7Open the private games menu.",
+                "&6/privategames toggle &f- &7Enable/disable private games."
+        ));
+        yml.addDefault("privategames.modifiers.message", list(
+                "&6-----------------------------------------------------",
+                "{player} &a&lhas enabled private game modifiers!",
+                "{modifiers}",
+                "&6-----------------------------------------------------"
+        ));
+
+        yml.addDefault("privategames.modifiers.format", "&6- {modifier}");
+        yml.addDefault("privategames.modifiers.format_with_option", "&6- {modifier}: &e{selected}");
 
         yml.options().copyDefaults(true);
         save();

@@ -4,8 +4,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.protocollib.ProtocolListener;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 public class ProtocolLibHook {
 
@@ -18,7 +18,7 @@ public class ProtocolLibHook {
     }
 
     public static void destroyProtocolLib() {
-        getProtocolManager().removePacketListener(LISTENER);
+        getProtocolManager().removePacketListeners(SkyWars.getInstance());
 
         LOGGER.log(Level.INFO, "ProtocolLib found, destroying StatsNPC...");
     }

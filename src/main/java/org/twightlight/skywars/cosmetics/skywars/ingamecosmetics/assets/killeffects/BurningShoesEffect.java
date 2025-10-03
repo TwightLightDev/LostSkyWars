@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
@@ -46,5 +46,30 @@ public class BurningShoesEffect extends SkyWarsKillEffect {
                 }
             }
         }).runTaskTimer(SkyWars.getInstance(), 1L, 1L);
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+
+        (new BukkitRunnable() {
+            double t = 0.0D;
+
+            public void run() {
+                this.t += 0.3D;
+                for (double phi = 0.0D; phi <= 6.0D; phi += 1.5D) {
+                    double x = 0.11D * (12.5D - this.t) * Math.cos(this.t + phi);
+                    double y = 0.23D * this.t;
+                    double z = 0.11D * (12.5D - this.t) * Math.sin(this.t + phi);
+                    location.add(x, y, z);
+                    ParticleType.of("FLAME").spawn(player, location, 1);
+                    location.subtract(x, y, z);
+                    if (this.t >= 12.5D) {
+                        location.add(x, y, z);
+                        if (phi > Math.PI)
+                            cancel();
+                    }
+                }
+            }
+        }).runTaskTimer(SkyWars.getInstance(), 21L, 1L);
     }
 }

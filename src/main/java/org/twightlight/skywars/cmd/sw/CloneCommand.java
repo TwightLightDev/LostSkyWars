@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.ui.server.ScanCallback;
+import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.arena.Arena;

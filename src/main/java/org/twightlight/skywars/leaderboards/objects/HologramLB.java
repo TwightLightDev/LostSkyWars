@@ -3,12 +3,12 @@ package org.twightlight.skywars.leaderboards.objects;
 import org.bukkit.Location;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.Holograms;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
 import org.twightlight.skywars.leaderboards.LeaderBoardStats;
 import org.twightlight.skywars.leaderboards.LeaderBoardType;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;

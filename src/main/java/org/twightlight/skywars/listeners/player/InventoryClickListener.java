@@ -2,6 +2,7 @@ package org.twightlight.skywars.listeners.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
@@ -55,17 +56,24 @@ public class InventoryClickListener extends Listeners {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick_2(InventoryClickEvent e) {
         if (!(e.getInventory().getHolder() instanceof InventoryHolder)) return;
         e.setCancelled(true);
         InventoryHolder holder = (InventoryHolder) e.getInventory().getHolder();
+
+        if (e.getClickedInventory().equals(e.getWhoClicked().getInventory())) {
+            e.setCancelled(holder.willCancelEvent());
+            return;
+        }
+
         int slot = e.getRawSlot();
 
         if (slot < 0 || slot >= e.getInventory().getSize()) return;
 
         if (holder.getButtonsMap().containsKey(slot)) {
             holder.getButtonsMap().get(slot).execute(e);
+            e.setCancelled(true);
         } else {
             e.setCancelled(holder.willCancelEvent());
         }

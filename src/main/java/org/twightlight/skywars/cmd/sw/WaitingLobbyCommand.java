@@ -8,7 +8,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsCube;
+import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.arena.Arena;
 

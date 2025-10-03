@@ -9,8 +9,8 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.List;

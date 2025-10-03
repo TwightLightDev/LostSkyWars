@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsBalloon;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsBalloon;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -82,10 +82,10 @@ public class BalloonsMenu extends PagedPlayerMenu {
 
                         }
                     } else if (balloon != null) {
-//            if (evt.getClick().name().contains("RIGHT")) {
-//
-//              return;
-//            }
+                        if (evt.getClick().name().contains("RIGHT")) {
+                            balloon.playPreview(player, 100L, BalloonsMenu.class, order, filter, searchQuery);
+                            return;
+                        }
 
                         if (!balloon.has(account)) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
@@ -161,7 +161,7 @@ public class BalloonsMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        List<Cosmetic> cosmetics = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLON);
+        List<Cosmetic> cosmetics = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLOON);
         order.accept(cosmetics);
         cosmetics = filter.accept(cosmetics, player);
         cosmetics = cosmetics.stream().filter(cos -> cos.getRawName().toLowerCase().startsWith(searchQuery)).collect(Collectors.toList());

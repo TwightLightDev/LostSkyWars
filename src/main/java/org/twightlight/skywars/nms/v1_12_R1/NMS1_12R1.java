@@ -11,26 +11,31 @@ import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.HologramLine;
-import org.twightlight.skywars.holograms.entity.IArmorStand;
+import org.twightlight.skywars.nms.MapHelper;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.HologramLine;
+import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.BalloonEntity;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.NMSBridge;
 import org.twightlight.skywars.nms.v1_12_R1.entity.EntityArmorStand;
 import org.twightlight.skywars.nms.v1_12_R1.entity.*;
 import org.twightlight.skywars.nms.v1_12_R1.entity.EntityArmorStand.CraftArmorStand;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 
 public class NMS1_12R1 extends NMSBridge {
+    private MapHelper mapHelper;
 
     public NMS1_12R1() {
         this.registerEntity(65, "LSW-Bat", BalloonEntityBat.class);
         this.registerEntity(8, "LSW-LeashKnot", BalloonEntityLeash.class);
         this.registerEntity(53, "LSW-Giant", BalloonEntityGiant.class);
+        mapHelper = new org.twightlight.skywars.nms.v1_12_R1.sprays.MapHelper();
+
     }
 
     private void registerEntity(int entityId, String entityName, Class<? extends net.minecraft.server.v1_12_R1.Entity> entityClass) {
@@ -58,8 +63,22 @@ public class NMS1_12R1 extends NMSBridge {
     }
 
     @Override
-    public BalloonEntity createBalloonLeash(Location location) {
-        BalloonEntityLeash entity = new BalloonEntityLeash(location);
+    public BalloonEntity createBalloonLeash(Location location, List<UUID> viewers) {
+        BalloonEntityLeash entity = new BalloonEntityLeash(location, viewers);
+
+        if (!viewers.isEmpty()) {
+            net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntity packet = new net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntity(entity, EntityTypes.b.a(entity.getClass()));
+            net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata packet1 = new net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true);
+
+            viewers.forEach((UUID) -> {
+                if (Bukkit.getPlayer(UUID).isOnline()) {
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet);
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet1);
+                }
+            });
+            return entity;
+        }
+
         if (addEntity(entity)) {
             return entity;
         }
@@ -68,8 +87,25 @@ public class NMS1_12R1 extends NMSBridge {
     }
 
     @Override
-    public BalloonEntity createBalloonBat(Location location, BalloonEntity leash) {
-        BalloonEntityBat entity = new BalloonEntityBat(location, (BalloonEntityLeash) leash);
+    public BalloonEntity createBalloonBat(Location location, BalloonEntity leash, List<UUID> viewers) {
+        BalloonEntityBat entity = new BalloonEntityBat(location, (BalloonEntityLeash) leash, viewers);
+
+        if (!viewers.isEmpty()) {
+            net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving packet = new net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving(entity);
+            net.minecraft.server.v1_12_R1.PacketPlayOutAttachEntity packet2 = new PacketPlayOutAttachEntity(entity, (BalloonEntityLeash) leash);
+            net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata packet1 = new net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true);
+
+            viewers.forEach((UUID) -> {
+                if (Bukkit.getPlayer(UUID).isOnline()) {
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet);
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet2);
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet1);
+
+                }
+            });
+            return entity;
+        }
+
         if (addEntity(entity)) {
             return entity;
         }
@@ -78,8 +114,23 @@ public class NMS1_12R1 extends NMSBridge {
     }
 
     @Override
-    public BalloonEntity createBalloonGiant(Location location, List<String> frames) {
-        BalloonEntityGiant entity = new BalloonEntityGiant(location, frames);
+    public BalloonEntity createBalloonGiant(Location location, List<String> frames, List<UUID> viewers) {
+        BalloonEntityGiant entity = new BalloonEntityGiant(location, frames, viewers);
+
+        if (!viewers.isEmpty()) {
+            net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving packet = new net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving(entity);
+            net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata packet1 = new net.minecraft.server.v1_12_R1.PacketPlayOutEntityMetadata(entity.getId(), entity.getDataWatcher(), true);
+
+            viewers.forEach((UUID) -> {
+                if (Bukkit.getPlayer(UUID).isOnline()) {
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet);
+                    entity.setFrame(0);
+                    ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer) Bukkit.getPlayer(UUID)).getHandle().playerConnection.sendPacket(packet1);
+                }
+            });
+            return entity;
+        }
+
         if (addEntity(entity)) {
             return entity;
         }
@@ -165,5 +216,13 @@ public class NMS1_12R1 extends NMSBridge {
         }
 
         ep.playerConnection.sendPacket(packet);
+    }
+
+    public MapHelper getMapHelper() {
+        return mapHelper;
+    }
+
+    public int getIdOfEntity(Entity entity) {
+        return ((org.bukkit.craftbukkit.v1_12_R1.entity.CraftEntity) entity).getHandle().getId();
     }
 }

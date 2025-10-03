@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 
 import java.util.ArrayList;
 import java.util.List;

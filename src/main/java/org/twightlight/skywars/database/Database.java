@@ -4,7 +4,7 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 import javax.sql.rowset.CachedRowSet;
 import java.util.Collection;
@@ -20,13 +20,19 @@ public abstract class Database {
 
     public abstract Account loadAccount(UUID id, String name);
 
-    public abstract CompletableFuture<Account> loadOffline(String name);
+    public abstract CompletableFuture<Account> loadAccountOffline(String name);
+
+    public abstract CompletableFuture<Account> getAccountOffline(UUID uuid);
+
+    public abstract Account unloadOfflineAccount(UUID uuid);
 
     public abstract Account unloadAccount(UUID id);
 
     public abstract Account getAccount(UUID id);
 
     public abstract Collection<Account> listAccounts();
+
+    public abstract Collection<Account> listOfflineAccounts();
 
     public abstract CachedRowSet query(String query, Object... vars);
 

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.ui.Executable;
+import org.twightlight.skywars.arena.ui.interfaces.Executable;
 
 import java.util.function.Function;
 

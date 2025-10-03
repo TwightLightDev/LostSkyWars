@@ -2,22 +2,14 @@ package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.victory
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Bat;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsVictoryDance;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.VectorUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ThorEffect extends SkyWarsVictoryDance {
@@ -55,9 +47,7 @@ public class ThorEffect extends SkyWarsVictoryDance {
 
             public void run() {
                 if (this.ticks >= 100) {
-                    if (this.getTaskId() != 1) {
-                        Bukkit.getScheduler().cancelTask(getTaskId());
-                    }
+                    cancel();
                     return;
                 }
                 Location location = player.getLocation().add(VectorUtils.randomVector().multiply(250));

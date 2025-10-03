@@ -4,9 +4,9 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.level.Level;
+import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ranked.Ranked;
+import org.twightlight.skywars.player.ranked.Ranked;
 import org.twightlight.skywars.utils.StringUtils;
 
 public class LostSkyWarsExpansion extends PlaceholderExpansion {

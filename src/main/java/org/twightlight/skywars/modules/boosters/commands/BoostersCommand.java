@@ -7,11 +7,12 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.modules.libs.cmds.SubCommand;
+import org.twightlight.skywars.modules.api.cmds.SubCommand;
 import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.lobbysettings.User;
+import org.twightlight.skywars.modules.lobbysettings.commands.subcommands.Help;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class BoostersCommand extends Command {
         } catch (ReflectiveOperationException ex) {
             SkyWars.LOGGER.log(Level.SEVERE, "Could not register command: ", ex);
         }
-
+        registerSubCommand(new Help(null));
     }
 
     @Override
@@ -44,17 +45,17 @@ public class BoostersCommand extends Command {
             if (account.getServer() != null) return true;
             SubCommand subCommand = subCommands.stream().filter(sc -> sc.getSubCommand().equalsIgnoreCase(args[0])).findFirst().orElse(null);
             if (subCommand == null) {
-                user.sendMessage(Boosters.getLanguage().getString("boosters.general.command-not-found"));
+                user.sendMessage(Boosters.getLanguage().getString("messages.commands.command-not-found"));
                 return true;
             }
             List<String> list = new ArrayList<>();
             list.addAll(Arrays.asList(args));
             list.remove(0);
 
-            if (player.hasPermission(subCommand.getPermission().getName())) {
+            if (player.hasPermission(subCommand.getPermission().getName()) || subCommand.getPermission() == null) {
                 subCommand.execute(user, list.toArray(new String[list.size()]));
             } else {
-                user.sendMessage(Boosters.getLanguage().getString("boosters.general.no-permission"));
+                user.sendMessage(Boosters.getLanguage().getString("messages.commands.no-permission"));
             }
 
             return true;

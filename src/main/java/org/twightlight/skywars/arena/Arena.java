@@ -2,26 +2,32 @@ package org.twightlight.skywars.arena;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
+import org.twightlight.skywars.arena.type.doubles.Doubles;
+import org.twightlight.skywars.arena.type.doubles.DoublesRanked;
+import org.twightlight.skywars.arena.type.solo.Solo;
+import org.twightlight.skywars.arena.type.solo.SoloRanked;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.chest.ChestType;
-import org.twightlight.skywars.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.ui.SkyWarsEvent;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
-import org.twightlight.skywars.ui.server.ScanCallback;
+import org.twightlight.skywars.arena.ui.chest.ChestType;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.utils.*;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.arena.type.*;
 
 import java.io.File;
@@ -47,16 +53,22 @@ public abstract class Arena<T> extends SkyWarsServer {
     protected long startTime;
     protected long startTimeMillis;
     protected User serverOwner;
+    protected List<ChatColor> teamcolors = Arrays.stream(ChatColor.values()).collect(Collectors.toList());
 
     public Arena(String yaml) {
         this(yaml, null, false);
     }
 
     public Arena(String yaml, ScanCallback callback, boolean isPrivate) {
+        this(yaml, callback, isPrivate, new ArenaConfig(yaml, isPrivate));
+    }
+
+
+    public Arena(String yaml, ScanCallback callback, boolean isPrivate, ArenaConfig config) {
         super();
         LOGGER.log(Level.INFO, "Loading arena: " + yaml + "...");
         this.timer = Language.game$countdown$start + 1;
-        this.config = new ArenaConfig(yaml, isPrivate);
+        this.config = config;
         this.name = config.getMapName();
         this.timerTask = new Timer(this);
         for (String spawn : this.config.listSpawns()) {
@@ -70,7 +82,7 @@ public abstract class Arena<T> extends SkyWarsServer {
             callback.finish();
         }
         this.isPrivate = isPrivate;
-
+        Collections.shuffle(teamcolors);
     }
 
     @Override
@@ -148,6 +160,10 @@ public abstract class Arena<T> extends SkyWarsServer {
     public void setServerOwner(User p) {
         if (isPrivate)
             serverOwner = p;
+    }
+
+    public List<ChatColor> getTeamColors() {
+        return teamcolors;
     }
 
     public SkyWarsTeam getAvailableTeam(Player player) {

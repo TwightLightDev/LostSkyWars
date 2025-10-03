@@ -19,29 +19,26 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.game.SkyWarsGameEndEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
-import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
+import org.twightlight.skywars.api.event.player.*;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent.SkyWarsDeathCause;
-import org.twightlight.skywars.api.event.player.SkyWarsPlayerJoinEvent;
-import org.twightlight.skywars.api.event.player.SkyWarsPlayerQuitEvent;
-import org.twightlight.skywars.api.event.player.SkyWarsPlayerWatchEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsCage;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsDeathCry;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.player.DataContainer;
-import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.server.ScanCallback;
+import org.twightlight.skywars.player.CurrencyManager;
+import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.utils.FontUtils;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -57,7 +54,7 @@ public class Duels extends Arena<SkyWarsTeam> {
     private List<UUID> players, spectators;
     private List<String> opponentData;
     private Map<UUID, Integer> kills;
-    private Map<UUID, DataContainer> dataContainer;
+    private Map<UUID, CurrencyManager> dataContainer;
 
     public Duels(String yaml, ScanCallback callback, boolean isPrivate) {
         super(yaml, callback, isPrivate);
@@ -147,7 +144,9 @@ public class Duels extends Arena<SkyWarsTeam> {
             }
 
             int amount = Language.game$rewards$coins_per_kill;
-            dataContainer.get(killer.getUniqueId()).addCoins(amount);
+            dataContainer.get(killer.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
+            double amount1 = Language.game$rewards$exp_per_kill;
+            dataContainer.get(killer.getUniqueId()).addXp(amount1, SkyWarsPlayerXpGainEvent.XpSource.KILL);
             if (ack.getInt("souls") < ack.getContainer("account").get("sw_maxsouls").getAsInt()) {
                 dataContainer.get(killer.getUniqueId()).addSouls(1);
             }
@@ -157,8 +156,8 @@ public class Duels extends Arena<SkyWarsTeam> {
         // account.addStat("soloplays");
         int play = Language.game$rewards$coins_per_play;
         double expPlay = Language.game$rewards$exp_per_play;
-        dataContainer.get(player.getUniqueId()).addCoins(play);
-        dataContainer.get(player.getUniqueId()).addXp(expPlay);
+        dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
+        dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
         SkyWarsDeathCry cry = (SkyWarsDeathCry) account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
         if (cry != null) {
             cry.getSound().play(player.getLocation(), cry.getVolume(), cry.getPitch());
@@ -227,7 +226,9 @@ public class Duels extends Arena<SkyWarsTeam> {
             }
 
             int amount = Language.game$rewards$coins_per_kill;
-            dataContainer.get(killer.getUniqueId()).addCoins(amount);
+            dataContainer.get(killer.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
+            double amount1 = Language.game$rewards$exp_per_kill;
+            dataContainer.get(killer.getUniqueId()).addXp(amount1, SkyWarsPlayerXpGainEvent.XpSource.KILL);
             if (ack.getInt("souls") < ack.getContainer("account").get("sw_maxsouls").getAsInt()) {
                 dataContainer.get(killer.getUniqueId()).addSouls(1);
             }
@@ -237,8 +238,8 @@ public class Duels extends Arena<SkyWarsTeam> {
         // account.addStat("soloplays");
         int play = Language.game$rewards$coins_per_play;
         double expPlay = Language.game$rewards$exp_per_play;
-        dataContainer.get(player.getUniqueId()).addCoins(play);
-        dataContainer.get(player.getUniqueId()).addXp(expPlay);
+        dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
+        dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
         Location returns = team.getLocation();
         Location dieLocation = player.getLocation();
         team.removeMember(player);
@@ -276,7 +277,8 @@ public class Duels extends Arena<SkyWarsTeam> {
                 killMessage);
         Bukkit.getPluginManager().callEvent(e
         );
-        broadcast(e.getKillMessage());        this.broadcastAction(Language.game$broadcast$ingame$action_bar$remaining.replace("{alive}", String.valueOf(this.getAlive())));
+        broadcast(e.getKillMessage());
+        this.broadcastAction(Language.game$broadcast$ingame$action_bar$remaining.replace("{alive}", String.valueOf(this.getAlive())));
         this.updateTags();
         this.check();
     }
@@ -548,7 +550,7 @@ public class Duels extends Arena<SkyWarsTeam> {
 
                 account.reloadScoreboard();
                 account.refreshPlayer();
-                dataContainer.put(player.getUniqueId(), new DataContainer(account));
+                dataContainer.put(player.getUniqueId(), new CurrencyManager(account));
                 Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, this.getType().getIndex());
                 if (cosmetic != null && cosmetic instanceof SkyWarsKit) {
                     ((SkyWarsKit) cosmetic).apply(player);
@@ -612,9 +614,9 @@ public class Duels extends Arena<SkyWarsTeam> {
                     int amount = Language.game$rewards$coins_per_win, play = Language.game$rewards$coins_per_play;
                     double expAmount = Language.game$rewards$exp_per_win, expPlay = Language.game$rewards$exp_per_play;
 
-                    dataContainer.get(player.getUniqueId()).addCoins(play);
-                    dataContainer.get(player.getUniqueId()).addXp(expPlay);
-                    dataContainer.get(player.getUniqueId()).addCoins(amount);
+                    dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
+                    dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
+                    dataContainer.get(player.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.WIN);
 
                     for (int i = 0; i < account.getContainer("account").get("sw_soulswin").getAsInt(); i++) {
                         if (account.getInt("souls") < account.getContainer("account").get("sw_maxsouls").getAsInt()) {
@@ -622,7 +624,7 @@ public class Duels extends Arena<SkyWarsTeam> {
                         }
                     }
 
-                    dataContainer.get(player.getUniqueId()).addXp(expAmount);
+                    dataContainer.get(player.getUniqueId()).addXp(expAmount, SkyWarsPlayerXpGainEvent.XpSource.WIN);
                     Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
                         for (String line : Language.game$player$ingame$reward_summary) {
                             line = line.replace("{totalCoins}", "" + dataContainer.get(player.getUniqueId()).getCoinsEarned());
@@ -682,6 +684,8 @@ public class Duels extends Arena<SkyWarsTeam> {
         this.spectators.clear();
         this.dataContainer.clear();
         this.getTimerTask().cancel();
+        this.initialPlayers.clear();
+        Collections.shuffle(teamcolors);
         this.teams.forEach(SkyWarsTeam::reset);
         this.chests.forEach(SkyWarsChest::destroy);
         RollBackManager.rollBack(this);
@@ -789,7 +793,7 @@ public class Duels extends Arena<SkyWarsTeam> {
 
     @Override
     public SkyWarsMode getMode() {
-        return SkyWarsMode.fromName(config.getServerMode());
+        return SkyWarsMode.fromName(config.getArenaMode());
     }
 
     @Override

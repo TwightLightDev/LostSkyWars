@@ -4,9 +4,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.twightlight.skywars.bungee.Core;
+import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.Logger.Level;
 
 public class PlayerLoginListener extends Listeners {
 
@@ -15,6 +18,13 @@ public class PlayerLoginListener extends Listeners {
         Player player = evt.getPlayer();
 
         try {
+            if (Core.MODE == CoreMode.MULTI_ARENA) {
+                Account account = Database.getInstance().unloadOfflineAccount(player.getUniqueId());
+                if (account != null) {
+                    account.save();
+                    account.destroy();
+                }
+            }
             Database.getInstance().loadAccount(player.getUniqueId(), player.getName());
         } catch (Exception ex) {
             evt.disallow(PlayerLoginEvent.Result.KICK_OTHER,

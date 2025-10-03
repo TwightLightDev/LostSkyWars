@@ -5,15 +5,18 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.HologramLine;
-import org.twightlight.skywars.holograms.entity.IArmorStand;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.HologramLine;
+import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.v1_12_R1.NMS1_12R1;
 import org.twightlight.skywars.nms.v1_8_R3.NMS1_8R3;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.MinecraftVersion;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class NMS {
@@ -26,15 +29,27 @@ public class NMS {
     }
 
     public static BalloonEntity createBalloonLeash(Location location) {
-        return BRIDGE.createBalloonLeash(location);
+        return BRIDGE.createBalloonLeash(location, Collections.emptyList());
     }
 
     public static BalloonEntity createBalloonBat(Location location, BalloonEntity leash) {
-        return BRIDGE.createBalloonBat(location, leash);
+        return BRIDGE.createBalloonBat(location, leash, Collections.emptyList());
+    }
+
+    public static BalloonEntity createBalloonLeash(Location location, List<UUID> viewers) {
+        return BRIDGE.createBalloonLeash(location, viewers);
+    }
+
+    public static BalloonEntity createBalloonBat(Location location, BalloonEntity leash, List<UUID> viewers) {
+        return BRIDGE.createBalloonBat(location, leash, viewers);
     }
 
     public static BalloonEntity createBalloonGiant(Location location, List<String> frames) {
-        return BRIDGE.createBalloonGiant(location, frames);
+        return BRIDGE.createBalloonGiant(location, frames, Collections.emptyList());
+    }
+
+    public static BalloonEntity createBalloonGiant(Location location, List<String> frames, List<UUID> viewers) {
+        return BRIDGE.createBalloonGiant(location, frames, viewers);
     }
 
     public static Hologram getHologram(Entity entity) {
@@ -94,5 +109,38 @@ public class NMS {
         if (ENDER_PORTAL_FRAME == null) {
             ENDER_PORTAL_FRAME = Material.ENDER_PORTAL_FRAME;
         }
+    }
+
+    public static void setFieldValue(Field field, Object instance, Object value) throws SecurityException {
+        if (!field.isAccessible())
+            field.setAccessible(true);
+        try {
+            field.set(instance, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Field findField(Class<?> clazz, String name) {
+        try {
+            return clazz.getDeclaredField(name);
+        } catch (NoSuchFieldException e) {
+            NoSuchFieldException exception = e;
+            Class<?> superClazz = clazz.getSuperclass();
+            if (superClazz != null && superClazz != Object.class)
+                try {
+                    return superClazz.getField(name);
+                } catch (NoSuchFieldException noSuchFieldException) {}
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static MapHelper getMapHelper() {
+        return BRIDGE.getMapHelper();
+    }
+
+    public static int getIdOfEntity(Entity e) {
+        return BRIDGE.getIdOfEntity(e);
     }
 }

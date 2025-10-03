@@ -3,7 +3,7 @@ package org.twightlight.skywars.modules;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class Module {
 
@@ -14,6 +14,7 @@ public class Module {
     public Module(String name) {
         skywars = SkyWars.getInstance();
         LOGGER = SkyWars.LOGGER.getModule(name);
+        this.name = name;
     }
 
     public SkyWars getPlugin() {
@@ -28,4 +29,7 @@ public class Module {
         return LOGGER;
     }
 
+    public String getName() {
+        return name;
+    }
 }

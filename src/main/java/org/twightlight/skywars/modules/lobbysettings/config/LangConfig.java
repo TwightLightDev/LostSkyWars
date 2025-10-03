@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.lobbysettings.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 
 import java.util.Arrays;
 
@@ -25,6 +25,8 @@ public class LangConfig extends YamlWrapper {
                 "&9&l-------------------------------------------"
         ));
 
+        yml.addDefault("lobbysettings.fly.usage", "&6/lobbysettings fly <on/off> &f- &7Toggle fly mode.");
+
         yml.addDefault("lobbysettings.speed.on", list(
                 "&9&l-------------------------------------------",
                 "&aSet your speed boost to &d[{amplifier}]&a!",
@@ -37,6 +39,8 @@ public class LangConfig extends YamlWrapper {
                 "&9&l-------------------------------------------"
         ));
 
+        yml.addDefault("lobbysettings.speed.usage", "&6/lobbysettings speed <level> &f- &7Modify your speed.");
+
         yml.addDefault("lobbysettings.jumpboost.on", list(
                 "&9&l-------------------------------------------",
                 "&aSet your jump boost to &d[{amplifier}]&a!",
@@ -48,7 +52,7 @@ public class LangConfig extends YamlWrapper {
                 "&aRemoved your jump boost!",
                 "&9&l-------------------------------------------"
         ));
-
+        yml.addDefault("lobbysettings.jumpboost.usage", "&6/lobbysettings jumpboost <level> &f- &7Modify your jumpboost.");
 
         yml.addDefault("lobbysettings.vanish.on", list(
                 "&9&l-------------------------------------------",
@@ -56,11 +60,15 @@ public class LangConfig extends YamlWrapper {
                 "&9&l-------------------------------------------"
         ));
 
+
         yml.addDefault("lobbysettings.vanish.off", list(
                 "&9&l-------------------------------------------",
                 "&aYou are now &bVisible&a!",
                 "&9&l-------------------------------------------"
         ));
+
+        yml.addDefault("lobbysettings.vanish.usage", "&6/lobbysettings vanish <on/off> &f- &7Toggle vanish mode.");
+
 
         yml.addDefault("lobbysettings.scoreboard.on", list(
                 "&9&l-------------------------------------------",
@@ -73,6 +81,7 @@ public class LangConfig extends YamlWrapper {
                 "&aThe scoreboard has been hidden!",
                 "&9&l-------------------------------------------"
         ));
+        yml.addDefault("lobbysettings.scoreboard.usage", "&6/lobbysettings scoreboard <on/off> &f- &7Toggle scoreboard.");
 
         yml.addDefault("lobbysettings.particles.on", list(
                 "&9&l-------------------------------------------",
@@ -85,6 +94,7 @@ public class LangConfig extends YamlWrapper {
                 "&aParticles has been hidden!",
                 "&9&l-------------------------------------------"
         ));
+        yml.addDefault("lobbysettings.particles.usage", "&6/lobbysettings particles <on/off> &f- &7Toggle particles.");
 
         yml.addDefault("lobbysettings.chat.on", list(
                 "&9&l-------------------------------------------",
@@ -97,6 +107,14 @@ public class LangConfig extends YamlWrapper {
                 "&aChat has been hidden!",
                 "&9&l-------------------------------------------"
         ));
+        yml.addDefault("lobbysettings.chat.usage", "&6/lobbysettings chat <on/off> &f- &7Toggle chat.");
+
+        yml.addDefault("lobbysettings.help", list(
+                "§dLobbySettings - Help",
+                "&6/lobbysettings menu &f- &7Open the lobby settings menu.",
+                "{cmds}"
+        ));
+        yml.addDefault("lobbysettings.help.usage", "&6/lobbysettings help &f- &7Prints this help message.");
 
 
         yml.options().copyDefaults(true);

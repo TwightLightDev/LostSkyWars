@@ -6,10 +6,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.ui.SkyWarsCube;
+import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,24 +18,24 @@ import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("deprecation")
 public class ArenaConfig {
-    private static Logger LOGGER = SkyWars.LOGGER.getModule("Arena");
-    private String yaml;
-    private String name;
-    private String mode;
-    private String type;
-    private World world;
-    private int minPlayers;
-    private SkyWarsCube cube;
-    private SkyWarsCube waitingCube;
-    private String waitingLobby;
+    protected static Logger LOGGER = SkyWars.LOGGER.getModule("Arena");
+    protected String yaml;
+    protected String name;
+    protected String mode;
+    protected String type;
+    protected World world;
+    protected int minPlayers;
+    protected SkyWarsCube cube;
+    protected SkyWarsCube waitingCube;
+    protected String waitingLobby;
 
-    private List<String> spawns;
-    private List<String> chests;
-    private List<String> balloons;
+    protected List<String> spawns;
+    protected List<String> chests;
+    protected List<String> balloons;
 
-    private ConfigUtils config;
-    private String worldName;
-    private CompletableFuture<World> cf;
+    protected ConfigUtils config;
+    protected String worldName;
+    protected CompletableFuture<World> cf;
 
     public ArenaConfig(String yaml, boolean isPrivate) {
         long start = System.currentTimeMillis();
@@ -166,7 +166,7 @@ public class ArenaConfig {
         return name;
     }
 
-    public String getServerMode() {
+    public String getArenaMode() {
         return mode;
     }
 

@@ -14,7 +14,7 @@ import org.twightlight.skywars.hook.citizens.cmd.DeliveryNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.PlayNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.ShopkeeperNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.StatsNPCCommand;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,6 +44,7 @@ public class SkyWarsCommand extends Command {
                 if (SkyWars.protocollib) {
                     commands.add(new StatsNPCCommand());
                 }
+                commands.add(new PreviewCommand());
             }
             if (SkyWars.lostboxes) {
                 commands.add(new BoxNPCCommand());
@@ -58,9 +59,7 @@ public class SkyWarsCommand extends Command {
             commands.add(new CreateCageCommand());
             commands.add(new DeathCryCommand());
         }
-        if (Core.MODE != CoreMode.ARENA) {
-            commands.add(new LeaderBoardCommand());
-        }
+        if (Core.MODE != CoreMode.ARENA) {}
         commands.add(new GiveCommand());
         commands.add(new RemoveCommand());
         if (Core.MODE != CoreMode.LOBBY) {

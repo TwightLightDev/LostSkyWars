@@ -1,5 +1,6 @@
 package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.killeffects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,10 +11,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
-import org.twightlight.skywars.particles.ParticleEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
+import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.utils.VectorUtils;
+
+import java.util.Random;
 
 
 public class RebirthEffect extends SkyWarsKillEffect {
@@ -44,5 +48,26 @@ public class RebirthEffect extends SkyWarsKillEffect {
                 }
             }
         }).runTaskTimer(SkyWars.getInstance(), 2L, 1L);
+    }
+
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+            final Item item = location.getWorld().dropItem(location, new ItemStack(Material.DRAGON_EGG));
+            item.setVelocity(new Vector(0.0D, 0.45D, 0.0D));
+            item.setPickupDelay(2147483647);
+            (new BukkitRunnable() {
+                public void run() {
+                    if (item.getTicksLived() > 60 || item.isOnGround() || !item.isValid()) {
+                        item.getWorld().playSound(item.getLocation(), Sound.ENDERDRAGON_GROWL, 1.0F, 1.0F);
+                        ParticleEffect.SPELL_WITCH.display(0.0F, 0.0F, 0.0F, 0.3F, 20, item.getLocation(), player);
+                        item.remove();
+                        cancel();
+                    }
+                }
+            }).runTaskTimer(SkyWars.getInstance(), 2L, 1L);
+        }, 20L);
     }
 }

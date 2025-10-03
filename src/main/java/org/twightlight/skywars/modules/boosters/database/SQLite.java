@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.*;
+import java.util.concurrent.CompletableFuture;
 
 
 public class SQLite {
@@ -32,6 +33,7 @@ public class SQLite {
                     + dbname +
                     " ( " +
                     "player TEXT PRIMARY KEY, " +
+                    "name TEXT DEFAULT '', " +
                     "personal_activating TEXT DEFAULT '', " +
                     "personal_queue TEXT DEFAULT '', " +
                     "personal_storage TEXT DEFAULT '', " +
@@ -84,18 +86,19 @@ public class SQLite {
         try (Connection connection = getConnection();
              PreparedStatement checkPs = connection.prepareStatement("SELECT player FROM " + dbname + " WHERE player = ?");
              PreparedStatement insertPs = connection.prepareStatement("INSERT INTO " + dbname +
-                     " (player, personal_activating, personal_queue, personal_storage, network_storage, total_activated) VALUES (?, ?, ?, ?, ?, ?)")) {
+                     " (player, name, personal_activating, personal_queue, personal_storage, network_storage, total_activated) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
 
             checkPs.setString(1, p.getUniqueId().toString());
             ResultSet rs = checkPs.executeQuery();
 
             if (!rs.next()) {
                 insertPs.setString(1, p.getUniqueId().toString());
-                insertPs.setString(2, "{}");
-                insertPs.setString(3, "[]");
+                insertPs.setString(2, p.getName());
+                insertPs.setString(3, "{}");
                 insertPs.setString(4, "[]");
                 insertPs.setString(5, "[]");
-                insertPs.setInt(6, 0);
+                insertPs.setString(6, "[]");
+                insertPs.setInt(7, 0);
 
                 insertPs.executeUpdate();
             }
@@ -121,7 +124,59 @@ public class SQLite {
         }
     }
 
-            @SuppressWarnings("unchecked")
+    public <T> CompletableFuture<T> getOfflineData(String name, String column, TypeToken<T> typeToken, T fallback) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = getConnection();
+                 PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + dbname + " WHERE name = ?")) {
+
+                ps.setString(1, name);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    if (rs.getObject(column) == null) {
+                        return fallback;
+                    }
+
+                    Type type = typeToken.getType();
+
+                    if (type == Integer.class || type == int.class) {
+                        return (T) Integer.valueOf(rs.getInt(column));
+                    } else if (type == Double.class || type == double.class) {
+                        return (T) Double.valueOf(rs.getDouble(column));
+                    } else if (type == String.class) {
+                        return (T) rs.getString(column);
+                    } else {
+                        String json = rs.getString(column);
+                        try {
+                            Gson gson = new Gson();
+                            return gson.fromJson(json, type);
+                        } catch (JsonSyntaxException e) {
+                            Bukkit.getLogger().warning("Invalid JSON in database for " + column + ": " + json);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return fallback;
+        });
+    }
+
+
+    public <T> boolean appendOfflineData(String name, T data, String column) {
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement("UPDATE " + dbname +
+                     " SET " + column + " = json_insert(" + column + ", '$[#]', ?) WHERE name=?")) {
+
+            ps.setString(1, new Gson().toJson(data));
+            ps.setString(2, name);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public <T> T getData(OfflinePlayer player, String column, TypeToken<T> typeToken, T fallback) {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement("SELECT " + column + " FROM " + dbname + " WHERE player = ?")) {

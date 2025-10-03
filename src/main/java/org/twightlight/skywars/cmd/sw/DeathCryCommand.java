@@ -15,7 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsDeathCry;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsDeathCry;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.utils.StringUtils;
 

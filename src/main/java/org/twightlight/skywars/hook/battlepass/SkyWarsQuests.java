@@ -27,7 +27,7 @@ public class SkyWarsQuests extends ExternalActionContainer {
                     super.executionBuilder("win")
                             .player(p)
                             .root(server.getName())
-                            .subRoot("mode", server.getConfig().getServerMode())
+                            .subRoot("mode", server.getConfig().getArenaMode())
                             .subRoot("type", server.getConfig().getServerType())
                             .progressSingle()
                             .buildAndExecute();
@@ -41,7 +41,7 @@ public class SkyWarsQuests extends ExternalActionContainer {
     public void onPlayerKill(SkyWarsPlayerDeathEvent e) {
         if (e.getServer() instanceof Arena<?>) {
             Arena<?> server = (Arena<?>) e.getServer();
-            if (!server.isPrivate()) {
+            if (!server.isPrivate() && e.getKiller() != null) {
                 executionBuilder("kill")
                         .player(e.getKiller())
                         .root(e.getCause().name())
@@ -62,7 +62,7 @@ public class SkyWarsQuests extends ExternalActionContainer {
                     executionBuilder("play")
                             .player(p)
                             .root(server.getName())
-                            .subRoot("mode", server.getConfig().getServerMode())
+                            .subRoot("mode", server.getConfig().getArenaMode())
                             .subRoot("type", server.getConfig().getServerType())
                             .progressSingle()
                             .buildAndExecute();

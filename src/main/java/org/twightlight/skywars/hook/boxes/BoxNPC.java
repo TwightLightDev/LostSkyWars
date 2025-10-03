@@ -6,12 +6,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.Holograms;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;

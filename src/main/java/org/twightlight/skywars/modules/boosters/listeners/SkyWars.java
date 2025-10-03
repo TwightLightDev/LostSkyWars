@@ -1,17 +1,24 @@
 package org.twightlight.skywars.modules.boosters.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSoulEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
+import org.twightlight.skywars.bungee.Core;
+import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.boosters.api.event.BoosterMultiplyEvent;
+import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.users.ServerUser;
+import org.twightlight.skywars.player.Account;
 
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 public class SkyWars implements Listener {
     @EventHandler
@@ -32,16 +39,21 @@ public class SkyWars implements Listener {
                 (int) (value * ((p_multiplier - 1) + s_multiplier))
         );
         Bukkit.getPluginManager().callEvent(e1);
+        if (Core.MODE == CoreMode.MULTI_ARENA) {
+            serverUser.getActivatingStream().getActivatingBooster().forEach(pair -> {
+                Booster booster = BoosterManager.getBoosters().get(pair.getValue());
+                if (booster == null) return;
+                Database.getInstance().getAccountOffline(pair.getKey()).thenAccept((account) ->
+                        {
+                            int affiliateReward = (int) (value * (booster.getAmplifier() - 1) * booster.getAffiliateRate());
+                            if (affiliateReward > 0) {
+                                account.addStat("coins", affiliateReward);
 
-        serverUser.getActivatingStream().getActivatingBooster().forEach(booster -> {
-            booster.getOwner().thenAccept(account -> {
-                int affiliateReward = (int) (value * (booster.getAmplifier() - 1) * booster.getAffiliateRate());
-                if (affiliateReward > 0) {
-                    account.addStat("coins", affiliateReward);
-                }
+                            }
+                        }
+                );
             });
-        });
-
+        }
         e.setAmount((int) (value * (p_multiplier + s_multiplier)));
     }
 
@@ -63,14 +75,20 @@ public class SkyWars implements Listener {
                 (int) (value * ((p_multiplier - 1) + s_multiplier))
         );
         Bukkit.getPluginManager().callEvent(e1);
+        if (Core.MODE == CoreMode.MULTI_ARENA) {
+            serverUser.getActivatingStream().getActivatingBooster().forEach(pair -> {
+                Booster booster = BoosterManager.getBoosters().get(pair.getValue());
+                if (booster == null) return;
+                Database.getInstance().getAccountOffline(pair.getKey()).thenAccept((account) ->
+                        {
+                            if (chanceOf((int) (booster.getAffiliateRate() * 100 * booster.getAmplifier()))) {
+                                account.addStat("souls", value);
 
-        serverUser.getActivatingStream().getActivatingBooster().forEach(booster -> {
-            booster.getOwner().thenAccept(account -> {
-                if (chanceOf((int) (booster.getAffiliateRate() * 100 * booster.getAmplifier()))) {
-                    account.addStat("souls", value);
-                }
+                            };
+                        }
+                );
             });
-        });
+        }
 
         e.setAmount((int) (value * (p_multiplier + s_multiplier)));
     }
@@ -93,16 +111,22 @@ public class SkyWars implements Listener {
                 (int) (value * ((p_multiplier - 1) + s_multiplier))
         );
         Bukkit.getPluginManager().callEvent(e1);
+        if (Core.MODE == CoreMode.MULTI_ARENA) {
+            serverUser.getActivatingStream().getActivatingBooster().forEach(pair -> {
+                Booster booster = BoosterManager.getBoosters().get(pair.getValue());
+                if (booster == null) return;
+                Database.getInstance().getAccountOffline(pair.getKey()).thenAccept((account) ->
+                        {
+                            double affiliateReward = value * (booster.getAmplifier() - 1) * booster.getAffiliateRate();
+                            if (affiliateReward > 0) {
+                                account.addExp(affiliateReward);
 
-        serverUser.getActivatingStream().getActivatingBooster().forEach(booster -> {
-            booster.getOwner().thenAccept(account -> {
-                double affiliateReward = value * (booster.getAmplifier() - 1) * booster.getAffiliateRate();
-                if (affiliateReward > 0) {
-                    account.addExp(affiliateReward);
-                }
+                            }
+                            ;
+                        }
+                );
             });
-        });
-
+        }
         e.setAmount(value * (p_multiplier + s_multiplier));
     }
 

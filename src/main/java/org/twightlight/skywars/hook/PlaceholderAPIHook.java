@@ -3,8 +3,8 @@ package org.twightlight.skywars.hook;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.LostSkyWarsExpansion;
 import org.twightlight.skywars.api.LostSkyWarsPlusExpansion;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 public class PlaceholderAPIHook {
 

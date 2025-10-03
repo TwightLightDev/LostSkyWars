@@ -3,21 +3,22 @@ package org.twightlight.skywars.nms;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.HologramLine;
-import org.twightlight.skywars.holograms.entity.IArmorStand;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.HologramLine;
+import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class NMSBridge {
 
     public abstract IArmorStand createArmorStand(Location location, String name, HologramLine line);
 
-    public abstract BalloonEntity createBalloonLeash(Location location);
+    public abstract BalloonEntity createBalloonLeash(Location location, List<UUID> viewers);
 
-    public abstract BalloonEntity createBalloonBat(Location location, BalloonEntity leash);
+    public abstract BalloonEntity createBalloonBat(Location location, BalloonEntity leash, List<UUID> viewers);
 
-    public abstract BalloonEntity createBalloonGiant(Location location, List<String> frames);
+    public abstract BalloonEntity createBalloonGiant(Location location, List<String> frames, List<UUID> viewers);
 
     public abstract Hologram getHologram(Entity entity);
 
@@ -32,4 +33,8 @@ public abstract class NMSBridge {
     public abstract void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut);
 
     public abstract void sendTabHeaderFooter(Player player, String header, String footer);
+
+    public abstract MapHelper getMapHelper();
+
+    public abstract int getIdOfEntity(Entity entity);
 }

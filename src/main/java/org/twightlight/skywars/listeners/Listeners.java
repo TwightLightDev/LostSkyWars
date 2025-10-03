@@ -7,6 +7,7 @@ import org.bukkit.plugin.PluginManager;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.listeners.entity.EntityListener;
 import org.twightlight.skywars.listeners.entity.FriendlyMobListener;
 import org.twightlight.skywars.listeners.entity.ItemFrameManager;
@@ -14,7 +15,7 @@ import org.twightlight.skywars.listeners.player.*;
 import org.twightlight.skywars.listeners.server.PluginMessageListener;
 import org.twightlight.skywars.listeners.server.ServerListener;
 import org.twightlight.skywars.listeners.skywars.SkyWarsDeath;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class Listeners implements Listener {
 
@@ -34,6 +35,7 @@ public class Listeners implements Listener {
         pm.registerEvents(new PlayerJoinListener(), plugin);
         pm.registerEvents(new PlayerQuitListener(), plugin);
         pm.registerEvents(new PlayerRestListener(), plugin);
+        pm.registerEvents(new PlayerMoveEvent(), plugin);
         pm.registerEvents(new InventoryCloseListener(), plugin);
         pm.registerEvents(new FriendlyMobListener(), plugin);
         pm.registerEvents(new ProjectileLaunchEvent(), plugin);
@@ -41,6 +43,8 @@ public class Listeners implements Listener {
         pm.registerEvents(new ItemFrameManager(), plugin);
 
         pm.registerEvents(new ServerListener(), plugin);
+
+        pm.registerEvents(new SkyWarsKillEffect.NavigationCheck(), plugin);
 
         if (Core.MODE != CoreMode.MULTI_ARENA) {
             Bukkit.getMessenger().registerIncomingPluginChannel(plugin, "LostSWAPI", new PluginMessageListener());

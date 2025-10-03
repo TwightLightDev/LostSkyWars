@@ -1,11 +1,12 @@
 package org.twightlight.skywars.database;
 
 import com.google.common.collect.ImmutableList;
+import org.bukkit.Bukkit;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
@@ -214,6 +215,7 @@ public class MySQLDatabase extends Database {
     }
 
     private Map<UUID, Account> accounts = new HashMap<>();
+    private Map<UUID, Account> offlineaccounts = new HashMap<>();
 
     @Override
     public Account loadAccount(UUID id, String name) {
@@ -227,7 +229,7 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
-    public CompletableFuture<Account> loadOffline(String name) {
+    public CompletableFuture<Account> loadAccountOffline(String name) {
         return CompletableFuture.supplyAsync(() -> {
             try (CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?", name.toLowerCase())) {
                 if (rs == null || !rs.next()) {
@@ -239,6 +241,32 @@ public class MySQLDatabase extends Database {
                 return null;
             }
         });
+    }
+
+    @Override
+    public CompletableFuture<Account> getAccountOffline(UUID uuid) {
+        return CompletableFuture.supplyAsync(() -> {
+            Account account = offlineaccounts.get(uuid);
+            if (account != null) {
+                return account;
+            }
+            try (CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`id`) = ?", uuid.toString())) {
+                if (rs == null || !rs.next()) {
+                    return null;
+                }
+                account = new Account(uuid, Bukkit.getOfflinePlayer(uuid).getName());
+                offlineaccounts.put(uuid, account);
+                return account;
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "loadOffline(\"" + uuid + "\") error: ", ex);
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public Account unloadOfflineAccount(UUID uuid) {
+        return offlineaccounts.remove(uuid);
     }
 
     @Override
@@ -255,7 +283,10 @@ public class MySQLDatabase extends Database {
     public Collection<Account> listAccounts() {
         return ImmutableList.copyOf(accounts.values());
     }
-
+    @Override
+    public Collection<Account> listOfflineAccounts() {
+        return ImmutableList.copyOf(offlineaccounts.values());
+    }
     public void openConnection() {
         try {
             boolean reconnected = true;

@@ -5,7 +5,7 @@ import io.github.losteddev.boxes.api.box.RewardRarity;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 
 public class CosmeticReward extends BoxReward {
 

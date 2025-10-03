@@ -3,7 +3,7 @@ package org.twightlight.skywars.modules.privategames.menus.submenus;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.twightlight.libs.xseries.XMaterial;
-import org.twightlight.skywars.modules.libs.menus.Item;
+import org.twightlight.skywars.modules.api.menus.Item;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;

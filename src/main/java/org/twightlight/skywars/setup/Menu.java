@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.ui.Executable;
+import org.twightlight.skywars.arena.ui.interfaces.Executable;
 
 public abstract class Menu {
     protected InventoryHolder holder;

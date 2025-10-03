@@ -9,8 +9,8 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.play.PlayRankedMenu;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.Logger.Level;
 
 public class PlayCommand extends Command {
 

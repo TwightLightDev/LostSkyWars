@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsSpray;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsSpray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -83,7 +83,10 @@ public class SpraysMenu extends PagedPlayerMenu {
 
                         }
                     } else if (cos != null) {
-
+                        if (evt.getClick().name().contains("RIGHT")) {
+                            cos.playPreview(player, 100L, SpraysMenu.class, order, filter, searchQuery);
+                            return;
+                        }
                         if (!cos.has(account)) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             if (!cos.canBeSold()) {

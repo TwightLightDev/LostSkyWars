@@ -1,33 +1,31 @@
 package org.twightlight.skywars.modules.boosters.boosters;
 
 import com.google.gson.Gson;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
-import org.twightlight.skywars.player.Account;
-
-import java.util.concurrent.CompletableFuture;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 
 public class Booster {
     private static Gson gson = new Gson();
 
+    private String id;
     private int duration;
     private Currency currency;
     private float amplifier;
     private BoosterType type;
-    private CompletableFuture<Account> owner;
     private float affiliateRate;
 
-    public static Booster createBooster(int time, Currency currency, float amplifier, float affiliateRate, BoosterType type) {
+    public static Booster createBooster(String id, int time, Currency currency, float amplifier, float affiliateRate, BoosterType type) {
         Booster booster = new Booster();
         booster.amplifier = amplifier;
         booster.affiliateRate = affiliateRate;
         booster.duration = time;
         booster.currency = currency;
         booster.type = type;
+        booster.id = id;
         return booster;
     }
 
-    public static Booster parseFromYaml(YamlWrapper wrapper, String path) {
-        return createBooster(wrapper.getInt(path+".duration", 3600),
+    public static Booster parseFromYaml(YamlWrapper wrapper, String path, String key) {
+        return createBooster(key, wrapper.getInt(path+".duration", 3600),
                 Currency.valueOf(wrapper.getString(path+".currency", "COINS")),
                 wrapper.getFloat(path + ".amplifier"),
                 wrapper.getFloat(path + ".affiliate"),
@@ -59,16 +57,12 @@ public class Booster {
         return amplifier;
     }
 
-    public void setOwner(CompletableFuture<Account> owner) {
-        this.owner = owner;
-    }
-
-    public CompletableFuture<Account> getOwner() {
-        return owner;
-    }
-
     public float getAffiliateRate() {
         return affiliateRate;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public enum Currency {

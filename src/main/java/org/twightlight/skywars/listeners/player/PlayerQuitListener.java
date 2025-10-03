@@ -7,7 +7,7 @@ import org.twightlight.skywars.cmd.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.rank.TagUtils;
+import org.twightlight.skywars.player.rank.TagUtils;
 
 public class PlayerQuitListener extends Listeners {
 

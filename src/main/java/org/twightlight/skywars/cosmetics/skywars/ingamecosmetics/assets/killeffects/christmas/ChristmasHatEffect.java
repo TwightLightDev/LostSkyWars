@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
-import org.twightlight.skywars.particles.ParticleEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
+import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
@@ -62,6 +62,36 @@ public class ChristmasHatEffect extends SkyWarsKillEffect {
                 }
                 for (i = 0; i < 7; i++)
                     ParticleEffect.REDSTONE.display((ParticleEffect.ParticleColor)new ParticleEffect.OrdinaryColor(255, 255, 255), loc.clone().add((Math.random() - 0.5D) / 10.0D, 0.6D, (Math.random() - 0.5D) / 10.0D), 120.0D);
+            }
+        }).runTaskTimer(SkyWars.getInstance(), 0L, 1L);
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+        (new BukkitRunnable() {
+            int ticks = 0;
+
+            public void run() {
+                this.ticks++;
+                if (this.ticks > 90) {
+                    cancel();
+                    return;
+                }
+
+                Location loc = location.clone().add(0, 1.6, 0).add(0.0D, 0.3D, 0.0D);
+                int max = 8;
+                int i;
+                for (i = 0; i < max; i++) {
+                    double cos = Math.cos(Math.toRadians(360.0D / max * i));
+                    double sin = Math.sin(Math.toRadians(360.0D / max * i));
+                    ParticleEffect.REDSTONE.display(0.0F, 0.0F, 0.0F, 0.0F, 1, loc.clone().add(0.25D * cos, 0.1D, 0.25D * sin), player);
+                    ParticleEffect.REDSTONE.display(0.0F, 0.0F, 0.0F, 0.0F, 1, loc.clone().add(0.16D * cos, 0.2D, 0.16D * sin), player);
+                    ParticleEffect.REDSTONE.display(0.0F, 0.0F, 0.0F, 0.0F, 1, loc.clone().add(0.07D * cos, 0.3D, 0.07D * sin), player);
+                    ParticleEffect.REDSTONE.display(0.0F, 0.0F, 0.0F, 0.0F, 1, loc.clone().add(0.07D * cos, 0.4D, 0.07D * sin), player);
+                    ParticleEffect.REDSTONE.display((ParticleEffect.ParticleColor)new ParticleEffect.OrdinaryColor(255, 255, 255), loc.clone().add(0.35D * cos, 0.0D, 0.35D * sin), player);
+                }
+                for (i = 0; i < 7; i++)
+                    ParticleEffect.REDSTONE.display((ParticleEffect.ParticleColor)new ParticleEffect.OrdinaryColor(255, 255, 255), loc.clone().add((Math.random() - 0.5D) / 10.0D, 0.6D, (Math.random() - 0.5D) / 10.0D), player);
             }
         }).runTaskTimer(SkyWars.getInstance(), 0L, 1L);
     }

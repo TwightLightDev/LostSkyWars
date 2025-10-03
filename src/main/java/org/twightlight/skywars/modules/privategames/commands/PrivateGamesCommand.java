@@ -10,7 +10,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.Arrays;
 
@@ -40,8 +40,10 @@ public class PrivateGamesCommand extends Command {
 
             if (args[0].equals("toggle")) {
                 user.togglePrivateGame();
-            } else if (args[0].equals("settings")) {
+            } else if (args[0].equals("gui")) {
                 MainMenu.open(PrivateGames.getStorage().getUser(player));
+            } else if (args[0].equals("help")) {
+                user.sendMessage(PrivateGames.getLanguage().getList("privategames.help"));
             }
             return true;
         }

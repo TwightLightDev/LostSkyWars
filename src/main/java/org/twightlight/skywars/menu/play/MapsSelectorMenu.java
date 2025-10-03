@@ -20,8 +20,8 @@ import org.twightlight.skywars.menu.api.UpdatablePlayerPagedMenu;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.arena.Arena;
 

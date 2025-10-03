@@ -33,7 +33,7 @@ public class RemoveCommand extends SubCommand {
 
             Player target = Bukkit.getPlayerExact(args[1]);
             CompletableFuture<Account> account1;
-            account1 = Database.getInstance().loadOffline(args[1]);
+            account1 = Database.getInstance().loadAccountOffline(args[1]);
 
             boolean save;
             if (target == null || !target.isOnline()) {

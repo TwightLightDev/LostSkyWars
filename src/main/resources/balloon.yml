@@ -35,7 +35,7 @@ extras:
  - '&7Rarity: {rarity}'
  - '&7Cost: &6{price}'
  - ''
- - '&eClick to buy!'
+ - '&aClick to buy!'
  description-unavailable:
  - '&7Rarity: {rarity}'
  - ''
@@ -43,8 +43,8 @@ extras:
  description-unlocked:
  - '&7Rarity: {rarity}'
  - ''
- - '&eClick to select!'
+ - '&aClick to select!'
  description-selected:
  - '&7Rarity: {rarity}'
  - '' 
- - '&eSELECTED!'
+ - '&aSELECTED!'

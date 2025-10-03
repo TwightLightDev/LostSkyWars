@@ -1,14 +1,22 @@
 package org.twightlight.skywars.nms.v1_8_R3.entity;
 
 import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.twightlight.skywars.nms.BalloonEntity;
 
-public class BalloonEntityBat extends EntityBat implements BalloonEntity {
+import java.util.List;
+import java.util.UUID;
 
-    public BalloonEntityBat(Location location, BalloonEntityLeash leash) {
+public class BalloonEntityBat extends EntityBat implements BalloonEntity {
+    private List<UUID> viewers;
+
+    public BalloonEntityBat(Location location, BalloonEntityLeash leash, List<UUID> viewers) {
         super(((CraftWorld) location.getWorld()).getHandle());
+        this.viewers = viewers;
 
         super.setInvisible(true);
         this.setLeashHolder(leash, true);
@@ -18,6 +26,18 @@ public class BalloonEntityBat extends EntityBat implements BalloonEntity {
 
     @Override
     public void kill() {
+        if (!viewers.isEmpty()) {
+            PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(getId());
+
+            viewers.forEach((UUID) -> {
+                Player player = Bukkit.getPlayer(UUID);
+
+                if (player.isOnline()) {
+                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                }
+            });
+            return;
+        }
         this.dead = true;
     }
 

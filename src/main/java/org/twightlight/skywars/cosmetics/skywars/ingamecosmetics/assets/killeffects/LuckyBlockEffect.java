@@ -10,11 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.libs.fastparticles.ParticleData;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.ItemBuilder;
@@ -73,5 +74,53 @@ public class LuckyBlockEffect extends SkyWarsKillEffect {
                 this.pitch = (float)(this.pitch + 0.05D);
             }
         }).runTaskTimer(SkyWars.getInstance(),0L, 1L);
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+
+        final ArmorStand stand = (ArmorStand) location.getWorld().spawn(location.subtract(0.0D, 1.54D, 0.0D), ArmorStand.class);
+        stand.setMetadata("cosmetic.entity", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), Boolean.valueOf(true)));
+        stand.setMarker(true);
+        ItemStack[] head = { (new ItemBuilder(Material.SKULL_ITEM, 1, (byte) SkullType.PLAYER.ordinal())).setSkullOwnerNMS("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGI5MmNiNDMzMzNhYTYyMWM3MGVlZjRlYmYyOTliYTQxMmI0NDZmZTEyZTM0MWNjYzU4MmYzMTkyMTg5In19fQ==").toItemStack() };
+        stand.setHelmet(head[0]);
+        stand.setVisible(false);
+        stand.setGravity(false);
+        Location loc = stand.getLocation();
+        stand.teleport(loc);
+        BukkitTask task = (new BukkitRunnable() {
+            double y = 0.1D;
+
+            float yaw = 16.0F;
+
+            float pitch = 0.5F;
+
+            public void run() {
+                if (!player.isOnline()) {
+                    cancel();
+                    return;
+                }
+                Location loc = stand.getLocation();
+                loc.setYaw(loc.getYaw() + this.yaw);
+                stand.teleport(loc.add(0.0D, this.y, 0.0D));
+                this.y -= 0.00365D;
+                this.yaw -= 0.4F;
+                if (this.y <= 0.0D) {
+                    stand.remove();
+                    player.playSound(stand.getEyeLocation(), Sound.DIG_STONE, 1.0F, 1.0F);
+                    ParticleData data = ParticleData.createBlockData(Material.REDSTONE_BLOCK, (byte)0);
+                    ParticleType.of("BLOCK_CRACK").spawn(player, stand.getEyeLocation(), 30 , 0.3F, 0.3F, 0.3F, 0.75F, data);
+                    cancel();
+                }
+                if (stand.getTicksLived() % 4 == 0)
+                    player.playSound(stand.getEyeLocation(), Sound.NOTE_PLING, 0.6F, this.pitch);
+                this.pitch = (float)(this.pitch + 0.05D);
+            }
+        }).runTaskTimer(SkyWars.getInstance(),0L, 1L);
+
+        sessionUUID.get(player.getUniqueId()).addEndConsumers((p) -> {
+            stand.remove();
+            task.cancel();
+        });
     }
 }

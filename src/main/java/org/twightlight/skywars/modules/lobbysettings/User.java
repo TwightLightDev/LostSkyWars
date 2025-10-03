@@ -218,4 +218,12 @@ public class User {
     public static User getFromUUID(UUID uuid) {
         return userList.get(uuid);
     }
+
+    public static User removeUser(User user) {
+        return userList.remove(user.uuid);
+    }
+
+    public static Map<UUID, User> getUsers() {
+        return userList;
+    }
 }

@@ -10,7 +10,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -44,7 +44,7 @@ public class StatsCommand extends Command {
 
             CompletableFuture<Account> account = null;
             Player target = Bukkit.getPlayer(args[0]);
-            account = Database.getInstance().loadOffline(args[0]);
+            account = Database.getInstance().loadAccountOffline(args[0]);
 
 
             if (account == null) {

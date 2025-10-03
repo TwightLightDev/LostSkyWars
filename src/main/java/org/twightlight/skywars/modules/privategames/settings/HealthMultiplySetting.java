@@ -11,6 +11,8 @@ public class HealthMultiplySetting extends PrivateGamesSetting<Double>{
     public HealthMultiplySetting(Double value, Player p) {
         super(value, p);
     }
+
+
     public static Double getBaseValue(Player p) {
         return PrivateGames.getStorage().getDatabase().
                 getData(p, type.getColumn(), new TypeToken<Double>() {},

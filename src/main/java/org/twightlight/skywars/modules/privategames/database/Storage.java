@@ -6,6 +6,7 @@ import org.twightlight.skywars.modules.privategames.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Storage {
     private Map<Player, User> users = new HashMap<>();
@@ -25,5 +26,13 @@ public class Storage {
 
     public SQLite getDatabase() {
         return database;
+    }
+
+    public User removeUser(User user) {
+        return users.remove(user.getPlayer());
+    }
+
+    public Map<Player, User> getUsers() {
+        return users;
     }
 }

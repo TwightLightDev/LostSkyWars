@@ -3,7 +3,7 @@ package org.twightlight.skywars.modules.lobbysettings.commands.subcommands;
 import org.bukkit.permissions.Permission;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
-import org.twightlight.skywars.modules.libs.cmds.SubCommand;
+import org.twightlight.skywars.modules.api.cmds.SubCommand;
 
 public class Vanish extends SubCommand {
     public Vanish(Permission permission) {
@@ -17,7 +17,7 @@ public class Vanish extends SubCommand {
 
     @Override
     public void sendUsage(User user) {
-
+        user.sendMessage(LobbySettings.getLanguage().getString("lobbysettings."+getSubCommand()+".usage"));
     }
 
     @Override

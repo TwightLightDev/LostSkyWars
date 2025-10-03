@@ -6,28 +6,37 @@ public enum CosmeticType {
 
     SKYWARS_KIT(1, "kits", 0, 4),
     SKYWARS_PERK(2, "perks", 1, 3),
-    SKYWARS_CAGE(3, "cages", 2),
+    SKYWARS_CAGE(3, "cages", "cages", 2),
     SKYWARS_DEATHCRY(4, "deathcry", 3),
-    SKYWARS_BALLON(5, "ballons", 4),
+    SKYWARS_BALLOON(5, "ballons", "balloons", 4),
     SKYWARS_SYMBOL(6, "noneeds", 5),
-    SKYWARS_TRAIL(7, "trail", 6),
+    SKYWARS_TRAIL(7, "trail", "trails", 6),
     SKYWARS_KILLMESSAGE(8, "killmessage", 7),
-    SKYWARS_SPRAY(9, "spray", 8),
-    SKYWARS_KILLEFFECT(10, "killeffect", 9),
+    SKYWARS_SPRAY(9, "spray", "sprays", 8),
+    SKYWARS_KILLEFFECT(10, "killeffect", "killeffects", 9),
     SKYWARS_VICTORYDANCE(11, "victorydance", 10),
     SKYWARS_TITLE(12, "title", 11);
 
 
     private int uniqueId;
-    private String stats;
+    private String stats, previewID;
     private int index, size;
 
     CosmeticType(int uniqueId, String stats, int index) {
-        this(uniqueId, stats, index, 1);
+        this(uniqueId, stats, "noneeds", index, 1);
+    }
+
+    CosmeticType(int uniqueId, String stats, String previewId, int index) {
+        this(uniqueId, stats, previewId, index, 1);
     }
 
     CosmeticType(int uniqueId, String stats, int index, int size) {
+        this(uniqueId, stats, "noneeds", index, size);
+    }
+
+    CosmeticType(int uniqueId, String stats, String previewId, int index, int size) {
         this.uniqueId = uniqueId;
+        this.previewID = previewId;
         this.stats = stats;
         this.index = index;
         this.size = size;
@@ -72,5 +81,9 @@ public enum CosmeticType {
         }
 
         return null;
+    }
+
+    public String getPreviewID() {
+        return previewID;
     }
 }

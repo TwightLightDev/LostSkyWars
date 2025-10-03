@@ -5,14 +5,13 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.*;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
 import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 
 public abstract class Cosmetic {
 

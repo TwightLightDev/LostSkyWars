@@ -1,7 +1,7 @@
 package org.twightlight.skywars.modules.privategames.menus;
 
 import org.twightlight.libs.xseries.XMaterial;
-import org.twightlight.skywars.modules.libs.menus.Item;
+import org.twightlight.skywars.modules.api.menus.Item;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.submenus.GameSpeed;
 import org.twightlight.skywars.modules.privategames.menus.submenus.GameTime;

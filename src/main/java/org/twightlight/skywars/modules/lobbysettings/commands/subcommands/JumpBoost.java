@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
-import org.twightlight.skywars.modules.libs.cmds.SubCommand;
+import org.twightlight.skywars.modules.api.cmds.SubCommand;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
 public class JumpBoost extends SubCommand {
@@ -21,6 +21,7 @@ public class JumpBoost extends SubCommand {
 
     @Override
     public void sendUsage(User user) {
+        user.sendMessage(LobbySettings.getLanguage().getString("lobbysettings."+getSubCommand()+".usage"));
 
     }
 

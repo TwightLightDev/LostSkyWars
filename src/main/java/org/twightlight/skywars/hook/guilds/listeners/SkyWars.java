@@ -12,7 +12,7 @@ import org.twightlight.skywars.api.event.game.SkyWarsGameEndEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
-import org.twightlight.skywars.player.DataContainer;
+import org.twightlight.skywars.player.CurrencyManager;
 import org.twightlight.skywars.arena.Arena;
 
 import java.util.*;
@@ -69,7 +69,7 @@ public class SkyWars implements Listener {
             guild.sendDoubleXpMessage(player);
         }
         e.addFinalTask(objects -> {
-            DataContainer container = (DataContainer) objects.get(0);
+            CurrencyManager container = (CurrencyManager) objects.get(0);
             double amount = (double) objects.get(1);
             container.addGxp(amount * 0.6);
         });

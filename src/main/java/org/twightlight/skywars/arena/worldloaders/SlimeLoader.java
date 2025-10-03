@@ -12,7 +12,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,7 +149,6 @@ public class SlimeLoader extends WorldLoaderAdapter {
                 });
 
             } catch (IOException | WorldAlreadyExistsException | NullPointerException ex) {
-                future.completeExceptionally(ex);
             }
         });
 
@@ -178,6 +178,12 @@ public class SlimeLoader extends WorldLoaderAdapter {
         spm.setString(SlimeProperties.DIFFICULTY, "easy");
         spm.setBoolean(SlimeProperties.PVP, true);
         return spm;
+    }
+
+    public boolean importWorld(World world) {
+        unload(world.getName());
+        load(world.getName());
+        return true;
     }
 
     @Override

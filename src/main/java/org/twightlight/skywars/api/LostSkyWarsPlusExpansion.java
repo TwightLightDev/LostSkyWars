@@ -3,12 +3,17 @@ package org.twightlight.skywars.api;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.type.Duels;
+import org.twightlight.skywars.arena.type.solo.Solo;
+import org.twightlight.skywars.arena.type.solo.SoloRanked;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.arena.Arena;
 
 public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
@@ -78,6 +83,30 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return "" + playing;
         } else if (params.equals("rank_prefix")) {
             return Rank.getRank(player).getColoredName();
+        } else if (params.equals("team_tag")) {
+            Account account = Database.getInstance().getAccount(player.getUniqueId());
+            if (account == null ||
+                    account.getServer() == null ||
+                    !(account.getServer() instanceof Arena<?>) ||
+                    (account.getServer() instanceof Solo) ||
+                    (account.getServer() instanceof SoloRanked)||
+                    (account.getServer() instanceof Duels)) {
+                return "";
+            }
+            Arena<?> arena = (Arena<?>) account.getServer();
+            return arena.getTeam(player).getAlphabeticalTag() + " ";
+        } else if (params.equals("team_alphabet")) {
+            Account account = Database.getInstance().getAccount(player.getUniqueId());
+            if (account == null ||
+                    account.getServer() == null ||
+                    !(account.getServer() instanceof Arena<?>) ||
+                    (account.getServer() instanceof Solo) ||
+                    (account.getServer() instanceof SoloRanked)||
+                    (account.getServer() instanceof Duels)) {
+                return "";
+            }
+            Arena<?> arena = (Arena<?>) account.getServer();
+            return arena.getTeam(player).getAlphabetical();
         }
 
         return null;

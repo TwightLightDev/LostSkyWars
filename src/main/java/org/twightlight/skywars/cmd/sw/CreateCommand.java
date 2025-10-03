@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cmd.SubCommand;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.ui.SkyWarsCube;
-import org.twightlight.skywars.ui.server.ScanCallback;
+import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
+import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.utils.ZipUtils;
 import org.twightlight.skywars.arena.Arena;
@@ -163,18 +163,12 @@ public class CreateCommand extends SubCommand {
             Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> player.sendMessage("§5[LostSkyWars] §aCreating backup of world..."), 20);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-                File source = new File(Bukkit.getWorldContainer(), world.getName());
-                File zipDest = new File("plugins/LostSkyWars/maps/" + world.getName() + ".zip");
-                try {
-                    ZipUtils.zip(source, zipDest);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    player.sendMessage("§5[LostSkyWars] §cFailed to save world as zip!");
-                    return;
+                if (!SkyWars.getInstance().getWorldLoader().importWorld(world)) {
+                    player.sendMessage("§cFailed to import world (see the console)!");
                 }
                 try {
                     account.refreshPlayer();
-                    player.sendMessage("§5[LostSkyWars] §aAdding to server list...");
+                    player.sendMessage("§5[LostSkyWars] §aAdding to arena list...");
                     Arena.loadArena(config.getFile(), new ScanCallback() {
 
                         @Override

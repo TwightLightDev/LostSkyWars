@@ -13,7 +13,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
@@ -67,5 +67,35 @@ public class SadFaceBannerEffect extends SkyWarsKillEffect {
             location.subtract(0.0D, 1.0D, 0.0D);
         }
         return location;
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+        Location loc = getBlockUnder(location);
+        if (loc == null)
+            return;
+        loc.add(0.0D, 1.0D, 0.0D);
+        final Block block = loc.getBlock();
+        Material material = Material.STANDING_BANNER;
+        block.setType(material);
+        Banner banner = (Banner)block.getState();
+        banner.setBaseColor(DyeColor.BLACK);
+        List<Pattern> patterns = new ArrayList<>();
+        for (int i = 0; i < 9; i++)
+            patterns.add(new Pattern(DyeColor.WHITE, PatternType.SKULL));
+        patterns.add(new Pattern(DyeColor.BLACK, PatternType.FLOWER));
+        patterns.add(new Pattern(DyeColor.BLACK, PatternType.FLOWER));
+        patterns.add(new Pattern(DyeColor.BLACK, PatternType.HALF_HORIZONTAL_MIRROR));
+        banner.setPatterns(patterns);
+        banner.update();
+        (new BukkitRunnable() {
+            public void run() {
+                block.setType(Material.AIR);
+            }
+        }).runTaskLater(SkyWars.getInstance(), 100L);
+        block.setMetadata("cosmetic.block", (MetadataValue)new FixedMetadataValue(SkyWars.getInstance(), Boolean.valueOf(true)));
+        sessionUUID.get(player.getUniqueId()).addEndConsumers((p) -> {
+            block.setType(Material.AIR);
+        });
     }
 }

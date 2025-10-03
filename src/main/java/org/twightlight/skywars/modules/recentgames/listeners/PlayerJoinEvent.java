@@ -8,7 +8,9 @@ import org.twightlight.skywars.modules.recentgames.User;
 public class PlayerJoinEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent e) {
-        new User(e.getPlayer());
-        RecentGames.getDatabase().createPlayerData(e.getPlayer());
+        if (User.getUser(e.getPlayer()) == null) {
+            new User(e.getPlayer());
+            RecentGames.getDatabase().createPlayerData(e.getPlayer());
+        }
     }
 }

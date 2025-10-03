@@ -20,7 +20,7 @@ public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
         this.server = server;
         this.player = player;
         this.amount = amount;
-        this.source = XpSource.PLAY;
+        this.source = XpSource.CUSTOM;
     }
 
     public SkyWarsPlayerXpGainEvent(SkyWarsServer server, Player player, double amount, XpSource source) {
@@ -59,6 +59,8 @@ public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
     }
 
     public enum XpSource {
+        KILL,
+        WIN,
         PLAY,
         CUSTOM
     }

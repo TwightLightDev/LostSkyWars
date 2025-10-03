@@ -1,7 +1,7 @@
 package org.twightlight.skywars.bungee;
 
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ public class Core {
     public static final List<String> filesSaved = Arrays.asList("profile", "leveling", "statistics", "settings", "shop", "cells", "play", "playduels", "playranked", "kitsandperks",
             "nkits", "ikits", "rkits", "viewkit", "confirmbuy", "kitselector", "mapselector", "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
             "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "projectiletrail", "killmessage", "spray", "balloon", "statsnpc", "symbol", "normalkits", "insanekits", "rankedkits",
-            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails", "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title", "deliveries", "levels", "perks", "ranked", "ranks", "symbols", "lang", "cosmetics");
+            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails", "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title", "deliveries", "levels", "perks", "ranked", "ranks", "symbols", "lang", "cosmetics", "oosmeticspreview");
 
     public static CoreSender getCoreSender() {
         if (SENDER == null) {

@@ -4,13 +4,12 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.leaderboards.LeaderBoardStats;
-import org.twightlight.skywars.ui.SkyWarsEvent;
-import org.twightlight.skywars.ui.SkyWarsMode;
-import org.twightlight.skywars.ui.SkyWarsType;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Field;
@@ -174,6 +173,17 @@ public class Language {
     public static double game$rewards$exp_per_kill = 5.0;
     public static double game$rewards$exp_per_win = 10.0;
 
+    public static String game$rewards_message$coins_per_play = "&6+{coins} SkyWars Coins Received (Play).";
+    public static String game$rewards_message$coins_per_kill = "&6+{coins} SkyWars Coins Received (Kill).";
+    public static String game$rewards_message$coins_per_win = "&6+{coins} SkyWars Coins Received (Game Win).";
+
+    public static String game$rewards_message$exp_per_play = "&d+{xp} SkyWars Experience Received (Play).";
+    public static String game$rewards_message$exp_per_kill = "&d+{xp} SkyWars Experience Received (Kill).";
+    public static String game$rewards_message$exp_per_win = "&d+{xp} SkyWars Experience Received (Game Win).";
+
+    public static String game$rewards_message$soul = "&b+{souls} Souls.";
+
+
     public static int game$countdown$start = 45;
     public static int game$countdown$full = 10;
     public static int game$countdown$normal$game = 1200;
@@ -277,12 +287,6 @@ public class Language {
     public static String command$join_game$game_already_started = "§cGame already started.";
 
     public static String cosmetics$sprays$holograms = "§eClick!";
-    public static List<String> recentgames$lore = Arrays.asList("&7Result: &a{result}", "&7Start Time: &a{startTime}",
-            "&7Duration: &a{duration}", "", "&eClick to watch replay!");
-    public static String privategames$party$not_leader = "§cOnly the Party leader can find a match.";
-    public static String privategames$party$not_found = "§cYou must in a party in order to start private match.";
-    public static String privategames$toggle$on = "§aYou have turned on private match.";
-    public static String privategames$toggle$off = "§cYou have turned off private match.";
 
     public static Logger LOGGER;
     private static ConfigUtils CONFIG;

@@ -1,23 +1,42 @@
 package org.twightlight.skywars.nms.v1_8_R3.entity;
 
-import net.minecraft.server.v1_8_R3.DamageSource;
-import net.minecraft.server.v1_8_R3.EntityLeash;
-import net.minecraft.server.v1_8_R3.ItemStack;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.twightlight.skywars.nms.BalloonEntity;
 
-public class BalloonEntityLeash extends EntityLeash implements BalloonEntity {
+import java.util.List;
+import java.util.UUID;
 
-    public BalloonEntityLeash(Location location) {
+public class BalloonEntityLeash extends EntityLeash implements BalloonEntity {
+    private List<UUID> viewers;
+
+    public BalloonEntityLeash(Location location, List<UUID> viewers) {
         super(((CraftWorld) location.getWorld()).getHandle());
+        this.viewers = viewers;
 
         this.setPosition(location.getX(), location.getY(), location.getZ());
+
     }
 
     @Override
     public void kill() {
+        if (!viewers.isEmpty()) {
+            PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(getId());
+
+            viewers.forEach((UUID) -> {
+                Player player = Bukkit.getPlayer(UUID);
+
+                if (player.isOnline()) {
+                    ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+                }
+            });
+            return;
+        }
+
         this.dead = true;
     }
 

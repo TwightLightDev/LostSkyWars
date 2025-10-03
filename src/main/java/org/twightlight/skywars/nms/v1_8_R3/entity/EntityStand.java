@@ -9,8 +9,8 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.EulerAngle;
-import org.twightlight.skywars.holograms.HologramLine;
-import org.twightlight.skywars.holograms.entity.IArmorStand;
+import org.twightlight.skywars.systems.holograms.HologramLine;
+import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 
 import java.lang.reflect.Field;
 

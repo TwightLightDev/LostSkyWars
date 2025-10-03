@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.*;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.level.Level;
+import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
@@ -171,10 +171,10 @@ public class CosmeticsMenu extends PlayerMenu {
                 stack = stack.replace("{sprays_current}", c == null || !(c instanceof SkyWarsSpray) ? config.getAsString("empty") : ((SkyWarsSpray) c).getRawName());
 
                 // Balloons
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLON).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLON).stream().filter(cosmetic -> ((SkyWarsBalloon) cosmetic).has(account)).count();
+                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLOON).size();
+                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLOON).stream().filter(cosmetic -> ((SkyWarsBalloon) cosmetic).has(account)).count();
                 percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLON, 1);
+                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1);
                 stack = stack.replace("{balloons_has}", String.valueOf(amount));
                 stack = stack.replace("{balloons_max}", String.valueOf(max));
                 stack = stack.replace("{balloons_percentage}", percentage + "%");

@@ -34,7 +34,7 @@ public class GiveCommand extends SubCommand {
             Player target = Bukkit.getPlayerExact(args[1]);
             CompletableFuture<Account> account1;
             boolean save;
-            account1 = Database.getInstance().loadOffline(args[1]);
+            account1 = Database.getInstance().loadAccountOffline(args[1]);
 
             if (account1 == null) {
                 sender.sendMessage("§5[LostSkyWars] §cUser not found!");

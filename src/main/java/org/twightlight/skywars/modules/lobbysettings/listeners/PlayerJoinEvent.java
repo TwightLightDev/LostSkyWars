@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.bungee.Core;
+import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 
@@ -14,6 +16,9 @@ public class PlayerJoinEvent implements Listener {
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent e) {
         Player p = e.getPlayer();
         LobbySettings.getDatabase().createPlayerData(p);
-        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> new User(p).enable(), 10L);
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+            if (Core.MODE != CoreMode.ARENA)
+                new User(p).enable();
+        }, 10L);
     }
 }

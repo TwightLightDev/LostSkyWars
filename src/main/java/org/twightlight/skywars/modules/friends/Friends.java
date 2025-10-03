@@ -10,10 +10,11 @@ import org.twightlight.skywars.modules.friends.commands.FriendCmd;
 import org.twightlight.skywars.modules.friends.config.LangConfig;
 import org.twightlight.skywars.modules.friends.friend.FriendRequestManager;
 import org.twightlight.skywars.modules.friends.listeners.PlayerJoinEvent;
+import org.twightlight.skywars.modules.friends.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.friends.user.UserManager;
 import org.twightlight.skywars.modules.friends.utils.MessageUtil;
 import org.twightlight.skywars.modules.friends.utils.StorageUtil;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 import java.io.File;
 
@@ -39,6 +40,10 @@ public class Friends extends Module {
         instance = this;
         LOGGER.log(Logger.Level.INFO, "Friends module has been successfully loaded!");
 
+    }
+
+    public static void disable() {
+        instance = null;
     }
 
     private void loadUtils() {
@@ -67,6 +72,8 @@ public class Friends extends Module {
         LOGGER.log(Logger.Level.INFO, "Loading Listeners...");
         PluginManager pluginManager = SkyWars.getInstance().getServer().getPluginManager();
         pluginManager.registerEvents(new PlayerJoinEvent(this), (Plugin)this.getPlugin());
+        pluginManager.registerEvents(new PlayerQuitEvent(this), (Plugin)this.getPlugin());
+
     }
 
     public FriendRequestManager getFriendRequestManager() {

@@ -24,7 +24,7 @@ import org.twightlight.skywars.cmd.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.MinecraftVersion;
 
 @SuppressWarnings("deprecation")
@@ -202,4 +202,6 @@ public class EntityListener implements Listener {
             }
         }
     }
+
+
 }

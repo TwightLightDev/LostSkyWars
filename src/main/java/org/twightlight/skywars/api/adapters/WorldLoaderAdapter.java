@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public abstract class WorldLoaderAdapter {
     private final Plugin plugin;
@@ -23,7 +23,6 @@ public abstract class WorldLoaderAdapter {
     }
 
     public abstract CompletableFuture<Void> load(String world);
-
 
     public abstract void unload(String world);
 
@@ -42,6 +41,8 @@ public abstract class WorldLoaderAdapter {
     public abstract CompletableFuture<Void> cloneArenaWorld(String worldName1, String worldName);
 
     public abstract List<String> getWorldsList();
+
+    public abstract boolean importWorld(World paramString);
 
     public abstract String getDisplayName();
 }

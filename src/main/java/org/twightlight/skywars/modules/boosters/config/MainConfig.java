@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.boosters.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 
 public class MainConfig extends YamlWrapper {
     public MainConfig(Plugin pl, String name, String dir) {
@@ -16,6 +16,11 @@ public class MainConfig extends YamlWrapper {
         yml.addDefault("general.queue.cap.8", "boosters.queue.8");
         yml.addDefault("general.queue.cap.5", "boosters.queue.5");
         yml.addDefault("general.queue.cap.3", "boosters.queue.3");
+        yml.addDefault("menus.size.mainmenu", 36);
+        yml.addDefault("menus.size.activating", 36);
+        yml.addDefault("menus.size.queue", 27);
+        yml.addDefault("menus.size.storage", 54);
+
         yml.options().copyDefaults(true);
         save();
     }

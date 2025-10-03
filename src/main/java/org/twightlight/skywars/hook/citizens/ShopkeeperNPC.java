@@ -9,13 +9,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.holograms.Hologram;
-import org.twightlight.skywars.holograms.Holograms;
+import org.twightlight.skywars.systems.holograms.Hologram;
+import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.hook.CitizensHook;
-import org.twightlight.skywars.particles.ParticleEffect;
+import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;

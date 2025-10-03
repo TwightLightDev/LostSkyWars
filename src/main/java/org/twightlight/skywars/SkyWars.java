@@ -14,7 +14,8 @@ import org.twightlight.skywars.cmd.Commands;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.SQLiteDatabase;
-import org.twightlight.skywars.holograms.Holograms;
+import org.twightlight.skywars.fun.customitems.CustomItemsManager;
+import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.hook.*;
 import org.twightlight.skywars.leaderboards.LeaderBoard;
 import org.twightlight.skywars.listeners.Listeners;
@@ -24,16 +25,15 @@ import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
-import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.rank.TagUtils;
-import org.twightlight.skywars.ranked.Ranked;
+import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.player.rank.TagUtils;
+import org.twightlight.skywars.player.ranked.Ranked;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
-import org.twightlight.skywars.ui.chest.ChestType;
-import org.twightlight.skywars.utils.Logger;
-import org.twightlight.skywars.utils.Logger.Level;
+import org.twightlight.skywars.arena.ui.chest.ChestType;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.MinecraftVersion;
-import org.twightlight.skywars.well.AngelOfDeath;
-import org.twightlight.skywars.well.WellNPC;
+import org.twightlight.skywars.systems.well.AngelOfDeath;
+import org.twightlight.skywars.systems.well.WellNPC;
 import org.twightlight.skywars.arena.Arena;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class SkyWars extends JavaPlugin {
 
     private static SkyWars instance;
     private static boolean validInit;
-    public static boolean citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, guilds = true, we = true;
+    public static boolean packetevents = true, citizens = true, lostparties = true, lostboxes = true, vault = true, placeholderapi = true, battlepass = true, protocollib = true, decentHolograms = true, guilds = true, we = true;
     public static Object economy;
     public static final Logger LOGGER = new Logger();
     private WorldLoaderAdapter adapter;
@@ -56,6 +56,7 @@ public class SkyWars extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        setupPacketEvents();
         if (!this.getConfig().contains("servermode")) {
             this.getConfig().set("servermode", CoreMode.MULTI_ARENA.name());
             saveConfig();
@@ -98,8 +99,9 @@ public class SkyWars extends JavaPlugin {
             modules.mkdirs();
         }
         Rank.setupRanks();
-        org.twightlight.skywars.level.Level.setupLevels();
+        org.twightlight.skywars.player.level.Level.setupLevels();
         Ranked.setupRanked();
+        CustomItemsManager.load();
         new PrivateGames();
         new RecentGames();
         new Friends();
@@ -128,6 +130,7 @@ public class SkyWars extends JavaPlugin {
         this.setupBattlePass();
         this.setupGuilds();
         this.setupWE();
+        this.setupDecentHolograms();
         if (MODE == CoreMode.MULTI_ARENA) {
             this.setupParties();
         } else {
@@ -182,6 +185,19 @@ public class SkyWars extends JavaPlugin {
                 account.destroy();
             });
 
+            if (decentHolograms) {
+                DecentHologramsHook.disable();
+            }
+
+            Boosters.disable();
+            Friends.disable();
+            LobbySettings.disable();
+            PrivateGames.disable();
+            RecentGames.disable();
+            CustomItemsManager.disable();
+            if (packetevents) {
+                PacketEventsHook.disable();
+            }
             HandlerList.unregisterAll(this);
             Bukkit.getScheduler().cancelTasks(this);
         }
@@ -255,8 +271,27 @@ public class SkyWars extends JavaPlugin {
             Class.forName("io.github.battlepass.BattlePlugin");
             BattlePassHook.setupBattlePass();
         } catch (ClassNotFoundException ex) {
-            battlepass = false;
             LOGGER.log(Level.WARNING, "BattlePass not found, disabling support.");
+        }
+    }
+
+    private void setupDecentHolograms() {
+        try {
+            Class.forName("eu.decentsoftware.holograms.plugin.DecentHologramsPlugin");
+            Bukkit.getScheduler().runTaskLater(this, DecentHologramsHook::setupDecentHolograms, 100L);
+        } catch (ClassNotFoundException ex) {
+            decentHolograms = false;
+            LOGGER.log(Level.WARNING, "DecentHolograms not found, disabling support.");
+        }
+    }
+
+    private void setupPacketEvents() {
+        if (Bukkit.getPluginManager().getPlugin("packetevents") != null) {
+            PacketEventsHook.setupPacketEvents();
+        } else {
+            packetevents = false;
+            LOGGER.log(Level.WARNING, "PacketEvents not found, disabling support.");
+
         }
     }
 

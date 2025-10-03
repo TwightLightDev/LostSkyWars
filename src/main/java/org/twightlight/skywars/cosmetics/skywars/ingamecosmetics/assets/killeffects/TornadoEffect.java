@@ -7,7 +7,7 @@ import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.libs.xseries.XSound;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
@@ -38,6 +38,30 @@ public class TornadoEffect extends SkyWarsKillEffect {
                         double z = Math.sin(Math.toRadians(90.0D * l + y * 30.0D - this.angle)) * radius;
                         double finalY = y;
                         ParticleType.of("CLOUD").spawn(location.getWorld(), location.clone().add(x, finalY, z), 1, 0, 0, 0, 0);
+                    }
+                }
+                this.angle++;
+                if (this.angle == 70)
+                    cancel();
+            }
+        }).runTaskTimer(SkyWars.getInstance(), 2L, 0L);
+    }
+
+    @Override
+    public void killEffectPreview(Player player, Location location) {
+        XSound.ENTITY_GENERIC_EXPLODE.play(location, 1.0F, 1.0F);
+        (new BukkitRunnable() {
+            int angle = 0;
+
+            public void run() {
+                for (int l = 0; l < 4; l++) {
+                    double y;
+                    for (y = 0.0D; y < 7.0D; y += 0.25D) {
+                        double radius = y * 0.42857142857142855D;
+                        double x = Math.cos(Math.toRadians(90.0D * l + y * 30.0D - this.angle)) * radius;
+                        double z = Math.sin(Math.toRadians(90.0D * l + y * 30.0D - this.angle)) * radius;
+                        double finalY = y;
+                        ParticleType.of("CLOUD").spawn(player, location.clone().add(x, finalY, z), 1, 0, 0, 0, 0);
                     }
                 }
                 this.angle++;

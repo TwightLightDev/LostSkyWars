@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cmd.SubCommand;
-import org.twightlight.skywars.well.AngelOfDeath;
+import org.twightlight.skywars.systems.well.AngelOfDeath;
 
 public class AODCommand extends SubCommand {
 

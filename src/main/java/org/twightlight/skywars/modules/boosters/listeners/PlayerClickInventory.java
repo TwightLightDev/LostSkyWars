@@ -4,19 +4,16 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.twightlight.skywars.modules.boosters.menus.utils.BMenu;
-import org.twightlight.skywars.modules.boosters.menus.utils.BMenuHolder;
-import org.twightlight.skywars.modules.libs.menus.ModulesMenu;
-import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;
-import org.twightlight.skywars.modules.privategames.menus.utils.PGMenuHolder;
+import org.twightlight.skywars.modules.api.menus.ModulesMenu;
+import org.twightlight.skywars.modules.api.menus.ModulesMenuHolder;
 
 public class PlayerClickInventory implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
-        if (e.getInventory().getHolder() instanceof BMenuHolder) {
+        if (e.getInventory().getHolder() instanceof ModulesMenuHolder) {
             e.setCancelled(true);
-            BMenuHolder holder = (BMenuHolder) e.getInventory().getHolder();
-            BMenu menu = holder.getMenu();
+            ModulesMenuHolder holder = (ModulesMenuHolder) e.getInventory().getHolder();
+            ModulesMenu menu = holder.getMenu();
 
             if (menu.hasItem(e.getRawSlot()) && e.getCurrentItem().getType() != Material.AIR) {
                 menu.getItem(e.getRawSlot()).getExecutable().execute(e);

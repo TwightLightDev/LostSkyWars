@@ -4,7 +4,7 @@ import io.github.battlepass.BattlePlugin;
 import net.advancedplugins.bp.impl.actions.ActionRegistry;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.battlepass.SkyWarsQuests;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class BattlePassHook {
     private static ActionRegistry actionRegistry = BattlePlugin.getPlugin().getActionRegistry();
@@ -14,4 +14,5 @@ public class BattlePassHook {
         LOGGER.log(Logger.Level.INFO, "BattlePass found, hooking...");
         actionRegistry.quest(SkyWarsQuests::new);
     }
+
 }

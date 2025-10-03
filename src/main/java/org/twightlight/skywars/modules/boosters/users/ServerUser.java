@@ -1,8 +1,8 @@
 package org.twightlight.skywars.modules.boosters.users;
 
-import org.twightlight.skywars.modules.boosters.boosters.Activating;
+import org.twightlight.skywars.modules.boosters.boosters.streams.Activating;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
-import org.twightlight.skywars.modules.boosters.boosters.Queue;
+import org.twightlight.skywars.modules.boosters.boosters.streams.Queue;
 
 public class ServerUser extends User {
     private static ServerUser user;
@@ -15,5 +15,9 @@ public class ServerUser extends User {
 
     public static ServerUser getServerUser() {
         return user;
+    }
+
+    public static void  remove() {
+        user = null;
     }
 }

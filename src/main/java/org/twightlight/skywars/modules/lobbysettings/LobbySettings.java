@@ -2,19 +2,22 @@ package org.twightlight.skywars.modules.lobbysettings;
 
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.modules.Module;
-import org.twightlight.skywars.modules.libs.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.lobbysettings.commands.LobbySettingsCommand;
 import org.twightlight.skywars.modules.lobbysettings.config.LangConfig;
 import org.twightlight.skywars.modules.lobbysettings.database.SQLite;
 import org.twightlight.skywars.modules.lobbysettings.listeners.ParticleReceiveEvent;
 import org.twightlight.skywars.modules.lobbysettings.listeners.PlayerJoinEvent;
+import org.twightlight.skywars.modules.lobbysettings.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.lobbysettings.listeners.WorldChangeEvent;
 import org.twightlight.skywars.modules.lobbysettings.papi.PlaceholderAPI;
-import org.twightlight.skywars.utils.Logger;
+import org.twightlight.skywars.Logger;
 
 public class LobbySettings extends Module {
     private static SQLite storage;
     private static YamlWrapper lang;
+    private static LobbySettingsCommand commandManager;
+    private static LobbySettings instance;
 
     public LobbySettings() {
         super("LobbySettings");
@@ -23,8 +26,23 @@ public class LobbySettings extends Module {
         initCommands();
         initConfig();
         new PlaceholderAPI().register();
+        instance = this;
         LOGGER.log(Logger.Level.INFO, "LobbySettings module has been successfully loaded!");
 
+    }
+
+    public static LobbySettings getInstance() {
+        return instance;
+    }
+
+    public static void disable() {
+        storage = null;
+
+        lang = null;
+
+        commandManager = null;
+
+        User.getUsers().clear();
     }
 
 
@@ -33,6 +51,8 @@ public class LobbySettings extends Module {
 
         Bukkit.getPluginManager().registerEvents(new PlayerJoinEvent(), getPlugin());
         Bukkit.getPluginManager().registerEvents(new WorldChangeEvent(), getPlugin());
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitEvent(), getPlugin());
+
         ParticleReceiveEvent.init();
     }
 
@@ -45,7 +65,7 @@ public class LobbySettings extends Module {
     private void initCommands() {
         LOGGER.log(Logger.Level.INFO, "Loading Commands...");
 
-        new LobbySettingsCommand();
+        commandManager = new LobbySettingsCommand();
     }
 
     public static SQLite getDatabase() {
@@ -59,5 +79,9 @@ public class LobbySettings extends Module {
 
     public static YamlWrapper getLanguage() {
         return lang;
+    }
+
+    public static LobbySettingsCommand getCommandManager() {
+        return commandManager;
     }
 }

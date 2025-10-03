@@ -1,10 +1,13 @@
 author: Twightlightdev
 name: LostSkyWars
 version: 2.4.26
-softdepend: [ Vault, Citizens, LostParties, LostBoxes, TwightLightCore ]
+softdepend: [packetevents,  Vault, Citizens, LostParties, LostBoxes, TwightLightCore, Guilds, EpicAchievements, DecentHolograms, WorldEdit ]
 
 main: org.twightlight.skywars.SkyWars
 commands:
   friend:
     aliases: [friends, f]
+    description: ''
+  funitems:
+    aliases: [ funitem, customitems, customitem ]
     description: ''

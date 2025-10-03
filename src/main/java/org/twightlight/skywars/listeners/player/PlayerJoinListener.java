@@ -12,8 +12,8 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.rank.Rank;
-import org.twightlight.skywars.rank.TagUtils;
+import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.player.rank.TagUtils;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
 import org.twightlight.skywars.arena.Arena;
@@ -23,6 +23,7 @@ public class PlayerJoinListener extends Listeners {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent evt) {
         Player player = evt.getPlayer();
+        player.removeMetadata("frozen", SkyWars.getInstance());
         evt.setJoinMessage(null);
 
         TagUtils.sendTeams(player);

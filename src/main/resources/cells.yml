@@ -24,6 +24,9 @@ extras:
  description-locked:
  - '&7Select the {name} Cage.'
  - ''
+ - '&eLeft-Click to preview small form!'
+ - '&eRight-Click to preview big form!'
+ - ''
  - '&7Rarity: {rarity}'
  - ''
  - '&bCan be found on Soul Well.'
