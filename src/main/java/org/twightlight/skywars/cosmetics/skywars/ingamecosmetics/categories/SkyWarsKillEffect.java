@@ -1,17 +1,14 @@
 package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories;
 
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientEntityAction;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityAnimation;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityStatus;
 import net.citizensnpcs.api.ai.event.NavigationCompleteEvent;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.trait.Gravity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
@@ -22,7 +19,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
-import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.*;
@@ -75,34 +71,18 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
         klocation.getChunk().load();
         vlocation.getChunk().load();
 
-        Map<Block, Material> affectedBlocks = new HashMap<>();
-
-        World world = klocation.getWorld();
-
-        int minX = Math.min(klocation.getBlockX(), vlocation.getBlockX());
-        int maxX = Math.max(klocation.getBlockX(), vlocation.getBlockX());
-        int minZ = Math.min(klocation.getBlockZ(), vlocation.getBlockZ());
-        int maxZ = Math.max(klocation.getBlockZ(), vlocation.getBlockZ());
-
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                affectedBlocks.put(world.getBlockAt(x, klocation.getBlockY()-1, z), world.getBlockAt(x, klocation.getBlockY()-1, z).getType());
-                world.getBlockAt(x, klocation.getBlockY()-1, z).setType(Material.BARRIER);
-
-            }
-        }
-
         NPC killerNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewKillerNPC");
         killerNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
         killerNPC.setFlyable(true);
 
-        killerNPC.addTrait(Equipment.class);
-        killerNPC.getTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD));
+        killerNPC.getOrAddTrait(Gravity.class).gravitate(true);
+        killerNPC.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD));
         killerNPC.setName("KillEffectsPreviewKillerNPC");
         killerNPC.spawn(klocation);
 
         NPC victimNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewVictimNPC");
         victimNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
+        victimNPC.getOrAddTrait(Gravity.class).gravitate(true);
         victimNPC.setFlyable(true);
         victimNPC.setName("KillEffectsPreviewVictimNPC");
         victimNPC.spawn(vlocation);
@@ -137,11 +117,6 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
             npcSkyWarsKillEffectMap.remove(killerNPC);
             killerNPC.destroy();
 
-            for (Block block : affectedBlocks.keySet()) {
-
-                block.setType(affectedBlocks.get(block));
-
-            }
         });
     }
 
