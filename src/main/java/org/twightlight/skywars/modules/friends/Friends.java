@@ -4,6 +4,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.friends.commands.FriendCmd;
@@ -14,7 +15,6 @@ import org.twightlight.skywars.modules.friends.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.friends.user.UserManager;
 import org.twightlight.skywars.modules.friends.utils.MessageUtil;
 import org.twightlight.skywars.modules.friends.utils.StorageUtil;
-import org.twightlight.skywars.Logger;
 
 import java.io.File;
 

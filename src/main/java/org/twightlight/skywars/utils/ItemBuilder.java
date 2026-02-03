@@ -470,13 +470,25 @@ public class ItemBuilder {
     }
 
     public static ItemBuilder parse(YamlConfiguration yml, String path) {
-        XMaterial material = XMaterial.valueOf(yml.getString(path + ".material", "BEDROCK"));
-        ItemBuilder builder = new ItemBuilder(material);
+        ItemBuilder builder;
+        try {
+            XMaterial material = XMaterial.valueOf(yml.getString(path + ".material", "BEDROCK"));
+            builder = new ItemBuilder(material);
+        } catch (Exception e) {
+            try {
+                Material material = Material.valueOf(yml.getString(path + ".material", "BEDROCK"));
+                builder = new ItemBuilder(material);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                builder = new ItemBuilder(XMaterial.BEDROCK);
+            }
+        }
+
         if (yml.contains(path + ".name")) {
             builder = builder.setName(yml.getString(path + ".name"));
         }
         if (yml.contains(path + ".data")) {
-            builder = builder.setDurability(Short.parseShort(yml.getString(path + ".name")));
+            builder = builder.setDurability(Short.parseShort(yml.getString(path + ".data")));
         }
         if (yml.contains(path + ".dye_color")) {
             builder = builder.setDyeColor(DyeColor.valueOf(yml.getString(path + ".dye_color")));
@@ -518,7 +530,7 @@ public class ItemBuilder {
             builder = builder.setName(yml.getString(path + ".name"));
         }
         if (yml.contains(path + ".data")) {
-            builder = builder.setDurability(Short.parseShort(yml.getString(path + ".name")));
+            builder = builder.setDurability(Short.parseShort(yml.getString(path + ".data")));
         }
         if (yml.contains(path + ".dye_color")) {
             builder = builder.setDyeColor(DyeColor.valueOf(yml.getString(path + ".dye_color")));

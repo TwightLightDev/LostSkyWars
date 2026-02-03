@@ -1,10 +1,17 @@
 package org.twightlight.skywars.cosmetics;
 
 import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.util.Vector3i;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerPositionAndRotation;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.google.common.reflect.TypeToken;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
@@ -13,14 +20,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.PacketEventsHook;
@@ -28,7 +34,6 @@ import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
-import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -64,8 +69,6 @@ public abstract class PreviewableCosmetic extends Cosmetic {
                 }
                 Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location."+ getType().getPreviewID()));
 
-                new PreviewSession(this, player, playerLocation, player.getLocation(), duration, returns, order, filter, searchQuery);
-
                 XMaterial xMaterial = XMaterial.BARRIER;
                 MaterialData matdata = xMaterial.parseItem().getData();
 
@@ -76,9 +79,15 @@ public abstract class PreviewableCosmetic extends Cosmetic {
                                 (int) playerLocation.getY()-1,
                                 (int) playerLocation.getZ()), id);
 
+
                 PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
 
-                preview(player, objects);
+                new PreviewSession(this, player, playerLocation, player.getLocation(), duration, returns, order, filter, searchQuery);
+
+                Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+                    preview(player, objects);
+                }, 20L);
+
             } catch (Exception e) {
                 player.sendMessage(StringUtils.formatColors("&cPlayer's location not found or cosmetic's location is missing!"));
                 e.printStackTrace();
@@ -112,22 +121,26 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
             previewLoc.getChunk().load(true);
             GameMode gameMode = player.getGameMode();
-            int standID = summonCameraStand(player, previewLoc);
             player.teleport(previewLoc);
-            player.setMetadata("frozen", new FixedMetadataValue(SkyWars.getInstance(), true));
+            int standID = summonCameraStand(player, previewLoc);
+
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+
                 setGameMode(player, GameMode.SPECTATOR);
 
-                WrapperPlayServerCamera playPreviewCamera = new WrapperPlayServerCamera(standID);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, playPreviewCamera);
                 ItemStack[] itemStacks = player.getInventory().getContents();
                 ItemStack[] armors = player.getInventory().getArmorContents();
                 player.getInventory().clear();
                 player.updateInventory();
-                player.removeMetadata("frozen", SkyWars.getInstance());
+                WrapperPlayServerCamera playPreviewCamera = new WrapperPlayServerCamera(standID);
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, playPreviewCamera);
                 Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                     sessionUUID.remove(player.getUniqueId());
                     sessionCosmeticType.get(cosmetic.getType()).remove(this);
+
+                    if (!player.isOnline()) {
+                        return;
+                    }
                     Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location." + cosmetic.getType().getPreviewID()));
 
                     XMaterial xMaterial = XMaterial.AIR;
@@ -184,7 +197,7 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
 
                 }, duration);
-            }, 2L);
+            }, 10L);
         }
 
         @SafeVarargs
@@ -202,8 +215,6 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
     private static void removeCameraStand(Player player, int entityID) {
 
-
-
         WrapperPlayServerDestroyEntities destroyEntities = new WrapperPlayServerDestroyEntities(entityID);
         PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, destroyEntities);
 
@@ -213,18 +224,42 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
         UUID uuid = UUID.randomUUID();
         int entityId = SpigotReflectionUtil.generateEntityId();
-        com.github.retrooper.packetevents.protocol.world.Location location1 = new com.github.retrooper.packetevents.protocol.world.Location(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        com.github.retrooper.packetevents.protocol.world.Location location1 = new com.github.retrooper.packetevents.protocol.world.Location(
+                location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 
-        WrapperPlayServerSpawnEntity standPacket = new WrapperPlayServerSpawnEntity(entityId, uuid, EntityTypes.ARMOR_STAND, location1, location1.getYaw(), 0, null);
-        WrapperPlayServerEntityTeleport teleport = new WrapperPlayServerEntityTeleport(entityId, location1, true);
+        WrapperPlayServerSpawnEntity standPacket = new WrapperPlayServerSpawnEntity(
+                entityId, uuid, EntityTypes.ARMOR_STAND, location1, location.getYaw(), 0, null);
 
         EntityData<Byte> entityData = new EntityData<>(0, EntityDataTypes.BYTE, (byte) 0x20);
+        WrapperPlayServerEntityMetadata entityMetadata = new WrapperPlayServerEntityMetadata(entityId, Arrays.asList(entityData));
 
-        WrapperPlayServerEntityMetadata entityMetadata = new WrapperPlayServerEntityMetadata(entityId, Collections.singletonList(entityData));
+        WrapperPlayServerEntityHeadLook headLook = new WrapperPlayServerEntityHeadLook(entityId, location.getYaw());
+
+        WrapperPlayServerEntityTeleport teleport = new WrapperPlayServerEntityTeleport(entityId, location1, false);
 
         PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, standPacket);
+        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, headLook);
         PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, entityMetadata);
         PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, teleport);
+
+        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, headLook);
+        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, teleport);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!sessionUUID.containsKey(p.getUniqueId()) || !p.isOnline()) {
+                    this.cancel();
+                    return;
+                }
+
+                WrapperPlayServerEntityTeleport tp = new WrapperPlayServerEntityTeleport(entityId, location1, false);
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, tp);
+
+                WrapperPlayServerEntityHeadLook hl = new WrapperPlayServerEntityHeadLook(entityId, location.getYaw());
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, hl);
+            }
+        }.runTaskTimerAsynchronously(SkyWars.getInstance(), 10L, 1L);
 
         return entityId;
     }
@@ -248,5 +283,24 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
     public static ConfigUtils getPreviewConfig() {
         return PREVIEWCONFIG;
+    }
+
+    public static class NoInteraction implements PacketListener {
+
+        @Override
+        public void onPacketReceive(PacketReceiveEvent event) {
+            com.github.retrooper.packetevents.protocol.player.User user = event.getUser();
+
+            if (!sessionUUID.containsKey(user.getUUID())) {
+                return;
+            }
+
+            if (event.getPacketType() == PacketType.Play.Client.INTERACT_ENTITY ||
+                    event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION ||
+                    event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION ||
+                    event.getPacketType() == PacketType.Play.Client.PLAYER_ROTATION) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

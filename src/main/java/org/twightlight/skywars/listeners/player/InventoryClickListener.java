@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.cmd.sw.BuildCommand;
+import org.twightlight.skywars.commands.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;

@@ -2,7 +2,6 @@ package org.twightlight.skywars.modules.boosters.api.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.users.User;
 

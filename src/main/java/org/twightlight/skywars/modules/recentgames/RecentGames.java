@@ -1,16 +1,15 @@
 package org.twightlight.skywars.modules.recentgames;
 
 import org.bukkit.Bukkit;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.MenuConfig;
-import org.twightlight.skywars.modules.privategames.config.LangConfig;
 import org.twightlight.skywars.modules.recentgames.commands.RecentGamesCommand;
 import org.twightlight.skywars.modules.recentgames.config.Menu;
 import org.twightlight.skywars.modules.recentgames.database.SQLite;
 import org.twightlight.skywars.modules.recentgames.hook.ReplayHook;
 import org.twightlight.skywars.modules.recentgames.listeners.*;
-import org.twightlight.skywars.Logger;
 
 public class RecentGames extends Module {
 

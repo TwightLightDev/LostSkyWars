@@ -5,14 +5,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
+import org.twightlight.skywars.modules.api.ModulesUser;
 import org.twightlight.skywars.modules.privategames.settings.*;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.arena.Arena;
 
 import java.util.*;
 
-public class User {
+public class User implements ModulesUser {
 
     UUID uuid;
     GameSpeedSetting gameSpeedSetting;

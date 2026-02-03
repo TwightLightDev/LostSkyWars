@@ -2,8 +2,8 @@ package org.twightlight.skywars.modules.boosters.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.boosters.boosters.Booster;
 
 public class BoostersConfig extends YamlWrapper {
 

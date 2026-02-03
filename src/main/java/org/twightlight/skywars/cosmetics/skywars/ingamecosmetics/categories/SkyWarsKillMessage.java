@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
@@ -15,7 +16,6 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;

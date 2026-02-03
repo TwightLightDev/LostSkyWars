@@ -1,8 +1,8 @@
 package org.twightlight.skywars.modules.recentgames;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.modules.recentgames.hook.ReplayData;
 import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.modules.recentgames.hook.ReplayData;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -2,7 +2,9 @@ package org.twightlight.skywars.modules.recentgames;
 
 import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.modules.api.ModulesUser;
 
 import java.util.*;
 
@@ -57,5 +59,16 @@ public class User {
 
     public static Map<UUID, User> getUsers() {
         return userMap;
+    }
+
+    public void sendMessage(String msg) {
+        Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+    }
+
+    public void sendMessage(List<String> msgs) {
+        Player p = Bukkit.getPlayer(uuid);
+        msgs.forEach(line -> {
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
+        });
     }
 }

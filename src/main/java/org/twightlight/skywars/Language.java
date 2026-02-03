@@ -1,15 +1,14 @@
 package org.twightlight.skywars;
 
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.leaderboards.LeaderBoardStats;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.bungee.Core;
+import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Field;
@@ -183,6 +182,13 @@ public class Language {
 
     public static String game$rewards_message$soul = "&b+{souls} Souls.";
 
+    public static String game$rewards_message$chat$single$coins = "&6+{coins} coin! {reason} {boosters}";
+    public static String game$rewards_message$chat$single$exp = "&d+{xp} SkyWars Experience! {reason}";
+    public static String game$rewards_message$chat$single$souls = "&d+{souls} Soul.";
+
+    public static String game$rewards_message$chat$plural$coins = "&6+{coins} coins! {reason} {boosters}";
+    public static String game$rewards_message$chat$plural$exp = "&d+{xp} SkyWars Experience! {reason}";
+    public static String game$rewards_message$chat$plural$souls = "&d+{souls} Souls";
 
     public static int game$countdown$start = 45;
     public static int game$countdown$full = 10;
@@ -369,7 +375,6 @@ public class Language {
         for (SkyWarsType type : SkyWarsType.values()) {
             type.translate();
         }
-        LeaderBoardStats.translate();
     }
 
     public static void reload() {

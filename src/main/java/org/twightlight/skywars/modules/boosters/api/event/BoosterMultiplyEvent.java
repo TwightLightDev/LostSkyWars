@@ -3,19 +3,22 @@ package org.twightlight.skywars.modules.boosters.api.event;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
+import org.twightlight.skywars.modules.boosters.boosters.BoosterData;
 import org.twightlight.skywars.modules.boosters.users.User;
 
-import java.awt.*;
+import java.util.List;
 
 public class BoosterMultiplyEvent extends Event {
     private User user;
     private Booster.Currency currency;
     private int totalProfit;
+    private List<BoosterData> boostersData;
 
-    public BoosterMultiplyEvent(Booster.Currency currency, User player, int totalProfit) {
+    public BoosterMultiplyEvent(Booster.Currency currency, User player, int totalProfit, List<BoosterData> boostersData) {
         this.user = player;
         this.currency = currency;
         this.totalProfit = totalProfit;
+        this.boostersData = boostersData;
     }
 
     public int getTotalProfit() {
@@ -28,6 +31,10 @@ public class BoosterMultiplyEvent extends Event {
 
     public User getUser() {
         return user;
+    }
+
+    public List<BoosterData> getBoostersData() {
+        return boostersData;
     }
 
     @Override

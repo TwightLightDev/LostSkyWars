@@ -1,7 +1,8 @@
 package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories;
 
 import com.github.retrooper.packetevents.util.Vector3i;
-import com.github.retrooper.packetevents.wrapper.play.server.*;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerBlockChange;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDestroyEntities;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import org.bukkit.Location;
@@ -14,21 +15,27 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.*;
+import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.RenderUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class SkyWarsSpray extends PreviewableCosmetic {
 

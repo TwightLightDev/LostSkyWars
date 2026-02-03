@@ -1,6 +1,7 @@
 package org.twightlight.skywars.fun.customitems.assets;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -100,7 +101,8 @@ public class VoidBlock extends FunItem {
         if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
             event.setCancelled(true);
             player.setVelocity(new Vector(0, 100, 0));
-
+            Location loc = player.getLocation();
+            player.teleport(new Location(loc.getWorld(), loc.getX(), loc.getY() + 20, loc.getZ()));
             UUID uuid = player.getUniqueId();
             activateList.add(uuid);
 

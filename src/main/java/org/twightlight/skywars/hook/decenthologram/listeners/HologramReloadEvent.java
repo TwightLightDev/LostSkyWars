@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.hook.DecentHologramsHook;
+import org.twightlight.skywars.hook.decenthologram.DecentHologramsHook;
 import org.twightlight.skywars.hook.decenthologram.User;
 
 public class HologramReloadEvent implements Listener {

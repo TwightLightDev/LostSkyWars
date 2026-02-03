@@ -9,9 +9,6 @@ import org.bukkit.event.Listener;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.recentgames.GameData;
 import org.twightlight.skywars.modules.recentgames.User;
-import org.twightlight.skywars.utils.FileUtils;
-
-import java.io.File;
 
 public class ReplayFinishEvent implements Listener {
     @EventHandler

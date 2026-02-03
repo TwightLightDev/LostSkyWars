@@ -1,10 +1,8 @@
 package org.twightlight.skywars.modules.lobbysettings.papi;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 
 public class PlaceholderAPI extends PlaceholderExpansion {

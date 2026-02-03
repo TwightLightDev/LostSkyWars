@@ -1,10 +1,13 @@
 package org.twightlight.skywars.modules.boosters.commands.subcommands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.twightlight.skywars.modules.api.ModulesUser;
 import org.twightlight.skywars.modules.api.cmds.SubCommand;
-import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
-import org.twightlight.skywars.modules.lobbysettings.User;
+import org.twightlight.skywars.modules.boosters.Boosters;
+import org.twightlight.skywars.modules.boosters.users.PlayerUser;
+import org.twightlight.skywars.modules.lobbysettings.papi.PlaceholderAPI;
 
 import java.util.List;
 
@@ -19,22 +22,23 @@ public class Help extends SubCommand {
     }
 
     @Override
-    public void sendUsage(User user) {
+    public void sendUsage(ModulesUser user) {
 
     }
-
     @Override
-    public boolean execute(User user, String[] args) {
-        List<String> list = LobbySettings.getLanguage().getList("messages.commands.help");
+    public boolean execute(Player user, String[] args) {
+        List<String> list = Boosters.getLanguage().getList("messages.commands.help");
         for (String help : list) {
             if (help.contains("{cmds}")) {
-                for (SubCommand sc : LobbySettings.getCommandManager().getSubCommands()) {
-                    if (Bukkit.getPlayer(user.getUUID()).hasPermission(sc.getPermission()) || sc.getPermission() == null) {
-                        sc.sendUsage(user);
+                help = help.replace("{cmds}", "");
+
+                for (SubCommand sc : Boosters.getCommandManager().getSubCommands()) {
+                    if (sc.getPermission() == null || user.hasPermission(sc.getPermission()) || sc.getPermission() == null) {
+                        sc.sendUsage(PlayerUser.getFromUUID(user.getUniqueId()));
                     }
                 }
             }
-            user.sendMessage(help);
+            PlayerUser.getFromUUID(user.getUniqueId()).sendMessage(help);
         }
         return true;
     }

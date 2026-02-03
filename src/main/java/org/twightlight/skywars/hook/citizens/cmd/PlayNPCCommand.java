@@ -4,15 +4,15 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cmd.SubCommand;
+import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.hook.citizens.DuelsNPC;
 import org.twightlight.skywars.hook.citizens.PlayNPC;
 import org.twightlight.skywars.hook.citizens.RankedNPC;
 import org.twightlight.skywars.mojang.InvalidMojangException;
 import org.twightlight.skywars.mojang.Mojang;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 
 public class PlayNPCCommand extends SubCommand {
 

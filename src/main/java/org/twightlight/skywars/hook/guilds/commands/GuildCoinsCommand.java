@@ -6,10 +6,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.hook.GuildsHook;
-import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.hook.guilds.GuildsHook;
+import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
 import java.util.Arrays;

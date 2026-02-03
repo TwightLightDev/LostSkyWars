@@ -1,18 +1,11 @@
 package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.killeffects;
 
-import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSpawnEntity;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
-import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
-import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-
-import java.util.UUID;
 
 
 public class LightningStrikeEffect extends SkyWarsKillEffect {

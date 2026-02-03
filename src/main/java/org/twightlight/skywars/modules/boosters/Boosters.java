@@ -1,27 +1,30 @@
 package org.twightlight.skywars.modules.boosters;
 
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.modules.Module;
+import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.commands.BoostersCommand;
 import org.twightlight.skywars.modules.boosters.config.BoostersConfig;
+import org.twightlight.skywars.modules.boosters.config.LangConfig;
 import org.twightlight.skywars.modules.boosters.config.MainConfig;
+import org.twightlight.skywars.modules.boosters.config.MenuConfig;
+import org.twightlight.skywars.modules.boosters.database.SQLite;
+import org.twightlight.skywars.modules.boosters.listeners.PlayerClickInventory;
+import org.twightlight.skywars.modules.boosters.listeners.PlayerJoinEvent;
 import org.twightlight.skywars.modules.boosters.listeners.PlayerQuitEvent;
+import org.twightlight.skywars.modules.boosters.listeners.SkyWars;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.users.ServerUser;
-import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
-import org.twightlight.skywars.modules.boosters.config.LangConfig;
-import org.twightlight.skywars.modules.boosters.database.SQLite;
-import org.twightlight.skywars.modules.boosters.listeners.PlayerJoinEvent;
-import org.twightlight.skywars.modules.boosters.listeners.SkyWars;
-import org.twightlight.skywars.Logger;
 
 public class Boosters extends Module {
     private static SQLite database;
     private static YamlWrapper lang;
     private static YamlWrapper config;
     private static YamlWrapper bconfig;
-
+    private static YamlWrapper menu;
     private static Boosters instance;
-    private BoostersCommand commandManager;
+    private static BoostersCommand commandManager;
     public Boosters() {
         super("Boosters");
         instance = this;
@@ -30,6 +33,7 @@ public class Boosters extends Module {
         initDatabase();
         initCommands();
         initServerUser();
+        BoosterManager.init();
         LOGGER.log(Logger.Level.INFO, "Boosters module has been successfully loaded!");
 
     }
@@ -54,6 +58,8 @@ public class Boosters extends Module {
         this.registerEvents(new PlayerJoinEvent());
         this.registerEvents(new SkyWars());
         this.registerEvents(new PlayerQuitEvent());
+        this.registerEvents(new PlayerClickInventory());
+
     }
 
     private void initDatabase() {
@@ -64,7 +70,7 @@ public class Boosters extends Module {
 
     private void initCommands() {
         LOGGER.log(Logger.Level.INFO, "Loading Commands...");
-
+        commandManager = new BoostersCommand();
     }
 
     public static SQLite getDatabase() {
@@ -80,6 +86,8 @@ public class Boosters extends Module {
         lang = new LangConfig(getPlugin(), "language", getPlugin().getDataFolder().getPath() + "/modules/boosters");
         config = new MainConfig(getPlugin(), "config", getPlugin().getDataFolder().getPath() + "/modules/boosters");
         bconfig = new BoostersConfig(getPlugin(), "boosters", getPlugin().getDataFolder().getPath() + "/modules/boosters");
+        menu = new MenuConfig(getPlugin(), "menu", getPlugin().getDataFolder().getPath() + "/modules/boosters", "boosters");
+        menu.reload();
     }
 
     public static YamlWrapper getLanguage() {
@@ -94,7 +102,12 @@ public class Boosters extends Module {
         return bconfig;
     }
 
-    public BoostersCommand getCommandManager() {
+    public static BoostersCommand getCommandManager() {
         return commandManager;
     }
+
+    public static YamlWrapper getMenuConfig() {
+        return menu;
+    }
+
 }

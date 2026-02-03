@@ -1,9 +1,9 @@
 package org.twightlight.skywars.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import org.twightlight.skywars.bungee.server.ServerManager;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.bungee.server.ServerManager;
 
 public class Bungee extends Plugin {
 

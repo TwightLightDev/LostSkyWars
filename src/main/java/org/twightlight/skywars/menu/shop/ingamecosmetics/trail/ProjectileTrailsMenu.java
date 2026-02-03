@@ -22,7 +22,6 @@ import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
-import org.twightlight.skywars.menu.shop.ingamecosmetics.spray.SpraysMenu;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.setup.ChatSession;

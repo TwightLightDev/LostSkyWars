@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cmd.SubCommand;
+import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.hook.citizens.DeliveryNPC;
 import org.twightlight.skywars.mojang.InvalidMojangException;
 import org.twightlight.skywars.mojang.Mojang;

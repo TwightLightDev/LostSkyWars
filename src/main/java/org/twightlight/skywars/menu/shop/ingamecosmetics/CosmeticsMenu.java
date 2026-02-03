@@ -13,7 +13,6 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
@@ -29,6 +28,7 @@ import org.twightlight.skywars.menu.shop.ingamecosmetics.title.TitlesMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.trail.ProjectileTrailsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.victorydance.VictoryDancesMenu;
 import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 

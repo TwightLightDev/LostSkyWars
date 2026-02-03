@@ -5,12 +5,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.Arrays;
 

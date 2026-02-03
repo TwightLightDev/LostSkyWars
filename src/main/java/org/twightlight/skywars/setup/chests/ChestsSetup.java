@@ -11,8 +11,8 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.setup.ChatSession;
 import org.twightlight.skywars.setup.InventoryHolder;
 import org.twightlight.skywars.setup.Menu;
-import org.twightlight.skywars.setup.chests.content_fills.Regular;
 import org.twightlight.skywars.setup.chests.content_fills.Guaranteed;
+import org.twightlight.skywars.setup.chests.content_fills.Regular;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.ItemBuilder;
@@ -26,9 +26,6 @@ public class ChestsSetup extends Menu {
 
     private ConfigUtils config;
     private String path;
-    private final List<String> rarities = Arrays.stream(CosmeticRarity.values())
-            .map(CosmeticRarity::getUncoloredName)
-            .collect(Collectors.toList());
 
     private ChestsSetup(ConfigUtils config, String path) {
         super(45, true);

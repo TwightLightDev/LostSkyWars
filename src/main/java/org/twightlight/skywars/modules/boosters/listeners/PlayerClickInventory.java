@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.twightlight.skywars.modules.api.menus.ModulesMenu;
 import org.twightlight.skywars.modules.api.menus.ModulesMenuHolder;
+import org.twightlight.skywars.modules.boosters.menus.utils.BMenu;
 
 public class PlayerClickInventory implements Listener {
     @EventHandler
@@ -15,7 +16,7 @@ public class PlayerClickInventory implements Listener {
             ModulesMenuHolder holder = (ModulesMenuHolder) e.getInventory().getHolder();
             ModulesMenu menu = holder.getMenu();
 
-            if (menu.hasItem(e.getRawSlot()) && e.getCurrentItem().getType() != Material.AIR) {
+            if (menu instanceof BMenu && menu.hasItem(e.getRawSlot()) && e.getCurrentItem().getType() != Material.AIR) {
                 menu.getItem(e.getRawSlot()).getExecutable().execute(e);
             }
         }

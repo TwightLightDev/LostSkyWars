@@ -36,6 +36,36 @@ public class TimeUtils {
         return cooldown.getTimeInMillis();
     }
 
+    public static String convertTime(long epoch, String... textSet) {
+        long ms = epoch / 1000;
+        if (ms <= 0) {
+            return "Expired";
+        }
+
+        String result = "";
+        long days = ms / 86400;
+        if (days > 0) {
+            result += days + textSet[0] + (days > 1 ? "s" : "") + " ";
+            ms -= days * 86400;
+        }
+        long hours = ms / 3600;
+        if (hours > 0) {
+            result += hours + textSet[1] + (hours > 1 ? "s" : "") + " ";
+            ms -= hours * 3600;
+        }
+        long minutes = ms / 60;
+        if (minutes > 0) {
+            result += minutes + textSet[2] + (minutes > 1 ? "s" : "") + " ";
+            ms -= minutes * 60;
+        }
+        if (ms > 0) {
+            result += ms + textSet[3] + (ms > 1 ? "s" : "") + " ";
+            ms -= ms;
+        }
+
+        return result.substring(0, result.length() - 1);
+    }
+
     public static String getTimeUntil(long epoch) {
         epoch -= System.currentTimeMillis();
         long ms = epoch / 1000;

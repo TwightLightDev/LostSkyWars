@@ -3,9 +3,9 @@ package org.twightlight.skywars.modules.boosters.boosters;
 import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.TimeUtils;
 
 import java.util.*;
@@ -16,6 +16,7 @@ public class BoosterManager {
         if (player != null && player.isOnline()) {
             PlayerUser user = PlayerUser.getFromUUID(player.getUniqueId());
             user.addBooster(booster.getId());
+            user.save();
         } else {
             Boosters.getDatabase().getOfflineData(name, booster.getType().getStorageColumn(), new TypeToken<List<String>>() {
             }, new ArrayList<>()).thenAccept((o) -> {
@@ -42,7 +43,7 @@ public class BoosterManager {
 
     public static String getDurationString(Booster booster) {
         int duration = booster.getDuration();
-        return TimeUtils.getTimeUntil(duration * 1000L, "Day", "Hour", "Minute", "Seconds");
+        return TimeUtils.convertTime(duration * 1000L, " Day", " Hour", " Minute", " Second");
     }
 
     public static String getAmplifierString(Booster booster) {

@@ -5,11 +5,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.jline.internal.InputStreamReader;
 import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.Logger.Level;
 
 import java.io.*;
 import java.util.*;

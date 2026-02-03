@@ -1,6 +1,7 @@
 package org.twightlight.skywars.player.level;
 
 import com.google.common.collect.ImmutableList;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -9,7 +10,6 @@ import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.io.File;

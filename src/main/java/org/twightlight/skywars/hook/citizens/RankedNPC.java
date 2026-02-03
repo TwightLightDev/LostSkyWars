@@ -2,29 +2,29 @@ package org.twightlight.skywars.hook.citizens;
 
 import com.google.common.collect.ImmutableList;
 import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.hook.CitizensHook;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.twightlight.skywars.hook.CitizensHook.LOGGER;
+import static org.twightlight.skywars.hook.citizens.CitizensHook.LOGGER;
 
 public class RankedNPC {
 
@@ -63,10 +63,9 @@ public class RankedNPC {
         }
         this.npc = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "§8[NPC] ");
         this.npc.data().setPersistent("ranked-npc", "ranked");
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_UUID_METADATA, "[npc] ");
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_USE_LATEST, false);
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA, Language.lobby$npcs$ranked$skin_value);
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA, Language.lobby$npcs$ranked$skin_signature);
+        this.npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("[npc] ",
+                Language.lobby$npcs$ranked$skin_value,
+                Language.lobby$npcs$ranked$skin_signature);
         npc.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
         this.npc.spawn(location);
     }

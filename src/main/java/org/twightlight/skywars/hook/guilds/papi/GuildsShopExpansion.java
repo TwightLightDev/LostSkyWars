@@ -4,7 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.hook.guilds.donation.Donator;
 
 public class GuildsShopExpansion extends PlaceholderExpansion {
 

@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.hook.GuildsHook;
+import org.twightlight.skywars.hook.guilds.GuildsHook;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
 import org.twightlight.skywars.hook.guilds.menus.api.GMenu;
 import org.twightlight.skywars.hook.guilds.menus.api.Item;

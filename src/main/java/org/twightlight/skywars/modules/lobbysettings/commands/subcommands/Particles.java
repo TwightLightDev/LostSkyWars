@@ -1,9 +1,12 @@
 package org.twightlight.skywars.modules.lobbysettings.commands.subcommands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.twightlight.skywars.modules.api.ModulesUser;
+import org.twightlight.skywars.modules.api.cmds.SubCommand;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
-import org.twightlight.skywars.modules.api.cmds.SubCommand;
 
 public class Particles extends SubCommand {
     public Particles(Permission permission) {
@@ -16,13 +19,15 @@ public class Particles extends SubCommand {
     }
 
     @Override
-    public void sendUsage(User user) {
+    public void sendUsage(ModulesUser user) {
         user.sendMessage(LobbySettings.getLanguage().getString("lobbysettings."+getSubCommand()+".usage"));
 
     }
 
     @Override
-    public boolean execute(User user, String[] args) {
+    public boolean execute(Player player, String[] args) {
+        User user = User.getFromUUID(player.getUniqueId());
+
         if (args.length < 1) {
             sendUsage(user);
             return true;

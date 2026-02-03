@@ -2,11 +2,11 @@ package org.twightlight.skywars.database;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;

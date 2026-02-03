@@ -3,18 +3,18 @@ package org.twightlight.skywars.api;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.type.Duels;
 import org.twightlight.skywars.arena.type.solo.Solo;
 import org.twightlight.skywars.arena.type.solo.SoloRanked;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.rank.Rank;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
-import org.twightlight.skywars.arena.Arena;
 
 public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
 

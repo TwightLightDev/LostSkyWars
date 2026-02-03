@@ -20,16 +20,16 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.PacketEventsHook;
-import org.twightlight.skywars.hook.WorldEditHook;
+import org.twightlight.skywars.hook.worldedit.WorldEditHook;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,9 +80,8 @@ public class SkyWarsCage extends PreviewableCosmetic {
         if (type == CageType.STATIC) {
             applyStatic(location, isBig);
         } else {
-            applyDynamic(p, location, isBig);
+            applyAnimated(p, location, isBig);
         }
-
 
     }
 
@@ -115,7 +114,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
         }
     }
 
-    public void applyDynamic(Player p, Location location, boolean isBig) {
+    public void applyAnimated(Player p, Location location, boolean isBig) {
         List<JSONArray> frames;
         if (!isBig) {
             frames = smallFrames;
@@ -173,7 +172,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
         if (type == CageType.STATIC) {
             previewStatic(player, isBig);
         } else {
-            previewDynamic(player, isBig);
+            previewAnimated(player, isBig);
         }
 
     }
@@ -222,7 +221,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
         });
     }
 
-    public void previewDynamic(Player p, boolean isBig) {
+    public void previewAnimated(Player p, boolean isBig) {
         List<JSONArray> frames;
         Location cageLoc;
 

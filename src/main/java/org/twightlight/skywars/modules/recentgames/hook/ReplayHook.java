@@ -1,10 +1,13 @@
 package org.twightlight.skywars.modules.recentgames.hook;
 
+import com.grinderwolf.swm.api.world.SlimeWorld;
 import me.jumper251.replay.api.ReplayAPI;
 import me.jumper251.replay.replaysystem.Replay;
+import org.bukkit.Bukkit;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.modules.recentgames.GameData;
 import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
+import org.twightlight.skywars.modules.recentgames.GameData;
 import org.twightlight.skywars.modules.recentgames.User;
 
 import java.util.HashMap;
@@ -36,9 +39,20 @@ public class ReplayHook {
     public void play(GameData data, User p) {
         ReplayData replayData = data.getReplay();
 
+        if (!getReplayAPI().getReplaySaver().replayExists(replayData.getReplayId())) {
+            p.sendMessage("&cReplay file has been deleted!");
+            return;
+        }
+
+        if (Bukkit.getWorld(replayData.getWorldName()) != null) {
+            getReplayAPI().playReplay(replayData.getReplayId(), p.getPlayer());
+            return;
+        }
+
         SkyWars.getInstance().getWorldLoader().createArenaWorld(replayData.getArenaId(), replayData.getWorldName()).thenAccept((world) -> {
             getReplayAPI().playReplay(replayData.getReplayId(), p.getPlayer());
         });
+
         p.setViewingGame(data);
     }
 }

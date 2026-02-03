@@ -1,8 +1,8 @@
 package org.twightlight.skywars.utils;
 
 import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.bungee.Core;
 
 import java.io.*;
 import java.net.URLDecoder;

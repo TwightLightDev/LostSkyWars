@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.Plugin;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.ZipUtils;
 
 import java.io.File;
@@ -158,9 +158,24 @@ public class InternalLoader extends WorldLoaderAdapter {
     @Override
     public CompletableFuture<Void> cloneArenaWorld(String worldName1, String worldName) {
         FileUtils.copyFiles(new File("plugins/LostSkyWars/maps/" + worldName1 + ".zip"), new File("plugins/LostSkyWars/maps/" + worldName + ".zip"));
-        return CompletableFuture.supplyAsync(() -> {
+        File zipFile = new File("plugins/LostSkyWars/maps/" + worldName + ".zip");
+        File worldFolder = new File(Bukkit.getWorldContainer(), worldName);
+
+        if (!zipFile.exists()) {
+            throw new IllegalArgumentException("Cannot find world zip for arena " + worldName);
+        }
+        if (worldFolder.exists()) {
+            FileUtils.deleteFile(worldFolder);
+        }
+
+        try {
+            ZipUtils.unzip(zipFile, worldFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
-        });
+        }
+
+        return load(worldName);
     }
 
 

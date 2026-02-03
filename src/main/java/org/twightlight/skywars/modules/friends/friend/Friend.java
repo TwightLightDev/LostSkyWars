@@ -1,10 +1,11 @@
 package org.twightlight.skywars.modules.friends.friend;
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.player.Account;
+
+import java.util.UUID;
 
 public class Friend {
     private UUID uuid;

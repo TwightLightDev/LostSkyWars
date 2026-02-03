@@ -9,6 +9,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.modules.api.ModulesUser;
 import org.twightlight.skywars.player.Account;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class User {
+public class User implements ModulesUser {
     private UUID uuid;
 
     private static Map<UUID, User> userList = new HashMap<>();

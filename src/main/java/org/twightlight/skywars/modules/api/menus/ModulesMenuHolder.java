@@ -18,4 +18,9 @@ public class ModulesMenuHolder implements InventoryHolder {
     public Inventory getInventory() {
         return menu.inv;
     }
+
+    public void remove() {
+        menu.remove();
+        menu = null;
+    }
 }

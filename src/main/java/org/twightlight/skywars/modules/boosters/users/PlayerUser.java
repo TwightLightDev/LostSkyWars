@@ -4,15 +4,17 @@ import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.modules.api.ModulesUser;
 import org.twightlight.skywars.modules.boosters.Boosters;
+import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.boosters.streams.Activating;
-import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.boosters.streams.Queue;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.User {
+public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.User implements ModulesUser {
     private UUID uuid;
 
     private static Map<UUID, PlayerUser> userList = new HashMap<>();
@@ -50,14 +52,43 @@ public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.U
         }
     }
 
-    public void removeBooster(String Sbooster) {
-        Booster booster = BoosterManager.getBoosters().get(Sbooster);
+    public void removeBooster(String sBooster) {
+        Booster booster = BoosterManager.getBoosters().get(sBooster);
+        if (booster == null) return;
+
         Booster.BoosterType type = booster.getType();
-        if (type == Booster.BoosterType.PERSONAL) {
-            personal_storage.remove(Sbooster);
-        } else {
-            network_storage.remove(Sbooster);
+
+        List<String> storage = (type == Booster.BoosterType.PERSONAL)
+                ? personal_storage
+                : network_storage;
+
+        storage.remove(sBooster);
+        save();
+    }
+
+    @Override
+    public boolean addToQueue(UUID uuid, String booster) {
+        boolean isQueue;
+        Booster booster1 = BoosterManager.getBoosters().get(booster);
+        isQueue = activating.isFull();
+        boolean b = super.addToQueue(uuid, booster);
+        if (b) {
+            if (isQueue) {
+                sendMessage(Boosters.getLanguage().getList("messages.boosters.queue").stream().map((line) -> {
+                    return line.replace("{booster}", Boosters.getLanguage().getString("boosters.display.item-name").replace("{time}", BoosterManager.getDurationString(booster1)).replace("{color}", BoosterManager.getColor(booster1)).replace("{amplifier}", BoosterManager.getAmplifierString(booster1)).replace("{currency}", BoosterManager.getCurrencyString(booster1)));
+                }).collect(Collectors.toList()));
+            } else {
+                sendMessage(Boosters.getLanguage().getList("messages.boosters.active").stream().map((line) -> {
+                    return line.replace("{booster}", Boosters.getLanguage().getString("boosters.display.item-name").replace("{time}", BoosterManager.getDurationString(booster1)).replace("{color}", BoosterManager.getColor(booster1)).replace("{amplifier}", BoosterManager.getAmplifierString(booster1)).replace("{currency}", BoosterManager.getCurrencyString(booster1)));
+                }).collect(Collectors.toList()));
+            }
         }
+        return b;
+    }
+
+    public void save() {
+        Boosters.getDatabase().updateData(Bukkit.getPlayer(uuid), personal_storage, Booster.BoosterType.PERSONAL.getStorageColumn());
+        Boosters.getDatabase().updateData(Bukkit.getPlayer(uuid), network_storage, Booster.BoosterType.NETWORK.getStorageColumn());
     }
 
     public void removeBooster(int booster, Booster.BoosterType type) {
@@ -71,13 +102,23 @@ public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.U
     public int getCap(String str) {
         Set<String> configuration = Boosters.getConfig().getYml().getConfigurationSection("general."+ str +".cap").getKeys(false);
         if (configuration == null) return 1;
+        int max = 1;
         for (String key : configuration) {
             if (Bukkit.getPlayer(uuid).hasPermission(Boosters.getConfig().getString("general."+ str +".cap." + key))) {
-                return Integer.parseInt(key);
+                max = Math.max(max, Integer.parseInt(key));
             }
-            else return 1;
         }
-        return 1;
+        return max;
+    }
+
+    public int getMaxCap(String str) {
+        Set<String> configuration = Boosters.getConfig().getYml().getConfigurationSection("general."+ str +".cap").getKeys(false);
+        if (configuration == null) return 1;
+        int max = 1;
+        for (String key : configuration) {
+            max = Math.max(max, Integer.parseInt(key));
+        }
+        return max;
     }
 
     public Player getPlayer() {
@@ -94,7 +135,6 @@ public class PlayerUser extends org.twightlight.skywars.modules.boosters.users.U
 
     public void sendMessage(String msg) {
         Bukkit.getPlayer(uuid).sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
-
     }
 
     public void sendMessage(List<String> msgs) {

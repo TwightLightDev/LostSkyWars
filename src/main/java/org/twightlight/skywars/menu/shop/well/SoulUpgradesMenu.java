@@ -15,9 +15,9 @@ import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.shop.SoulWellMenu;
 import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.systems.well.WellUpgrade;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.systems.well.WellUpgrade;
 
 import java.util.HashMap;
 import java.util.Map;

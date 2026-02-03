@@ -6,10 +6,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.player.Account;
 
 import java.util.HashMap;
 import java.util.Map;

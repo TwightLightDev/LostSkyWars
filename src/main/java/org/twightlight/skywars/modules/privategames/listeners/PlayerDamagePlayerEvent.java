@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.arena.Arena;
 
 public class PlayerDamagePlayerEvent implements Listener {
     @EventHandler

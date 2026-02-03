@@ -1,9 +1,10 @@
 package org.twightlight.skywars.modules.friends.friend;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FriendList {
     private List<Friend> friends;

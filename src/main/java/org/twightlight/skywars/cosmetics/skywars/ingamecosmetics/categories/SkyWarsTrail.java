@@ -16,13 +16,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.*;
+import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.SpiralFactory;
 
 import java.util.ArrayList;

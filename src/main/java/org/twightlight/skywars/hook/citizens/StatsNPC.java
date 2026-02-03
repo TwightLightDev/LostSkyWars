@@ -8,19 +8,18 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.hook.CitizensHook;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.twightlight.skywars.hook.CitizensHook.LOGGER;
+import static org.twightlight.skywars.hook.citizens.CitizensHook.LOGGER;
 
 @SuppressWarnings("deprecation")
 public class StatsNPC {
@@ -60,10 +59,6 @@ public class StatsNPC {
         }
         this.npc = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "§8[NPC] ");
         this.npc.data().setPersistent("profile", true);
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_UUID_METADATA, "[npc] ");
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_USE_LATEST, false);
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA, "");
-        this.npc.data().setPersistent(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA, "");
         this.npc.addTrait(new Trait("stats-item") {
             @Override
             public void onSpawn() {

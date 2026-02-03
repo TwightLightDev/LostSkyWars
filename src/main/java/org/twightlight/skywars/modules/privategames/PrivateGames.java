@@ -1,17 +1,17 @@
 package org.twightlight.skywars.modules.privategames;
 
 import org.bukkit.Bukkit;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Module;
-import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
+import org.twightlight.skywars.modules.privategames.commands.PrivateGamesCommand;
 import org.twightlight.skywars.modules.privategames.config.LangConfig;
 import org.twightlight.skywars.modules.privategames.database.Storage;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerClickInventory;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerJoin;
 import org.twightlight.skywars.modules.privategames.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.privategames.listeners.ServerManagement;
-import org.twightlight.skywars.Logger;
 
 public class PrivateGames extends Module {
 

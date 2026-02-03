@@ -9,19 +9,18 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.hook.CitizensHook;
-import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.twightlight.skywars.hook.CitizensHook.LOGGER;
+import static org.twightlight.skywars.hook.citizens.CitizensHook.LOGGER;
 
 @SuppressWarnings("deprecation")
 public class ShopkeeperNPC {

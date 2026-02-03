@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;

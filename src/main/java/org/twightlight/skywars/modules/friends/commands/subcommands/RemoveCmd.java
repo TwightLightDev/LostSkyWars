@@ -1,6 +1,5 @@
 package org.twightlight.skywars.modules.friends.commands.subcommands;
 
-import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -10,6 +9,8 @@ import org.bukkit.permissions.Permission;
 import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.modules.friends.friend.Friend;
 import org.twightlight.skywars.modules.friends.user.User;
+
+import java.util.List;
 
 public class RemoveCmd extends SubCommand {
     public RemoveCmd(Friends module, Permission permission) {

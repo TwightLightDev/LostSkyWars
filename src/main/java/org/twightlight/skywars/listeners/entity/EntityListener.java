@@ -17,14 +17,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
-import org.twightlight.skywars.cmd.sw.SetLobbyCommand;
+import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.utils.MinecraftVersion;
 
 @SuppressWarnings("deprecation")

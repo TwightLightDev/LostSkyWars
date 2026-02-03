@@ -9,12 +9,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.ranked.Ranked;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 
 import java.util.List;
 import java.util.UUID;

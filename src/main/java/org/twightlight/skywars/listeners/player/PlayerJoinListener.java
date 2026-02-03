@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
@@ -16,7 +17,6 @@ import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.rank.TagUtils;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.arena.Arena;
 
 public class PlayerJoinListener extends Listeners {
 

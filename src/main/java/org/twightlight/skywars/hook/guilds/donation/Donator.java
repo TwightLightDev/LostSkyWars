@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.hook.GuildsHook;
+import org.twightlight.skywars.hook.guilds.GuildsHook;
 import org.twightlight.skywars.hook.guilds.level.Level;
 import org.twightlight.skywars.player.Account;
 

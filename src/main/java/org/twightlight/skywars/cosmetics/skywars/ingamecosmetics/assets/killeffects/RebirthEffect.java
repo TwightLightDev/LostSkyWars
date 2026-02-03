@@ -15,9 +15,6 @@ import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyW
 import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.VectorUtils;
-
-import java.util.Random;
 
 
 public class RebirthEffect extends SkyWarsKillEffect {

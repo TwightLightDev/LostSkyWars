@@ -2,12 +2,12 @@ package org.twightlight.skywars.hook.decenthologram;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.hook.DecentHologramsHook;
 import org.twightlight.skywars.hook.decenthologram.holograms.Leaderboard;
 
-
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class User {
     private UUID uuid;

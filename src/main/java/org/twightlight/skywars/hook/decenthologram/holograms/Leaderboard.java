@@ -3,7 +3,7 @@ package org.twightlight.skywars.hook.decenthologram.holograms;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.hook.DecentHologramsHook;
+import org.twightlight.skywars.hook.decenthologram.DecentHologramsHook;
 import org.twightlight.skywars.hook.decenthologram.User;
 
 public class Leaderboard {

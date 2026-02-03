@@ -8,14 +8,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.Ranked;
 import org.twightlight.skywars.setup.ChatSession;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
 

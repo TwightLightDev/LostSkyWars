@@ -5,9 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
-import org.twightlight.skywars.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;

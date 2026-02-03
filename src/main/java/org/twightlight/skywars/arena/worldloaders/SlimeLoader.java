@@ -10,14 +10,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class SlimeLoader extends WorldLoaderAdapter {
@@ -130,26 +132,41 @@ public class SlimeLoader extends WorldLoaderAdapter {
     //Create a VIRTUAL world and load it internally -> no need to call load();
     public CompletableFuture<Void> cloneArenaWorld(String name1, String name2) {
         CompletableFuture<Void> future = new CompletableFuture<>();
+        int maxRetries = 3;
 
         Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
-            try {
-                SlimeWorld world = worlds.get(name1);
-                if (world == null) {
-                    future.completeExceptionally(
-                            new IllegalArgumentException("Original world " + name1 + " not found! Maybe it was renamed or loaded incorrectly!")
-                    );
+            for (int attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+
+                    SlimeWorld world = worlds.get(name1);
+                    if (world == null) {
+                        future.completeExceptionally(
+                                new IllegalArgumentException("Original world not found: " + name1)
+                        );
+                        break;
+
+                    }
+
+                    SlimeWorld cloned = world.clone(name2, null);
+
+                    Bukkit.getScheduler().runTask(getOwner(), () -> {
+                        slime.generateWorld(cloned);
+                        future.complete(null);
+                    });
+
+                    break;
+
+                } catch (WorldAlreadyExistsException ex) {
+                    unload(name2);
+                } catch (IOException | NullPointerException ex) {
+                    future.completeExceptionally(ex);
                     return;
                 }
-
-                SlimeWorld world1 = world.clone(name2, null);
-
-                Bukkit.getScheduler().runTask(getOwner(), () -> {
-                    slime.generateWorld(world1);
-                    future.complete(null);
-                });
-
-            } catch (IOException | WorldAlreadyExistsException | NullPointerException ex) {
             }
+
+            future.completeExceptionally(
+                    new IllegalStateException("World clone failed after " + maxRetries + " attempts")
+            );
         });
 
         return future;

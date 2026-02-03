@@ -1,8 +1,8 @@
 package org.twightlight.skywars.modules.boosters.users;
 
+import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.boosters.streams.Activating;
-import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.boosters.streams.Queue;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public abstract class User {
     }
 
     public boolean addToQueue(UUID uuid, String booster) {
-        if (activating.isEmpty()) {
+        if (!activating.isFull()) {
             return activateBooster(uuid, booster);
         } else {
             return queue.add(uuid, booster);
@@ -41,11 +41,10 @@ public abstract class User {
         queue.remove(booster);
     }
 
-
     public float getTotalMultiplier(Booster.Currency currency) {
-        return (float) (1F + activating.getActivatingBooster().stream()
+        return (float) (1F + activating.getAsList().stream()
                 .filter(b -> {
-                    Booster booster = BoosterManager.getBoosters().get(b.getValue());
+                    Booster booster = BoosterManager.getBoosters().get(b.getBoosterID());
                     if (booster != null) {
                         return booster.getCurrency() == currency;
                     } else {
@@ -53,7 +52,7 @@ public abstract class User {
                     }
                 })
                 .mapToDouble(b -> {
-                    Booster booster = BoosterManager.getBoosters().get(b.getValue());
+                    Booster booster = BoosterManager.getBoosters().get(b.getBoosterID());
                     if (booster != null) {
                         return booster.getAmplifier() - 1;
                     } else {
@@ -64,7 +63,7 @@ public abstract class User {
     }
 
     public boolean hasBooster() {
-        return !activating.isEmpty();
+        return !activating.getAsList().isEmpty();
     }
 
 

@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import org.twightlight.skywars.fun.customitems.CustomItemsManager;
 
-import java.sql.BatchUpdateException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

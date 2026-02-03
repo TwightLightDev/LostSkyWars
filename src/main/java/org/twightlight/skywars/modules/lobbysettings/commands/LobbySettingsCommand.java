@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.api.cmds.SubCommand;
@@ -13,7 +14,6 @@ import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 import org.twightlight.skywars.modules.lobbysettings.commands.subcommands.*;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,8 +69,8 @@ public class LobbySettingsCommand extends Command {
             list.addAll(Arrays.asList(args));
             list.remove(0);
 
-            if (player.hasPermission(subCommand.getPermission().getName()) || subCommand.getPermission() == null) {
-                subCommand.execute(user, list.toArray(new String[list.size()]));
+            if (subCommand.getPermission() == null || player.hasPermission(subCommand.getPermission().getName()) || subCommand.getPermission() == null) {
+                subCommand.execute(Bukkit.getPlayer(user.getUUID()), list.toArray(new String[list.size()]));
             } else {
                 user.sendMessage(LobbySettings.getLanguage().getString("lobbysettings.general.no-permission"));
             }

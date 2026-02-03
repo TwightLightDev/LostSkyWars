@@ -1,5 +1,6 @@
 package org.twightlight.skywars.utils;
 
+
 public class Pair<K, V> {
     private final K key;
     private final V value;
@@ -38,4 +39,5 @@ public class Pair<K, V> {
         return (key == null ? other.key == null : key.equals(other.key)) &&
                 (value == null ? other.value == null : value.equals(other.value));
     }
+
 }

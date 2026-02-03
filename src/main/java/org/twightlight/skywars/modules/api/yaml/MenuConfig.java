@@ -1,11 +1,11 @@
 package org.twightlight.skywars.modules.api.yaml;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.yaml.snakeyaml.Yaml;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -30,7 +30,7 @@ public abstract class MenuConfig extends YamlWrapper {
     }
 
     public List<String> getList(String path) {
-        return this.getYml().getStringList(module + "." + path).stream().map(s -> s.replace("&", "§")).collect(Collectors.toList());
+        return Optional.ofNullable(this.getYml().getStringList(module + "." + path)).orElse(Collections.emptyList()).stream().map(s -> s.replace("&", "§")).collect(Collectors.toList());
     }
 
     public boolean getBoolean(String path) {

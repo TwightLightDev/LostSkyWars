@@ -8,7 +8,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.libs.xseries.XMaterial;
-import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.api.menus.Item;
 import org.twightlight.skywars.modules.recentgames.GameData;
@@ -17,7 +17,6 @@ import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.modules.recentgames.User;
 import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
 import org.twightlight.skywars.utils.ItemBuilder;
-import org.twightlight.skywars.Logger.Level;
 
 import java.util.Arrays;
 import java.util.List;
@@ -99,6 +98,7 @@ public class RecentGamesCommand extends Command {
             int index = (page - 1) * amountPerPage + i;
             Item paper = new Item((e) -> {
                 if (RecentGames.hasReplayHook()) {
+                    e.getWhoClicked().closeInventory();
                     RecentGames.getReplayHook().play(dataList.get(index), User.getUser((Player) e.getWhoClicked()));
                 }
             }, (p) -> {
@@ -108,7 +108,7 @@ public class RecentGamesCommand extends Command {
                 }
                 return new ItemBuilder(XMaterial.valueOf(RecentGames.getMenuConfig().getString("menu.items.game-item.material", "PAPER"))).
                         setName(RecentGames.getMenuConfig().getString("menu.items.game-item.name").replace("{arena}", dataList.get(index).getName())).
-                        setLore(RecentGames.getMenuConfig().getList("menu.items.game-item.lore").stream().map((line) -> line.replace("{result}", (dataList.get(index).getResult() == GameResult.WIN) ? "VICTORY" : (dataList.get(index).getResult() == GameResult.LOSE) ? "DEFEAT" : "UNKNOWN")
+                        setLore(RecentGames.getMenuConfig().getList("menu.items.game-item.lore").stream().map((line) -> line.replace("{result}", (dataList.get(index).getResult() == GameResult.WIN) ? "&6VICTORY" : (dataList.get(index).getResult() == GameResult.LOSE) ? "&cDEFEAT" : "&fUNKNOWN")
                                 .replace("{startTime}", dataList.get(index).getFormattedStartTime()).replace("{duration}", dataList.get(index).getFormattedDuration())).collect(Collectors.toList())).toItemStack();
             });
 

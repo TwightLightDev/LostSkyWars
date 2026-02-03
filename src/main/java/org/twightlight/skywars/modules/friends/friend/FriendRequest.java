@@ -1,13 +1,14 @@
 package org.twightlight.skywars.modules.friends.friend;
 
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.modules.friends.Friends;
+
+import java.util.List;
+import java.util.UUID;
 
 public class FriendRequest {
     private int expireTime;

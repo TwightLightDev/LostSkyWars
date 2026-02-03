@@ -1,13 +1,13 @@
 package org.twightlight.skywars.api.adapters;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.Logger;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class WorldLoaderAdapter {
     private final Plugin plugin;

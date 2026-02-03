@@ -3,7 +3,7 @@ package org.twightlight.skywars.hook.guilds.level;
 import com.google.common.reflect.TypeToken;
 import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.Bukkit;
-import org.twightlight.skywars.hook.GuildsHook;
+import org.twightlight.skywars.hook.guilds.GuildsHook;
 import org.twightlight.skywars.hook.guilds.donation.Donator;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
 package org.twightlight.skywars.systems.holograms;
 
 import org.bukkit.Location;
-import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.nms.NMS;
+import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.utils.StringUtils;
 
 public class HologramLine {

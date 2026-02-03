@@ -8,11 +8,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.arena.Arena;
 
 import java.util.HashMap;
 import java.util.Map;

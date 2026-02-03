@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -15,7 +16,7 @@ import org.twightlight.skywars.listeners.player.*;
 import org.twightlight.skywars.listeners.server.PluginMessageListener;
 import org.twightlight.skywars.listeners.server.ServerListener;
 import org.twightlight.skywars.listeners.skywars.SkyWarsDeath;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.modules.api.listeners.InventoryCloseEvent;
 
 public class Listeners implements Listener {
 
@@ -45,6 +46,7 @@ public class Listeners implements Listener {
         pm.registerEvents(new ServerListener(), plugin);
 
         pm.registerEvents(new SkyWarsKillEffect.NavigationCheck(), plugin);
+        pm.registerEvents(new InventoryCloseEvent(), plugin);
 
         if (Core.MODE != CoreMode.MULTI_ARENA) {
             Bukkit.getMessenger().registerIncomingPluginChannel(plugin, "LostSWAPI", new PluginMessageListener());

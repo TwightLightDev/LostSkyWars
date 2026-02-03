@@ -2,11 +2,11 @@ package org.twightlight.skywars.bungee;
 
 import net.md_5.bungee.config.Configuration;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.bungee.utils.BungeeConfig;
 import org.twightlight.skywars.database.MySQLDatabase;
 import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Field;

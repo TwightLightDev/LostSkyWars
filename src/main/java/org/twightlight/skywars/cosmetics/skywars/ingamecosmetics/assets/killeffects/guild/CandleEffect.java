@@ -8,9 +8,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
+import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 

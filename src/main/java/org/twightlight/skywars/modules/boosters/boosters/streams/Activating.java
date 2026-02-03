@@ -4,58 +4,59 @@ import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.skywars.modules.boosters.Boosters;
+import org.twightlight.skywars.modules.boosters.api.event.BoosterActiveEvent;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
+import org.twightlight.skywars.modules.boosters.boosters.BoosterData;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
-import org.twightlight.skywars.modules.boosters.api.event.BoosterActiveEvent;
+import org.twightlight.skywars.modules.boosters.users.ServerUser;
 import org.twightlight.skywars.modules.boosters.users.User;
-import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.Pair;
 
 import java.util.*;
 
-public class Activating {
-    private TreeMap<Long, Pair<UUID, String>> list;
+public class Activating implements Stream {
+    private final TreeMap<Long, BoosterData> list;
     private int cap;
-    private Booster.BoosterType type;
+    private final Booster.BoosterType type;
     private BukkitTask task;
-    private Queue queue;
-    private User user;
+    private final Queue queue;
+    private final User user;
 
     public Activating(User user, int cap, Booster.BoosterType type, Queue queue) {
         this.cap = cap;
         this.type = type;
         this.user = user;
+        this.queue = queue;
         if (type == Booster.BoosterType.PERSONAL) {
             PlayerUser playerUser = (PlayerUser) user;
             this.list = Boosters.getDatabase().getData(
-                    Bukkit.getPlayer(playerUser.getUUID()), Booster.BoosterType.PERSONAL.getActivatingColumn(),
-                    new TypeToken<TreeMap<Long, Pair<UUID, String>>>() {}, new TreeMap<>());
+                    Bukkit.getPlayer(playerUser.getUUID()), type.getActivatingColumn(),
+                    new TypeToken<TreeMap<Long, BoosterData>>() {}, new TreeMap<>());
         } else {
-            this.list = Boosters.getDatabase().getNetworkData(Booster.BoosterType.NETWORK.getActivatingColumn(),
-                    new TypeToken<TreeMap<Long, Pair<UUID, String>>>() {}, new TreeMap<>());
+            this.list = Boosters.getDatabase().getNetworkData(type.getActivatingColumn(),
+                    new TypeToken<TreeMap<Long, BoosterData>>() {}, new TreeMap<>());
         }
-
-        this.queue = queue;
+        check();
     }
 
     public boolean add(UUID uuid, String boosterid) {
-        if (list.keySet().size() < cap && BoosterManager.getBoosters().get(boosterid) != null) {
+        if (list.size() < cap && BoosterManager.getBoosters().get(boosterid) != null) {
             Booster booster = BoosterManager.getBoosters().get(boosterid);
-            list.put(System.currentTimeMillis() + booster.getDuration(), new Pair<>(uuid, boosterid));
-            check();
-            update(type.getQueueColumn());
+            list.put(System.currentTimeMillis() + booster.getDuration() * 1000L, new BoosterData(uuid, boosterid));
+
             BoosterActiveEvent e = new BoosterActiveEvent(booster, user);
             Bukkit.getPluginManager().callEvent(e);
+            update(type.getActivatingColumn());
+            check();
             return true;
         }
         return false;
     }
 
     public boolean remove(long pos) {
-        Pair<UUID, String> b = list.remove(pos);
+        BoosterData b = list.remove(pos);
         check();
-        update(type.getQueueColumn());
+        update(type.getActivatingColumn());
         return b != null;
     }
 
@@ -77,16 +78,16 @@ public class Activating {
     }
 
     public void update(String column) {
-        if (type == Booster.BoosterType.PERSONAL) {
+        if (user instanceof PlayerUser) {
             PlayerUser playerUser = (PlayerUser) user;
             Boosters.getDatabase().updateData(Bukkit.getPlayer(playerUser.getUUID()), list, column);
-        } else {
+        } else if (user instanceof ServerUser)  {
             Boosters.getDatabase().updateNetworkData(list, column);
         }
     }
 
     public void check() {
-        if (!list.isEmpty() && task == null) {
+        if (task == null) {
             task = Bukkit.getScheduler().runTaskTimer(Boosters.getInstance().getPlugin(), () -> {
                 Iterator<Long> iterator = list.keySet().iterator();
                 while (iterator.hasNext()) {
@@ -100,20 +101,31 @@ public class Activating {
                 }
 
                 if (list.size() < cap && !queue.isEmpty()) {
-                    Pair<UUID, String> next = queue.getQueue().poll();
+                    BoosterData next = queue.getQueue().poll();
                     if (next != null) {
-                        add(next.getKey(), next.getValue());
+                        add(next.getOwner(), next.getBoosterID());
+                        queue.update(type.getQueueColumn());
                     }
                 }
+
+                if (list.isEmpty()) {
+                    task.cancel();
+                    task = null;
+                }
             }, 20L, 20L);
-        } else if (list.isEmpty() && task != null) {
-            task.cancel();
-            task = null;
         }
     }
 
-    public List<Pair<UUID, String>> getActivatingBooster() {
+    public List<BoosterData> getAsList() {
         return new ArrayList<>(list.values());
+    }
+
+    public List<Long> getActivatingTimeLine() {
+        return new ArrayList<>(list.keySet());
+    }
+
+    public boolean isFull() {
+        return list.size() >= cap;
     }
 
     public boolean isEmpty() {
@@ -122,5 +134,14 @@ public class Activating {
 
     public User getUser() {
         return user;
+    }
+
+    public UUID getOwner(int pos) {
+        try {
+            long target = list.keySet().toArray(new Long[0])[pos];
+            return list.get(target).getOwner();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
     }
 }

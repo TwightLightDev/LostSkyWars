@@ -25,4 +25,9 @@ public class Item {
     public Executable<InventoryClickEvent> getExecutable() {
         return executable;
     }
+
+    public void remove() {
+        executable = null;
+        itemStackFunction = null;
+    }
 }

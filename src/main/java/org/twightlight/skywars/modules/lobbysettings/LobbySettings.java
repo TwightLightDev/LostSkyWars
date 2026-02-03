@@ -1,6 +1,7 @@
 package org.twightlight.skywars.modules.lobbysettings;
 
 import org.bukkit.Bukkit;
+import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.lobbysettings.commands.LobbySettingsCommand;
@@ -11,7 +12,6 @@ import org.twightlight.skywars.modules.lobbysettings.listeners.PlayerJoinEvent;
 import org.twightlight.skywars.modules.lobbysettings.listeners.PlayerQuitEvent;
 import org.twightlight.skywars.modules.lobbysettings.listeners.WorldChangeEvent;
 import org.twightlight.skywars.modules.lobbysettings.papi.PlaceholderAPI;
-import org.twightlight.skywars.Logger;
 
 public class LobbySettings extends Module {
     private static SQLite storage;

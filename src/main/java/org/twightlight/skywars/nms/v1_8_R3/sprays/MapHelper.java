@@ -1,23 +1,6 @@
 package org.twightlight.skywars.nms.v1_8_R3.sprays;
 
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import net.minecraft.server.v1_8_R3.BlockPosition;
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntityItemFrame;
-import net.minecraft.server.v1_8_R3.ItemStack;
-import net.minecraft.server.v1_8_R3.Items;
-import net.minecraft.server.v1_8_R3.MathHelper;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityMetadata;
-import net.minecraft.server.v1_8_R3.PacketPlayOutMap;
-import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntity;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
-import net.minecraft.server.v1_8_R3.World;
-import org.bukkit.Bukkit;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -25,8 +8,14 @@ import org.bukkit.craftbukkit.v1_8_R3.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapPalette;
-import org.bukkit.map.MapView;
 import org.twightlight.skywars.nms.NMS;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MapHelper extends org.twightlight.skywars.nms.MapHelper {
     static final int DEFAULT_STARTING_ID = 8000;

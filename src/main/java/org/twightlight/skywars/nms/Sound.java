@@ -3,8 +3,8 @@ package org.twightlight.skywars.nms;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.SkyWars;
 
 public enum Sound {
 

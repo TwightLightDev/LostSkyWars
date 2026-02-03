@@ -1,8 +1,8 @@
 package org.twightlight.skywars.menu.shop.well;
 
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.List;

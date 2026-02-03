@@ -2,7 +2,6 @@ package org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.victory
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -11,8 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.SkyWars;
@@ -20,7 +17,6 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
-import org.twightlight.skywars.utils.VectorUtils;
 
 
 public class WitherRider extends SkyWarsVictoryDance {

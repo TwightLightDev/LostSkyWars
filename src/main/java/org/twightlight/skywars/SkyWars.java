@@ -4,37 +4,44 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
+import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.worldloaders.InternalLoader;
 import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cmd.Commands;
+import org.twightlight.skywars.commands.Commands;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.SQLiteDatabase;
 import org.twightlight.skywars.fun.customitems.CustomItemsManager;
-import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.hook.*;
-import org.twightlight.skywars.leaderboards.LeaderBoard;
+import org.twightlight.skywars.hook.battlepass.BattlePassHook;
+import org.twightlight.skywars.hook.boxes.BoxesHook;
+import org.twightlight.skywars.hook.citizens.CitizensHook;
+import org.twightlight.skywars.hook.decenthologram.DecentHologramsHook;
+import org.twightlight.skywars.hook.guilds.GuildsHook;
+import org.twightlight.skywars.hook.protocollib.ProtocolLibHook;
+import org.twightlight.skywars.hook.worldedit.WorldEditHook;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
-import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
+import org.twightlight.skywars.modules.quests.Quests;
+import org.twightlight.skywars.modules.recentgames.RecentGames;
+import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.rank.TagUtils;
 import org.twightlight.skywars.player.ranked.Ranked;
-import org.twightlight.skywars.modules.recentgames.RecentGames;
-import org.twightlight.skywars.arena.ui.chest.ChestType;
-import org.twightlight.skywars.Logger.Level;
-import org.twightlight.skywars.utils.MinecraftVersion;
+import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.well.AngelOfDeath;
 import org.twightlight.skywars.systems.well.WellNPC;
-import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.utils.MinecraftVersion;
 
 import java.io.File;
 
@@ -107,6 +114,7 @@ public class SkyWars extends JavaPlugin {
         new Friends();
         new LobbySettings();
         new Boosters();
+        new Quests();
         if (MODE != CoreMode.LOBBY) {
             ChestType.setupTypes();
         }
@@ -148,7 +156,6 @@ public class SkyWars extends JavaPlugin {
         Listeners.setupListeners();
 
         if (MODE != CoreMode.ARENA) {
-            LeaderBoard.setupLeaderBoards();
 
             WellNPC.setupWellNPCs();
             AngelOfDeath.setupAngels();

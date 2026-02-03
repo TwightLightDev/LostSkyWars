@@ -11,9 +11,9 @@ import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.arena.Arena;
 
 public class ServerListener implements Listener {
 
