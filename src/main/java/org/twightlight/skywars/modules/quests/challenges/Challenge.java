@@ -24,6 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Challenge implements Refreshable, Identifiable, ProgressGoal {
+
     //General
     private String id;
 

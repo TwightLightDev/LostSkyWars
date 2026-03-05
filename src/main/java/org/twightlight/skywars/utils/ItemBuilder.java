@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
+import org.twightlight.libs.xseries.XEnchantment;
 import org.twightlight.libs.xseries.XMaterial;
 
 import java.lang.reflect.Field;
@@ -177,6 +178,11 @@ public class ItemBuilder {
 
     public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
         this.is.addUnsafeEnchantment(ench, level);
+        return this;
+    }
+
+    public ItemBuilder addUnsafeEnchantments(Map<Enchantment, Integer> enchs) {
+        this.is.addUnsafeEnchantments(enchs);
         return this;
     }
 
@@ -510,9 +516,9 @@ public class ItemBuilder {
             Map<Enchantment, Integer> enchsMap = new HashMap<>();
             yml.getStringList(path + ".enchantments").forEach(line -> {
                 String[] elements = line.split(":", 2);
-                enchsMap.put(Enchantment.getByName(elements[0]), Integer.parseInt(elements[1]));
+                enchsMap.put(XEnchantment.of(elements[0]).orElseThrow(() -> new RuntimeException("Enchantment not found!")).get(), Integer.parseInt(elements[1]));
             });
-            builder = builder.addEnchantments(enchsMap);
+            builder = builder.addUnsafeEnchantments(enchsMap);
         }
         if (yml.contains(path + ".flags")) {
             for (String line : yml.getStringList(path + ".flags")) {
@@ -552,9 +558,9 @@ public class ItemBuilder {
             Map<Enchantment, Integer> enchsMap = new HashMap<>();
             yml.getStringList(path + ".enchantments").forEach(line -> {
                 String[] elements = line.split(":", 2);
-                enchsMap.put(Enchantment.getByName(elements[0]), Integer.parseInt(elements[1]));
+                enchsMap.put(XEnchantment.of(elements[0]).orElseThrow(() -> new RuntimeException("Enchantment not found!")).get(), Integer.parseInt(elements[1]));
             });
-            builder = builder.addEnchantments(enchsMap);
+            builder = builder.addUnsafeEnchantments(enchsMap);
         }
         if (yml.contains(path + ".flags")) {
             for (String line : yml.getStringList(path + ".flags")) {

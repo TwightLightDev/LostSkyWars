@@ -143,4 +143,8 @@ public class NMS {
     public static int getIdOfEntity(Entity e) {
         return BRIDGE.getIdOfEntity(e);
     }
+
+    public static NMSBridge getNMSBridge() {
+        return BRIDGE;
+    }
 }

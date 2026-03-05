@@ -36,7 +36,7 @@ public class Level {
 
     public String getLevel(Account account) {
         Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
-        if (cosmetic == null || !(cosmetic instanceof SkyWarsSymbol)) {
+        if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }
 
@@ -45,7 +45,7 @@ public class Level {
 
     public String getLevelSymbol(Account account) {
         Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
-        if (cosmetic == null || !(cosmetic instanceof SkyWarsSymbol)) {
+        if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }
 

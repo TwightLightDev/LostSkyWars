@@ -65,7 +65,7 @@ public class SkyWars implements Listener {
             return;
         Arena<?> server = ((Arena<?>) e.getServer());
         if (Optional.ofNullable(xp_multiplier.get(server)).isPresent() && xp_multiplier.get(server).contains(player) ) {
-            e.setAmount(e.getAmount() * 2);
+            e.setAmount(e.getAmount() + e.getBaseAmount() * 2);
             guild.sendDoubleXpMessage(player);
         }
         e.addFinalTask(objects -> {
@@ -83,7 +83,7 @@ public class SkyWars implements Listener {
             return;
         Arena<?> server = ((Arena<?>) e.getServer());
         if (Optional.ofNullable(coins_multiplier.get(server)).isPresent() && coins_multiplier.get(server).contains(player)) {
-            e.setAmount(e.getAmount() * 2);
+            e.setAmount(e.getAmount() + e.getBaseAmount() * 2);
             List<String> var10000 = Guilds.get().getLanguage().getList("guilds.settings.boosters.double-coins.reward-message");
             Objects.requireNonNull(player);
             var10000.forEach(player::sendMessage);

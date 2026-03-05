@@ -34,8 +34,7 @@ public class SkyWars implements Listener {
         List<BoosterData> data = user.getActivatingStream().getAsList();
         data.addAll(serverUser.getActivatingStream().getAsList());
 
-
-        int value = e.getAmount();
+        int value = e.getBaseAmount();
         BoosterMultiplyEvent e1 = new BoosterMultiplyEvent(
                 Booster.Currency.COINS,
                 user,
@@ -74,7 +73,7 @@ public class SkyWars implements Listener {
         List<BoosterData> data = user.getActivatingStream().getAsList();
         data.addAll(serverUser.getActivatingStream().getAsList());
 
-        int value = e.getAmount();
+        int value = e.getBaseAmount();
         BoosterMultiplyEvent e1 = new BoosterMultiplyEvent(
                 Booster.Currency.SOULS,
                 user,
@@ -113,7 +112,7 @@ public class SkyWars implements Listener {
         List<BoosterData> data = user.getActivatingStream().getAsList();
         data.addAll(serverUser.getActivatingStream().getAsList());
 
-        double value = e.getAmount();
+        double value = e.getBaseAmount();
         BoosterMultiplyEvent e1 = new BoosterMultiplyEvent(
                 Booster.Currency.EXP,
                 user,

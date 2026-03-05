@@ -122,8 +122,6 @@ public abstract class Cosmetic {
         }
         LOGGER.log(Level.INFO, "Loaded " + size + " cosmetics!");
 
-        PacketEvents.getAPI().getEventManager().registerListener(
-                new PreviewableCosmetic.NoInteraction(), PacketListenerPriority.LOWEST);
     }
 
     public static Cosmetic findFrom(CosmeticServer server, CosmeticType type, int index, String id) {

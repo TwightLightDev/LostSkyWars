@@ -2,6 +2,7 @@ package org.twightlight.skywars.modules.quests.quests;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
@@ -40,7 +41,7 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
     private List<String> completedMessages;
 
     //Menu
-    private Function<User, ItemStack> itemBuilder;
+    private Function<Player, ItemStack> itemBuilder;
     private int slot;
     private List<Integer> pages;
 
@@ -74,7 +75,9 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
             Quests.getInstance().getLogger().log(Logger.Level.WARNING, "Refreshing time of this quest is less than 5 minutes! Minimum time allowed is 5 minutes! Your quest is still loaded without any problem except the refreshing time is set to 5 minutes!");
         }
 
-        quest.itemBuilder = (user -> {
+        quest.itemBuilder = (user1 -> {
+            User user = User.getUser(user1);
+
             String path = "";
 
             switch (user.getQuestHelper().getQuestStatus(quest)) {
@@ -126,7 +129,6 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
                 current += refreshTimeMultiplication * refreshTimeUnit.getDuration().toMillis();
             }
             Quests.getInstance().getDatabase().getSQLHelper().setNextRefresh(this, current);
-
 
         }
     }
@@ -196,7 +198,7 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
         return shortDescription;
     }
 
-    public Function<User, ItemStack> getItemBuilder() {
+    public Function<Player, ItemStack> getItemBuilder() {
         return itemBuilder;
     }
 

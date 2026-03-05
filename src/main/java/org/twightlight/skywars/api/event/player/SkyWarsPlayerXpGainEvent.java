@@ -15,12 +15,15 @@ public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
     private double amount;
     private XpSource source;
     private List<Consumer<List<Object>>> final_task = new ArrayList<>();
+    private double baseAmount;
 
     public SkyWarsPlayerXpGainEvent(SkyWarsServer server, Player player, double amount) {
         this.server = server;
         this.player = player;
         this.amount = amount;
         this.source = XpSource.CUSTOM;
+        this.baseAmount = amount;
+
     }
 
     public SkyWarsPlayerXpGainEvent(SkyWarsServer server, Player player, double amount, XpSource source) {
@@ -63,5 +66,9 @@ public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
         WIN,
         PLAY,
         CUSTOM
+    }
+
+    public double getBaseAmount() {
+        return baseAmount;
     }
 }

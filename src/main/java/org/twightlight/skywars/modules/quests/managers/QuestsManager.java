@@ -47,6 +47,11 @@ public class QuestsManager {
     }
 
 
+    public List<Quest> getQuestsByPage(int page) {
+        return getQuests().stream().filter((q) -> q.getPages().contains(page)).collect(Collectors.toList());
+    }
+
+
     public List<Quest> getQuests() {
         return new ArrayList<>(REGISTRY.values());
     }

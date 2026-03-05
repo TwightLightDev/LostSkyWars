@@ -1,39 +1,44 @@
 package org.twightlight.skywars.cosmetics;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListener;
-import com.github.retrooper.packetevents.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
 import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
 import com.github.retrooper.packetevents.protocol.entity.type.EntityTypes;
-import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.util.Vector3i;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientChatMessage;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
-import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientPlayerPositionAndRotation;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import com.google.common.reflect.TypeToken;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import net.kyori.adventure.text.Component;
+import org.bukkit.*;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.scheduler.BukkitTask;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.hook.PacketEventsHook;
+import org.twightlight.skywars.hook.protocollib.ProtocolLibHook;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
+import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -41,12 +46,13 @@ import org.twightlight.skywars.utils.StringUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public abstract class PreviewableCosmetic extends Cosmetic {
     protected static final ConfigUtils PREVIEWCONFIG = ConfigUtils.getConfig("cosmeticspreview");
-    protected static final Map<UUID, PreviewSession> sessionUUID = new HashMap<>();
-    protected static final Map<CosmeticType, List<PreviewSession>> sessionCosmeticType = new HashMap<>();
+    protected static final Map<UUID, PreviewSession> sessionUUID = new ConcurrentHashMap<>();
+    protected static final Map<CosmeticType, List<PreviewSession>> sessionCosmeticType = new ConcurrentHashMap<>();
 
     public PreviewableCosmetic(int id, CosmeticServer server, CosmeticType type, CosmeticRarity rarity) {
         super(id, server, type, rarity);
@@ -55,7 +61,7 @@ public abstract class PreviewableCosmetic extends Cosmetic {
     public abstract void preview(Player player, Object... objects);
 
     public final void playPreview(Player player, long duration, Class<?> returns, Order order, Filter filter, String searchQuery, Object... objects) {
-        if (SkyWars.packetevents) {
+        if (SkyWars.packetevents && SkyWars.protocollib) {
             try {
                 if (sessionCosmeticType.containsKey(getType())) {
                     if (getType() == CosmeticType.SKYWARS_TRAIL && !sessionCosmeticType.get(getType()).isEmpty()) {
@@ -79,14 +85,13 @@ public abstract class PreviewableCosmetic extends Cosmetic {
                                 (int) playerLocation.getY()-1,
                                 (int) playerLocation.getZ()), id);
 
-
                 PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
 
                 new PreviewSession(this, player, playerLocation, player.getLocation(), duration, returns, order, filter, searchQuery);
 
                 Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                     preview(player, objects);
-                }, 20L);
+                }, 10L);
 
             } catch (Exception e) {
                 player.sendMessage(StringUtils.formatColors("&cPlayer's location not found or cosmetic's location is missing!"));
@@ -96,17 +101,20 @@ public abstract class PreviewableCosmetic extends Cosmetic {
     }
 
 
-    public static class PreviewSession {
+    public static class PreviewSession implements Listener {
         private List<Consumer<Player>> consumers;
         private PreviewableCosmetic cosmetic;
-
+        private UUID uuid;
+        private Location previewLoc;
         public PreviewSession(PreviewableCosmetic cosmetic, Player player, Location previewLoc, Location initialLocation, long duration, Class<?> returns, Order order, Filter filter, String searchQuery) {
             player.closeInventory();
             this.cosmetic = cosmetic;
             consumers = new ArrayList<>();
             sessionUUID.put(player.getUniqueId(), this);
             sessionCosmeticType.computeIfAbsent(cosmetic.getType(), (k) -> new ArrayList<>()).add(this);
-
+            uuid = player.getUniqueId();
+            this.previewLoc = previewLoc;
+            Bukkit.getPluginManager().registerEvents(this, SkyWars.getInstance());
             player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) duration, 2, false, false));
 
             for (Player player1 : Bukkit.getOnlinePlayers()) {
@@ -121,83 +129,82 @@ public abstract class PreviewableCosmetic extends Cosmetic {
 
             previewLoc.getChunk().load(true);
             GameMode gameMode = player.getGameMode();
-            player.teleport(previewLoc);
-            int standID = summonCameraStand(player, previewLoc);
+            player.teleport(previewLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+            setGameMode(player, GameMode.SPECTATOR);
+
+            ItemStack[] itemStacks = player.getInventory().getContents();
+            ItemStack[] armors = player.getInventory().getArmorContents();
+            player.getInventory().clear();
+            player.updateInventory();
+
 
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+                HandlerList.unregisterAll(this);
+                sessionUUID.remove(player.getUniqueId());
+                sessionCosmeticType.get(cosmetic.getType()).remove(this);
+                if (!player.isOnline()) {
+                    return;
+                }
+                Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location." + cosmetic.getType().getPreviewID()));
 
-                setGameMode(player, GameMode.SPECTATOR);
+                XMaterial xMaterial = XMaterial.AIR;
+                MaterialData matdata = xMaterial.parseItem().getData();
 
-                ItemStack[] itemStacks = player.getInventory().getContents();
-                ItemStack[] armors = player.getInventory().getArmorContents();
-                player.getInventory().clear();
+                int id = SpigotConversionUtil.fromBukkitMaterialData(matdata).getGlobalId();
+
+                WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
+                        new Vector3i((int) playerLocation.getX(),
+                                (int) playerLocation.getY() - 1,
+                                (int) playerLocation.getZ()), id);
+
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+
+                if (consumers != null) {
+                    consumers.forEach((consumer) -> {
+                        consumer.accept(player);
+                    });
+                }
+
+                PacketContainer camera1 = ProtocolLibHook.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+                camera1.getIntegers().write(0, player.getEntityId());
+
+                try {
+                    ProtocolLibHook.getProtocolManager().sendServerPacket(player, camera1);
+
+                } catch (InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                player.teleport(initialLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                player.setGameMode(gameMode);
+                if (user != null) {
+                    boolean showScoreboard = Boolean.parseBoolean(LobbySettings.getDatabase().getData(player, "showScoreboard", new TypeToken<String>() {
+                    }, "true"));
+
+                    user.setScoreboardVisibility(showScoreboard, false);
+                }
+                for (Player player1 : Bukkit.getOnlinePlayers()) {
+                    if (player1.equals(player))
+                        continue;
+                    player1.showPlayer(player);
+                }
+                sessionUUID.remove(player.getUniqueId());
+
+                player.getInventory().setArmorContents(armors);
+                player.getInventory().setContents(itemStacks);
                 player.updateInventory();
-                WrapperPlayServerCamera playPreviewCamera = new WrapperPlayServerCamera(standID);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, playPreviewCamera);
-                Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
-                    sessionUUID.remove(player.getUniqueId());
-                    sessionCosmeticType.get(cosmetic.getType()).remove(this);
-
-                    if (!player.isOnline()) {
-                        return;
-                    }
-                    Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location." + cosmetic.getType().getPreviewID()));
-
-                    XMaterial xMaterial = XMaterial.AIR;
-                    MaterialData matdata = xMaterial.parseItem().getData();
-
-                    int id = SpigotConversionUtil.fromBukkitMaterialData(matdata).getGlobalId();
-
-                    WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                            new Vector3i((int) playerLocation.getX(),
-                                    (int) playerLocation.getY() - 1,
-                                    (int) playerLocation.getZ()), id);
-
-                    PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
-
-                    if (consumers != null) {
-                        consumers.forEach((consumer) -> {
-                            consumer.accept(player);
-                        });
-                    }
-
-                    player.removePotionEffect(PotionEffectType.INVISIBILITY);
-                    player.teleport(initialLocation);
-                    if (user != null) {
-                        boolean showScoreboard = Boolean.parseBoolean(LobbySettings.getDatabase().getData(player, "showScoreboard", new TypeToken<String>() {
-                        }, "true"));
-
-                        user.setScoreboardVisibility(showScoreboard, false);
-                    }
-                    for (Player player1 : Bukkit.getOnlinePlayers()) {
-                        if (player1.equals(player))
-                            continue;
-                        player1.showPlayer(player);
-                    }
-                    sessionUUID.remove(player.getUniqueId());
-
-                    int playerID = player.getEntityId();
-                    WrapperPlayServerCamera playResetCamera = new WrapperPlayServerCamera(playerID);
-                    PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, playResetCamera);
-                    removeCameraStand(player, standID);
-                    player.getInventory().setArmorContents(armors);
-                    player.getInventory().setContents(itemStacks);
-                    player.updateInventory();
-                    setGameMode(player, gameMode);
-
-                    Constructor<?> constructor;
-                    try {
-                        constructor = returns.getConstructor(Player.class, Order.class, Filter.class, String.class);
-                        constructor.newInstance(player, order, filter, searchQuery);
-
-                    } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
-                             IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
 
 
-                }, duration);
-            }, 10L);
+                Constructor<?> constructor;
+                try {
+                    constructor = returns.getConstructor(Player.class, Order.class, Filter.class, String.class);
+                    constructor.newInstance(player, order, filter, searchQuery);
+
+                } catch (NoSuchMethodException | InstantiationException | InvocationTargetException |
+                         IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }, duration);
         }
 
         @SafeVarargs
@@ -211,57 +218,19 @@ public abstract class PreviewableCosmetic extends Cosmetic {
         public PreviewableCosmetic getCosmetic() {
             return cosmetic;
         }
-    }
-
-    private static void removeCameraStand(Player player, int entityID) {
-
-        WrapperPlayServerDestroyEntities destroyEntities = new WrapperPlayServerDestroyEntities(entityID);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, destroyEntities);
-
-    }
-
-    private static int summonCameraStand(Player p, Location location) {
-
-        UUID uuid = UUID.randomUUID();
-        int entityId = SpigotReflectionUtil.generateEntityId();
-        com.github.retrooper.packetevents.protocol.world.Location location1 = new com.github.retrooper.packetevents.protocol.world.Location(
-                location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-
-        WrapperPlayServerSpawnEntity standPacket = new WrapperPlayServerSpawnEntity(
-                entityId, uuid, EntityTypes.ARMOR_STAND, location1, location.getYaw(), 0, null);
-
-        EntityData<Byte> entityData = new EntityData<>(0, EntityDataTypes.BYTE, (byte) 0x20);
-        WrapperPlayServerEntityMetadata entityMetadata = new WrapperPlayServerEntityMetadata(entityId, Arrays.asList(entityData));
-
-        WrapperPlayServerEntityHeadLook headLook = new WrapperPlayServerEntityHeadLook(entityId, location.getYaw());
-
-        WrapperPlayServerEntityTeleport teleport = new WrapperPlayServerEntityTeleport(entityId, location1, false);
-
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, standPacket);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, headLook);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, entityMetadata);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, teleport);
-
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, headLook);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, teleport);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!sessionUUID.containsKey(p.getUniqueId()) || !p.isOnline()) {
-                    this.cancel();
-                    return;
-                }
-
-                WrapperPlayServerEntityTeleport tp = new WrapperPlayServerEntityTeleport(entityId, location1, false);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, tp);
-
-                WrapperPlayServerEntityHeadLook hl = new WrapperPlayServerEntityHeadLook(entityId, location.getYaw());
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, hl);
+        @EventHandler
+        public void onQuit(PlayerQuitEvent e) {
+            if (e.getPlayer().getUniqueId() == uuid) {
+                consumers.clear();
             }
-        }.runTaskTimerAsynchronously(SkyWars.getInstance(), 10L, 1L);
+        }
 
-        return entityId;
+        @EventHandler
+        public void onMove(PlayerMoveEvent e) {
+            if (e.getPlayer().getUniqueId() == uuid) {
+                e.setTo(previewLoc);
+            }
+        }
     }
 
     private static void setGameMode(Player p, org.bukkit.GameMode gameMode) {
@@ -285,22 +254,4 @@ public abstract class PreviewableCosmetic extends Cosmetic {
         return PREVIEWCONFIG;
     }
 
-    public static class NoInteraction implements PacketListener {
-
-        @Override
-        public void onPacketReceive(PacketReceiveEvent event) {
-            com.github.retrooper.packetevents.protocol.player.User user = event.getUser();
-
-            if (!sessionUUID.containsKey(user.getUUID())) {
-                return;
-            }
-
-            if (event.getPacketType() == PacketType.Play.Client.INTERACT_ENTITY ||
-                    event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION ||
-                    event.getPacketType() == PacketType.Play.Client.PLAYER_POSITION ||
-                    event.getPacketType() == PacketType.Play.Client.PLAYER_ROTATION) {
-                event.setCancelled(true);
-            }
-        }
-    }
 }

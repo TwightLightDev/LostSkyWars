@@ -25,7 +25,7 @@ public class Menu extends SubCommand {
 
     @Override
     public boolean execute(Player user, String[] args) {
-        QuestsMasterMenu.open(User.getUser(user));
+        QuestsMasterMenu.open(User.getUser(user), 1);
         return true;
     }
 }

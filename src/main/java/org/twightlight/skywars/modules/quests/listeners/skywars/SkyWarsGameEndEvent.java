@@ -3,7 +3,6 @@ package org.twightlight.skywars.modules.quests.listeners.skywars;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.quests.User;
 import org.twightlight.skywars.modules.quests.managers.ProgressionBuilder;
 
@@ -17,7 +16,7 @@ public class SkyWarsGameEndEvent implements Listener {
                     addQuestType("lsw_game_win").
                     setUser(User.getUser(winner)).
                     singleProgress().
-                    buildAndExecute();
+                    execute();
         }
     }
 }

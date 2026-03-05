@@ -37,4 +37,14 @@ public abstract class NMSBridge {
     public abstract MapHelper getMapHelper();
 
     public abstract int getIdOfEntity(Entity entity);
+
+    public abstract void sendChunksAroundLocation(Player player, Location loc,
+                             int radius);
+
+    public abstract void unloadChunksAroundLocation(Player player, Location loc,
+                                            int radius);
+
+    public abstract void resyncTrackedEntities(org.bukkit.entity.Player player);
+
+    public abstract void resyncEntity(Player player, Entity entity);
 }

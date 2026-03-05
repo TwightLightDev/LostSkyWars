@@ -76,6 +76,10 @@ public class YamlWrapper {
         return this.yml.getStringList(path).stream().map(s -> s.replace("&", "§")).collect(Collectors.toList());
     }
 
+    public void addDefault(String path, Object object) {
+        this.yml.addDefault(path, object);
+    }
+
     public boolean getBoolean(String path) {
         return this.yml.getBoolean(path);
     }

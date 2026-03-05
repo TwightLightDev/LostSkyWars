@@ -9,11 +9,14 @@ public class SkyWarsPlayerSoulEarnEvent extends SkyWarsEvent {
     private SkyWarsServer server;
     private Player player;
     private int amount;
+    private int baseAmount;
 
     public SkyWarsPlayerSoulEarnEvent(SkyWarsServer server, Player player, int amount) {
         this.server = server;
         this.player = player;
         this.amount = amount;
+        this.baseAmount = amount;
+
     }
 
     public void setAmount(int amount) {
@@ -30,5 +33,9 @@ public class SkyWarsPlayerSoulEarnEvent extends SkyWarsEvent {
 
     public int getAmount() {
         return amount;
+    }
+
+    public int getBaseAmount() {
+        return baseAmount;
     }
 }

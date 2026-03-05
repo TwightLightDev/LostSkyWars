@@ -3,7 +3,6 @@ package org.twightlight.skywars.modules.quests.managers;
 import org.twightlight.skywars.modules.quests.Quests;
 import org.twightlight.skywars.modules.quests.User;
 import org.twightlight.skywars.modules.quests.interfaces.ProgressGoal;
-import org.twightlight.skywars.modules.quests.quests.Quest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ProgressionBuilder {
         return this;
     }
 
-    public void buildAndExecute() {
+    public void execute() {
         if (user == null || goal == null) return;
 
         goal.forEach(q -> q.progress(user, progressValue));

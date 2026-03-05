@@ -22,12 +22,12 @@ public class BoostersConfig extends YamlWrapper {
                     String path3 = path2 + "_" + (int) (a * 100);
                     for (int d : durations) {
                         String path4 = path3 + "_" + d;
-                        yml.addDefault(path4 + ".id", path4.replace("boosters.", ""));
-                        yml.addDefault(path4 + ".duration", d);
-                        yml.addDefault(path4 + ".currency", c.name());
-                        yml.addDefault(path4 + ".amplifier", a);
-                        yml.addDefault(path4 + ".affiliate", 0.05);
-                        yml.addDefault(path4 + ".type", t.name());
+                        addDefault(path4 + ".id", path4.replace("boosters.", ""));
+                        addDefault(path4 + ".duration", d);
+                        addDefault(path4 + ".currency", c.name());
+                        addDefault(path4 + ".amplifier", a);
+                        addDefault(path4 + ".affiliate", 0.05);
+                        addDefault(path4 + ".type", t.name());
                     }
                 }
             }

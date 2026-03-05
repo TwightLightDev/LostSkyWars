@@ -30,6 +30,7 @@ import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.killeffe
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.citizens.CitizensHook;
 import org.twightlight.skywars.hook.PacketEventsHook;
+import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -66,60 +67,65 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
 
     @Override
     public final void preview(Player player, Object... objects) {
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {        Location klocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.attacker"));
+            Location vlocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.victim"));
+            vlocation.setY(klocation.getY());
+            klocation.getChunk().load();
+            vlocation.getChunk().load();
 
-        Location klocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.attacker"));
-        Location vlocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.victim"));
-        vlocation.setY(klocation.getY());
-        klocation.getChunk().load();
-        vlocation.getChunk().load();
+            NPC killerNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewKillerNPC");
+            killerNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
+            killerNPC.setFlyable(true);
 
-        NPC killerNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewKillerNPC");
-        killerNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
-        killerNPC.setFlyable(true);
+            killerNPC.getOrAddTrait(Gravity.class).gravitate(true);
+            killerNPC.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD));
+            killerNPC.setName("KillEffectsPreviewKillerNPC");
+            killerNPC.spawn(klocation);
 
-        killerNPC.getOrAddTrait(Gravity.class).gravitate(true);
-        killerNPC.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, new ItemStack(Material.DIAMOND_SWORD));
-        killerNPC.setName("KillEffectsPreviewKillerNPC");
-        killerNPC.spawn(klocation);
-
-        NPC victimNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewVictimNPC");
-        victimNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
-        victimNPC.getOrAddTrait(Gravity.class).gravitate(true);
-        victimNPC.setFlyable(true);
-        victimNPC.setName("KillEffectsPreviewVictimNPC");
-        victimNPC.spawn(vlocation);
-
-        Vector vector = vlocation.toVector().subtract(klocation.toVector()).normalize();
-
-        Location navigationLocation = vlocation.clone().subtract(vector.multiply(0.5));
-
-        killerNPC.getNavigator().setTarget(navigationLocation);
-
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-
-        npcSkyWarsKillEffectMap.put(killerNPC, completableFuture);
-
-        completableFuture.thenApply((b) -> {
-
-            WrapperPlayServerEntityAnimation action = new WrapperPlayServerEntityAnimation(killerNPC.getEntity().getEntityId(), WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM);
-            WrapperPlayServerEntityStatus action1 = new WrapperPlayServerEntityStatus(victimNPC.getEntity().getEntityId(), 3);
-
-            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action);
-            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action1);
+            NPC victimNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewVictimNPC");
+            victimNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
+            victimNPC.getOrAddTrait(Gravity.class).gravitate(true);
+            victimNPC.setFlyable(true);
+            victimNPC.setName("KillEffectsPreviewVictimNPC");
+            victimNPC.spawn(vlocation);
 
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
-                victimNPC.destroy();
+                NMS.getNMSBridge().resyncEntity(player, killerNPC.getEntity());
+                NMS.getNMSBridge().resyncEntity(player, victimNPC.getEntity());
+            }, 1);
 
-                killEffectPreview(player, vlocation);
-            }, 5L);
-            return b;
-        });
+            Vector vector = vlocation.toVector().subtract(klocation.toVector()).normalize();
 
-        sessionUUID.get(player.getUniqueId()).addEndConsumers((p) -> {
-            npcSkyWarsKillEffectMap.remove(killerNPC);
-            killerNPC.destroy();
+            Location navigationLocation = vlocation.clone().subtract(vector.multiply(0.5));
 
-        });
+            killerNPC.getNavigator().setTarget(navigationLocation);
+
+            CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+            npcSkyWarsKillEffectMap.put(killerNPC, completableFuture);
+
+            completableFuture.thenApply((b) -> {
+
+                WrapperPlayServerEntityAnimation action = new WrapperPlayServerEntityAnimation(killerNPC.getEntity().getEntityId(), WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM);
+                WrapperPlayServerEntityStatus action1 = new WrapperPlayServerEntityStatus(victimNPC.getEntity().getEntityId(), 3);
+
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action);
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action1);
+
+                Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+                    victimNPC.destroy();
+
+                    killEffectPreview(player, vlocation);
+                }, 5L);
+                return b;
+            });
+
+            sessionUUID.get(player.getUniqueId()).addEndConsumers((p) -> {
+                npcSkyWarsKillEffectMap.remove(killerNPC);
+                killerNPC.destroy();
+            });
+            }, 15L);
+
     }
 
     public abstract void killEffectPreview(Player player, Location location);
@@ -128,11 +134,9 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
         @EventHandler
         public void onNavigationComplete(NavigationCompleteEvent e) {
             NPC npc = e.getNPC();
-
             if (npc.getName().equals("KillEffectsPreviewKillerNPC") && npcSkyWarsKillEffectMap.containsKey(npc)) {
                 npcSkyWarsKillEffectMap.get(npc).complete(true);
             }
-
         }
     }
 

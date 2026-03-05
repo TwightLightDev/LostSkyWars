@@ -132,42 +132,34 @@ public class SlimeLoader extends WorldLoaderAdapter {
     //Create a VIRTUAL world and load it internally -> no need to call load();
     public CompletableFuture<Void> cloneArenaWorld(String name1, String name2) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        int maxRetries = 3;
 
-        Bukkit.getScheduler().runTaskAsynchronously(getOwner(), () -> {
-            for (int attempt = 1; attempt <= maxRetries; attempt++) {
-                try {
+        if (Bukkit.getWorld(name2) != null) {
+            future.complete(null);
+            return future;
+        }
 
-                    SlimeWorld world = worlds.get(name1);
-                    if (world == null) {
-                        future.completeExceptionally(
-                                new IllegalArgumentException("Original world not found: " + name1)
-                        );
-                        break;
+        try {
 
-                    }
+            SlimeWorld world = worlds.get(name1);
+            if (world == null) {
+                future.completeExceptionally(
+                        new IllegalArgumentException("Original world not found: " + name1)
+                );
 
-                    SlimeWorld cloned = world.clone(name2, null);
-
-                    Bukkit.getScheduler().runTask(getOwner(), () -> {
-                        slime.generateWorld(cloned);
-                        future.complete(null);
-                    });
-
-                    break;
-
-                } catch (WorldAlreadyExistsException ex) {
-                    unload(name2);
-                } catch (IOException | NullPointerException ex) {
-                    future.completeExceptionally(ex);
-                    return;
-                }
             }
 
-            future.completeExceptionally(
-                    new IllegalStateException("World clone failed after " + maxRetries + " attempts")
-            );
-        });
+            SlimeWorld cloned = world.clone(name2, null);
+
+            Bukkit.getScheduler().runTask(getOwner(), () -> {
+                slime.generateWorld(cloned);
+                future.complete(null);
+            });
+
+
+        } catch (WorldAlreadyExistsException | IOException | NullPointerException ex) {
+            future.completeExceptionally(ex);
+        }
+
 
         return future;
     }
