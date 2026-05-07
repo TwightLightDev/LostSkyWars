@@ -36,6 +36,10 @@ public abstract class Database {
 
     public abstract CachedRowSet query(String query, Object... vars);
 
+    public abstract Account cacheAccount(Account account);
+
+    public abstract Account uncacheAccount(UUID id);
+
     private static Database instance;
     public static final Logger LOGGER = Core.getCoreLogger().getModule("Database");
 

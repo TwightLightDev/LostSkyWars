@@ -40,52 +40,98 @@ public class MySQLDatabase extends Database {
         this.createAccountTable();
         this.createSkyWarsTable();
         this.createRankedTable();
-        if (query("SHOW COLUMNS FROM premium_lostedaccount LIKE 'leveling'") == null) {
-            update("ALTER TABLE premium_lostedaccount ADD COLUMN leveling TEXT DEFAULT NULL AFTER deliveries;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'deathcry'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN deathcry TEXT DEFAULT NULL AFTER cages;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'trail'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN trail TEXT DEFAULT NULL AFTER deathcry;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'ballons'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN ballons TEXT DEFAULT NULL AFTER trail;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'killmessage'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN killmessage TEXT DEFAULT NULL AFTER ballons;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'killeffect'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN killeffect TEXT DEFAULT NULL AFTER killmessage;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'spray'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN spray TEXT DEFAULT NULL AFTER killeffect;");
-        }
-        if (query("SHOW COLUMNS FROM premium_lostedskywars LIKE 'victorydance'") == null) {
-            update("ALTER TABLE premium_lostedskywars ADD COLUMN victorydance TEXT DEFAULT NULL AFTER spray;");
+
+        // Safe schema migrations — add missing columns
+        addColumnIfMissing("premium_lostedaccount", "leveling", "TEXT DEFAULT NULL", "deliveries");
+        addColumnIfMissing("premium_lostedskywars", "deathcry", "TEXT DEFAULT NULL", "cages");
+        addColumnIfMissing("premium_lostedskywars", "trail", "TEXT DEFAULT NULL", "deathcry");
+        addColumnIfMissing("premium_lostedskywars", "ballons", "TEXT DEFAULT NULL", "trail");
+        addColumnIfMissing("premium_lostedskywars", "killmessage", "TEXT DEFAULT NULL", "ballons");
+        addColumnIfMissing("premium_lostedskywars", "killeffect", "TEXT DEFAULT NULL", "killmessage");
+        addColumnIfMissing("premium_lostedskywars", "spray", "TEXT DEFAULT NULL", "killeffect");
+        addColumnIfMissing("premium_lostedskywars", "victorydance", "TEXT DEFAULT NULL", "spray");
+    }
+
+    private void addColumnIfMissing(String table, String column, String definition, String after) {
+        if (query("SHOW COLUMNS FROM " + table + " LIKE '" + column + "'") == null) {
+            update("ALTER TABLE " + table + " ADD COLUMN " + column + " " + definition + " AFTER " + after + ";");
         }
     }
 
     private void createAccountTable() {
-        this.update("CREATE TABLE IF NOT EXISTS premium_lostedaccount (" + "id VARCHAR(36) NOT NULL," + "name VARCHAR(32) NOT NULL," + "lastRank VARCHAR(2) NOT NULL,"
-                + "mysterydusts INTEGER NOT NULL," + "sw_maxsouls INTEGER DEFAULT 100," + "sw_wellroll INTEGER DEFAULT 1," + "sw_soulswin INTEGER DEFAULT 0,"
-                + "deliveries TEXT DEFAULT NULL," + "leveling TEXT DEFAULT NULL," + "players BOOLEAN NOT NULL," + "gore BOOLEAN NOT NULL,"
+        this.update("CREATE TABLE IF NOT EXISTS premium_lostedaccount ("
+                + "id VARCHAR(36) NOT NULL,"
+                + "name VARCHAR(32) NOT NULL,"
+                + "lastRank VARCHAR(2) NOT NULL,"
+                + "mysterydusts INTEGER NOT NULL,"
+                + "sw_maxsouls INTEGER DEFAULT 100,"
+                + "sw_wellroll INTEGER DEFAULT 1,"
+                + "sw_soulswin INTEGER DEFAULT 0,"
+                + "deliveries TEXT DEFAULT NULL,"
+                + "leveling TEXT DEFAULT NULL,"
+                + "players BOOLEAN NOT NULL,"
+                + "gore BOOLEAN NOT NULL,"
                 + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
     }
 
     private void createRankedTable() {
-        this.update("CREATE TABLE IF NOT EXISTS ranked_lostedskywars (" + "id VARCHAR(36) NOT NULL," + "name VARCHAR(32) NOT NULL," + "kills INTEGER NOT NULL,"
-                + "wins INTEGER NOT NULL," + "assists INTEGER NOT NULL," + "deaths INTEGER NOT NULL," + "melee INTEGER NOT NULL," + "bow INTEGER NOT NULL," + "mob INTEGER NOT NULL," + "void INTEGER NOT NULL,"
-                + "plays INTEGER NOT NULL," + "points INTEGER NOT NULL," + "brave_points INTEGER NOT NULL," + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+        this.update("CREATE TABLE IF NOT EXISTS ranked_lostedskywars ("
+                + "id VARCHAR(36) NOT NULL,"
+                + "name VARCHAR(32) NOT NULL,"
+                + "kills INTEGER NOT NULL,"
+                + "wins INTEGER NOT NULL,"
+                + "assists INTEGER NOT NULL,"
+                + "deaths INTEGER NOT NULL,"
+                + "melee INTEGER NOT NULL,"
+                + "bow INTEGER NOT NULL,"
+                + "mob INTEGER NOT NULL,"
+                + "void INTEGER NOT NULL,"
+                + "plays INTEGER NOT NULL,"
+                + "points INTEGER NOT NULL,"
+                + "brave_points INTEGER NOT NULL,"
+                + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
     }
 
     private void createSkyWarsTable() {
-        this.update("CREATE TABLE IF NOT EXISTS premium_lostedskywars (" + "id VARCHAR(36) NOT NULL," + "name VARCHAR(32) NOT NULL," + "solokills INTEGER NOT NULL,"
-                + "solowins INTEGER NOT NULL," + "soloassists INTEGER NOT NULL," + "solodeaths INTEGER NOT NULL," + "solomelee INTEGER NOT NULL," + "solobow INTEGER NOT NULL,"
-                + "solomob INTEGER NOT NULL," + "solovoid INTEGER NOT NULL," + "soloplays INTEGER NOT NULL," + "teamkills INTEGER NOT NULL," + "teamwins INTEGER NOT NULL," + "teamassists INTEGER NOT NULL,"
-                + "teamdeaths INTEGER NOT NULL," + "teammelee INTEGER NOT NULL," + "teambow INTEGER NOT NULL," + "teammob INTEGER NOT NULL," + "teamvoid INTEGER NOT NULL," + "teamplays INTEGER NOT NULL,"
-                + "coins INTEGER NOT NULL," + "souls INTEGER NOT NULL," + "level INTEGER NOT NULL," + "exp DOUBLE NOT NULL," + "kits TEXT DEFAULT NULL," + "perks TEXT DEFAULT NULL,"
-                + "cages TEXT DEFAULT NULL," + "deathcry TEXT DEFAULT NULL," + "trail TEXT DEFAULT NULL," + "ballons TEXT DEFAULT NULL," + "killmessage TEXT DEFAULT NULL," + "killeffect TEXT DEFAULT NULL," + "spray TEXT DEFAULT NULL," + "victorydance TEXT DEFAULT NULL," + "title TEXT DEFAULT NULL," + "selected TEXT DEFAULT NULL," + "lastSelected LONG," + "favorites TEXT,"
+        this.update("CREATE TABLE IF NOT EXISTS premium_lostedskywars ("
+                + "id VARCHAR(36) NOT NULL,"
+                + "name VARCHAR(32) NOT NULL,"
+                + "solokills INTEGER NOT NULL,"
+                + "solowins INTEGER NOT NULL,"
+                + "soloassists INTEGER NOT NULL,"
+                + "solodeaths INTEGER NOT NULL,"
+                + "solomelee INTEGER NOT NULL,"
+                + "solobow INTEGER NOT NULL,"
+                + "solomob INTEGER NOT NULL,"
+                + "solovoid INTEGER NOT NULL,"
+                + "soloplays INTEGER NOT NULL,"
+                + "teamkills INTEGER NOT NULL,"
+                + "teamwins INTEGER NOT NULL,"
+                + "teamassists INTEGER NOT NULL,"
+                + "teamdeaths INTEGER NOT NULL,"
+                + "teammelee INTEGER NOT NULL,"
+                + "teambow INTEGER NOT NULL,"
+                + "teammob INTEGER NOT NULL,"
+                + "teamvoid INTEGER NOT NULL,"
+                + "teamplays INTEGER NOT NULL,"
+                + "coins INTEGER NOT NULL,"
+                + "souls INTEGER NOT NULL,"
+                + "level INTEGER NOT NULL,"
+                + "exp DOUBLE NOT NULL,"
+                + "kits TEXT DEFAULT NULL,"
+                + "perks TEXT DEFAULT NULL,"
+                + "cages TEXT DEFAULT NULL,"
+                + "deathcry TEXT DEFAULT NULL,"
+                + "trail TEXT DEFAULT NULL,"
+                + "ballons TEXT DEFAULT NULL,"
+                + "killmessage TEXT DEFAULT NULL,"
+                + "killeffect TEXT DEFAULT NULL,"
+                + "spray TEXT DEFAULT NULL,"
+                + "victorydance TEXT DEFAULT NULL,"
+                + "title TEXT DEFAULT NULL,"
+                + "selected TEXT DEFAULT NULL,"
+                + "lastSelected LONG,"
+                + "favorites TEXT,"
                 + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
     }
 
@@ -94,27 +140,53 @@ public class MySQLDatabase extends Database {
         table = (table.equalsIgnoreCase("ranked_lostedskywars") ? table : "premium_" + table);
         Map<String, StatsContainer> map = new LinkedHashMap<>();
         CachedRowSet rs = this.query("SELECT * FROM `" + table + "` WHERE `id` = ?", id.toString());
+
         if (rs != null) {
             try {
-                for (int collumn = 2; collumn <= rs.getMetaData().getColumnCount(); collumn++) {
-                    String key = rs.getMetaData().getColumnName(collumn);
-                    if (key.equals("name")) {
-                        String oldName = rs.getString(key);
-                        if (!oldName.equals(name)) {
-                            this.execute("UPDATE `" + table + "` SET `name` = ? WHERE `id` = ?", name, id.toString());
+                if (rs.next()) {
+                    for (int column = 2; column <= rs.getMetaData().getColumnCount(); column++) {
+                        String key = rs.getMetaData().getColumnName(column);
+                        if (key.equals("name")) {
+                            String oldName = rs.getString(key);
+                            if (!oldName.equals(name)) {
+                                this.execute("UPDATE `" + table + "` SET `name` = ? WHERE `id` = ?", name, id.toString());
+                            }
+                            continue;
                         }
 
-                        continue;
+                        if (key.equals("players") || key.equals("gore")) {
+                            map.put(key, new StatsContainer(rs.getBoolean(key)));
+                        } else {
+                            map.put(key, new StatsContainer(rs.getObject(key)));
+                        }
                     }
-
-                    map.put(key, new StatsContainer(rs.getObject(key)));
                 }
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
+            } finally {
+                closeQuietly(rs);
             }
 
-            return map;
+            if (!map.isEmpty()) {
+                return map;
+            }
         }
+
+        // No existing row — build defaults and INSERT
+        map = buildDefaultMap(table);
+
+        List<Object> list = new ArrayList<>();
+        list.add(id.toString());
+        list.add(name);
+        list.addAll(map.values().stream().map(StatsContainer::get).collect(Collectors.toList()));
+        this.execute("INSERT INTO `" + table + "` VALUES (?, ?, "
+                + StringUtils.repeat("?, ", map.size() - 1) + "?)", list.toArray(new Object[0]));
+
+        return map;
+    }
+
+    private Map<String, StatsContainer> buildDefaultMap(String table) {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
 
         if (table.equals("premium_lostedskywars")) {
             map.put("solokills", new StatsContainer(0));
@@ -147,9 +219,9 @@ public class MySQLDatabase extends Database {
             map.put("killmessage", new StatsContainer("{}"));
             map.put("killeffect", new StatsContainer("{}"));
             map.put("spray", new StatsContainer("{}"));
+            map.put("ballons", new StatsContainer("{}"));
             map.put("victorydance", new StatsContainer("{}"));
             map.put("title", new StatsContainer("{}"));
-            map.put("ballons", new StatsContainer("{}"));
             map.put("selected", new StatsContainer("0:0:0 : 0"));
             map.put("lastSelected", new StatsContainer(0L));
             map.put("favorites", new StatsContainer("[]"));
@@ -176,13 +248,7 @@ public class MySQLDatabase extends Database {
             map.put("players", new StatsContainer(true));
             map.put("gore", new StatsContainer(true));
         }
-        List<Object> list = new ArrayList<>();
-        list.add(id.toString());
-        list.add(name);
-        list.addAll(map.values().stream().map(sc -> sc.get()).collect(Collectors.toList()));
-        this.execute("INSERT INTO `" + table + "` VALUES (?, ?, " + StringUtils.repeat("?, ", map.size() - 1) + "?)", list.toArray(new Object[list.size()]));
-        list.clear();
-        list = null;
+
         return map;
     }
 
@@ -191,31 +257,23 @@ public class MySQLDatabase extends Database {
         table = (table.equalsIgnoreCase("ranked_lostedskywars") ? table : "premium_" + table);
         StringBuilder sb = new StringBuilder("UPDATE `" + table + "` SET ");
         List<String> keys = new ArrayList<>(map.keySet());
-        for (int slot = 0; slot < keys.size(); slot++) {
-            String key = keys.get(slot);
-            sb.append("`" + key + "` = ?");
-            if (slot + 1 == keys.size()) {
-                continue;
-            }
 
-            sb.append(", ");
+        for (int i = 0; i < keys.size(); i++) {
+            sb.append("`").append(keys.get(i)).append("` = ?");
+            if (i + 1 < keys.size()) {
+                sb.append(", ");
+            }
         }
 
         sb.append(" WHERE `id` = ?");
 
-        List<Object> values = new ArrayList<>();
-        values.addAll(map.values().stream().map(sc -> sc.get()).collect(Collectors.toList()));
+        List<Object> values = map.values().stream().map(StatsContainer::get).collect(Collectors.toList());
         values.add(id.toString());
-        this.execute(sb.toString(), values.toArray(new Object[values.size()]));
-
-        keys.clear();
-        values.clear();
-        keys = null;
-        values = null;
+        this.execute(sb.toString(), values.toArray(new Object[0]));
     }
 
-    private Map<UUID, Account> accounts = new HashMap<>();
-    private Map<UUID, Account> offlineaccounts = new HashMap<>();
+    private final Map<UUID, Account> accounts = new ConcurrentHashMap<>();
+    private final Map<UUID, Account> offlineaccounts = new ConcurrentHashMap<>();
 
     @Override
     public Account loadAccount(UUID id, String name) {
@@ -231,14 +289,23 @@ public class MySQLDatabase extends Database {
     @Override
     public CompletableFuture<Account> loadAccountOffline(String name) {
         return CompletableFuture.supplyAsync(() -> {
-            try (CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?", name.toLowerCase())) {
-                if (rs == null || !rs.next()) {
+            CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?",
+                    name.toLowerCase());
+
+            if (rs == null) {
+                return null;
+            }
+
+            try {
+                if (!rs.next()) {
                     return null;
                 }
                 return new Account(UUID.fromString(rs.getString("id")), name);
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\") error: ", ex);
                 return null;
+            } finally {
+                closeQuietly(rs);
             }
         });
     }
@@ -250,16 +317,27 @@ public class MySQLDatabase extends Database {
             if (account != null) {
                 return account;
             }
-            try (CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`id`) = ?", uuid.toString())) {
-                if (rs == null || !rs.next()) {
+
+            // Fixed: removed LOWER() on UUID — UUIDs are case-insensitive but should match directly
+            CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE `id` = ?",
+                    uuid.toString());
+
+            if (rs == null) {
+                return null;
+            }
+
+            try {
+                if (!rs.next()) {
                     return null;
                 }
                 account = new Account(uuid, Bukkit.getOfflinePlayer(uuid).getName());
                 offlineaccounts.put(uuid, account);
                 return account;
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, "loadOffline(\"" + uuid + "\") error: ", ex);
+                LOGGER.log(Level.SEVERE, "getAccountOffline(\"" + uuid + "\") error: ", ex);
                 return null;
+            } finally {
+                closeQuietly(rs);
             }
         });
     }
@@ -280,27 +358,36 @@ public class MySQLDatabase extends Database {
     }
 
     @Override
+    public Account cacheAccount(Account account) {
+        if (account == null) return null;
+        return accounts.put(account.getUniqueId(), account);
+    }
+
+    @Override
+    public Account uncacheAccount(UUID id) {
+        if (id == null) return null;
+        return accounts.remove(id);
+    }
+
+    @Override
     public Collection<Account> listAccounts() {
         return ImmutableList.copyOf(accounts.values());
     }
+
     @Override
     public Collection<Account> listOfflineAccounts() {
         return ImmutableList.copyOf(offlineaccounts.values());
     }
+
     public void openConnection() {
         try {
-            boolean reconnected = true;
-            if (this.connection == null) {
-                reconnected = false;
-            }
+            boolean reconnected = this.connection != null;
             this.connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?verifyServerCertificate=false&useSSL=false&useUnicode=yes&characterEncoding=UTF-8", username, password);
-            if (reconnected) {
-                LOGGER.info("Reconnected to MySQL!");
-                return;
-            }
+                    "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                            + "?verifyServerCertificate=false&useSSL=false&useUnicode=yes&characterEncoding=UTF-8",
+                    username, password);
 
-            LOGGER.info("Connected to MySQL!");
+            LOGGER.info(reconnected ? "Reconnected to MySQL!" : "Connected to MySQL!");
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Could not open MySQL connection: ", ex);
         }
@@ -334,19 +421,26 @@ public class MySQLDatabase extends Database {
     }
 
     public void update(String sql, Object... vars) {
+        PreparedStatement ps = prepareStatement(sql, vars);
+        if (ps == null) {
+            LOGGER.log(Level.WARNING, "Could not execute SQL (PreparedStatement was null): " + sql);
+            return;
+        }
+
         try {
-            PreparedStatement ps = prepareStatement(sql, vars);
             ps.execute();
-            ps.close();
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, "Could not execute SQL (" + sql + "): ", e);
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     public void execute(String sql, Object... vars) {
-        executor.execute(() -> {
-            update(sql, vars);
-        });
+        executor.execute(() -> update(sql, vars));
     }
 
     public PreparedStatement prepareStatement(String query, Object... vars) {
@@ -363,40 +457,51 @@ public class MySQLDatabase extends Database {
         return null;
     }
 
+    /**
+     * Executes a query and returns a CachedRowSet with the cursor positioned
+     * BEFORE the first row (ready for rs.next()). Returns null if no rows.
+     */
     public CachedRowSet query(String query, Object... vars) {
         CachedRowSet rowSet = null;
         try {
-            Future<CachedRowSet> future = executor.submit(new Callable<CachedRowSet>() {
-
-                @Override
-                public CachedRowSet call() {
-                    try {
-                        PreparedStatement ps = prepareStatement(query, vars);
-
-                        ResultSet rs = ps.executeQuery();
-                        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-                        crs.populate(rs);
-                        rs.close();
-                        ps.close();
-
-                        if (crs.next()) {
-                            return crs;
-                        }
-                    } catch (Exception e) {
-                        LOGGER.log(Level.WARNING, "Could not Execute Query: ", e);
-                    }
-
+            Future<CachedRowSet> future = executor.submit(() -> {
+                PreparedStatement ps = prepareStatement(query, vars);
+                if (ps == null) {
                     return null;
                 }
+
+                try {
+                    ResultSet rs = ps.executeQuery();
+                    CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+                    crs.populate(rs);
+                    rs.close();
+                    ps.close();
+
+                    if (crs.size() > 0) {
+                        crs.beforeFirst();
+                        return crs;
+                    }
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Could not Execute Query: ", e);
+                }
+
+                return null;
             });
 
-            if (future.get() != null) {
-                rowSet = future.get();
-            }
+            rowSet = future.get();
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Could not Call FutureTask: ", e);
         }
 
         return rowSet;
+    }
+
+    private static void closeQuietly(CachedRowSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException ignored) {
+            }
+        }
     }
 }

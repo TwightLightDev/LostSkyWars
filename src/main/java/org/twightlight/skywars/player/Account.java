@@ -47,44 +47,112 @@ public class Account {
 
     private SkyWarsServer server;
 
-    private Map<String, StatsContainer> account, skywars, ranked;
+    protected Map<String, StatsContainer> account, skywars, ranked;
     private Map<UUID, Long> lastHit = new HashMap<>();
 
+    private static final String[] SKYWARS_JSON_FIELDS = {
+            "deathcry", "trail", "killmessage", "spray", "ballons",
+            "killeffect", "victorydance", "perks"
+    };
+
     public Account(UUID id, String name) {
+        this(id, name, false);
+    }
+
+    protected Account(UUID id, String name, boolean virtual) {
         this.id = id;
         this.name = name;
 
-        this.account = Database.getInstance().loadStats(id, "lostedaccount", name);
-        this.skywars = Database.getInstance().loadStats(id, "lostedskywars", name);
-        this.ranked = Database.getInstance().loadStats(id, "ranked_lostedskywars", name);
+        if (!virtual) {
+            this.account = Database.getInstance().loadStats(id, "lostedaccount", name);
+            this.skywars = Database.getInstance().loadStats(id, "lostedskywars", name);
+            this.ranked = Database.getInstance().loadStats(id, "ranked_lostedskywars", name);
+        } else {
+            this.account = buildDefaultAccountStats();
+            this.skywars = buildDefaultSkyWarsStats();
+            this.ranked = buildDefaultRankedStats();
+        }
 
         if (this.account.get("leveling").get() == null) {
             this.account.get("leveling").set("[]");
         }
-        if (this.skywars.get("deathcry").get() == null) {
-            this.skywars.get("deathcry").set("{}");
+
+        for (String field : SKYWARS_JSON_FIELDS) {
+            if (this.skywars.get(field).get() == null) {
+                this.skywars.get(field).set("{}");
+            }
         }
-        if (this.skywars.get("trail").get() == null) {
-            this.skywars.get("trail").set("{}");
-        }
-        if (this.skywars.get("killmessage").get() == null) {
-            this.skywars.get("killmessage").set("{}");
-        }
-        if (this.skywars.get("spray").get() == null) {
-            this.skywars.get("spray").set("{}");
-        }
-        if (this.skywars.get("ballons").get() == null) {
-            this.skywars.get("ballons").set("{}");
-        }
-        if (this.skywars.get("killeffect").get() == null) {
-            this.skywars.get("killeffect").set("{}");
-        }
-        if (this.skywars.get("victorydance").get() == null) {
-            this.skywars.get("victorydance").set("{}");
-        }
-        if (this.skywars.get("perks").get() == null) {
-            this.skywars.get("perks").set("{}");
-        }
+    }
+
+    private static Map<String, StatsContainer> buildDefaultAccountStats() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("lastRank", new StatsContainer("&7"));
+        map.put("mysterydusts", new StatsContainer(0));
+        map.put("sw_maxsouls", new StatsContainer(100));
+        map.put("sw_wellroll", new StatsContainer(1));
+        map.put("sw_soulswin", new StatsContainer(0));
+        map.put("deliveries", new StatsContainer("{}"));
+        map.put("leveling", new StatsContainer("[]"));
+        map.put("players", new StatsContainer(true));
+        map.put("gore", new StatsContainer(true));
+        return map;
+    }
+
+    private static Map<String, StatsContainer> buildDefaultSkyWarsStats() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("solokills", new StatsContainer(0));
+        map.put("solowins", new StatsContainer(0));
+        map.put("soloassists", new StatsContainer(0));
+        map.put("solodeaths", new StatsContainer(0));
+        map.put("solomelee", new StatsContainer(0));
+        map.put("solobow", new StatsContainer(0));
+        map.put("solomob", new StatsContainer(0));
+        map.put("solovoid", new StatsContainer(0));
+        map.put("soloplays", new StatsContainer(0));
+        map.put("teamkills", new StatsContainer(0));
+        map.put("teamwins", new StatsContainer(0));
+        map.put("teamassists", new StatsContainer(0));
+        map.put("teamdeaths", new StatsContainer(0));
+        map.put("teammelee", new StatsContainer(0));
+        map.put("teambow", new StatsContainer(0));
+        map.put("teammob", new StatsContainer(0));
+        map.put("teamvoid", new StatsContainer(0));
+        map.put("teamplays", new StatsContainer(0));
+        map.put("coins", new StatsContainer(0));
+        map.put("souls", new StatsContainer(0));
+        map.put("level", new StatsContainer(1));
+        map.put("exp", new StatsContainer(0.0D));
+        map.put("kits", new StatsContainer("{}"));
+        map.put("perks", new StatsContainer("{}"));
+        map.put("cages", new StatsContainer("{}"));
+        map.put("deathcry", new StatsContainer("{}"));
+        map.put("trail", new StatsContainer("{}"));
+        map.put("killmessage", new StatsContainer("{}"));
+        map.put("killeffect", new StatsContainer("{}"));
+        map.put("spray", new StatsContainer("{}"));
+        map.put("ballons", new StatsContainer("{}"));
+        map.put("victorydance", new StatsContainer("{}"));
+        map.put("title", new StatsContainer("{}"));
+        map.put("selected", new StatsContainer("0:0:0 : 0"));
+        map.put("lastSelected", new StatsContainer(0L));
+        map.put("favorites", new StatsContainer("[]"));
+        return map;
+    }
+
+    private static Map<String, StatsContainer> buildDefaultRankedStats() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("kills", new StatsContainer(0));
+        map.put("wins", new StatsContainer(0));
+        map.put("assists", new StatsContainer(0));
+        map.put("deaths", new StatsContainer(0));
+        map.put("melee", new StatsContainer(0));
+        map.put("bow", new StatsContainer(0));
+        map.put("mob", new StatsContainer(0));
+        map.put("void", new StatsContainer(0));
+        map.put("plays", new StatsContainer(0));
+        map.put("points", new StatsContainer(0));
+        map.put("brave_points", new StatsContainer(0));
+        return map;
     }
 
     @SuppressWarnings("unchecked")
@@ -140,7 +208,8 @@ public class Account {
 
     public void addExp(double exp) {
         this.skywars.get("exp").addDouble(exp);
-        Level current = Level.getByLevel(this.skywars.get("level").getAsInt()), nextLevel = current.getNext();
+        Level current = Level.getByLevel(this.skywars.get("level").getAsInt());
+        Level nextLevel = current.getNext();
         if (current.getExperienceUntil(this.getExp()) <= 0.0) {
             if (nextLevel != null) {
                 this.skywars.get("level").addInt(1);
@@ -170,74 +239,15 @@ public class Account {
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
+
         if (inLobby()) {
-            player.setGameMode(GameMode.ADVENTURE);
-            int slot = Language.lobby$hotbar$profile$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot,
-                        BukkitUtils.putProfileOnSkull(player, BukkitUtils.deserializeItemStack("SKULL_ITEM:3 : 1 : display=" + Language.lobby$hotbar$profile$name)));
-            }
-
-            slot = Language.lobby$hotbar$shop$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("EMERALD : 1 : display=" + Language.lobby$hotbar$shop$name));
-            }
-
-            slot = Language.lobby$hotbar$players$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
-                        "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display=" + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
-            }
-
-            Rank.getRank(player).apply(player);
-            player.teleport(SetLobbyCommand.getSpawnLocation());
-            if (Language.lobby$speed$enabled) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, Language.lobby$speed$level - 1));
-            }
-            if (Language.lobby$jump_boost$enabled) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, Language.lobby$jump_boost$level - 1));
-            }
+            setupLobbyInventory(player);
         } else if (server.getState().canJoin()) {
-            player.setGameMode(GameMode.ADVENTURE);
-            int slot = Language.game$hotbar$kits$slot;
-            if (slot < 9 && slot > -1) {
-                if (server.getType() != SkyWarsType.DUELS) {
-                    player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
-                }
-            }
-
-            slot = Language.game$hotbar$quit$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("BED : 1 : display=" + Language.game$hotbar$quit$name));
-            }
+            setupWaitingInventory(player);
         } else if (server.getState() == SkyWarsState.STARTING) {
-            player.setGameMode(GameMode.ADVENTURE);
-            int slot = Language.game$hotbar$kits$slot;
-            if (slot < 9 && slot > -1) {
-                if (server.getType() != SkyWarsType.DUELS) {
-                    player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
-                }
-            }
+            setupStartingInventory(player);
         } else if (server.isSpectator(player)) {
-            player.setGameMode(GameMode.ADVENTURE);
-            player.setAllowFlight(true);
-            player.setFlying(true);
-            player.spigot().setCollidesWithEntities(false);
-
-            int slot = Language.game$hotbar$compass$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("COMPASS : 1 : display=" + Language.game$hotbar$compass$name));
-            }
-
-            slot = Language.game$hotbar$play_again$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("PAPER : 1 : display=" + Language.game$hotbar$play_again$name));
-            }
-
-            slot = Language.game$hotbar$quit_spectator$slot;
-            if (slot < 9 && slot > -1) {
-                player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack("BED : 1 : display=" + Language.game$hotbar$quit_spectator$name));
-            }
+            setupSpectatorInventory(player);
         } else {
             player.setGameMode(GameMode.SURVIVAL);
         }
@@ -245,34 +255,126 @@ public class Account {
         player.updateInventory();
     }
 
+    private void setupLobbyInventory(Player player) {
+        player.setGameMode(GameMode.ADVENTURE);
+
+        int slot = Language.lobby$hotbar$profile$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.putProfileOnSkull(player, BukkitUtils.deserializeItemStack(
+                            "SKULL_ITEM:3 : 1 : display=" + Language.lobby$hotbar$profile$name)));
+        }
+
+        slot = Language.lobby$hotbar$shop$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("EMERALD : 1 : display=" + Language.lobby$hotbar$shop$name));
+        }
+
+        slot = Language.lobby$hotbar$players$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
+                    "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display="
+                            + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
+        }
+
+        Rank.getRank(player).apply(player);
+        player.teleport(SetLobbyCommand.getSpawnLocation());
+
+        if (Language.lobby$speed$enabled) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, Language.lobby$speed$level - 1));
+        }
+        if (Language.lobby$jump_boost$enabled) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, Language.lobby$jump_boost$level - 1));
+        }
+    }
+
+    private void setupWaitingInventory(Player player) {
+        player.setGameMode(GameMode.ADVENTURE);
+
+        int slot = Language.game$hotbar$kits$slot;
+        if (slot >= 0 && slot < 9 && server.getType() != SkyWarsType.DUELS) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
+        }
+
+        slot = Language.game$hotbar$quit$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("BED : 1 : display=" + Language.game$hotbar$quit$name));
+        }
+    }
+
+    private void setupStartingInventory(Player player) {
+        player.setGameMode(GameMode.ADVENTURE);
+
+        int slot = Language.game$hotbar$kits$slot;
+        if (slot >= 0 && slot < 9 && server.getType() != SkyWarsType.DUELS) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
+        }
+    }
+
+    private void setupSpectatorInventory(Player player) {
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setAllowFlight(true);
+        player.setFlying(true);
+        player.spigot().setCollidesWithEntities(false);
+
+        int slot = Language.game$hotbar$compass$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("COMPASS : 1 : display=" + Language.game$hotbar$compass$name));
+        }
+
+        slot = Language.game$hotbar$play_again$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("PAPER : 1 : display=" + Language.game$hotbar$play_again$name));
+        }
+
+        slot = Language.game$hotbar$quit_spectator$slot;
+        if (slot >= 0 && slot < 9) {
+            player.getInventory().setItem(slot,
+                    BukkitUtils.deserializeItemStack("BED : 1 : display=" + Language.game$hotbar$quit_spectator$name));
+        }
+    }
+
     public void refreshPlayers() {
         Player player = getPlayer();
+        if (player == null) {
+            return;
+        }
 
         int slot = Language.lobby$hotbar$players$slot;
-        if (slot < 9 && slot > -1) {
+        if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
-                    "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display=" + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
+                    "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display="
+                            + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
         }
         player.updateInventory();
 
         Database.getInstance().listAccounts().forEach(account -> {
-            Player players = account.getPlayer();
+            Player other = account.getPlayer();
+            if (other == null) {
+                return;
+            }
 
             if (account.inLobby()) {
                 if (canSeePlayers()) {
-                    player.showPlayer(players);
+                    player.showPlayer(other);
                 } else {
-                    player.hidePlayer(players);
+                    player.hidePlayer(other);
                 }
 
                 if (account.canSeePlayers()) {
-                    players.showPlayer(player);
+                    other.showPlayer(player);
                 } else {
-                    players.hidePlayer(player);
+                    other.hidePlayer(player);
                 }
             } else {
-                player.hidePlayer(players);
-                players.hidePlayer(player);
+                player.hidePlayer(other);
+                other.hidePlayer(player);
             }
         });
     }
@@ -282,44 +384,70 @@ public class Account {
         double currentExp = this.getExp();
         double needExp = level.getNext() == null ? 0.0 : level.getNext().getExp();
         StringBuilder progressBar = new StringBuilder();
-        double percentage = currentExp >= needExp ? 100.0 : ((currentExp * 100.0) / needExp);
+        double percentage = needExp <= 0.0 ? 100.0 : ((currentExp * 100.0) / needExp);
 
-        boolean higher = false, hasColor = false;
-        for (double d = (utf8 ? 10.0 : 2.5); d <= 100.0; d += (utf8 ? 10.0 : 2.5)) {
-            if (!higher && percentage >= d) {
-                progressBar.append((utf8 ? "§b" : "§3"));
-                higher = true;
+        double step = utf8 ? 10.0 : 2.5;
+        String filledColor = utf8 ? "§b" : "§3";
+        String emptyColor = utf8 ? "§7" : "§8";
+        String symbol = utf8 ? "■" : "|";
+
+        boolean lastWasFilled = false;
+        boolean hasColor = false;
+
+        for (double d = step; d <= 100.0; d += step) {
+            boolean filled = percentage >= d;
+
+            if (filled && !lastWasFilled) {
+                progressBar.append(filledColor);
+                lastWasFilled = true;
                 hasColor = true;
-            } else if ((higher || !hasColor) && percentage < d) {
-                higher = false;
+            } else if (!filled && (lastWasFilled || !hasColor)) {
+                progressBar.append(emptyColor);
+                lastWasFilled = false;
                 hasColor = true;
-                progressBar.append((utf8 ? "§7" : "§8"));
             }
 
-            progressBar.append(percentage >= d ? (utf8 ? "■" : "|") : (utf8 ? "■" : "|"));
+            progressBar.append(symbol);
         }
 
         return progressBar.toString();
     }
 
     public void reloadScoreboard() {
+        Player player = getPlayer();
+        if (player == null) {
+            return;
+        }
+
         this.scoreboard = new LostScoreboard() {
             @Override
             public void update() {
-                List<String> clone = new ArrayList<>(server == null ? Language.scoreboards$lines$lobby
-                        : server.getState().canJoin() ? server.getType().equals(SkyWarsType.DUELS) ? Language.scoreboards$lines$waiting_duels : Language.scoreboards$lines$waiting
+                List<String> clone = new ArrayList<>(server == null
+                        ? Language.scoreboards$lines$lobby
+                        : server.getState().canJoin()
+                        ? server.getType().equals(SkyWarsType.DUELS)
+                        ? Language.scoreboards$lines$waiting_duels
+                        : Language.scoreboards$lines$waiting
                         : server.getMode().equals(SkyWarsMode.SOLO)
-                        ? server.getType().equals(SkyWarsType.DUELS) ? Language.scoreboards$lines$ingame_duels : Language.scoreboards$lines$ingame
-                        : server.getType().equals(SkyWarsType.DUELS) ? Language.scoreboards$lines$ingame_duels_doubles : Language.scoreboards$lines$ingame_doubles);
+                        ? server.getType().equals(SkyWarsType.DUELS)
+                        ? Language.scoreboards$lines$ingame_duels
+                        : Language.scoreboards$lines$ingame
+                        : server.getType().equals(SkyWarsType.DUELS)
+                        ? Language.scoreboards$lines$ingame_duels_doubles
+                        : Language.scoreboards$lines$ingame_doubles);
+
                 Collections.reverse(clone);
+
                 for (int i = 0; i < clone.size(); i++) {
                     String line = clone.get(i);
+
                     if (SkyWars.placeholderapi) {
                         line = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(getPlayer(), line);
                     }
 
-                    SkyWarsServer server = getServer();
-                    if (server == null) {
+                    SkyWarsServer currentServer = getServer();
+
+                    if (currentServer == null) {
                         line = line.replace("{level}", Level.getByLevel(getLevel()).getLevel(Account.this));
                         line = line.replace("{kills}", getFormatted("solokills", "teamkills"));
                         line = line.replace("{wins}", getFormatted("solowins", "teamwins"));
@@ -335,16 +463,19 @@ public class Account {
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
-                        line = line.replace("{world}", server instanceof Arena<?> ? ((Arena<?>) server).isPrivate() ? ChatColor.translateAlternateColorCodes('&', "&7[P]") : server.getName() : server.getName());
-                        line = line.replace("{event}", server.getEvent());
-                        line = line.replace("{mode}", server.getType().getColoredName());
-                        line = line.replace("{map}", server.getName());
-                        line = line.replace("{on}", String.valueOf(server.getAlive()));
+                        line = line.replace("{world}", currentServer instanceof Arena<?>
+                                ? ((Arena<?>) currentServer).isPrivate()
+                                ? ChatColor.translateAlternateColorCodes('&', "&7[P]")
+                                : currentServer.getName()
+                                : currentServer.getName());
+                        line = line.replace("{event}", currentServer.getEvent());
+                        line = line.replace("{mode}", currentServer.getType().getColoredName());
+                        line = line.replace("{map}", currentServer.getName());
+                        line = line.replace("{on}", String.valueOf(currentServer.getAlive()));
 
-                        //
-                        if (server instanceof Duels) {
-                            Duels duels = (Duels) server;
-                            line = line.replace("{timeLeft}", new SimpleDateFormat("mm:ss").format((server.getTimer()) * 1000));
+                        if (currentServer instanceof Duels) {
+                            Duels duels = (Duels) currentServer;
+                            line = line.replace("{timeLeft}", new SimpleDateFormat("mm:ss").format((currentServer.getTimer()) * 1000));
                             line = line.replace("{kit}", "None");
 
                             if (line.contains("{opponent")) {
@@ -353,24 +484,27 @@ public class Account {
                                     continue;
                                 }
 
-                                line = line.replace("{opponent}", opponents.split("\n")[0]);
-                                if (opponents.split("\n").length > 1) {
-                                    line = line.replace("{opponent2}", opponents.split("\n")[1]);
+                                String[] parts = opponents.split("\n");
+                                line = line.replace("{opponent}", parts[0]);
+                                if (parts.length > 1) {
+                                    line = line.replace("{opponent2}", parts[1]);
                                 }
                             }
                         }
-                        //
 
-                        line = line.replace("{teams}", String.valueOf(server.getAliveTeams().size()));
-                        line = line.replace("{max}", String.valueOf(server.getMaxPlayers()));
-                        line = line.replace("{replace}", server.getTimer() == (Language.game$countdown$start + 1) ? Language.scoreboard$replace$waiting
-                                : Language.scoreboard$replace$starting.replace("{time}", String.valueOf(server.getTimer())));
-                        line = line.replace("{kills}", String.valueOf(server.getKills(getPlayer())));
+                        line = line.replace("{teams}", String.valueOf(currentServer.getAliveTeams().size()));
+                        line = line.replace("{max}", String.valueOf(currentServer.getMaxPlayers()));
+                        line = line.replace("{replace}", currentServer.getTimer() == (Language.game$countdown$start + 1)
+                                ? Language.scoreboard$replace$waiting
+                                : Language.scoreboard$replace$starting.replace("{time}", String.valueOf(currentServer.getTimer())));
+                        line = line.replace("{kills}", String.valueOf(currentServer.getKills(getPlayer())));
                     }
+
                     this.add(i + 1, line);
                 }
             }
-        }.to(this.getPlayer()).scroller(new ScoreboardScroller(Language.scoreboards$animation$title)).build();
+        }.to(player).scroller(new ScoreboardScroller(Language.scoreboards$animation$title)).build();
+
         this.scoreboard.update();
         this.scoreboard.scroll();
     }
@@ -385,15 +519,20 @@ public class Account {
             return;
         }
 
-        if (SkyWars.lostboxes && Rank.getRank(getPlayer()).receiveBox() && (key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
-            io.github.losteddev.boxes.player.Account bc = io.github.losteddev.boxes.database.Database.getInstance().getAccount(id);
+        if (SkyWars.lostboxes && Rank.getRank(getPlayer()).receiveBox()
+                && (key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
+            io.github.losteddev.boxes.player.Account bc =
+                    io.github.losteddev.boxes.database.Database.getInstance().getAccount(id);
             if (bc != null) {
                 io.github.losteddev.boxes.api.box.Box box = io.github.losteddev.boxes.api.LostBoxesAPI.randomBox(7);
                 bc.addBox(box);
-                this.getPlayer()
-                        .sendMessage(Language.game$player$ingame$receive_box.replace("{stars}", String.valueOf((int) box.getStars())).replace("{s}", box.getStars() >= 2.0 ? "s" : ""));
+                this.getPlayer().sendMessage(
+                        Language.game$player$ingame$receive_box
+                                .replace("{stars}", String.valueOf((int) box.getStars()))
+                                .replace("{s}", box.getStars() >= 2.0 ? "s" : ""));
             }
         }
+
         this.skywars.get(key).addInt(amount);
     }
 
@@ -469,7 +608,8 @@ public class Account {
     }
 
     public Cosmetic getSelected(CosmeticServer server, CosmeticType type, int index) {
-        Cosmetic c = Cosmetic.findFrom(server, type, index, getContainer(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
+        Cosmetic c = Cosmetic.findFrom(server, type, index,
+                getContainer(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
         if (c != null) {
             if (c instanceof SkyWarsKit) {
                 if (!((SkyWarsKit) c).has(this)) {
@@ -533,31 +673,42 @@ public class Account {
     public void destroy() {
         this.id = null;
         this.name = null;
-        this.skywars.clear();
-        this.skywars = null;
+        if (this.skywars != null) {
+            this.skywars.clear();
+            this.skywars = null;
+        }
+        if (this.account != null) {
+            this.account.clear();
+            this.account = null;
+        }
+        if (this.ranked != null) {
+            this.ranked.clear();
+            this.ranked = null;
+        }
         this.scoreboard = null;
+        this.lastHit.clear();
     }
 
     public List<Account> getLastHitters() {
-        List<String> order = new ArrayList<>(lastHit.size());
-        long start = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        List<Map.Entry<UUID, Long>> validEntries = new ArrayList<>();
+
         for (Entry<UUID, Long> entry : lastHit.entrySet()) {
-            if (entry.getValue() > start) {
-                order.add(entry.getKey() + " " + entry.getValue());
+            if (entry.getValue() > now) {
+                validEntries.add(entry);
             }
         }
 
-        order.sort((arg0, arg1) -> Long.compare(Long.parseLong(arg1.split(" ")[1]), Long.parseLong(arg0.split(" ")[1])));
-        List<Account> result = new ArrayList<>(order.size());
-        Account account = null;
-        for (String player : order) {
-            if ((account = Database.getInstance().getAccount(UUID.fromString(player.split(" ")[0]))) != null) {
-                result.add(account);
+        validEntries.sort((a, b) -> Long.compare(b.getValue(), a.getValue()));
+
+        List<Account> result = new ArrayList<>(validEntries.size());
+        for (Map.Entry<UUID, Long> entry : validEntries) {
+            Account acc = Database.getInstance().getAccount(entry.getKey());
+            if (acc != null) {
+                result.add(acc);
             }
         }
 
-        order.clear();
-        account = null;
         return result;
     }
 
@@ -574,6 +725,6 @@ public class Account {
     }
 
     public Player getPlayer() {
-        return Bukkit.getPlayer(id);
+        return id != null ? Bukkit.getPlayer(id) : null;
     }
 }
