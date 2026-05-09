@@ -13,9 +13,8 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.type.Duels;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.GameArena;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -291,9 +290,11 @@ public class Account {
 
     private void setupWaitingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
+        ArenaGroup group = server.getGroup();
+        boolean isDuels = group != null && group.getId().equals("duels");
 
         int slot = Language.game$hotbar$kits$slot;
-        if (slot >= 0 && slot < 9 && server.getType() != SkyWarsType.DUELS) {
+        if (slot >= 0 && slot < 9 && !isDuels) {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
         }
@@ -308,8 +309,11 @@ public class Account {
     private void setupStartingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
 
+        ArenaGroup group = server.getGroup();
+        boolean isDuels = group != null && group.getId().equals("duels");
+
         int slot = Language.game$hotbar$kits$slot;
-        if (slot >= 0 && slot < 9 && server.getType() != SkyWarsType.DUELS) {
+        if (slot >= 0 && slot < 9 && !isDuels) {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
         }
@@ -387,9 +391,9 @@ public class Account {
         double percentage = needExp <= 0.0 ? 100.0 : ((currentExp * 100.0) / needExp);
 
         double step = utf8 ? 10.0 : 2.5;
-        String filledColor = utf8 ? "§b" : "§3";
-        String emptyColor = utf8 ? "§7" : "§8";
-        String symbol = utf8 ? "■" : "|";
+        String filledColor = utf8 ? "b" : "3";
+        String emptyColor = utf8 ? "7" : "8";
+        String symbol = utf8 ? "" : "|";
 
         boolean lastWasFilled = false;
         boolean hasColor = false;
@@ -422,19 +426,18 @@ public class Account {
         this.scoreboard = new LostScoreboard() {
             @Override
             public void update() {
-                List<String> clone = new ArrayList<>(server == null
-                        ? Language.scoreboards$lines$lobby
-                        : server.getState().canJoin()
-                        ? server.getType().equals(SkyWarsType.DUELS)
-                        ? Language.scoreboards$lines$waiting_duels
-                        : Language.scoreboards$lines$waiting
-                        : server.getMode().equals(SkyWarsMode.SOLO)
-                        ? server.getType().equals(SkyWarsType.DUELS)
-                        ? Language.scoreboards$lines$ingame_duels
-                        : Language.scoreboards$lines$ingame
-                        : server.getType().equals(SkyWarsType.DUELS)
-                        ? Language.scoreboards$lines$ingame_duels_doubles
-                        : Language.scoreboards$lines$ingame_doubles);
+                ArenaGroup group = server != null ? server.getGroup() : null;
+                boolean isTeam = group != null && group.getTeamSize() > 1;
+                boolean hasOpponents = group != null && group.hasTrait("opponents_tracking");
+
+                List<String> clone;
+                if (server == null) {
+                    clone = new ArrayList<>(Language.scoreboards$lines$lobby);
+                } else if (server.getState().canJoin()) {
+                    clone = new ArrayList<>(group.getScoreboardWaiting());
+                } else {
+                    clone = new ArrayList<>(group.getScoreboardIngame());
+                }
 
                 Collections.reverse(clone);
 
@@ -463,23 +466,23 @@ public class Account {
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
-                        line = line.replace("{world}", currentServer instanceof Arena<?>
-                                ? ((Arena<?>) currentServer).isPrivate()
+                        line = line.replace("{world}", currentServer instanceof Arena
+                                ? ((Arena) currentServer).isPrivate()
                                 ? ChatColor.translateAlternateColorCodes('&', "&7[P]")
                                 : currentServer.getName()
                                 : currentServer.getName());
                         line = line.replace("{event}", currentServer.getEvent());
-                        line = line.replace("{mode}", currentServer.getType().getColoredName());
+                        line = line.replace("{mode}", currentServer.getGroup().getDisplay());
                         line = line.replace("{map}", currentServer.getName());
                         line = line.replace("{on}", String.valueOf(currentServer.getAlive()));
 
-                        if (currentServer instanceof Duels) {
-                            Duels duels = (Duels) currentServer;
+                        if (hasOpponents && currentServer instanceof GameArena) {
+                            GameArena gameArena = (GameArena) currentServer;
                             line = line.replace("{timeLeft}", new SimpleDateFormat("mm:ss").format((currentServer.getTimer()) * 1000));
                             line = line.replace("{kit}", "None");
 
                             if (line.contains("{opponent")) {
-                                String opponents = duels.getOpponent(getPlayer());
+                                String opponents = gameArena.getOpponent(getPlayer());
                                 if (opponents.isEmpty()) {
                                     continue;
                                 }

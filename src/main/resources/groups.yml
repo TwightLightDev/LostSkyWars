@@ -1,0 +1,336 @@
+# groups.yml — Defines all game mode groups. Add/remove freely.
+# Each group has a unique key used as its identifier everywhere (stats, config, etc.)
+# 'traits' is a list of string tags. Game logic checks for trait presence, not hardcoded booleans.
+#   Built-in traits: has_stats, has_elo, custom_scoreboard, opponents_tracking, free_kits_and_perks
+# 'track-stats' is implied by has_stats trait.
+# Rewards define what players earn.
+
+groups:
+  solo:
+    display: "&fSolo &7Normal"
+    team-size: 1
+    traits:
+      - has_stats
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  solo_insane:
+    display: "&fSolo &cInsane"
+    team-size: 1
+    traits:
+      - has_stats
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  doubles:
+    display: "&fDoubles &7Normal"
+    team-size: 2
+    traits:
+      - has_stats
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - "Teams left: §a{teams}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  doubles_insane:
+    display: "&fDoubles &cInsane"
+    team-size: 2
+    traits:
+      - has_stats
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - "Teams left: §a{teams}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  ranked_solo:
+    display: "&6Ranked Solo"
+    team-size: 1
+    traits:
+      - has_elo
+      - has_stats
+      - free_kits_and_perks
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+      elo-per-kill: 5
+      elo-per-win: 15
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  ranked_doubles:
+    display: "&6Ranked Doubles"
+    team-size: 2
+    traits:
+      - has_elo
+      - has_stats
+      - free_kits_and_perks
+    scoreboard:
+      waiting:
+        - "§7{date} {world}"
+        - ""
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} {world}"
+        - ""
+        - "Next Event:"
+        - "§a{event}"
+        - ""
+        - "Players left: §a{on}"
+        - "Teams left: §a{teams}"
+        - ""
+        - "Kills: §a{kills}"
+        - ""
+        - "Map: §a{map}"
+        - "Mode: {mode}"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+      elo-per-kill: 5
+      elo-per-win: 15
+    timeline:
+      game: 1200
+      refills:
+        - 900
+        - 600
+      dragon: 300
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
+
+  duels:
+    display: "&dDuels"
+    team-size: 1
+    traits:
+      - opponents_tracking
+      - no_timeline
+      - no_spawn
+      - no_default_kit
+    scoreboard:
+      waiting:
+        - "§7{date} §8{world}"
+        - ""
+        - "Map: §a{map}"
+        - "Players: §a{on}/{max}"
+        - ""
+        - "{replace}"
+        - ""
+        - "§ewww.example.net"
+      ingame:
+        - "§7{date} §8{world}"
+        - ""
+        - "Time Left: §a{timeLeft}"
+        - ""
+        - "Opponent:"
+        - "{opponent}"
+        - ""
+        - "Kit: §a{kit}"
+        - ""
+        - "Mode: §aSkyWars Duel"
+        - ""
+        - "§ewww.example.net"
+    rewards:
+      coins-per-kill: 5
+      coins-per-win: 50
+      coins-per-play: 5
+      exp-per-kill: 5.0
+      exp-per-win: 10.0
+      exp-per-play: 1.0
+    timeline:
+      game: 480
+    tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars Duel\n \n{centered}&a&lEliminate your opponents!\n \n{centered}&f&lOpponent{s}: {opponents}\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'

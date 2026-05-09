@@ -1,8 +1,7 @@
 package org.twightlight.skywars.api.server;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.player.Account;
 
 import java.util.List;
@@ -63,9 +62,12 @@ public abstract class SkyWarsServer {
 
     public abstract String getServerName();
 
-    public abstract SkyWarsMode getMode();
+    public abstract ArenaGroup getGroup();
 
-    public abstract SkyWarsType getType();
+    public String getGroupId() {
+        ArenaGroup group = getGroup();
+        return group != null ? group.getId() : "unknown";
+    }
 
     public abstract String getEvent();
 
@@ -85,7 +87,8 @@ public abstract class SkyWarsServer {
 
     @Override
     public String toString() {
-        return "SkyWarsServer{name=" + this.getServerName() + ", mapName=" + this.getName() + ", ip=" + this.getIp() + ", state=" + this.getState().name() + ", online="
-                + this.getOnline() + ", max-players=" + this.getMaxPlayers() + "}";
+        return "SkyWarsServer{name=" + this.getServerName() + ", mapName=" + this.getName()
+                + ", ip=" + this.getIp() + ", state=" + this.getState().name()
+                + ", online=" + this.getOnline() + ", max-players=" + this.getMaxPlayers() + "}";
     }
 }

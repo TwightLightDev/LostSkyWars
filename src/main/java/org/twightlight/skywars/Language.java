@@ -1,9 +1,8 @@
 package org.twightlight.skywars;
 
 import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
@@ -31,18 +30,6 @@ public class Language {
     public static List<String> scoreboards$lines$lobby =
             Arrays.asList("", "Your Level: {level}", "", "Solo Kills: §a{solokills}", "Solo Wins: §a{solowins}", "Doubles Kills: §a{teamkills}", "Doubles Wins: §a{teamwins}",
                     "Ranked Kills: §a{rankedkills}", "Ranked Wins: §a{rankedwins}", "", "Coins: §6{coins}", "Souls: §b{souls}§7/{maxsouls}", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$waiting =
-            Arrays.asList("§7{date} {world}", "", "Players: §a{on}/{max}", "", "{replace}", "", "Map: §a{map}", "Mode: {mode}", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$waiting_duels =
-            Arrays.asList("§7{date} §8{world}", "", "Map: §a{map}", "Players: §a{on}/{max}", "", "{replace}", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$ingame = Arrays.asList("§7{date} {world}", "", "Next Event:", "§a{event}", "", "Players left: §a{on}", "", "Kills: §a{kills}", "",
-            "Map: §a{map}", "Mode: {mode}", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$ingame_doubles = Arrays.asList("§7{date} {world}", "", "Next Event:", "§a{event}", "", "Players left: §a{on}",
-            "Teams left: §a{teams}", "", "Kills: §a{kills}", "", "Map: §a{map}", "Mode: {mode}", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$ingame_duels =
-            Arrays.asList("§7{date} §8{world}", "", "Time Left: §a{timeLeft}", "", "Opponent:", "{opponent}", "", "Kit: §a{kit}", "", "Mode: §aSkyWars Duel", "", "§ewww.example.net");
-    public static List<String> scoreboards$lines$ingame_duels_doubles = Arrays.asList("§7{date} §8{world}", "", "Time Left: §a{timeLeft}", "", "Opponents:", "{opponent}",
-            "{opponent2}", "", "Kit: §a{kit}", "", "Mode: §aSkyWars Duel", "", "§ewww.example.net");
 
     public static boolean options$ranks$tab = true;
     public static boolean options$ranks$chat = true;
@@ -75,25 +62,6 @@ public class Language {
     public static String options$cosmetic$title = "Title ";
     public static String options$cosmetic$ballon = "Ballon ";
     public static String options$cosmetic$spray = "Spray ";
-    public static int options$leaderboard$update_time_minutes = 30;
-    public static String options$leaderboard$empty = "§7None";
-    public static String options$leaderboard$armorstand$stats$wins = "Wins";
-    public static String options$leaderboard$armorstand$stats$kills = "Kills";
-    public static String options$leaderboard$armorstand$stats$level = "Levels";
-    public static String options$leaderboard$armorstand$stats$ranked = "Points";
-    public static String options$leaderboard$holograms$mode$wins = "All Modes";
-    public static String options$leaderboard$holograms$mode$kills = "All Modes";
-    public static String options$leaderboard$holograms$mode$level = "Worldwide Best";
-    public static String options$leaderboard$holograms$mode$ranked = "Ranked Mode";
-    public static String options$leaderboard$holograms$stats$wins = "Lifetime Wins";
-    public static String options$leaderboard$holograms$stats$kills = "Lifetime Kills";
-    public static String options$leaderboard$holograms$stats$level = "SkyWars Levels";
-    public static String options$leaderboard$holograms$stats$ranked = "Ranked Rating";
-    public static List<String> options$leaderboard$armorstand$lines = Arrays.asList("§7{playerstats} {stats}", "{name}", "§f§lTop {position}");
-    public static List<String> options$leaderboard$hologram$lines =
-            Arrays.asList("§a10. {10_name} §7- §e{10_playerstats}", "§a9. {9_name} §7- §e{9_playerstats}", "§a8. {8_name} §7- §e{8_playerstats}", "§a7. {7_name} §7- §e{7_playerstats}",
-                    "§a6. {6_name} §7- §e{6_playerstats}", "§a5. {5_name} §7- §e{5_playerstats}", "§a4. {4_name} §7- §e{4_playerstats}", "§a3. {3_name} §7- §e{3_playerstats}",
-                    "§a2. {2_name} §7- §e{2_playerstats}", "§a1. {1_name} §7- §e{1_playerstats}", "", "§7{mode}", "§f§l{stats}");
 
     public static boolean lobby$chat$enabled = true;
     public static int lobby$chat$delay_time = 3;
@@ -229,12 +197,6 @@ public class Language {
     public static String game$broadcast$starting$selected_kit = "§aSelected Kit: {kit}";
     public static String game$broadcast$starting$title = "§c{time}";
     public static String game$broadcast$starting$subtitle = "§aPrepare to fight!";
-    public static String game$broadcast$started$teaming$solo = "§c§lTeaming is not allowed on Solo Mode!";
-    public static String game$broadcast$started$teaming$doubles = "§c§lCross-Teaming is not allowed!";
-    public static String game$broadcast$started$tutorial =
-            "§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}§f§lSkyWars\n \n{centered}§a§lGather resources and equipment on your island\n{centered}§a§lin order to eliminate every other player.\n{centered}§a§lGo to the center island for special chests\n{centered}§a§lwith special items!\n \n§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
-    public static String game$broadcast$started$tutorial_duels =
-            "§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}§f§lSkyWars Duel\n \n{centered}§a§lEliminate your opponents!\n \n{centered}§f§lOpponent{s}: {opponents}\n \n§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
     public static String game$broadcast$started$title = "{type_color}{type} MODE";
     public static String game$broadcast$started$subtitle = "";
     public static String game$broadcast$ingame$action_bar$remaining = "§eThere are §c{alive} §eplayers remaining!";
@@ -263,8 +225,6 @@ public class Language {
     public static String game$player$ingame$titles$border$bottom = "§7You are off the world border";
     public static String game$player$ingame$leader_board$template =
             "§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}§f§lSkyWars\n \n{centered}§aWinner §7- {winner}\n \n{centered}§a§l1st Killer §7- {top1} §7- {kills_top1}\n{centered}§6§l2nd Killer §7- {top2} §7- {kills_top2}\n{centered}§c§l3rd Killer §7- {top3} §7- {kills_top3}\n \n§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
-    public static String game$player$ingame$leader_board$template_duels =
-            "§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}§f§lSkyWars Duel\n \n{centered}§aWinner §7- {winner}\n \n{centered}§a§l1st Killer §7- {top1} §7- {kills_top1}\n{centered}§6§l2nd Killer §7- {top2} §7- {kills_top2}\n{centered}§c§l3rd Killer §7- {top3} §7- {kills_top3}\n \n§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
     public static List<String> game$player$ingame$reward_summary =
             Arrays.asList("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",
                     "                            &f&lReward Summary",
@@ -277,6 +237,7 @@ public class Language {
                     "&7You harvested &b{totalSouls} Souls",
                     "",
                     "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
+
     public static String game$player$ranked$action_bar$points = "§6+{points} League Points!";
     public static String game$player$ranked$action_bar$brave_points = "§c+{points} Brave Points!";
 
@@ -369,12 +330,6 @@ public class Language {
         for (CosmeticRarity rarity : CosmeticRarity.values()) {
             rarity.translate();
         }
-        for (SkyWarsMode mode : SkyWarsMode.values()) {
-            mode.translate();
-        }
-        for (SkyWarsType type : SkyWarsType.values()) {
-            type.translate();
-        }
     }
 
     public static void reload() {
@@ -412,25 +367,27 @@ public class Language {
         writer.write();
     }
 
-    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(SkyWarsType type) {
+    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(ArenaGroup group) {
         Map<Integer, SkyWarsEvent> timeline = new TreeMap<>(Comparator.reverseOrder());
+        if (group.hasTrait("no_timeline")) {
+            return timeline;
+        }
         int begin;
         int doom;
         List<Integer> refills;
-        if (type == SkyWarsType.NORMAL) {
-            begin = game$countdown$normal$game;
-            doom = game$countdown$normal$dragon;
-            refills = game$countdown$normal$refills;
-        } else if (type == SkyWarsType.INSANE) {
+        String groupId = group.getId();
+        if (groupId.contains("insane")) {
             begin = game$countdown$insane$game;
             doom = game$countdown$insane$dragon;
             refills = game$countdown$insane$refills;
-        } else if (type == SkyWarsType.RANKED) {
+        } else if (groupId.contains("ranked")) {
             begin = game$countdown$ranked$game;
             doom = game$countdown$ranked$dragon;
             refills = game$countdown$ranked$refills;
         } else {
-            return timeline;
+            begin = game$countdown$normal$game;
+            doom = game$countdown$normal$dragon;
+            refills = game$countdown$normal$refills;
         }
 
         for (Integer integer : refills) {

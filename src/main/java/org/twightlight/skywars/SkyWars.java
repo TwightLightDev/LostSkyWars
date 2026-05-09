@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.worldloaders.InternalLoader;
 import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
@@ -37,7 +38,7 @@ import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.rank.TagUtils;
-import org.twightlight.skywars.player.ranked.Ranked;
+import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.well.AngelOfDeath;
 import org.twightlight.skywars.systems.well.WellNPC;
@@ -107,7 +108,8 @@ public class SkyWars extends JavaPlugin {
         }
         Rank.setupRanks();
         org.twightlight.skywars.player.level.Level.setupLevels();
-        Ranked.setupRanked();
+        League.setupLeagues();
+        GroupManager.setup();
         CustomItemsManager.load();
         new PrivateGames();
         new RecentGames();
@@ -156,7 +158,6 @@ public class SkyWars extends JavaPlugin {
         Listeners.setupListeners();
 
         if (MODE != CoreMode.ARENA) {
-
             WellNPC.setupWellNPCs();
             AngelOfDeath.setupAngels();
         }
@@ -298,7 +299,6 @@ public class SkyWars extends JavaPlugin {
         } else {
             packetevents = false;
             LOGGER.log(Level.WARNING, "PacketEvents not found, disabling support.");
-
         }
     }
 
@@ -311,7 +311,6 @@ public class SkyWars extends JavaPlugin {
             LOGGER.log(Level.WARNING, "Guilds not found, disabling support.");
         }
     }
-
 
     private void setupVault() {
         try {
@@ -333,7 +332,6 @@ public class SkyWars extends JavaPlugin {
         Plugin swmPlugin = Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
         if (swmPlugin == null) {
             adapter = new InternalLoader(this);
-
         } else {
             adapter = new SlimeLoader(this);
         }

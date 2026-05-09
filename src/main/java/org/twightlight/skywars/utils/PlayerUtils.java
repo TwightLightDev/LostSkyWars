@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.arena.type.Duels;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 

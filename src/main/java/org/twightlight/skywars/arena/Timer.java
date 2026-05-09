@@ -16,8 +16,8 @@ import org.twightlight.skywars.api.event.game.SkyWarsChestRefillEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsDoomEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -35,10 +35,10 @@ import java.util.List;
 
 public class Timer {
 
-    private final Arena<?> server;
+    private final Arena server;
     private BukkitTask task;
 
-    public Timer(Arena<?> server) {
+    public Timer(Arena server) {
         this.server = server;
         this.reset();
     }
@@ -48,6 +48,23 @@ public class Timer {
             task.cancel();
             task = null;
         }
+    }
+
+    private void showKitActionBar() {
+        ArenaGroup group = server.getGroup();
+        boolean isDuels = group.hasTrait("custom_scoreboard");
+        server.getPlayers(true).forEach(player -> {
+            Account account = Database.getInstance().getAccount(player.getUniqueId());
+            if (account != null) {
+                Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, group.getKitIndex());
+                if (c != null) {
+                    NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
+                } else {
+                    NMS.sendActionBar(player,
+                            Language.game$broadcast$starting$selected_kit.replace("{kit}", isDuels ? "None" : Language.options$cosmetic$default_kit));
+                }
+            }
+        });
     }
 
     public void reset() {
@@ -65,18 +82,8 @@ public class Timer {
                     return;
                 }
 
-                server.getPlayers(true).forEach(player -> {
-                    Account account = Database.getInstance().getAccount(player.getUniqueId());
-                    if (account != null) {
-                        Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, server.getType().getIndex());
-                        if (c != null) {
-                            NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
-                        } else {
-                            NMS.sendActionBar(player,
-                                    Language.game$broadcast$starting$selected_kit.replace("{kit}", server.getType().equals(SkyWarsType.DUELS) ? "None" : Language.options$cosmetic$default_kit));
-                        }
-                    }
-                });
+                showKitActionBar();
+
                 if (server.getOnline() < server.getConfig().getMinPlayers()) {
                     if (server.getTimer() != (Language.game$countdown$start + 1)) {
                         server.setTimer(Language.game$countdown$start + 1);
@@ -123,7 +130,6 @@ public class Timer {
                 if (entity instanceof Player || entity instanceof ItemFrame) {
                     continue;
                 }
-
                 entity.remove();
             }
             server.setTimer(10);
@@ -135,18 +141,7 @@ public class Timer {
                         return;
                     }
 
-                    server.getPlayers(true).forEach(player -> {
-                        Account account = Database.getInstance().getAccount(player.getUniqueId());
-                        if (account != null) {
-                            Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, server.getType().getIndex());
-                            if (c != null) {
-                                NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
-                            } else {
-                                NMS.sendActionBar(player,
-                                        Language.game$broadcast$starting$selected_kit.replace("{kit}", server.getType().equals(SkyWarsType.DUELS) ? "None" : Language.options$cosmetic$default_kit));
-                            }
-                        }
-                    });
+                    showKitActionBar();
 
                     if (server.getTimer() == 10 || (server.getTimer() <= 5 && server.getTimer() > 0)) {
                         server.broadcast(Language.game$broadcast$starting$cage.replace("{s}", server.getTimer() > 1 ? "s" : "").replace("{time}",
@@ -162,11 +157,12 @@ public class Timer {
                 if (entity instanceof Player || entity instanceof ItemFrame) {
                     continue;
                 }
-
                 entity.remove();
             }
+            ArenaGroup group = server.getGroup();
+            boolean isDuels = group.hasTrait("custom_scoreboard");
             List<Integer> timeline = new ArrayList<>(server.getTimeline().keySet());
-            server.setTimer(server.getType().equals(SkyWarsType.DUELS) ? Language.game$countdown$game_duels : timeline.get(0));
+            server.setTimer(isDuels ? Language.game$countdown$game_duels : timeline.get(0));
             server.getConfig().removeWaitingLobby();
             this.task = new BukkitRunnable() {
                 @Override
@@ -178,7 +174,7 @@ public class Timer {
                             return;
                         }
 
-                        if (!server.getType().equals(SkyWarsType.DUELS)) {
+                        if (!isDuels) {
                             if (server.getTimeline().get(eventTime) == SkyWarsEvent.Refill) {
                                 server.chests.forEach(SkyWarsChest::fill);
                                 server.getPlayers(false).forEach(player -> {
@@ -219,17 +215,14 @@ public class Timer {
                                     }
                                 }.runTaskTimer(SkyWars.getInstance(), 0L, 1L);
 
-
                                 for (Player p : server.getPlayers(false)) {
-
                                     server.getPlayers(false).forEach(player -> {
                                         player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cSudden Death"), "");
-                                            });
-                                        Sound.ENDERDRAGON_GROWL.play(p, 20.0F, 5.0F);
+                                    });
+                                    Sound.ENDERDRAGON_GROWL.play(p, 20.0F, 5.0F);
                                 }
                                 Bukkit.getPluginManager().callEvent(new SkyWarsDoomEvent(server));
                             }
-
                         }
                     }
 

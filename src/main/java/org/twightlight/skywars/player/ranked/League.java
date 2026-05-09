@@ -35,7 +35,7 @@ public class League {
 
     private static List<League> leagues = new ArrayList<>();
 
-    static void setupLeagues() {
+    public static void setupLeagues() {
         ConfigurationSection section = CONFIG.getSection("leagues");
         section.getKeys(false).forEach(key -> leagues.add(new League(section.getString(key + ".name"), section.getInt(key + ".points"), section.getInt(key + ".fare"))));
         Collections.sort(leagues, (l1, l2) -> Integer.compare(l2.getPoints(), l1.getPoints()));

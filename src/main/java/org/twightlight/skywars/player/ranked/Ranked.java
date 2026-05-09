@@ -3,20 +3,14 @@ package org.twightlight.skywars.player.ranked;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.List;
 
 public class Ranked {
 
-    public static int rewards$points$solo$per_win;
-    public static int rewards$points$solo$per_kill;
-    public static int rewards$points$doubles$per_win;
-    public static int rewards$points$doubles$per_kill;
-
     public static void decrease(Account account, String stats) {
-        increase(account, stats, 1);
+        decrease(account, stats, 1);
     }
 
     public static void decrease(Account account, String stats, int amount) {
@@ -24,7 +18,6 @@ public class Ranked {
             if (account.getContainer("ranked").get(stats).getAsInt() == 0) {
                 break;
             }
-
             account.getContainer("ranked").get(stats).removeInt(1);
         }
     }
@@ -92,16 +85,5 @@ public class Ranked {
         }
 
         return leagues.get(leagues.size() - 1);
-    }
-
-    static final ConfigUtils CONFIG = ConfigUtils.getConfig("ranked");
-
-    public static void setupRanked() {
-        rewards$points$solo$per_kill = CONFIG.getInt("rewards.points.solo.per-kill");
-        rewards$points$solo$per_win = CONFIG.getInt("rewards.points.solo.per-win");
-        rewards$points$doubles$per_kill = CONFIG.getInt("rewards.points.doubles.per-kill");
-        rewards$points$doubles$per_win = CONFIG.getInt("rewards.points.doubles.per-win");
-
-        League.setupLeagues();
     }
 }

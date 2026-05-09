@@ -7,7 +7,9 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.play.PlayRankedMenu;
@@ -30,20 +32,30 @@ public class PlayCommand extends Command {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (args.length == 0) {
-                player.sendMessage(" \n§dPlay - Help\n \n§6/play <solo/doubles/ranked/duels> §f- §7Open play menu.\n ");
+                StringBuilder sb = new StringBuilder();
+                sb.append(" \n§dPlay - Help\n \n§6/play <group> §f- §7Open play menu.\n§7Available groups: ");
+                for (ArenaGroup gid : GroupManager.all()) {
+                    sb.append(gid.getId()).append(", ");
+                }
+                player.sendMessage(sb.toString().trim());
                 return true;
             }
 
-            if (args[0].equalsIgnoreCase("solo")) {
-                new PlayMenu(player, SkyWarsMode.SOLO);
-            } else if (args[0].equalsIgnoreCase("doubles")) {
-                new PlayMenu(player, SkyWarsMode.DOUBLES);
-            } else if (args[0].equalsIgnoreCase("ranked")) {
+            String arg = args[0].toLowerCase();
+            if (arg.equals("solo") || arg.equals("solo_insane")) {
+                new PlayMenu(player, "solo");
+            } else if (arg.equals("doubles") || arg.equals("doubles_insane")) {
+                new PlayMenu(player, "doubles");
+            } else if (arg.equals("ranked") || arg.equals("ranked_solo") || arg.equals("ranked_doubles")) {
                 new PlayRankedMenu(player);
-            } else if (args[0].equalsIgnoreCase("duels")) {
+            } else if (arg.equals("duels")) {
                 new PlayDuelsMenu(player);
             } else {
-                player.sendMessage(" \n§dPlay - Help\n \n§6/play <solo/doubles/ranked/duels> §f- §7Open play menu.\n ");
+                if (GroupManager.get(arg) != null) {
+                    new PlayMenu(player, arg);
+                } else {
+                    player.sendMessage("§cUnknown group. Use /play <group>");
+                }
             }
         }
 

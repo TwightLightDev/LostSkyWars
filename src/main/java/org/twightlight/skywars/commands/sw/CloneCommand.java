@@ -26,7 +26,7 @@ public class CloneCommand extends SubCommand {
         }
 
         String worldName = args[1];
-        Arena<?> server = Arena.getByWorldName(args[0]);
+        Arena server = Arena.getByWorldName(args[0]);
         if (server == null) {
             sender.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
@@ -40,8 +40,7 @@ public class CloneCommand extends SubCommand {
         sender.sendMessage("§5[LostSkyWars] §aCloning the arena...");
         ConfigUtils cu = ConfigUtils.getConfig(worldName, "plugins/LostSkyWars/servers");
         cu.set("name", server.getName());
-        cu.set("mode", server.getMode().name().toLowerCase());
-        cu.set("type", server.getType().name().toLowerCase());
+        cu.set("group", server.getGroup().getId());
         cu.set("cube", server.getConfig().getWorldCube().toString().replace(args[0], worldName));
         cu.set("min-players", server.getConfig().getMinPlayers());
         if (server.getConfig().getConfig().contains("waiting-cube")) {

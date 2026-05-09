@@ -10,13 +10,13 @@ import java.util.function.Consumer;
 
 public class EventsRegistry {
 
-    private static Map<String, List<Consumer<Arena<?>>>> registry = new HashMap<>();
+    private static Map<String, List<Consumer<Arena>>> registry = new HashMap<>();
 
-    public static void register(String submode, List<Consumer<Arena<?>>> consumers) {
+    public static void register(String submode, List<Consumer<Arena>> consumers) {
         registry.put(submode, consumers);
     }
 
-    public List<Consumer<Arena<?>>> getConsumers(String submode) {
+    public List<Consumer<Arena>> getConsumers(String submode) {
         return registry.getOrDefault(submode, new ArrayList<>());
     }
 }

@@ -10,6 +10,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -21,11 +23,11 @@ import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("deprecation")
 public class ArenaConfig {
+
     protected static Logger LOGGER = SkyWars.LOGGER.getModule("Arena");
     protected String yaml;
     protected String name;
-    protected String mode;
-    protected String type;
+    protected String groupId;
     protected World world;
     protected int minPlayers;
     protected SkyWarsCube cube;
@@ -54,8 +56,23 @@ public class ArenaConfig {
         this.config = ConfigUtils.getConfig(yaml, "plugins/LostSkyWars/servers");
 
         this.name = config.getString("name");
-        this.mode = config.getString("mode");
-        this.type = config.getString("type");
+
+        // Migration: convert old mode+type to group
+        if (config.contains("group")) {
+            this.groupId = config.getString("group");
+        } else if (config.contains("mode") && config.contains("type")) {
+            String oldMode = config.getString("mode");
+            String oldType = config.getString("type");
+            ArenaGroup migrated = GroupManager.fromLegacy(oldMode, oldType);
+            this.groupId = migrated != null ? migrated.getId() : "solo";
+            config.set("group", this.groupId);
+            config.set("mode", null);
+            config.set("type", null);
+            LOGGER.log(Logger.Level.INFO, "Migrated arena " + yaml + " from mode=" + oldMode + "+type=" + oldType + " to group=" + this.groupId);
+        } else {
+            this.groupId = "solo";
+        }
+
         this.minPlayers = config.getInt("min-players");
         this.cube = new SkyWarsCube(config.getString("cube"), worldName);
         if (this.config.contains("waiting-cube")) {
@@ -125,8 +142,7 @@ public class ArenaConfig {
         this.worldName = null;
         this.yaml = null;
         this.name = null;
-        this.mode = null;
-        this.type = null;
+        this.groupId = null;
         this.minPlayers = 0;
         this.cube = null;
         this.spawns.clear();
@@ -138,7 +154,7 @@ public class ArenaConfig {
         this.config = null;
     }
 
-    public void reload(Arena<?> rollbacking) {
+    public void reload(Arena server) {
         SkyWars.getInstance().getWorldLoader().deleteWorld(worldName);
 
         String id = String.valueOf(System.nanoTime());
@@ -155,8 +171,7 @@ public class ArenaConfig {
         cf = cf.thenApply(w2 -> {
             world = w2;
             w2.getEntities().forEach(Entity::remove);
-            rollbacking.setState(SkyWarsState.WAITING);
-
+            server.setState(SkyWarsState.WAITING);
             return w2;
         });
     }
@@ -169,12 +184,8 @@ public class ArenaConfig {
         return name;
     }
 
-    public String getArenaMode() {
-        return mode;
-    }
-
-    public String getServerType() {
-        return type;
+    public String getGroupId() {
+        return groupId;
     }
 
     public World getWorld() {

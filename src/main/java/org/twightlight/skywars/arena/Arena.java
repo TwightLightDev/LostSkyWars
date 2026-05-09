@@ -13,16 +13,11 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
-import org.twightlight.skywars.arena.type.Duels;
-import org.twightlight.skywars.arena.type.doubles.Doubles;
-import org.twightlight.skywars.arena.type.doubles.DoublesRanked;
-import org.twightlight.skywars.arena.type.solo.Solo;
-import org.twightlight.skywars.arena.type.solo.SoloRanked;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
 import org.twightlight.skywars.modules.privategames.User;
@@ -39,11 +34,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
-public abstract class Arena<T> extends SkyWarsServer {
+public abstract class Arena extends SkyWarsServer {
+
     protected static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
     protected int timer;
     protected ArenaConfig config;
+    protected ArenaGroup group;
 
     protected Timer timerTask;
     protected boolean isPrivate;
@@ -65,19 +62,23 @@ public abstract class Arena<T> extends SkyWarsServer {
         this(yaml, callback, isPrivate, new ArenaConfig(yaml, isPrivate));
     }
 
-
     public Arena(String yaml, ScanCallback callback, boolean isPrivate, ArenaConfig config) {
         super();
         LOGGER.log(Level.INFO, "Loading arena: " + yaml + "...");
         this.timer = Language.game$countdown$start + 1;
         this.config = config;
         this.name = config.getMapName();
+        this.group = GroupManager.get(config.getGroupId());
+        if (this.group == null) {
+            this.group = GroupManager.getOrDefault(config.getGroupId());
+            LOGGER.log(Level.WARNING, "Arena " + yaml + " has unknown group '" + config.getGroupId() + "', falling back to " + (this.group != null ? this.group.getId() : "null"));
+        }
         this.timerTask = new Timer(this);
         for (String spawn : this.config.listSpawns()) {
             this.teams.add(new SkyWarsTeam(this, this.teams.size(), spawn));
         }
         this.config.listChests().forEach(chest -> chests.add(new SkyWarsChest(this, chest)));
-        this.timeline = Language.getSkyWarsEventTimeline(this.getType());
+        this.timeline = this.group.buildTimeline();
 
         this.state = SkyWarsState.WAITING;
         if (callback != null) {
@@ -113,7 +114,7 @@ public abstract class Arena<T> extends SkyWarsServer {
 
     public abstract void updateScoreboards();
 
-    public abstract void stop(T winner);
+    public abstract void stop(SkyWarsTeam winner);
 
     public abstract void reset();
 
@@ -155,13 +156,11 @@ public abstract class Arena<T> extends SkyWarsServer {
                 return team;
             }
         }
-
         return null;
     }
 
     public void setServerOwner(User p) {
-        if (isPrivate)
-            serverOwner = p;
+        if (isPrivate) serverOwner = p;
     }
 
     public List<ChatColor> getTeamColors() {
@@ -179,7 +178,6 @@ public abstract class Arena<T> extends SkyWarsServer {
                 return team;
             }
         }
-
         return null;
     }
 
@@ -222,7 +220,6 @@ public abstract class Arena<T> extends SkyWarsServer {
         return target + new SimpleDateFormat("mm:ss").format((getTimer() - eventTime) * 1000);
     }
 
-
     public int getEventTime(boolean flag) {
         for (Integer integer : timeline.keySet()) {
             if (getTimer() >= (flag ? integer + 1 : integer)) {
@@ -254,7 +251,6 @@ public abstract class Arena<T> extends SkyWarsServer {
                 return chest;
             }
         }
-
         return null;
     }
 
@@ -285,8 +281,8 @@ public abstract class Arena<T> extends SkyWarsServer {
     }
 
     @Override
-    public SkyWarsType getType() {
-        return SkyWarsType.fromName(this.config.getServerType());
+    public ArenaGroup getGroup() {
+        return this.group;
     }
 
     @Override
@@ -295,7 +291,7 @@ public abstract class Arena<T> extends SkyWarsServer {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("WorldServer");
-    private static Map<String, Arena<?>> servers = new HashMap<>();
+    private static Map<String, Arena> servers = new HashMap<>();
 
     public static void setupServers() {
         File ymlFolder = new File("plugins/LostSkyWars/servers");
@@ -322,7 +318,7 @@ public abstract class Arena<T> extends SkyWarsServer {
         File[] yamlFiles = ymlFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         if (yamlFiles != null) {
             for (File yamlFile : yamlFiles) {
-                Arena<?> server = loadArena(yamlFile, null);
+                Arena server = loadArena(yamlFile, null);
                 if (yamlFile.getName().contains("_temp")) {
                     Arena.removeArena(server);
                 }
@@ -331,28 +327,15 @@ public abstract class Arena<T> extends SkyWarsServer {
 
         LOGGER.log(Level.INFO, "Loaded " + servers.size() + " servers!");
     }
-    public static Arena<?> loadArena(File yamlFile, ScanCallback callback) {
+
+    public static Arena loadArena(File yamlFile, ScanCallback callback) {
         return loadArena(yamlFile, callback, false);
     }
 
-    public static Arena<?> loadArena(File yamlFile, ScanCallback callback, boolean temp) {
+    public static Arena loadArena(File yamlFile, ScanCallback callback, boolean temp) {
         try {
             String arenaName = yamlFile.getName().split("\\.")[0];
-
-            String mode = ConfigUtils.getConfig(arenaName, "plugins/LostSkyWars/servers").getString("mode");
-            String type = ConfigUtils.getConfig(arenaName, "plugins/LostSkyWars/servers").getString("type");
-
-            Arena<?> server;
-            if ("ranked".equalsIgnoreCase(type)) {
-                server = "solo".equalsIgnoreCase(mode) ? new SoloRanked(arenaName, callback, temp)
-                        : new DoublesRanked(arenaName, callback, temp);
-            } else if ("duels".equalsIgnoreCase(type)) {
-                server = new Duels(arenaName, callback, temp);
-            } else {
-                server = "solo".equalsIgnoreCase(mode) ? new Solo(arenaName, callback, temp)
-                        : new Doubles(arenaName, callback, temp);
-            }
-
+            Arena server = new GameArena(arenaName, callback, temp);
             if (!server.isPrivate()) servers.put(arenaName, server);
             return server;
         } catch (Exception ex) {
@@ -362,7 +345,7 @@ public abstract class Arena<T> extends SkyWarsServer {
         return null;
     }
 
-    public static void removeArena(Arena<?> server) {
+    public static void removeArena(Arena server) {
         if (!server.isPrivate) {
             servers.remove(server.getServerName());
         }
@@ -371,54 +354,60 @@ public abstract class Arena<T> extends SkyWarsServer {
         server.destroy();
     }
 
-    public static Arena<?> findRandom(SkyWarsMode mode, SkyWarsType type) {
-        List<Arena<?>> servers = listServers().stream()
-                .filter(server -> server.getMode().equals(mode) && server.getType().equals(type) && server.getState().canJoin() && !server.isPrivate() && server.getAlive() < server.getMaxPlayers())
+    public static Arena findRandom(ArenaGroup group) {
+        List<Arena> matching = listServers().stream()
+                .filter(server -> server.getGroup().equals(group) && server.getState().canJoin()
+                        && !server.isPrivate() && server.getAlive() < server.getMaxPlayers())
                 .collect(Collectors.toList());
-        Collections.sort(servers, (s1, s2) -> Integer.compare(s2.getAlive(), s1.getAlive()));
-        Arena<?> server = servers.stream().findFirst().orElse(null);
-        if (server != null && server.getAlive() == 0) {
-            server = servers.get(ThreadLocalRandom.current().nextInt(servers.size()));
+        Collections.sort(matching, (s1, s2) -> Integer.compare(s2.getAlive(), s1.getAlive()));
+        Arena server = matching.stream().findFirst().orElse(null);
+        if (server != null && server.getAlive() == 0 && matching.size() > 1) {
+            server = matching.get(ThreadLocalRandom.current().nextInt(matching.size()));
         }
-
         return server;
     }
 
-    public static Map<String, List<Arena<?>>> getAsMap(SkyWarsMode mode, SkyWarsType type) {
-        Map<String, List<Arena<?>>> result = new HashMap<>();
-        listServers().stream().filter(server -> !server.isPrivate() && server.getMode().equals(mode) && server.getType().equals(type)).forEach(arena -> {
-            List<Arena<?>> list = result.get(arena.getName());
-            if (list == null) {
-                list = new ArrayList<>();
-                result.put(arena.getName(), list);
-            }
+    public static Arena findRandom(String groupId) {
+        ArenaGroup group = GroupManager.get(groupId);
+        return group != null ? findRandom(group) : null;
+    }
 
-            if (arena.getState().canJoin() && arena.getAlive() < arena.getMaxPlayers()) {
-                list.add(arena);
-            }
-        });
-
+    public static Map<String, List<Arena>> getAsMap(ArenaGroup group) {
+        Map<String, List<Arena>> result = new HashMap<>();
+        listServers().stream()
+                .filter(server -> !server.isPrivate() && server.getGroup().equals(group))
+                .forEach(arena -> {
+                    List<Arena> list = result.computeIfAbsent(arena.getName(), k -> new ArrayList<>());
+                    if (arena.getState().canJoin() && arena.getAlive() < arena.getMaxPlayers()) {
+                        list.add(arena);
+                    }
+                });
         return result;
     }
 
-    public static Arena<?> getByWorldName(String name) {
+    public static Map<String, List<Arena>> getAsMap(String groupId) {
+        ArenaGroup group = GroupManager.get(groupId);
+        return group != null ? getAsMap(group) : new HashMap<>();
+    }
+
+    public static Arena getByWorldName(String name) {
         return servers.get(name);
     }
 
-    public static Collection<Arena<?>> listServers() {
-        return ImmutableList.copyOf(servers.values().stream().filter((worldServer -> !worldServer.isPrivate())).collect(Collectors.toList()));
+    public static Collection<Arena> listServers() {
+        return ImmutableList.copyOf(servers.values().stream()
+                .filter(worldServer -> !worldServer.isPrivate())
+                .collect(Collectors.toList()));
     }
 
-    public Arena<?> cloneServer(boolean temp, String newArena) {
-
+    public Arena cloneServer(boolean temp, String newArena) {
         if (temp) {
             newArena += "_temp";
         }
 
         ConfigUtils cu = ConfigUtils.getConfig(newArena, "plugins/LostSkyWars/servers");
         cu.set("name", getName());
-        cu.set("mode", getMode().name().toLowerCase());
-        cu.set("type", getType().name().toLowerCase());
+        cu.set("group", getGroup().getId());
         cu.set("cube", getConfig().getWorldCube().toString().replace(getConfig().getId(), newArena));
         cu.set("min-players", getConfig().getMinPlayers());
         if (getConfig().getConfig().contains("waiting-cube")) {
@@ -430,11 +419,11 @@ public abstract class Arena<T> extends SkyWarsServer {
             spawns.add(spawn.replace(getConfig().getId(), newArena));
         }
         cu.set("spawns", spawns);
-        List<String> chests = new ArrayList<>();
+        List<String> chestsList = new ArrayList<>();
         for (String chest : getConfig().listChests()) {
-            chests.add(chest.replace(getConfig().getId(), newArena));
+            chestsList.add(chest.replace(getConfig().getId(), newArena));
         }
-        cu.set("chests", chests);
+        cu.set("chests", chestsList);
         List<String> balloons = new ArrayList<>();
         for (String balloon : getConfig().listBalloons()) {
             balloons.add(balloon.replace(getConfig().getId(), newArena));

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.arena.type.solo;
+package org.twightlight.skywars.arena;
 
 import me.leoo.guilds.bukkit.manager.GuildsManager;
 import org.bukkit.Bukkit;
@@ -24,10 +24,7 @@ import org.twightlight.skywars.api.event.player.*;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent.SkyWarsDeathCause;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.api.server.SkyWarsTeam;
-import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.RollBackManager;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -49,28 +46,63 @@ import org.twightlight.skywars.utils.StringUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Solo extends Arena<Player> {
+public class GameArena extends Arena {
 
-    private List<UUID> players, spectators;
+    private List<UUID> players;
+    private List<UUID> spectators;
     private Map<UUID, Integer> kills;
     private Map<UUID, CurrencyManager> dataContainer;
+    private Map<UUID, String> opponents;
 
-    public Solo(String yaml, ScanCallback callback, boolean isPrivate) {
+    public GameArena(String yaml, ScanCallback callback, boolean isPrivate) {
         super(yaml, callback, isPrivate);
-
         this.kills = new HashMap<>();
         this.players = new ArrayList<>();
         this.spectators = new ArrayList<>();
         this.dataContainer = new HashMap<>();
+        this.opponents = new HashMap<>();
+    }
+
+    private void recordKillStats(Account killerAccount, String statSuffix) {
+        if (!isPrivate && group.hasStats()) {
+            killerAccount.addStat(group.getId() + "_" + statSuffix);
+        }
+        if (!isPrivate && group.hasTrait("has_elo")) {
+            int eloPerKill = group.getRewardInt("elo-per-kill");
+            int killCount = getKills(killerAccount.getPlayer());
+            int eloAmount = (int) (eloPerKill + killCount * eloPerKill * 0.05);
+            killerAccount.addStat(group.getId() + "_elo", eloAmount);
+        }
+    }
+
+    private void recordDeathStats(Account account) {
+        if (!isPrivate && group.hasStats()) {
+            account.addStat(group.getId() + "_deaths");
+            account.addStat(group.getId() + "_plays");
+        }
+    }
+
+    private void giveKillRewards(Player killer, Account killerAccount) {
+        int coinsPerKill = group.getRewardInt("coins-per-kill");
+        double expPerKill = group.getReward("exp-per-kill");
+        dataContainer.get(killer.getUniqueId()).addCoins(coinsPerKill, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
+        dataContainer.get(killer.getUniqueId()).addXp(expPerKill, SkyWarsPlayerXpGainEvent.XpSource.KILL);
+        if (killerAccount.getInt("souls") < killerAccount.getContainer("account").get("sw_maxsouls").getAsInt()) {
+            dataContainer.get(killer.getUniqueId()).addSouls(1);
+        }
+    }
+
+    private void givePlayRewards(Player player) {
+        int coinsPerPlay = group.getRewardInt("coins-per-play");
+        double expPerPlay = group.getReward("exp-per-play");
+        dataContainer.get(player.getUniqueId()).addCoins(coinsPerPlay, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
+        dataContainer.get(player.getUniqueId()).addXp(expPerPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
     }
 
     public void killLeave(Account account, Account ack, boolean byMob) {
         Player player = account.getPlayer();
         Player killer = ack != null ? ack.getPlayer() : null;
-
-        if (killer != null && player.equals(killer)) {
-            killer = null;
-        }
+        if (killer != null && player.equals(killer)) killer = null;
 
         SkyWarsDeathCause cause = null;
         String killMessage;
@@ -81,54 +113,39 @@ public class Solo extends Arena<Player> {
             } else {
                 if (!byMob) {
                     cause = SkyWarsDeathCause.SUICIDE;
-                    killMessage = (PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$normal));
+                    killMessage = PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$normal);
                 } else {
                     cause = SkyWarsDeathCause.KILLED_MOB;
-                    killMessage = (PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$killed$mob));
+                    killMessage = PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$killed$mob);
                 }
             }
         } else {
             addKills(killer);
-            // general
-            if (!isPrivate) {
-                ack.addStat("solokills");
-            }
+            recordKillStats(ack, "kills");
             if (byMob) {
                 cause = SkyWarsDeathCause.KILLED_MOB;
-                if (!isPrivate) ack.addStat("solomob");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob));
+                recordKillStats(ack, "mob");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
                 cause = SkyWarsDeathCause.KILLED_VOID;
-                if (!isPrivate) ack.addStat("solovoid");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void));
+                recordKillStats(ack, "void");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause() instanceof EntityDamageByEntityEvent
                     && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Arrow) {
                 cause = SkyWarsDeathCause.KILLED_BOW;
-                if (!isPrivate) ack.addStat("solobow");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow));
+                recordKillStats(ack, "bow");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow);
             } else {
                 cause = SkyWarsDeathCause.KILLED_MELEE;
-                if (!isPrivate) ack.addStat("solomelee");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal));
+                recordKillStats(ack, "melee");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal);
             }
-
-            int amount = Language.game$rewards$coins_per_kill;
-            dataContainer.get(killer.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
-            double amount1 = Language.game$rewards$exp_per_kill;
-            dataContainer.get(killer.getUniqueId()).addXp(amount1, SkyWarsPlayerXpGainEvent.XpSource.KILL);
-            if (ack.getInt("souls") < ack.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                dataContainer.get(killer.getUniqueId()).addSouls(1);
-            }
+            giveKillRewards(killer, ack);
         }
 
-        if (!isPrivate) {
-            account.addStat("solodeaths");
-            account.addStat("soloplays");
-        }
-        int play = Language.game$rewards$coins_per_play;
-        double expPlay = Language.game$rewards$exp_per_play;
-        dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
-        dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
+        recordDeathStats(account);
+        givePlayRewards(player);
+
         SkyWarsDeathCry cry = (SkyWarsDeathCry) account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
         if (cry != null) {
             cry.getSound().play(player.getLocation(), cry.getVolume(), cry.getPitch());
@@ -152,76 +169,61 @@ public class Solo extends Arena<Player> {
         }
 
         Player killer = ack != null ? ack.getPlayer() : null;
-
-        if (killer != null && player.equals(killer)) {
-            killer = null;
-        }
+        if (killer != null && player.equals(killer)) killer = null;
 
         SkyWarsDeathCause cause = null;
         String killMessage;
         if (killer == null) {
             if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
                 cause = SkyWarsDeathCause.SUICIDE_VOID;
-                killMessage = (PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$void));
+                killMessage = PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$void);
             } else {
                 if (!byMob) {
                     cause = SkyWarsDeathCause.SUICIDE;
-                    killMessage = (PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$normal));
+                    killMessage = PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$suicide$normal);
                 } else {
                     cause = SkyWarsDeathCause.KILLED_MOB;
-                    killMessage = (PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$killed$mob));
+                    killMessage = PlayerUtils.replaceAll(player, Language.game$broadcast$ingame$death_messages$killed$mob);
                 }
             }
         } else {
             addKills(killer);
-            // general
-            if (!isPrivate) ack.addStat("solokills");
+            recordKillStats(ack, "kills");
             if (byMob) {
                 cause = SkyWarsDeathCause.KILLED_MOB;
-                if (!isPrivate) ack.addStat("solomob");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob));
+                recordKillStats(ack, "mob");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
                 cause = SkyWarsDeathCause.KILLED_VOID;
-                if (!isPrivate) ack.addStat("solovoid");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void));
+                recordKillStats(ack, "void");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause() instanceof EntityDamageByEntityEvent
                     && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Arrow) {
                 cause = SkyWarsDeathCause.KILLED_BOW;
-                if (!isPrivate) ack.addStat("solobow");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow));
+                recordKillStats(ack, "bow");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow);
             } else {
                 cause = SkyWarsDeathCause.KILLED_MELEE;
-                if (!isPrivate) ack.addStat("solomelee");
-                killMessage = (PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal));
+                recordKillStats(ack, "melee");
+                killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal);
             }
-
-            int amount = Language.game$rewards$coins_per_kill;
-            dataContainer.get(killer.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
-            double amount1 = Language.game$rewards$exp_per_kill;
-            dataContainer.get(killer.getUniqueId()).addXp(amount1, SkyWarsPlayerXpGainEvent.XpSource.KILL);
-            if (ack.getInt("souls") < ack.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                dataContainer.get(killer.getUniqueId()).addSouls(1);
-            }
+            giveKillRewards(killer, ack);
         }
 
-        if (!isPrivate) {
-            account.addStat("solodeaths");
-            account.addStat("soloplays");
-        }
-        int play = Language.game$rewards$coins_per_play;
-        double expPlay = Language.game$rewards$exp_per_play;
-        dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
-        dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
+        recordDeathStats(account);
+        givePlayRewards(player);
+
         Location returns = team.getLocation();
         Location dieLocation = player.getLocation();
         team.removeMember(player);
         players.remove(player.getUniqueId());
         spectators.add(player.getUniqueId());
-        for (Player players : getPlayers(true)) {
-            if (isSpectator(players)) {
-                player.showPlayer(players);
+
+        for (Player p : getPlayers(true)) {
+            if (isSpectator(p)) {
+                player.showPlayer(p);
             } else {
-                players.hidePlayer(player);
+                p.hidePlayer(player);
             }
         }
 
@@ -229,9 +231,10 @@ public class Solo extends Arena<Player> {
         Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
             player.teleport(returns);
             account.refreshPlayer();
-            NMS.sendTitle(player, killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$up_killed) : Language.game$player$ingame$titles$die$up,
-                    killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$bottom_killed) : Language.game$player$ingame$titles$die$bottom, 20, 60,
-                    20);
+            NMS.sendTitle(player,
+                    killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$up_killed) : Language.game$player$ingame$titles$die$up,
+                    killerFinal != null ? PlayerUtils.replaceAll(killerFinal, Language.game$player$ingame$titles$die$bottom_killed) : Language.game$player$ingame$titles$die$bottom,
+                    20, 60, 20);
             if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
                 int gxp = dataContainer.get(player.getUniqueId()).getGxpEarned();
                 GuildsManager.getByPlayer(player).getLevel().addXp(gxp);
@@ -241,16 +244,14 @@ public class Solo extends Arena<Player> {
                 line = line.replace("{totalExp}", "" + dataContainer.get(player.getUniqueId()).getXpEarned());
                 if (line.contains("{totalGExp}")) {
                     if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
-                        line = line.replace("{totalGExp}", "" + (dataContainer.get(player.getUniqueId()).getGxpEarned()));
+                        line = line.replace("{totalGExp}", "" + dataContainer.get(player.getUniqueId()).getGxpEarned());
                     } else {
                         continue;
                     }
                 }
                 line = line.replace("{totalSouls}", "" + dataContainer.get(player.getUniqueId()).getSoulsEarned());
-
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
             }
-
         }, 3);
 
         SkyWarsDeathCry cry = (SkyWarsDeathCry) account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
@@ -268,27 +269,24 @@ public class Solo extends Arena<Player> {
     @Override
     public void spectate(Account account, Player target) {
         Player player = account.getPlayer();
-
         account.setServer(this);
         spectators.add(player.getUniqueId());
         account.refreshPlayer();
         player.teleport(target.getLocation());
-        for (Player players : Bukkit.getOnlinePlayers()) {
-            if (!players.getWorld().equals(player.getWorld())) {
-                player.hidePlayer(players);
-                players.hidePlayer(player);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!p.getWorld().equals(player.getWorld())) {
+                player.hidePlayer(p);
+                p.hidePlayer(player);
                 continue;
             }
-
-            if (!isSpectator(players)) {
-                player.showPlayer(players);
-                players.hidePlayer(player);
+            if (!isSpectator(p)) {
+                player.showPlayer(p);
+                p.hidePlayer(player);
             } else {
-                player.showPlayer(players);
-                players.showPlayer(player);
+                player.showPlayer(p);
+                p.showPlayer(player);
             }
         }
-
         Bukkit.getPluginManager().callEvent(new SkyWarsPlayerWatchEvent(this, player, target));
         this.updateTags();
     }
@@ -296,13 +294,8 @@ public class Solo extends Arena<Player> {
     @Override
     public void connect(Account account, String... skipParty) {
         Player player = account.getPlayer();
-        if (player == null || !getState().canJoin() || players.size() >= getMaxPlayers()) {
-            return;
-        }
-
-        if (account.getServer() != null && account.getServer().equals(this)) {
-            return;
-        }
+        if (player == null || !getState().canJoin() || players.size() >= getMaxPlayers()) return;
+        if (account.getServer() != null && account.getServer().equals(this)) return;
 
         if (skipParty.length == 0) {
             if (SkyWars.lostparties) {
@@ -312,25 +305,17 @@ public class Solo extends Arena<Player> {
                         player.sendMessage(Language.lobby$connecting$party$not_leader);
                         return;
                     }
-
-                    if (party.online() + players.size() > getMaxPlayers()) {
-                        return;
-                    }
-
+                    if (party.online() + players.size() > getMaxPlayers()) return;
                     Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> party.getPlayers(false).forEach(member -> {
                         Account accounts = Database.getInstance().getAccount(member.getUniqueId());
-                        if (accounts != null) {
-                            connect(accounts, "");
-                        }
+                        if (accounts != null) connect(accounts, "");
                     }), 5L);
                 }
             }
         }
 
         SkyWarsTeam team = getAvailableTeam(player);
-        if (team == null) {
-            return;
-        }
+        if (team == null) return;
 
         if (account.getServer() != null) {
             account.getServer().disconnect(account, account.getServer().isSpectator(player) ? "-play" : "");
@@ -350,29 +335,27 @@ public class Solo extends Arena<Player> {
         player.teleport(this.getConfig().hasWaitingLobby() ? this.getConfig().getWaitingLocation() : team.getLocation().add(0, 1, 0));
         account.reloadScoreboard();
         account.refreshPlayer();
-        for (Player players : Bukkit.getOnlinePlayers()) {
-            if (!players.getWorld().equals(player.getWorld())) {
-                player.hidePlayer(players);
-                players.hidePlayer(player);
+
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!p.getWorld().equals(player.getWorld())) {
+                player.hidePlayer(p);
+                p.hidePlayer(player);
                 continue;
             }
-
-            if (isSpectator(players)) {
-                player.hidePlayer(players);
-                players.showPlayer(player);
+            if (isSpectator(p)) {
+                player.hidePlayer(p);
+                p.showPlayer(player);
             } else {
-                player.showPlayer(players);
-                players.showPlayer(player);
+                player.showPlayer(p);
+                p.showPlayer(player);
             }
         }
 
         Bukkit.getPluginManager().callEvent(new SkyWarsPlayerJoinEvent(this, player));
         this.updateTags();
         NMS.sendTitle(player,
-                Language.game$player$ingame$title$join$up.replace("{type_color}", StringUtils.getFirstColor(this.getType().getColoredName())).replace("{type}",
-                        StringUtils.stripColors(this.getType().getColoredName())),
-                Language.game$player$ingame$title$join$down.replace("{type_color}", StringUtils.getFirstColor(this.getType().getColoredName())).replace("{type}",
-                        StringUtils.stripColors(this.getType().getColoredName())));
+                Language.game$player$ingame$title$join$up.replace("{type_color}", StringUtils.getFirstColor(group.getColoredName())).replace("{type}", group.getStrippedName()),
+                Language.game$player$ingame$title$join$down.replace("{type_color}", StringUtils.getFirstColor(group.getColoredName())).replace("{type}", group.getStrippedName()));
         this.broadcast(PlayerUtils.replaceAll(player,
                 Language.game$broadcast$starting$join.replace("{on}", String.valueOf(this.getOnline())).replace("{max}", String.valueOf(this.getMaxPlayers()))));
         if (getTimer() > Language.game$countdown$full && this.getOnline() == this.getMaxPlayers()) {
@@ -388,15 +371,11 @@ public class Solo extends Arena<Player> {
     @Override
     public void disconnect(Account account, String options) {
         Player player = account.getPlayer();
-        if (!account.getServer().equals(this)) {
-            return;
-        }
+        if (!account.getServer().equals(this)) return;
 
         SkyWarsTeam team = getTeam(player);
         if (team != null) {
-            if (this.getState().canJoin()) {
-                team.destroy();
-            }
+            if (this.getState().canJoin()) team.destroy();
             team.removeMember(player);
         }
 
@@ -409,19 +388,18 @@ public class Solo extends Arena<Player> {
                 this.broadcast(PlayerUtils.replaceAll(player,
                         Language.game$broadcast$starting$left.replace("{on}", String.valueOf(this.getOnline())).replace("{max}", String.valueOf(this.getMaxPlayers()))));
             }
-
             if (alive && state == SkyWarsState.INGAME) {
                 List<Account> hitters = account.getLastHitters();
                 Account killer = hitters.size() > 0 ? hitters.get(0) : null;
                 this.killLeave(account, killer, false);
                 for (Account hitter : hitters) {
-                    if (hitter != null && (killer == null || !hitter.equals(killer)) && (hitter.getServer() != null && hitter.getServer().equals(this)) && hitter.getPlayer() != null
-                            && !this.isSpectator(hitter.getPlayer())) {
-                        if (!isPrivate()) hitter.addStat("soloassists");
+                    if (hitter != null && (killer == null || !hitter.equals(killer))
+                            && (hitter.getServer() != null && hitter.getServer().equals(this))
+                            && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
+                        if (!isPrivate() && group.hasStats()) hitter.addStat(group.getId() + "_assists");
                     }
                 }
             }
-
             account.setServer(null);
             this.check();
             return;
@@ -439,16 +417,16 @@ public class Solo extends Arena<Player> {
             Account killer = hitters.size() > 0 ? hitters.get(0) : null;
             this.killLeave(account, killer, false);
             for (Account hitter : hitters) {
-                if (hitter != null && (killer == null || !hitter.equals(killer)) && (hitter.getServer() != null && hitter.getServer().equals(this)) && hitter.getPlayer() != null
-                        && !this.isSpectator(hitter.getPlayer())) {
-                    if (!isPrivate()) hitter.addStat("soloassists");
+                if (hitter != null && (killer == null || !hitter.equals(killer))
+                        && (hitter.getServer() != null && hitter.getServer().equals(this))
+                        && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
+                    if (!isPrivate() && group.hasStats()) hitter.addStat(group.getId() + "_assists");
                 }
             }
         }
 
         account.setServer(null);
         this.updateTags();
-
         account.reloadScoreboard();
         account.refreshPlayer();
         account.refreshPlayers();
@@ -456,21 +434,20 @@ public class Solo extends Arena<Player> {
             this.broadcast(PlayerUtils.replaceAll(player,
                     Language.game$broadcast$starting$left.replace("{on}", String.valueOf(this.getOnline())).replace("{max}", String.valueOf(this.getMaxPlayers()))));
         }
-
         Bukkit.getPluginManager().callEvent(new SkyWarsPlayerQuitEvent(this, player));
         this.check();
     }
+
     @Override
     public void start() {
         if (this.getConfig().hasWaitingLobby()) {
             if (this.getState() == SkyWarsState.WAITING) {
                 this.setState(SkyWarsState.STARTING);
                 this.timerTask.switchTask();
-
                 for (Player player : getPlayers(false)) {
                     Account account = Database.getInstance().getAccount(player.getUniqueId());
                     if (account == null) {
-                        player.kickPlayer("§c§lSKY WARS\n \n§cError.");
+                        player.kickPlayer("clSKY WARS\n \ncError.");
                     } else {
                         account.reloadScoreboard();
                         account.refreshPlayer();
@@ -491,23 +468,45 @@ public class Solo extends Arena<Player> {
         }
 
         List<String> sb = new ArrayList<>();
-        for (String line : Language.game$broadcast$started$tutorial.split("\n")) {
+        String tutorial = group.getTutorial();
+
+        if (group.hasTrait("opponents_tracking")) {
+            StringBuilder opponentNames = new StringBuilder();
+            List<Player> playerList = getPlayers(false);
+            for (int i = 0; i < playerList.size(); i++) {
+                if (i > 0) opponentNames.append("§7, ");
+                opponentNames.append(playerList.get(i).getDisplayName());
+            }
+            tutorial = tutorial.replace("{opponents}", opponentNames.toString());
+            tutorial = tutorial.replace("{s}", playerList.size() > 2 ? "s" : "");
+
+            for (Player player : playerList) {
+                StringBuilder oppStr = new StringBuilder();
+                for (Player other : playerList) {
+                    if (!other.equals(player)) {
+                        if (oppStr.length() > 0) oppStr.append("\n");
+                        oppStr.append(other.getDisplayName());
+                    }
+                }
+                opponents.put(player.getUniqueId(), oppStr.toString());
+            }
+        }
+
+        for (String line : tutorial.split("\n")) {
             if (line.startsWith("{centered}")) {
                 line = FontUtils.center(line.replace("{centered}", ""));
             }
-
             sb.add(line);
         }
-
         this.broadcast(StringUtils.join(sb, "\n"));
-        this.broadcast(Language.game$broadcast$started$teaming$solo);
+
         this.broadcastTitle(
-                Language.game$broadcast$started$title.replace("{type_color}", StringUtils.getFirstColor(this.getType().getColoredName())).replace("{type}",
-                        StringUtils.stripColors(this.getType().getColoredName().toUpperCase())),
-                Language.game$broadcast$started$subtitle.replace("{type_color}", StringUtils.getFirstColor(this.getType().getColoredName())).replace("{type}",
-                        StringUtils.stripColors(this.getType().getColoredName().toUpperCase())));
+                Language.game$broadcast$started$title.replace("{type_color}", StringUtils.getFirstColor(group.getColoredName()))
+                        .replace("{type}", group.getStrippedName().toUpperCase()),
+                Language.game$broadcast$started$subtitle.replace("{type_color}", StringUtils.getFirstColor(group.getColoredName()))
+                        .replace("{type}", group.getStrippedName().toUpperCase()));
         sb.clear();
-        sb = null;
+
         teams.forEach(SkyWarsTeam::destroy);
         chests.forEach(SkyWarsChest::fill);
 
@@ -515,22 +514,23 @@ public class Solo extends Arena<Player> {
             kills.put(player.getUniqueId(), 0);
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account == null) {
-                player.kickPlayer("§c§lSKY WARS\n \n§cError.");
+                player.kickPlayer("clSKY WARS\n \ncError.");
             } else {
                 account.reloadScoreboard();
                 account.refreshPlayer();
                 dataContainer.put(player.getUniqueId(), new CurrencyManager(account));
-                Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, this.getType().getIndex());
-                if (cosmetic != null && cosmetic instanceof SkyWarsKit) {
-                    ((SkyWarsKit) cosmetic).apply(player);
+                Cosmetic cosmeticKit = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1);
+                if (cosmeticKit != null && cosmeticKit instanceof SkyWarsKit) {
+                    ((SkyWarsKit) cosmeticKit).apply(player);
                 } else {
-                    if (Language.options$game$default_kit) {
-                        player.getInventory().addItem(new ItemStack(Material.matchMaterial("WOOD_PICKAXE")), new ItemStack(Material.matchMaterial("WOOD_AXE")),
+                    if (Language.options$game$default_kit && !group.hasTrait("no_default_kit")) {
+                        player.getInventory().addItem(
+                                new ItemStack(Material.matchMaterial("WOOD_PICKAXE")),
+                                new ItemStack(Material.matchMaterial("WOOD_AXE")),
                                 new ItemStack(Material.matchMaterial("WOOD_SPADE")));
                     }
                 }
                 player.setNoDamageTicks(80);
-
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 100, 1));
@@ -547,78 +547,89 @@ public class Solo extends Arena<Player> {
     }
 
     private void check() {
-        if (this.getState() != SkyWarsState.INGAME) {
-            return;
-        }
+        if (this.getState() != SkyWarsState.INGAME) return;
 
-        List<SkyWarsTeam> teams = this.getAliveTeams();
-        if (teams.size() <= 1) {
-            if (teams.size() == 0) {
+        List<SkyWarsTeam> aliveTeams = this.getAliveTeams();
+        if (aliveTeams.size() <= 1) {
+            if (aliveTeams.size() == 0) {
                 this.stop(null);
                 Bukkit.getPluginManager().callEvent(new SkyWarsGameEndEvent(this, null));
                 return;
             }
 
             this.setState(SkyWarsState.ENDED);
-            SkyWarsTeam winner = teams.get(0);
-            Player player = winner.getMembers().get(0);
-            this.getPlayers(true).forEach(players -> {
-                boolean loser = !winner.hasMember(players);
+            SkyWarsTeam winner = aliveTeams.get(0);
+            Player winnerPlayer = winner.getMembers().get(0);
+
+            this.getPlayers(true).forEach(p -> {
+                boolean loser = !winner.hasMember(p);
                 if (loser) {
-                    NMS.sendTitle(players, Language.game$player$ingame$titles$loser$up, PlayerUtils.replaceAll(player, Language.game$player$ingame$titles$loser$bottom), 20, 80, 20);
+                    NMS.sendTitle(p, Language.game$player$ingame$titles$loser$up,
+                            PlayerUtils.replaceAll(winnerPlayer, Language.game$player$ingame$titles$loser$bottom), 20, 80, 20);
                 } else {
-                    NMS.sendTitle(players, Language.game$player$ingame$titles$winner$up, Language.game$player$ingame$titles$winner$bottom, 20, 80, 20);
+                    NMS.sendTitle(p, Language.game$player$ingame$titles$winner$up,
+                            Language.game$player$ingame$titles$winner$bottom, 20, 80, 20);
                 }
-
-                Database.getInstance().getAccount(players.getUniqueId()).getScoreboard().update();
+                Database.getInstance().getAccount(p.getUniqueId()).getScoreboard().update();
             });
-            this.stop(player);
-            if (this.isAlive(player)) {
-                this.players.remove(player.getUniqueId());
-                this.spectators.add(player.getUniqueId());
-                Account account = Database.getInstance().getAccount(player.getUniqueId());
-                account.refreshPlayer();
-                if (!isPrivate) {
-                    account.addStat("solowins");
-                    account.addStat("soloplays");
-                }
 
-                int amount = Language.game$rewards$coins_per_win, play = Language.game$rewards$coins_per_play;
-                double expAmount = Language.game$rewards$exp_per_win, expPlay = Language.game$rewards$exp_per_play;
+            this.stop(winner);
 
-                dataContainer.get(player.getUniqueId()).addCoins(play, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
-                dataContainer.get(player.getUniqueId()).addXp(expPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
-                dataContainer.get(player.getUniqueId()).addCoins(amount, SkyWarsPlayerCoinEarnEvent.CoinSource.WIN);
+            // Reward all players in the winning team
+            for (Player wPlayer : winner.getMembers()) {
+                if (this.isAlive(wPlayer)) {
+                    this.players.remove(wPlayer.getUniqueId());
+                    this.spectators.add(wPlayer.getUniqueId());
+                    Account wAccount = Database.getInstance().getAccount(wPlayer.getUniqueId());
+                    wAccount.refreshPlayer();
 
-                for (int i = 0; i < account.getContainer("account").get("sw_soulswin").getAsInt(); i++) {
-                    if (account.getInt("souls") < account.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                        dataContainer.get(player.getUniqueId()).addSouls(1);
+                    if (!isPrivate && group.hasStats()) {
+                        wAccount.addStat(group.getId() + "_wins");
+                        wAccount.addStat(group.getId() + "_plays");
                     }
-                }
+                    if (!isPrivate && group.hasTrait("has_elo")) {
+                        int eloPerWin = group.getRewardInt("elo-per-win");
+                        wAccount.addStat(group.getId() + "_elo", eloPerWin);
+                    }
 
-                dataContainer.get(player.getUniqueId()).addXp(expAmount, SkyWarsPlayerXpGainEvent.XpSource.WIN);
+                    int coinsPerWin = group.getRewardInt("coins-per-win");
+                    int coinsPerPlay = group.getRewardInt("coins-per-play");
+                    double expPerWin = group.getReward("exp-per-win");
+                    double expPerPlay = group.getReward("exp-per-play");
 
-                if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
-                    int gxp = dataContainer.get(player.getUniqueId()).getGxpEarned();
-                    GuildsManager.getByPlayer(player).getLevel().addXp(gxp);
-                }
+                    dataContainer.get(wPlayer.getUniqueId()).addCoins(coinsPerPlay, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
+                    dataContainer.get(wPlayer.getUniqueId()).addXp(expPerPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
+                    dataContainer.get(wPlayer.getUniqueId()).addCoins(coinsPerWin, SkyWarsPlayerCoinEarnEvent.CoinSource.WIN);
+                    dataContainer.get(wPlayer.getUniqueId()).addXp(expPerWin, SkyWarsPlayerXpGainEvent.XpSource.WIN);
 
-                Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-                    for (String line : Language.game$player$ingame$reward_summary) {
-                        line = line.replace("{totalCoins}", "" + dataContainer.get(player.getUniqueId()).getCoinsEarned());
-                        line = line.replace("{totalExp}", "" + dataContainer.get(player.getUniqueId()).getXpEarned());
-                        if (line.contains("{totalGExp}")) {
-                            if (SkyWars.guilds && GuildsManager.getByPlayer(player) != null) {
-                                line = line.replace("{totalGExp}", "" + (dataContainer.get(player.getUniqueId()).getGxpEarned()));
-                            } else {
-                                continue;
-                            }
+                    for (int i = 0; i < wAccount.getContainer("account").get("sw_soulswin").getAsInt(); i++) {
+                        if (wAccount.getInt("souls") < wAccount.getContainer("account").get("sw_maxsouls").getAsInt()) {
+                            dataContainer.get(wPlayer.getUniqueId()).addSouls(1);
                         }
-                        line = line.replace("{totalSouls}", "" + dataContainer.get(player.getUniqueId()).getSoulsEarned());
-
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
                     }
-                }, 20);
+
+                    if (SkyWars.guilds && GuildsManager.getByPlayer(wPlayer) != null) {
+                        int gxp = dataContainer.get(wPlayer.getUniqueId()).getGxpEarned();
+                        GuildsManager.getByPlayer(wPlayer).getLevel().addXp(gxp);
+                    }
+
+                    final Player fWinner = wPlayer;
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
+                        for (String line : Language.game$player$ingame$reward_summary) {
+                            line = line.replace("{totalCoins}", "" + dataContainer.get(fWinner.getUniqueId()).getCoinsEarned());
+                            line = line.replace("{totalExp}", "" + dataContainer.get(fWinner.getUniqueId()).getXpEarned());
+                            if (line.contains("{totalGExp}")) {
+                                if (SkyWars.guilds && GuildsManager.getByPlayer(fWinner) != null) {
+                                    line = line.replace("{totalGExp}", "" + dataContainer.get(fWinner.getUniqueId()).getGxpEarned());
+                                } else {
+                                    continue;
+                                }
+                            }
+                            line = line.replace("{totalSouls}", "" + dataContainer.get(fWinner.getUniqueId()).getSoulsEarned());
+                            fWinner.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
+                        }
+                    }, 20);
+                }
             }
 
             Bukkit.getPluginManager().callEvent(new SkyWarsGameEndEvent(this, winner));
@@ -626,29 +637,27 @@ public class Solo extends Arena<Player> {
     }
 
     @Override
-    public void stop(Player winner) {
+    public void stop(SkyWarsTeam winner) {
         this.setState(SkyWarsState.ENDED);
 
         List<String> sb = new ArrayList<>();
-        List<UUID> keys = kills.keySet().stream().sorted(Comparator.comparing(parent -> kills.get(parent), Comparator.reverseOrder())).collect(Collectors.toList());
+        List<UUID> keys = kills.keySet().stream()
+                .sorted(Comparator.comparing(parent -> kills.get(parent), Comparator.reverseOrder()))
+                .collect(Collectors.toList());
         while (keys.size() < 3) {
             keys.add(null);
         }
 
+        Player winnerPlayer = (winner != null && !winner.getMembers().isEmpty()) ? winner.getMembers().get(0) : null;
+
         for (String line : Language.game$player$ingame$leader_board$template.split("\n")) {
-            line = line.replace("{winner}", winner == null ? "§7None" : winner.getDisplayName());
-
-            line = line.replace("{top1}", keys.get(0) != null ?
-                    Bukkit.getPlayer(keys.get(0)).getDisplayName() : "§7None");
-            line = line.replace("{top2}", keys.get(1) != null ?
-                    Bukkit.getPlayer(keys.get(1)).getDisplayName() : "§7None");
-            line = line.replace("{top3}", keys.get(2) != null ?
-                    Bukkit.getPlayer(keys.get(2)).getDisplayName() : "§7None");
-
+            line = line.replace("{winner}", winnerPlayer == null ? "7None" : winnerPlayer.getDisplayName());
+            line = line.replace("{top1}", keys.get(0) != null ? Bukkit.getPlayer(keys.get(0)).getDisplayName() : "7None");
+            line = line.replace("{top2}", keys.get(1) != null ? Bukkit.getPlayer(keys.get(1)).getDisplayName() : "7None");
+            line = line.replace("{top3}", keys.get(2) != null ? Bukkit.getPlayer(keys.get(2)).getDisplayName() : "7None");
             line = line.replace("{kills_top1}", String.valueOf(this.getKills(keys.get(0))));
             line = line.replace("{kills_top2}", String.valueOf(this.getKills(keys.get(1))));
             line = line.replace("{kills_top3}", String.valueOf(this.getKills(keys.get(2))));
-
             if (line.startsWith("{centered}")) {
                 line = FontUtils.center(line.replace("{centered}", ""));
             }
@@ -656,9 +665,9 @@ public class Solo extends Arena<Player> {
         }
         this.broadcast(StringUtils.join(sb, "\n"));
         sb.clear();
-        sb = null;
 
-        this.getTimerTask().switchTask(winner != null ? new Player[]{winner} : new Player[]{});
+        Player[] winners = (winner != null) ? winner.getMembers().toArray(new Player[0]) : new Player[0];
+        this.getTimerTask().switchTask(winners);
     }
 
     @Override
@@ -667,6 +676,7 @@ public class Solo extends Arena<Player> {
         this.players.clear();
         this.spectators.clear();
         this.dataContainer.clear();
+        this.opponents.clear();
         this.getTimerTask().cancel();
         this.initialPlayers.clear();
         Collections.shuffle(teamcolors);
@@ -682,37 +692,32 @@ public class Solo extends Arena<Player> {
 
     @Override
     public void broadcastAction(String message) {
-        getPlayers(true).forEach(player -> {
-            NMS.sendActionBar(player, message);
-        });
+        getPlayers(true).forEach(player -> NMS.sendActionBar(player, message));
     }
 
     @Override
     public void broadcastTitle(String title, String subtitle) {
-        getPlayers(true).forEach(player -> {
-            NMS.sendTitle(player, title, subtitle, 0, 60, 0);
-        });
+        getPlayers(true).forEach(player -> NMS.sendTitle(player, title, subtitle, 0, 60, 0));
     }
 
     @Override
-    public void broadcast(String message, boolean spectators) {
-        getPlayers(spectators).forEach(player -> {
-            player.sendMessage(StringUtils.formatColors(message));
-        });
+    public void broadcast(String message, boolean includeSpectators) {
+        getPlayers(includeSpectators).forEach(player -> player.sendMessage(StringUtils.formatColors(message)));
     }
 
     @Override
     public void updateScoreboards() {
         getPlayers(true).forEach(player -> {
-            if (this.getState() != SkyWarsState.WAITING && this.getState() != SkyWarsState.STARTING && !this.getConfig().getWorldCube().contains(player.getLocation())) {
+            if (this.getState() != SkyWarsState.WAITING && this.getState() != SkyWarsState.STARTING
+                    && !this.getConfig().getWorldCube().contains(player.getLocation())) {
                 if (this.isSpectator(player)) {
                     player.teleport(this.getConfig().getWorldCube().getCenterLocation());
                 } else if (player.getLocation().getY() > 1) {
-                    NMS.sendTitle(player, Language.game$player$ingame$titles$border$up, Language.game$player$ingame$titles$border$bottom, 0, 20, 0);
+                    NMS.sendTitle(player, Language.game$player$ingame$titles$border$up,
+                            Language.game$player$ingame$titles$border$bottom, 0, 20, 0);
                     player.damage(1.0D);
                 }
             }
-
             Database.getInstance().getAccount(player.getUniqueId()).getScoreboard().update();
         });
     }
@@ -721,63 +726,51 @@ public class Solo extends Arena<Player> {
         if (this.getState().canJoin()) {
             for (Player player : getPlayers(true)) {
                 Scoreboard scoreboard = player.getScoreboard();
-
-                for (Player players : getPlayers(true)) {
-                    Team team = scoreboard.getTeam(players.getUniqueId().toString().replace("-", "").substring(0, 16));
+                for (Player other : getPlayers(true)) {
+                    Team team = scoreboard.getTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
                     if (team == null) {
-                        team = scoreboard.registerNewTeam(players.getUniqueId().toString().replace("-", "").substring(0, 16));
+                        team = scoreboard.registerNewTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
                     }
-
-                    team.setPrefix(StringUtils.getLastColor(Rank.getRank(players).getPrefix()));
-                    if (!team.hasEntry(players.getName())) {
-                        team.addEntry(players.getName());
-                    }
+                    team.setPrefix(StringUtils.getLastColor(Rank.getRank(other).getPrefix()));
+                    if (!team.hasEntry(other.getName())) team.addEntry(other.getName());
                 }
             }
-
             return;
         }
 
         for (Player player : getPlayers(true)) {
             Scoreboard scoreboard = player.getScoreboard();
-
-            for (Player players : getPlayers(true)) {
-                if (isSpectator(players)) {
-                    Team team = scoreboard.getTeam(players.getUniqueId().toString().replace("-", "").substring(0, 16));
-                    if (team != null) {
-                        team.unregister();
-                    }
-
+            for (Player other : getPlayers(true)) {
+                if (isSpectator(other)) {
+                    Team team = scoreboard.getTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
+                    if (team != null) team.unregister();
                     team = scoreboard.getTeam("spec");
                     if (team == null) {
                         team = scoreboard.registerNewTeam("spec");
-                        team.setPrefix("§7");
+                        team.setPrefix("7");
                     }
-
-                    if (!team.hasEntry(players.getName())) {
-                        team.addEntry(players.getName());
-                    }
+                    if (!team.hasEntry(other.getName())) team.addEntry(other.getName());
                 } else {
-                    Team team = scoreboard.getTeam(players.getUniqueId().toString().replace("-", "").substring(0, 16));
+                    Team team = scoreboard.getTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
                     if (team == null) {
-                        SkyWarsTeam st = getTeam(players);
-                        team = scoreboard.registerNewTeam(players.getUniqueId().toString().replace("-", "").substring(0, 16));
-                        team.setPrefix(st.hasMember(player) ? "§a" : "§c");
-                        team.addEntry(players.getName());
+                        SkyWarsTeam st = getTeam(other);
+                        team = scoreboard.registerNewTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
+                        team.setPrefix(st.hasMember(player) ? "a" : "c");
+                        team.addEntry(other.getName());
                     }
                 }
             }
         }
     }
 
-    @Override
-    public String getServerName() {
-        return config.getId();
+    public String getOpponent(Player player) {
+        String opp = opponents.get(player.getUniqueId());
+        return opp != null ? opp : "";
     }
 
     @Override
-    public SkyWarsMode getMode() {
-        return SkyWarsMode.SOLO;
+    public String getServerName() {
+        return config.getId();
     }
 
     @Override
@@ -813,13 +806,13 @@ public class Solo extends Arena<Player> {
         return players.size();
     }
 
-    public List<Player> getPlayers(boolean spectators) {
-        List<Player> players = new ArrayList<>(spectators ? this.spectators.size() + this.players.size() : this.players.size());
-        this.players.stream().filter(id -> Bukkit.getPlayer(id) != null).forEach(id -> players.add(Bukkit.getPlayer(id)));
-        if (spectators) {
-            this.spectators.stream().filter(id -> Bukkit.getPlayer(id) != null).forEach(id -> players.add(Bukkit.getPlayer(id)));
+    @Override
+    public List<Player> getPlayers(boolean includeSpectators) {
+        List<Player> result = new ArrayList<>(includeSpectators ? this.spectators.size() + this.players.size() : this.players.size());
+        this.players.stream().filter(id -> Bukkit.getPlayer(id) != null).forEach(id -> result.add(Bukkit.getPlayer(id)));
+        if (includeSpectators) {
+            this.spectators.stream().filter(id -> Bukkit.getPlayer(id) != null).forEach(id -> result.add(Bukkit.getPlayer(id)));
         }
-
-        return players;
+        return result;
     }
 }

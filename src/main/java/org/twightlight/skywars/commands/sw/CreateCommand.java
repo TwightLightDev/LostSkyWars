@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.commands.SubCommand;
@@ -39,8 +40,9 @@ public class CreateCommand extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        if (args.length <= 2) {
-            player.sendMessage("§cUse /lsw create <solo/doubles> <normal/insane/ranked/duels> <name>");
+        if (args.length <= 1) {
+            player.sendMessage("§cUse /lsw create <group> <name>");
+            player.sendMessage("§7Available groups: " + GroupManager.all());
             return;
         }
 
@@ -49,23 +51,16 @@ public class CreateCommand extends SubCommand {
             return;
         }
 
-        String mode = args[0].toLowerCase();
-        if (!mode.equals("solo") && !mode.equals("doubles")) {
-            player.sendMessage("§cUse /lsw create <solo/doubles> <normal/insane/ranked/duels> <name>");
+        String groupId = args[0].toLowerCase();
+        if (GroupManager.get(groupId) == null) {
+            player.sendMessage("§cInvalid group! Available: " + GroupManager.all());
             return;
         }
 
-        String type = args[1].toLowerCase();
-        if (!type.equals("normal") && !type.equals("insane") && !type.equals("ranked") && !type.equals("duels")) {
-            player.sendMessage("§cUse /lsw create <solo/doubles> <normal/insane/ranked/duels> <name>");
-            return;
-        }
-
-        String name = StringUtils.join(args, 2, " ");
+        String name = StringUtils.join(args, 1, " ");
         String[] array = new String[5];
-        array[0] = mode;
-        array[1] = type;
-        array[2] = name;
+        array[0] = groupId;
+        array[1] = name;
         CREATING.put(player, array);
 
         player.getInventory().clear();
@@ -85,7 +80,7 @@ public class CreateCommand extends SubCommand {
 
     @Override
     public String getUsage() {
-        return "create <solo/team> <normal/insane/ranked/duels> <name>";
+        return "create <group> <name>";
     }
 
     @Override
@@ -102,10 +97,10 @@ public class CreateCommand extends SubCommand {
         if (display.startsWith("§aBorder")) {
             evt.setCancelled(true);
             if (evt.getAction() == Action.LEFT_CLICK_BLOCK) {
-                CREATING.get(player)[3] = BukkitUtils.serializeLocation(evt.getClickedBlock().getLocation());
+                CREATING.get(player)[2] = BukkitUtils.serializeLocation(evt.getClickedBlock().getLocation());
                 player.sendMessage("§5[LostSkyWars] §aBorder 1 setted!");
             } else if (evt.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                CREATING.get(player)[4] = BukkitUtils.serializeLocation(evt.getClickedBlock().getLocation());
+                CREATING.get(player)[3] = BukkitUtils.serializeLocation(evt.getClickedBlock().getLocation());
                 player.sendMessage("§5[LostSkyWars] §aBorder 2 setted!");
             } else {
                 player.sendMessage("§5[LostSkyWars] §cClick in a block.");
@@ -113,12 +108,12 @@ public class CreateCommand extends SubCommand {
         } else if (display.startsWith("§aConfirm")) {
             evt.setCancelled(true);
             String[] array = CREATING.get(player);
-            if (array[3] == null) {
-                player.sendMessage("§5[LostSkyWars] §cSet the border 1 using the right click.");
+            if (array[2] == null) {
+                player.sendMessage("§5[LostSkyWars] §cSet the border 1 using the left click.");
                 return;
             }
 
-            if (array[4] == null) {
+            if (array[3] == null) {
                 player.sendMessage("§5[LostSkyWars] §cSet the border 2 using the right click.");
                 return;
             }
@@ -129,16 +124,19 @@ public class CreateCommand extends SubCommand {
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.updateInventory();
             CREATING.remove(player);
-            player.sendMessage("§5[LostSkyWars] §aCreating \"" + array[1] + "\" - " + array[0] + "...");
+            player.sendMessage("§5[LostSkyWars] §aCreating \"" + array[0] + "\" arena...");
 
-            SkyWarsCube sc = new SkyWarsCube(BukkitUtils.deserializeLocation(array[3]), BukkitUtils.deserializeLocation(array[4]));
+            String groupId = array[0];
+            boolean no_spawn = GroupManager.get(groupId) != null && GroupManager.get(groupId).hasTrait("no_spawn");
+
+            SkyWarsCube sc = new SkyWarsCube(BukkitUtils.deserializeLocation(array[2]), BukkitUtils.deserializeLocation(array[3]));
             List<String> chests = new ArrayList<>(), spawns = new ArrayList<>();
             for (Iterator<Block> itr = sc.iterator(); itr.hasNext(); ) {
                 Block block = itr.next();
                 if (block.getType() == Material.CHEST) {
                     chests.add(BukkitUtils.serializeLocation(block.getLocation()) + "; solo");
                 } else if (block.getType() == Material.BEACON) {
-                    if (array[1].equalsIgnoreCase("duels") && spawns.size() > 1) {
+                    if (no_spawn && spawns.size() > 1) {
                         continue;
                     }
                     block.setType(Material.AIR);
@@ -147,9 +145,8 @@ public class CreateCommand extends SubCommand {
             }
             player.sendMessage("§5[LostSkyWars] §aScanned " + spawns.size() + " spawns & " + chests.size() + " chests.");
 
-            config.set("name", array[2]);
-            config.set("mode", array[0]);
-            config.set("type", array[1]);
+            config.set("name", array[1]);
+            config.set("group", groupId);
             config.set("cube", sc.toString());
             config.set("min-players", spawns.size() / 2 > 0 ? spawns.size() / 2 : 2);
             config.set("spawns", spawns);

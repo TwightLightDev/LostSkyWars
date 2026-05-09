@@ -80,7 +80,7 @@ public class ChestCommand extends SubCommand {
         if (display.startsWith("§aMagic Wand")) {
             evt.setCancelled(true);
             ChestType type = CHEST.get(player);
-            Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
+            Arena server = Arena.getByWorldName(player.getWorld().getName());
             if (server == null) {
                 return;
             }
