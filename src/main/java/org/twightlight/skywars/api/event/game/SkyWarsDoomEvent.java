@@ -1,17 +1,17 @@
 package org.twightlight.skywars.api.event.game;
 
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsDoomEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
 
-    public SkyWarsDoomEvent(SkyWarsServer server) {
+    public SkyWarsDoomEvent(Arena server) {
         this.server = server;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 }

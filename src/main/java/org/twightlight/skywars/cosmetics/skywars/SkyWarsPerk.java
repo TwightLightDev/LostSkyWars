@@ -13,7 +13,6 @@ import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.GameServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
@@ -131,7 +130,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
 
     @Override
     public ItemStack getIcon() {
-        return this.getIcon("§a");
+        return this.getIcon("a");
     }
 
     public ItemStack getIcon(String colorDisplay, String... lores) {
@@ -149,6 +148,12 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
 
     public int getCoins() {
         return coins;
+    }
+
+    public static int getKitIndexForGroup(ArenaGroup group) {
+        if (group == null) return 1;
+        if (group.hasTrait("no_kits")) return 0;
+        return 1;
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Perks");

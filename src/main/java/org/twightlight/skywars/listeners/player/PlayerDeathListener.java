@@ -8,13 +8,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.player.ranked.Ranked;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +25,7 @@ public class PlayerDeathListener extends Listeners {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getArena();
+            Arena server = account.getArena();
             if (server == null) {
                 evt.setDroppedExp(0);
                 player.setHealth(20.0);
@@ -55,12 +52,11 @@ public class PlayerDeathListener extends Listeners {
                 }
 
                 for (Account hitter : hitters) {
-                    if (hitter != null && (killer == null || !hitter.equals(killer)) && (hitter.getArena() != null && hitter.getArena().equals(server)) && hitter.getPlayer() != null
-                            && !server.isSpectator(hitter.getPlayer())) {
-                        if (server.getType().equals(SkyWarsType.RANKED)) {
-                            Ranked.increase(hitter, "assists");
-                        } else {
-                            hitter.addStat((server.getMode().equals(SkyWarsMode.SOLO) ? "solo" : "team") + "assists");
+                    if (hitter != null && (killer == null || !hitter.equals(killer))
+                            && (hitter.getArena() != null && hitter.getArena().equals(server))
+                            && hitter.getPlayer() != null && !server.isSpectator(hitter.getPlayer())) {
+                        if (!server.isPrivate() && server.getGroup().hasTrait("has_stats")) {
+                            hitter.addStat(server.getGroup().getId() + "_assists");
                         }
                     }
                 }

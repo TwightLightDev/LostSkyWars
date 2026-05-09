@@ -103,7 +103,7 @@ public class GameArena extends Arena {
         Player killer = ack != null ? ack.getPlayer() : null;
         if (killer != null && player.equals(killer)) killer = null;
 
-        SkyWarsDeathCause cause = null;
+        SkyWarsDeathCause cause;
         String killMessage;
         if (killer == null) {
             if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
@@ -149,9 +149,9 @@ public class GameArena extends Arena {
         if (cry != null) {
             cry.getSound().play(player.getLocation(), cry.getVolume(), cry.getPitch());
         }
-        SkyWarsPlayerDeathEvent e = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
-        Bukkit.getPluginManager().callEvent(e);
-        broadcast(e.getKillMessage());
+        SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
+        Bukkit.getPluginManager().callEvent(deathEvent);
+        broadcast(deathEvent.getKillMessage());
         this.broadcastAction(Language.game$broadcast$ingame$action_bar$remaining.replace("{alive}", String.valueOf(this.getAlive())));
         this.updateTags();
         this.check();
@@ -170,7 +170,7 @@ public class GameArena extends Arena {
         Player killer = ack != null ? ack.getPlayer() : null;
         if (killer != null && player.equals(killer)) killer = null;
 
-        SkyWarsDeathCause cause = null;
+        SkyWarsDeathCause cause;
         String killMessage;
         if (killer == null) {
             if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
@@ -257,9 +257,9 @@ public class GameArena extends Arena {
         if (cry != null) {
             cry.getSound().play(dieLocation, cry.getVolume(), cry.getPitch());
         }
-        SkyWarsPlayerDeathEvent e = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
-        Bukkit.getPluginManager().callEvent(e);
-        broadcast(e.getKillMessage());
+        SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
+        Bukkit.getPluginManager().callEvent(deathEvent);
+        broadcast(deathEvent.getKillMessage());
         this.broadcastAction(Language.game$broadcast$ingame$action_bar$remaining.replace("{alive}", String.valueOf(this.getAlive())));
         this.updateTags();
         this.check();
@@ -473,7 +473,7 @@ public class GameArena extends Arena {
             StringBuilder opponentNames = new StringBuilder();
             List<Player> playerList = getPlayers(false);
             for (int i = 0; i < playerList.size(); i++) {
-                if (i > 0) opponentNames.append("§7, ");
+                if (i > 0) opponentNames.append("7, ");
                 opponentNames.append(playerList.get(i).getDisplayName());
             }
             tutorial = tutorial.replace("{opponents}", opponentNames.toString());
@@ -574,7 +574,6 @@ public class GameArena extends Arena {
 
             this.stop(winner);
 
-            // Reward all players in the winning team
             for (Player wPlayer : winner.getMembers()) {
                 if (this.isAlive(wPlayer)) {
                     this.players.remove(wPlayer.getUniqueId());

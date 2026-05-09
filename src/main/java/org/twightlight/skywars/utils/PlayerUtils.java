@@ -5,7 +5,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.database.Database;

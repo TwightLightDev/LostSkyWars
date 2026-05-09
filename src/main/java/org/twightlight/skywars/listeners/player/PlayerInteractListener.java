@@ -10,12 +10,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -85,11 +83,10 @@ public class PlayerInteractListener extends Listeners {
             account.refreshPlayers();
         }
 
-        display = null;
         player.updateInventory();
     }
 
-    public static void handleClickArena(Player player, Account account, SkyWarsServer server, String display, Cancellable evt) {
+    public static void handleClickArena(Player player, Account account, Arena server, String display, Cancellable evt) {
         long clickSpam = click.containsKey(player.getName()) ? click.get(player.getName()) : 0;
         if (clickSpam > System.currentTimeMillis()) {
             return;
@@ -97,7 +94,7 @@ public class PlayerInteractListener extends Listeners {
 
         click.put(player.getName(), System.currentTimeMillis() + 500);
         if (display.equals(Language.game$hotbar$kits$name)) {
-            new KitSelectorMenu(player, server.getType().getIndex());
+            new KitSelectorMenu(player, server.getGroup().getId());
         } else if (display.equals(Language.game$hotbar$quit$name) || display.equals(Language.game$hotbar$quit_spectator$name)) {
             if (Core.MODE == CoreMode.MULTI_ARENA) {
                 server.disconnect(account);
@@ -105,15 +102,11 @@ public class PlayerInteractListener extends Listeners {
                 CoreLobbies.writeLobby(player);
             }
         } else if (display.equals(Language.game$hotbar$compass$name)) {
-            new TeleporterMenu(player, (Arena<?>) server);
+            new TeleporterMenu(player, server);
         } else if (display.equals(Language.game$hotbar$play_again$name)) {
-            if (server.getType() == SkyWarsType.RANKED) {
-                new PlayRankedMenu(player);
-            } else if (server.getType() == SkyWarsType.DUELS) {
-                new PlayDuelsMenu(player);
-            } else {
-                new PlayMenu(player, server.getMode());
-            }
+            String groupId = server.getGroup().getId();
+            String category = server.getGroup().getTeamSize() > 1 ? "doubles" : "solo";
+            new PlayMenu(player, category);
         }
     }
 
@@ -132,7 +125,7 @@ public class PlayerInteractListener extends Listeners {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getArena();
+            Arena server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(player));
                 if (CREATING.containsKey(player)) {
@@ -186,15 +179,15 @@ public class PlayerInteractListener extends Listeners {
 
                         if (evt.getAction().name().contains("RIGHT")) {
                             if (block.getState() instanceof Chest) {
-                                SkyWarsChest chest = ((Arena<?>) server).getChest(block);
-                                if (chest != null && ((Arena<?>) server).getEventTime(true) != 0) {
+                                SkyWarsChest chest = server.getChest(block);
+                                if (chest != null && server.getEventTime(true) != 0) {
                                     chest.createHologram();
                                 }
                             }
 
-                            Arena<?> ws = (Arena<?>) server;
-                            if (!ws.getConfig().getWorldCube().contains(block.getLocation()) || !ws.getConfig().getWorldCube().contains(block.getRelative(BlockFace.UP).getLocation())
-                                    || ws.getConfig().isBalloon(BukkitUtils.serializeLocation(block.getLocation()))) {
+                            if (!server.getConfig().getWorldCube().contains(block.getLocation())
+                                    || !server.getConfig().getWorldCube().contains(block.getRelative(BlockFace.UP).getLocation())
+                                    || server.getConfig().isBalloon(BukkitUtils.serializeLocation(block.getLocation()))) {
                                 evt.setCancelled(true);
                             }
                         }

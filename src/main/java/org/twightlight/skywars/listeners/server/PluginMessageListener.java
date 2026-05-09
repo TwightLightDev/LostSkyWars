@@ -5,10 +5,9 @@ import com.google.common.io.ByteStreams;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.bungee.CoreLobbies;
 
-import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public class PluginMessageListener implements org.bukkit.plugin.messaging.PluginMessageListener {
 
     @Override
@@ -18,27 +17,22 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
             String subChannel = in.readUTF();
 
             if (subChannel.equals("Count")) {
-                String type = in.readUTF();
+                String groupId = in.readUTF();
                 int count = in.readInt();
-                try {
-                    Field f = CoreLobbies.class.getDeclaredField(type);
-                    f.set(null, count);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                CoreLobbies.setPlayerCount(groupId, count);
             } else if (subChannel.equals("MapSelector")) {
-                String type = in.readUTF();
+                String groupId = in.readUTF();
+                Map<String, Integer> map = new HashMap<>();
                 try {
-                    Field f = CoreLobbies.class.getDeclaredField(type + "_MAP");
-                    Map<String, Integer> map = (Map<String, Integer>) f.get(null);
-                    map.clear();
                     while (true) {
                         String entry = in.readUTF();
-                        map.put(entry.split(" : ")[0], Integer.parseInt(entry.split(" : ")[1]));
+                        String[] parts = entry.split(" : ");
+                        map.put(parts[0], Integer.parseInt(parts[1]));
                     }
                 } catch (Exception ex) {
-                    // ended
+                    // end of stream
                 }
+                CoreLobbies.setMapSelector(groupId, map);
             }
         }
     }

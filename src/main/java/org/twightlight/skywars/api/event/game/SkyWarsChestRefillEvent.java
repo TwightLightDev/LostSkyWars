@@ -1,17 +1,17 @@
 package org.twightlight.skywars.api.event.game;
 
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsChestRefillEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
 
-    public SkyWarsChestRefillEvent(SkyWarsServer server) {
+    public SkyWarsChestRefillEvent(Arena server) {
         this.server = server;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 }

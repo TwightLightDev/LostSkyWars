@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
@@ -54,7 +54,7 @@ public class WatchCommand extends Command {
                     return true;
                 }
 
-                SkyWarsServer server = acc.getArena();
+                Arena server = acc.getArena();
                 if (server == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(target)) {
                     player.sendMessage(Language.command$watch$user_not_in_match);
                     return true;

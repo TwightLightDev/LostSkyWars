@@ -2,21 +2,21 @@ package org.twightlight.skywars.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsPlayerWatchEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
     private Player watcher;
     private Player target;
 
-    public SkyWarsPlayerWatchEvent(SkyWarsServer server, Player watcher, Player killer) {
+    public SkyWarsPlayerWatchEvent(Arena server, Player watcher, Player killer) {
         this.server = server;
         this.watcher = watcher;
         this.target = killer;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 

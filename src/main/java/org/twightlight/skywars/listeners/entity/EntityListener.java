@@ -18,7 +18,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.SkyWarsTeam;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;

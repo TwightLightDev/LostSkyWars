@@ -11,8 +11,8 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.twightlight.skywars.bungee.server.ServerManager;
 import org.twightlight.skywars.bungee.server.ServerType;
+import org.twightlight.skywars.bungee.server.balancer.server.ArenaServer;
 import org.twightlight.skywars.bungee.server.balancer.server.BungeeServer;
-import org.twightlight.skywars.bungee.server.balancer.server.SkyWarsServer;
 import org.twightlight.skywars.bungee.server.balancer.type.MostConnection;
 
 import java.util.HashMap;
@@ -42,79 +42,77 @@ public class ServerListener implements Listener {
                 if (server != null) {
                     player.connect(server.getServerInfo());
                 } else {
-                    player.sendMessage(TextComponent.fromLegacyText("§cCould not find a available lobby!"));
+                    player.sendMessage(TextComponent.fromLegacyText("\u00a7cCould not find a available lobby!"));
                 }
             } else if (subChannel.startsWith("Count")) {
-                ServerType type = null;
-                try {
-                    type = ServerType.valueOf(in.readUTF().toUpperCase());
-                } catch (Exception ex) {
-                    return;
+                String groupId = in.readUTF();
+
+                int total = 0;
+                for (BungeeServer server : manager.getBalancer(ServerType.ARENA).getList()) {
+                    if (server instanceof ArenaServer) {
+                        ArenaServer arenaServer = (ArenaServer) server;
+                        if (groupId.equals(arenaServer.getGroupId())) {
+                            total += arenaServer.getOnlinePlayers();
+                        }
+                    }
                 }
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("Count");
-                out.writeUTF(type.name());
-                out.writeInt(this.manager.getBalancer(type).getTotalNumber());
+                out.writeUTF(groupId);
+                out.writeInt(total);
                 ((Server) evt.getSender()).sendData("LostSWAPI", out.toByteArray());
             } else if (subChannel.startsWith("Play")) {
                 ProxiedPlayer player = (ProxiedPlayer) evt.getReceiver();
-                ServerType type = null;
-                try {
-                    type = ServerType.valueOf(in.readUTF().toUpperCase());
-                } catch (Exception ex) {
-                    return;
-                }
+                String groupId = in.readUTF();
                 String mapFilter = in.readUTF();
 
-                SkyWarsServer server = (SkyWarsServer) this.manager.getBalancer(type).next();
-                if (!mapFilter.equals("all")) {
-                    Map<String, BungeeServer> map = new HashMap<>();
-                    for (BungeeServer s : manager.getBalancer(type).getList()) {
-                        SkyWarsServer mgs = (SkyWarsServer) s;
-                        if (mgs.getMap().equalsIgnoreCase(mapFilter)) {
-                            map.put(mgs.getServerInfo().getName(), mgs);
+                Map<String, BungeeServer> candidates = new HashMap<>();
+                for (BungeeServer server : manager.getBalancer(ServerType.ARENA).getList()) {
+                    if (server instanceof ArenaServer) {
+                        ArenaServer arenaServer = (ArenaServer) server;
+                        if (groupId.equals(arenaServer.getGroupId()) && arenaServer.canBeSelected()) {
+                            if (mapFilter.equals("all") || (arenaServer.getMap() != null && arenaServer.getMap().equalsIgnoreCase(mapFilter))) {
+                                candidates.put(arenaServer.getServerInfo().getName(), arenaServer);
+                            }
                         }
                     }
-
-                    MostConnection<BungeeServer> most = new MostConnection<>();
-                    most.addAll(map);
-                    server = (SkyWarsServer) most.next();
-                    most.destroy();
                 }
 
-                if (server != null) {
-                    player.connect(server.getServerInfo());
+                if (!candidates.isEmpty()) {
+                    MostConnection<BungeeServer> most = new MostConnection<>();
+                    most.addAll(candidates);
+                    BungeeServer picked = most.next();
+                    most.destroy();
+                    if (picked != null) {
+                        player.connect(picked.getServerInfo());
+                    }
                 }
             } else if (subChannel.startsWith("MapSelector")) {
-                ServerType type = null;
-                try {
-                    type = ServerType.valueOf(in.readUTF().toUpperCase());
-                } catch (Exception ex) {
-                    return;
-                }
+                String groupId = in.readUTF();
 
                 Map<String, Integer> set = new HashMap<>();
-                List<BungeeServer> servers = manager.getBalancer(type).getList();
+                List<BungeeServer> servers = manager.getBalancer(ServerType.ARENA).getList();
                 for (BungeeServer server : servers) {
-                    if (server instanceof SkyWarsServer) {
-                        SkyWarsServer mg = (SkyWarsServer) server;
-                        String map = mg.getMap();
-                        if (map != null) {
-                            int current = set.get(map) != null ? set.get(map) : 0;
-                            set.put(map, current + (server.canBeSelected() ? 1 : 0));
+                    if (server instanceof ArenaServer) {
+                        ArenaServer arenaServer = (ArenaServer) server;
+                        if (groupId.equals(arenaServer.getGroupId())) {
+                            String map = arenaServer.getMap();
+                            if (map != null) {
+                                int current = set.getOrDefault(map, 0);
+                                set.put(map, current + (server.canBeSelected() ? 1 : 0));
+                            }
                         }
                     }
                 }
 
                 ByteArrayDataOutput out = ByteStreams.newDataOutput();
                 out.writeUTF("MapSelector");
-                out.writeUTF(type.name());
+                out.writeUTF(groupId);
                 for (Entry<String, Integer> entry : set.entrySet()) {
                     out.writeUTF(entry.getKey() + " : " + entry.getValue());
                 }
                 set.clear();
-                set = null;
                 ((Server) evt.getSender()).sendData("LostSWAPI", out.toByteArray());
             }
         }

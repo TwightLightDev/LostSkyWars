@@ -1,6 +1,6 @@
 package org.twightlight.skywars.api.player;
 
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.player.Account;
 
 public class LostPlayer {
@@ -66,7 +66,7 @@ public class LostPlayer {
         return a.getMysteryDusts();
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return a.getArena();
     }
 

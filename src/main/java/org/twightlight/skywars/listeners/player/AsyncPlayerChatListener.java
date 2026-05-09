@@ -6,9 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.api.server.SkyWarsServer;
-import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
@@ -62,14 +61,17 @@ public class AsyncPlayerChatListener extends Listeners {
             flood.put(player.getName(), System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(Language.lobby$chat$delay_time));
         }
 
-        String color = Rank.getRank(player).getPermission().equals("none") ? "§7" : "§f";
+        String color = Rank.getRank(player).getPermission().equals("none") ? "\u00a77" : "\u00a7f";
         if (player.hasPermission("lostskywars.chat.color")) {
             evt.setMessage(StringUtils.formatColors(evt.getMessage()));
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        SkyWarsServer server = account.getArena();
-        if (server != null && server.getType().equals(SkyWarsType.DUELS) && (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING)) {
+        Arena server = account.getArena();
+        ArenaGroup group = server != null ? server.getGroup() : null;
+
+        if (server != null && group != null && group.hasTrait("no_chat_waiting")
+                && (server.getState().canJoin() || server.getState() == org.twightlight.skywars.api.server.SkyWarsState.STARTING)) {
             return;
         }
 
@@ -87,15 +89,13 @@ public class AsyncPlayerChatListener extends Listeners {
                     players.sendMessage(
                             PlayerUtils.replaceAll(player, Language.lobby$chat$format_spectator.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                 } else {
-                    if (server.getType() == SkyWarsType.RANKED) {
+                    if (group != null && group.hasTrait("has_elo")) {
                         players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_ranked.replace("{level}", level).replace("{league}", Ranked.getLeague(account).getName())
                                 .replace("{points}", StringUtils.formatNumber(Ranked.getPoints(account))).replace("{color}", color).replace("{message}", evt.getMessage())));
-                    } else if (server.getType() == SkyWarsType.DUELS) {
-                        players
-                                .sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_duels.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
+                    } else if (group != null && group.hasTrait("no_chat_waiting")) {
+                        players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_duels.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else {
-                        players
-                                .sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
+                        players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                     }
                 }
             }

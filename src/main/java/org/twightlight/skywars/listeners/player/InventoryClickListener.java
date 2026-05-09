@@ -6,8 +6,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.commands.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
@@ -26,7 +26,7 @@ public class InventoryClickListener extends Listeners {
                 return;
             }
 
-            SkyWarsServer server = account.getArena();
+            Arena server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(player));
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(player.getInventory())) {

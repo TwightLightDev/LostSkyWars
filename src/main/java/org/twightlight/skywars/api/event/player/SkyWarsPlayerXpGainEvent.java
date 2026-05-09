@@ -2,7 +2,7 @@ package org.twightlight.skywars.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +10,14 @@ import java.util.function.Consumer;
 
 public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
     private Player player;
     private double amount;
     private XpSource source;
     private List<Consumer<List<Object>>> final_task = new ArrayList<>();
     private double baseAmount;
 
-    public SkyWarsPlayerXpGainEvent(SkyWarsServer server, Player player, double amount) {
+    public SkyWarsPlayerXpGainEvent(Arena server, Player player, double amount) {
         this.server = server;
         this.player = player;
         this.amount = amount;
@@ -26,14 +26,14 @@ public class SkyWarsPlayerXpGainEvent extends SkyWarsEvent {
 
     }
 
-    public SkyWarsPlayerXpGainEvent(SkyWarsServer server, Player player, double amount, XpSource source) {
+    public SkyWarsPlayerXpGainEvent(Arena server, Player player, double amount, XpSource source) {
         this.server = server;
         this.player = player;
         this.amount = amount;
         this.source = source;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 

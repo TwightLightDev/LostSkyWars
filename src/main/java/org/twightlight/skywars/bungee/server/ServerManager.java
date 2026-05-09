@@ -5,9 +5,9 @@ import net.md_5.bungee.api.config.ServerInfo;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.bungee.Bungee;
 import org.twightlight.skywars.bungee.server.balancer.BaseBalancer;
+import org.twightlight.skywars.bungee.server.balancer.server.ArenaServer;
 import org.twightlight.skywars.bungee.server.balancer.server.BungeeServer;
 import org.twightlight.skywars.bungee.server.balancer.server.LobbyServer;
-import org.twightlight.skywars.bungee.server.balancer.server.SkyWarsServer;
 import org.twightlight.skywars.bungee.server.balancer.type.LeastConnection;
 import org.twightlight.skywars.bungee.server.balancer.type.MostConnection;
 import org.twightlight.skywars.bungee.server.listener.ServerListener;
@@ -100,18 +100,18 @@ public class ServerManager {
             if (type == ServerType.LOBBY) {
                 server = new LobbyServer(info.getName(), ping.getMax());
             } else {
-                server = new SkyWarsServer(info.getName(), ping.getMax(), state);
+                server = new ArenaServer(info.getName(), ping.getMax(), state);
             }
 
             activeServers.put(info.getName(), server);
             balancers.get(type).add(info.getName(), server);
         }
 
-        if (server instanceof SkyWarsServer) {
-            SkyWarsServer ss = (SkyWarsServer) server;
-            ss.setMap(map);
-            ss.setState(SkyWarsState.valueOf(splitted[2]));
-            ss.setJoinEnabled(!ss.isInProgress() && !server.isFull());
+        if (server instanceof ArenaServer) {
+            ArenaServer arenaServer = (ArenaServer) server;
+            arenaServer.setMap(map);
+            arenaServer.setState(SkyWarsState.valueOf(splitted[2]));
+            arenaServer.setJoinEnabled(!arenaServer.isInProgress() && !server.isFull());
         } else {
             server.setJoinEnabled(!server.isFull());
         }

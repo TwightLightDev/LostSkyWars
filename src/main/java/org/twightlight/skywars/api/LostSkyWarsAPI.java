@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.api.player.LostPlayer;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
@@ -19,14 +19,17 @@ public class LostSkyWarsAPI {
             return;
         }
 
-        SkyWarsServer server = account.getArena();
+        Arena server = account.getArena();
         if (server == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(target)) {
             watcher.sendMessage(Language.command$watch$user_not_in_match);
             return;
         }
 
+        Account watcherAccount = Database.getInstance().getAccount(watcher.getUniqueId());
+        if (watcherAccount == null) return;
+
         watcher.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-        server.spectate(account, target);
+        server.spectate(watcherAccount, target);
     }
 
     public static LostPlayer getLostPlayer(Player player) {

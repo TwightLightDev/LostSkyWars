@@ -10,7 +10,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.json.simple.JSONArray;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.GameArena;
@@ -291,7 +290,7 @@ public class Account {
     private void setupWaitingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
         ArenaGroup group = arena.getGroup();
-        boolean isDuels = group != null && group.getId().equals("duels");
+        boolean isDuels = group != null && group.hasTrait("no_kits");
 
         int slot = Language.game$hotbar$kits$slot;
         if (slot >= 0 && slot < 9 && !isDuels) {
@@ -310,7 +309,7 @@ public class Account {
         player.setGameMode(GameMode.ADVENTURE);
 
         ArenaGroup group = arena.getGroup();
-        boolean isDuels = group != null && group.getId().equals("duels");
+        boolean isDuels = group != null && group.hasTrait("no_kits");
 
         int slot = Language.game$hotbar$kits$slot;
         if (slot >= 0 && slot < 9 && !isDuels) {
@@ -427,7 +426,6 @@ public class Account {
             @Override
             public void update() {
                 ArenaGroup group = arena != null ? arena.getGroup() : null;
-                boolean isTeam = group != null && group.getTeamSize() > 1;
                 boolean hasOpponents = group != null && group.hasTrait("opponents_tracking");
 
                 List<String> clone;
@@ -448,7 +446,7 @@ public class Account {
                         line = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(getPlayer(), line);
                     }
 
-                    SkyWarsServer currentServer = getArena();
+                    Arena currentServer = getArena();
 
                     if (currentServer == null) {
                         line = line.replace("{level}", Level.getByLevel(getLevel()).getLevel(Account.this));
@@ -466,10 +464,8 @@ public class Account {
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
-                        line = line.replace("{world}", currentServer instanceof Arena
-                                ? ((Arena) currentServer).isPrivate()
+                        line = line.replace("{world}", currentServer.isPrivate()
                                 ? ChatColor.translateAlternateColorCodes('&', "&7[P]")
-                                : currentServer.getName()
                                 : currentServer.getName());
                         line = line.replace("{event}", currentServer.getEvent());
                         line = line.replace("{mode}", currentServer.getGroup().getDisplay());
@@ -523,7 +519,7 @@ public class Account {
         }
 
         if (SkyWars.lostboxes && Rank.getRank(getPlayer()).receiveBox()
-                && (key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
+                && (key.endsWith("_plays") || key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
             io.github.losteddev.boxes.player.Account bc =
                     io.github.losteddev.boxes.database.Database.getInstance().getAccount(id);
             if (bc != null) {

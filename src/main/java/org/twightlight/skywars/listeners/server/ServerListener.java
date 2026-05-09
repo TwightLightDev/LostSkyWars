@@ -27,20 +27,20 @@ public class ServerListener implements Listener {
             if (Core.MODE == CoreMode.LOBBY) {
                 evt.setMotd("LOBBY; ");
             } else {
-                Arena<?> server = Arena.listServers().stream().findFirst().orElse(null);
+                Arena server = Arena.listServers().stream().findFirst().orElse(null);
                 if (server == null) {
                     evt.setMotd("");
                     return;
                 }
 
-                evt.setMotd(server.getMode().name() + "_" + server.getType().name() + "; " + server.getConfig().getMapName() + "; " + server.getState().name());
+                evt.setMotd("ARENA; " + server.getConfig().getMapName() + "; " + server.getState().name());
             }
         }
     }
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent evt) {
-        Arena<?> server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
+        Arena server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {
@@ -50,7 +50,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent evt) {
-        Arena<?> server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
+        Arena server = Arena.getByWorldName(evt.getBlock().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {
@@ -65,7 +65,7 @@ public class ServerListener implements Listener {
 
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent evt) {
-        Arena<?> server = Arena.getByWorldName(evt.getEntity().getWorld().getName());
+        Arena server = Arena.getByWorldName(evt.getEntity().getWorld().getName());
         if (server == null) {
             evt.setCancelled(true);
         } else if (server.getState() != SkyWarsState.INGAME) {

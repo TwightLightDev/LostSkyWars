@@ -29,7 +29,7 @@ public class CurrencyManager {
     }
 
     public void addCoins(int amount, SkyWarsPlayerCoinEarnEvent.CoinSource source) {
-        Arena<?> server = (Arena<?>) account.getArena();
+        Arena server = account.getArena();
         SkyWarsPlayerCoinEarnEvent e = new SkyWarsPlayerCoinEarnEvent(server, account.getPlayer(), amount, source);
         Bukkit.getPluginManager().callEvent(e);
         int final_amount = e.getAmount();
@@ -59,7 +59,7 @@ public class CurrencyManager {
     }
 
     public void addXp(double amount, SkyWarsPlayerXpGainEvent.XpSource source) {
-        Arena<?> server = (Arena<?>) account.getArena();
+        Arena server = account.getArena();
 
 
         SkyWarsPlayerXpGainEvent e = new SkyWarsPlayerXpGainEvent(server, account.getPlayer(), amount, source);
@@ -102,7 +102,7 @@ public class CurrencyManager {
 
     public void addSouls(int amount) {
 
-        Arena<?> server = (Arena<?>) account.getArena();
+        Arena server = account.getArena();
         SkyWarsPlayerSoulEarnEvent e = new SkyWarsPlayerSoulEarnEvent(server, account.getPlayer(), amount);
         Bukkit.getPluginManager().callEvent(e);
         int final_amount = e.getAmount();

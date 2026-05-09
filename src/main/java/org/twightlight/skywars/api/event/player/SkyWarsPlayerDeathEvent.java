@@ -2,17 +2,17 @@ package org.twightlight.skywars.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsPlayerDeathEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
     private Player player;
     private Player killer;
     private SkyWarsDeathCause cause;
     private String message;
 
-    public SkyWarsPlayerDeathEvent(SkyWarsServer server, Player player, Player killer, SkyWarsDeathCause cause, String killMessage) {
+    public SkyWarsPlayerDeathEvent(Arena server, Player player, Player killer, SkyWarsDeathCause cause, String killMessage) {
         this.server = server;
         this.player = player;
         this.killer = killer;
@@ -20,7 +20,7 @@ public class SkyWarsPlayerDeathEvent extends SkyWarsEvent {
         message = killMessage;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 

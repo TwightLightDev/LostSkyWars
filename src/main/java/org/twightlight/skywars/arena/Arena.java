@@ -10,7 +10,6 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
@@ -119,7 +118,27 @@ public abstract class Arena {
 
     public abstract void kill(Account account, Account killer, boolean byMob);
 
+    public abstract void connect(Account account, String... skipParty);
+
+    public abstract void disconnect(Account account);
+
+    public abstract void disconnect(Account account, String options);
+
+    public abstract void spectate(Account account, Player target);
+
     public abstract List<Player> getPlayers(boolean spectators);
+
+    public abstract boolean isAlive(Player player);
+
+    public abstract boolean isSpectator(Player player);
+
+    public abstract int getAlive();
+
+    public abstract int getOnline();
+
+    public abstract int getKills(Player player);
+
+    public abstract String getServerName();
 
     public boolean isPrivate() {
         return isPrivate;
@@ -142,7 +161,7 @@ public abstract class Arena {
     }
 
     public List<SkyWarsTeam> getAliveTeams() {
-        return teams.stream().filter(team -> team.isAlive()).collect(Collectors.toList());
+        return teams.stream().filter(SkyWarsTeam::isAlive).collect(Collectors.toList());
     }
 
     public List<SkyWarsTeam> getTeams() {
@@ -180,13 +199,13 @@ public abstract class Arena {
         return null;
     }
 
-    public abstract boolean isAlive(Player player);
+    public void setState(SkyWarsState state) {
+        this.state = state;
+    }
 
-    public abstract boolean isSpectator(Player player);
-
-    public abstract int getAlive();
-
-    public abstract int getKills(Player player);
+    public SkyWarsState getState() {
+        return state;
+    }
 
     public void setTimer(int timer) {
         this.timer = timer;
@@ -287,6 +306,10 @@ public abstract class Arena {
         return config.listSpawns().size();
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("WorldServer");
     private static Map<String, Arena> servers = new HashMap<>();
 
@@ -344,7 +367,7 @@ public abstract class Arena {
 
     public static void removeArena(Arena arena) {
         if (!arena.isPrivate) {
-            servers.remove(arena.name);
+            servers.remove(arena.getConfig().getId());
         }
         FileUtils.deleteFile(arena.getConfig().getConfig().getFile());
         SkyWars.getInstance().getWorldLoader().deleteArenaWorld(arena);
@@ -429,13 +452,5 @@ public abstract class Arena {
 
         SkyWars.getInstance().getWorldLoader().cloneArenaWorld(this.getConfig().getId(), newArena);
         return Arena.loadArena(cu.getFile(), null, temp);
-    }
-
-    public SkyWarsState getState() {
-        return state;
-    }
-
-    public String getName() {
-        return name;
     }
 }

@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSpawnEntityEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 

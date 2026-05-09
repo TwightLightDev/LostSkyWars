@@ -4,7 +4,6 @@ import me.jumper251.replay.replaysystem.recording.PlayerWatcher;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
 

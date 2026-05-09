@@ -3,14 +3,14 @@ package org.twightlight.skywars.api.event.player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsPlayerSpawnEntityEvent extends SkyWarsEvent {
 
     private Player player;
     private Entity mob;
-    private SkyWarsServer server;
-    public SkyWarsPlayerSpawnEntityEvent(Player player, Entity mob, SkyWarsServer server) {
+    private Arena server;
+    public SkyWarsPlayerSpawnEntityEvent(Player player, Entity mob, Arena server) {
         this.player = player;
         this.mob = mob;
         this.server = server;
@@ -24,7 +24,7 @@ public class SkyWarsPlayerSpawnEntityEvent extends SkyWarsEvent {
         return mob;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 }

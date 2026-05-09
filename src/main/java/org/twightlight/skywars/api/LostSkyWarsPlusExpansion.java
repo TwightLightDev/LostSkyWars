@@ -83,10 +83,10 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return Rank.getRank(player).getColoredName();
         } else if (params.equals("team_tag")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null || account.getArena() == null || !(account.getArena() instanceof Arena)) {
+            if (account == null || account.getArena() == null) {
                 return "";
             }
-            Arena arena = (Arena) account.getArena();
+            Arena arena = account.getArena();
             ArenaGroup group = arena.getGroup();
             if (group == null || group.getTeamSize() <= 1) {
                 return "";
@@ -94,10 +94,10 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return arena.getTeam(player) != null ? arena.getTeam(player).getAlphabeticalTag() + " " : "";
         } else if (params.equals("team_alphabet")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null || account.getArena() == null || !(account.getArena() instanceof Arena)) {
+            if (account == null || account.getArena() == null) {
                 return "";
             }
-            Arena arena = (Arena) account.getArena();
+            Arena arena = account.getArena();
             ArenaGroup group = arena.getGroup();
             if (group == null || group.getTeamSize() <= 1) {
                 return "";

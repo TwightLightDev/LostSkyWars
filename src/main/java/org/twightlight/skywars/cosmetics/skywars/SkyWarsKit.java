@@ -8,13 +8,11 @@ import org.bukkit.potion.PotionEffect;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
@@ -23,19 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class SkyWarsKit extends Cosmetic {
+public class SkyWarsKit extends Cosmetic {
 
     private String name;
     private String permission;
     private ItemStack icon;
     private int coins;
-
     private ItemStack[] armor;
     private ItemStack[] content;
     private List<PotionEffect> potionEffects;
-
-
-
 
     public SkyWarsKit(int id, String name, CosmeticRarity rarity, String permission, ItemStack icon, int coins, ItemStack[] armor, ItemStack[] content, List<PotionEffect> potions) {
         super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, rarity);
@@ -45,9 +39,8 @@ public abstract class SkyWarsKit extends Cosmetic {
         this.coins = coins;
         this.armor = armor;
         this.content = content;
-        this.potionEffects = potions;
+        this.potionEffects = potions != null ? potions : new ArrayList<>();
     }
-
 
     public boolean canBeSold() {
         return coins > 0;
@@ -74,7 +67,7 @@ public abstract class SkyWarsKit extends Cosmetic {
 
     @Override
     public boolean canBeFoundInBox(Player player) {
-        return Language.options$ranked$freekitsandperks ? this.getMode() != 3 && (!isPermissible() || hasByPermission(player)) : (!isPermissible() || hasByPermission(player));
+        return !isPermissible() || hasByPermission(player);
     }
 
     public boolean isPermissible() {
@@ -100,7 +93,7 @@ public abstract class SkyWarsKit extends Cosmetic {
 
     @Override
     public ItemStack getIcon() {
-        return this.getIcon("§a");
+        return this.getIcon("\u00a7a");
     }
 
     public ItemStack getIcon(String colorDisplay, String... lores) {
@@ -109,7 +102,9 @@ public abstract class SkyWarsKit extends Cosmetic {
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName(colorDisplay + meta.getDisplayName());
         List<String> list = new ArrayList<>();
-        list.addAll(meta.getLore());
+        if (meta.getLore() != null) {
+            list.addAll(meta.getLore());
+        }
         list.addAll(Arrays.asList(lores));
         meta.setLore(list);
         cloned.setItemMeta(meta);
@@ -121,8 +116,12 @@ public abstract class SkyWarsKit extends Cosmetic {
     }
 
     public void apply(Player player) {
-        player.getInventory().setArmorContents(this.armor);
-        player.getInventory().addItem(this.content);
+        if (this.armor != null) {
+            player.getInventory().setArmorContents(this.armor);
+        }
+        if (this.content != null) {
+            player.getInventory().addItem(this.content);
+        }
         for (PotionEffect potionEffect : potionEffects) {
             potionEffect.apply(player);
         }
@@ -135,11 +134,10 @@ public abstract class SkyWarsKit extends Cosmetic {
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Kits");
 
     public static void setupKits() {
-
-        for (String group : GroupManager.getGroupIds()) {
-            ConfigUtils cu = ConfigUtils.getConfig(group+"_kits", "plugins/LostSkyWars/kits");
+        for (String groupId : GroupManager.getGroupIds()) {
+            ConfigUtils cu = ConfigUtils.getConfig(groupId + "_kits", "plugins/LostSkyWars/kits");
             for (String key : cu.getKeys(false)) {
-                LOGGER.log(Logger.Level.INFO, "Loading kit: " + key);
+                LOGGER.log(Logger.Level.INFO, "Loading kit: " + key + " (group: " + groupId + ")");
 
                 int id = cu.getInt(key + ".id");
                 String name = cu.getString(key + ".name");
@@ -149,8 +147,8 @@ public abstract class SkyWarsKit extends Cosmetic {
                 ItemStack icon = BukkitUtils.fullyDeserializeItemStack(cu.getString(key + ".icon", null));
                 List<ItemStack> list = new ArrayList<>();
 
-                for (String armor : cu.getStringList(key + ".armor")) {
-                    list.add(BukkitUtils.fullyDeserializeItemStack(armor));
+                for (String armorStr : cu.getStringList(key + ".armor")) {
+                    list.add(BukkitUtils.fullyDeserializeItemStack(armorStr));
                 }
 
                 List<PotionEffect> potionEffects = new ArrayList<>();
@@ -160,22 +158,20 @@ public abstract class SkyWarsKit extends Cosmetic {
                     }
                 }
 
-
                 ItemStack[] armor = list.toArray(new ItemStack[list.size()]);
                 if (armor.length != 4) {
                     armor = null;
                     LOGGER.log(Logger.Level.WARNING, "Invalid armor list for kit \"" + name + "\"");
                 }
                 list.clear();
-                for (String content : cu.getStringList(key + ".content")) {
-                    list.add(BukkitUtils.fullyDeserializeItemStack(content));
+                for (String contentStr : cu.getStringList(key + ".content")) {
+                    list.add(BukkitUtils.fullyDeserializeItemStack(contentStr));
                 }
 
                 ItemStack[] content = list.toArray(new ItemStack[list.size()]);
                 list.clear();
-                list = null;
 
-                CosmeticServer.SKYWARS.addCosmetic(new InsaneSkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
+                CosmeticServer.SKYWARS.addCosmetic(new SkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
 
                 LOGGER.log(Logger.Level.INFO, "Kit loaded: " + name);
             }

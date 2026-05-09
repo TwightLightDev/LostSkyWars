@@ -2,17 +2,17 @@ package org.twightlight.skywars.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.event.SkyWarsEvent;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.arena.Arena;
 
 public class SkyWarsPlayerCoinEarnEvent extends SkyWarsEvent {
 
-    private SkyWarsServer server;
+    private Arena server;
     private Player player;
     private int amount;
     private int baseAmount;
     private CoinSource coinSource;
 
-    public SkyWarsPlayerCoinEarnEvent(SkyWarsServer server, Player player, int amount) {
+    public SkyWarsPlayerCoinEarnEvent(Arena server, Player player, int amount) {
         this.server = server;
         this.player = player;
         this.amount = amount;
@@ -20,7 +20,7 @@ public class SkyWarsPlayerCoinEarnEvent extends SkyWarsEvent {
         this.coinSource = CoinSource.CUSTOM;
     }
 
-    public SkyWarsPlayerCoinEarnEvent(SkyWarsServer server, Player player, int amount, CoinSource source) {
+    public SkyWarsPlayerCoinEarnEvent(Arena server, Player player, int amount, CoinSource source) {
         this.server = server;
         this.player = player;
         this.amount = amount;
@@ -35,7 +35,7 @@ public class SkyWarsPlayerCoinEarnEvent extends SkyWarsEvent {
         this.amount = amount;
     }
 
-    public SkyWarsServer getServer() {
+    public Arena getServer() {
         return server;
     }
 
