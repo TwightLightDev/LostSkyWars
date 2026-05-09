@@ -40,7 +40,6 @@ public class LoadCommand extends SubCommand {
         try {
             sender.sendMessage("§5[LostSkyWars] §aLoading...");
             Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-
                 sender.sendMessage("§5[LostSkyWars] §aWorld loaded successfully!");
             });
         } catch (Exception ex) {

@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -52,8 +52,9 @@ public class PlayMenu extends PlayerMenu {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("playnormal")) {
+                                String normalGroupId = resolveNormalGroupId();
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    Arena<?> server = Arena.findRandom(mode, SkyWarsType.NORMAL);
+                                    Arena server = Arena.findRandom(normalGroupId);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -64,13 +65,14 @@ public class PlayMenu extends PlayerMenu {
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                     }
                                 } else {
-                                    CoreLobbies.writeMinigame(player, mode.name() + "_NORMAL", "all");
+                                    CoreLobbies.writeMinigame(player, normalGroupId, "all");
                                 }
                             } else if (menu.equalsIgnoreCase("mapsnormal")) {
-                                new MapsSelectorMenu(player, mode, SkyWarsType.NORMAL);
+                                new MapsSelectorMenu(player, resolveNormalGroupId());
                             } else if (menu.equalsIgnoreCase("playinsane")) {
+                                String insaneGroupId = resolveInsaneGroupId();
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    Arena<?> server = Arena.findRandom(mode, SkyWarsType.INSANE);
+                                    Arena server = Arena.findRandom(insaneGroupId);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -81,10 +83,10 @@ public class PlayMenu extends PlayerMenu {
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                     }
                                 } else {
-                                    CoreLobbies.writeMinigame(player, mode.name() + "_INSANE", "all");
+                                    CoreLobbies.writeMinigame(player, insaneGroupId, "all");
                                 }
                             } else if (menu.equalsIgnoreCase("mapsinsane")) {
-                                new MapsSelectorMenu(player, mode, SkyWarsType.INSANE);
+                                new MapsSelectorMenu(player, resolveInsaneGroupId());
                             } else if (menu.equalsIgnoreCase("closeinv")) {
                                 player.closeInventory();
                             }
@@ -98,34 +100,42 @@ public class PlayMenu extends PlayerMenu {
         }
     }
 
-    private SkyWarsMode mode;
+    private String category;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public PlayMenu(Player player, SkyWarsMode mode) {
+    /**
+     * @param player   the player
+     * @param category "solo" or "doubles" — determines which normal/insane groups to use
+     */
+    public PlayMenu(Player player, String category) {
         super(player, config.getTitle(), config.getRows());
-        this.mode = mode;
+        this.category = category;
 
-        int playing_normal = mode.equals(SkyWarsMode.SOLO) ? CoreLobbies.SOLO_NORMAL : CoreLobbies.DOUBLES_NORMAL,
-                playing_insane = mode.equals(SkyWarsMode.SOLO) ? CoreLobbies.SOLO_INSANE : CoreLobbies.DOUBLES_INSANE;
+        String normalGroupId = resolveNormalGroupId();
+        String insaneGroupId = resolveInsaneGroupId();
+
+        int playingNormal = CoreLobbies.getPlayerCount(normalGroupId);
+        int playingInsane = CoreLobbies.getPlayerCount(insaneGroupId);
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (Arena<?> server : Arena.listServers()) {
-                if (server.getMode().equals(mode)) {
-                    if (server.getType().equals(SkyWarsType.NORMAL)) {
-                        playing_normal += server.getOnline();
-                    } else if (server.getType().equals(SkyWarsType.INSANE)) {
-                        playing_insane += server.getOnline();
-                    }
+            for (Arena server : Arena.listServers()) {
+                String gid = server.getGroup().getId();
+                if (gid.equals(normalGroupId)) {
+                    playingNormal += server.getOnline();
+                } else if (gid.equals(insaneGroupId)) {
+                    playingInsane += server.getOnline();
                 }
             }
         }
+
+        String modeName = category.equals("doubles") ? Language.options$mode$doubles : Language.options$mode$solo;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
 
-                stack = stack.replace("{mode}", mode.getName());
-                stack = stack.replace("{players_normal}", StringUtils.formatNumber(playing_normal));
-                stack = stack.replace("{players_insane}", StringUtils.formatNumber(playing_insane));
+                stack = stack.replace("{mode}", modeName);
+                stack = stack.replace("{players_normal}", StringUtils.formatNumber(playingNormal));
+                stack = stack.replace("{players_insane}", StringUtils.formatNumber(playingInsane));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
@@ -136,10 +146,20 @@ public class PlayMenu extends PlayerMenu {
         this.register();
     }
 
+    private String resolveNormalGroupId() {
+        if (category.equals("doubles")) return "doubles";
+        return "solo";
+    }
+
+    private String resolveInsaneGroupId() {
+        if (category.equals("doubles")) return "doubles_insane";
+        return "solo_insane";
+    }
+
     public void cancel() {
         map.clear();
         map = null;
-        mode = null;
+        category = null;
         HandlerList.unregisterAll(this);
     }
 

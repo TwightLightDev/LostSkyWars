@@ -7,12 +7,9 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
-import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
-import org.twightlight.skywars.menu.play.PlayRankedMenu;
 
 public class PlayCommand extends Command {
 
@@ -42,21 +39,12 @@ public class PlayCommand extends Command {
             }
 
             String arg = args[0].toLowerCase();
-            if (arg.equals("solo") || arg.equals("solo_insane")) {
-                new PlayMenu(player, "solo");
-            } else if (arg.equals("doubles") || arg.equals("doubles_insane")) {
-                new PlayMenu(player, "doubles");
-            } else if (arg.equals("ranked") || arg.equals("ranked_solo") || arg.equals("ranked_doubles")) {
-                new PlayRankedMenu(player);
-            } else if (arg.equals("duels")) {
-                new PlayDuelsMenu(player);
+            if (GroupManager.get(arg) != null) {
+                new PlayMenu(player, arg);
             } else {
-                if (GroupManager.get(arg) != null) {
-                    new PlayMenu(player, arg);
-                } else {
-                    player.sendMessage("§cUnknown group. Use /play <group>");
-                }
+                player.sendMessage("§cUnknown group. Use /play <group>");
             }
+
         }
 
         return true;

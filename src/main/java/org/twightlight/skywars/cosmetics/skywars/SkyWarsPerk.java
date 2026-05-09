@@ -14,7 +14,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -46,7 +46,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         this.icon = icon;
         this.coins = coins;
         this.buyable = buyable;
-
     }
 
     public void register(Plugin plugin) {
@@ -58,6 +57,22 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
 
     public boolean canBeSold() {
         return buyable;
+    }
+
+    /**
+     * Maps a group id to the old kit/perk mode index used by CosmeticType.
+     * 1 = normal groups (solo, doubles)
+     * 2 = insane groups (solo_insane, doubles_insane)
+     * 3 = ranked groups (ranked_solo, ranked_doubles)
+     * Returns -1 for groups that don't use kits/perks (e.g. duels).
+     */
+    public static int getKitIndexForGroup(ArenaGroup group) {
+        if (group == null) return -1;
+        String id = group.getId();
+        if (id.contains("insane")) return 2;
+        if (id.contains("ranked")) return 3;
+        if (id.equals("duels")) return -1;
+        return 1;
     }
 
     public boolean isAbleToUse(Player player) {
@@ -77,8 +92,12 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             able = false;
         }
 
-        if (server != null && server.getType().getIndex() != this.getMode()) {
-            able = false;
+        if (server != null) {
+            ArenaGroup group = server.getGroup();
+            int kitIndex = getKitIndexForGroup(group);
+            if (kitIndex == -1 || kitIndex != this.getMode()) {
+                able = false;
+            }
         }
 
         account = null;
@@ -145,36 +164,28 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return coins;
     }
 
-    public boolean isAble(SkyWarsType type) {
-        return true;
-    }
-
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Perks");
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
     public static void setupPerks() {
-        // ArrowRecovery
         new ArrowRecovery(1);
         new ArrowRecovery(2);
         if (CONFIG.getBoolean("arrowrecovery.ranked")) {
             new ArrowRecovery(3);
         }
 
-        // Blazingarrows
         new BlazingArrows(1);
         new BlazingArrows(2);
         if (CONFIG.getBoolean("blazingarrow.ranked")) {
             new BlazingArrows(3);
         }
 
-        // Bulldozer
         new Bulldozer(1);
         new Bulldozer(2);
         if (CONFIG.getBoolean("bulldozer.ranked")) {
             new Bulldozer(3);
         }
 
-        // Ender Mastery (50% ender pearl damage)
         checkIfAbsent("endermastery");
         new EnderMastery(1);
         new EnderMastery(2);
@@ -182,7 +193,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new EnderMastery(3);
         }
 
-        // Juggernaut (regen I for 5 seconds)
         checkIfAbsent("juggernaut");
         new Juggernaut(1);
         new Juggernaut(2);
@@ -190,7 +200,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new Juggernaut(3);
         }
 
-        // Knowledge (every kill gain 1 EXP Level)
         checkIfAbsent("knowledge");
         new Knowledge(1);
         new Knowledge(2);
@@ -198,7 +207,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new Knowledge(3);
         }
 
-        // Nourishment (every kill gains full food and saturation)
         checkIfAbsent("nourishment");
         new Nourishment(1);
         new Nourishment(2);
@@ -206,7 +214,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new Nourishment(3);
         }
 
-        // Lucky Charm (5% chance to get a Golden Apple after a kill)
         checkIfAbsent("luckycharm");
         new LuckyCharm(1);
         new LuckyCharm(2);
@@ -214,7 +221,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new LuckyCharm(3);
         }
 
-        // Void Master (10% chance to get an enderpearl after throwing a player in the void)
         checkIfAbsent("voidmaster");
         new VoidMaster(1);
         new VoidMaster(2);
@@ -222,7 +228,6 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
             new VoidMaster(3);
         }
 
-        // Decisive Strike (10% chance to when you're about to die got 0,5 hearts instead of dying)
         checkIfAbsent("decisivestrike");
         DecisiveStrike st = new DecisiveStrike(1);
         new DecisiveStrike(2);

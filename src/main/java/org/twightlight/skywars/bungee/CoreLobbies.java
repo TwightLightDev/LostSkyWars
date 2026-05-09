@@ -6,105 +6,91 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class
-CoreLobbies {
+public class CoreLobbies {
 
-    public static int SOLO_NORMAL;
-    public static int SOLO_INSANE;
-    public static int SOLO_RANKED;
-    public static int SOLO_DUELS;
-    public static int DOUBLES_NORMAL;
-    public static int DOUBLES_INSANE;
-    public static int DOUBLES_RANKED;
-    public static int DOUBLES_DUELS;
-
-    public static Map<String, Integer> SOLO_NORMAL_MAP = new HashMap<>();
-    public static Map<String, Integer> SOLO_INSANE_MAP = new HashMap<>();
-    public static Map<String, Integer> SOLO_RANKED_MAP = new HashMap<>();
-    public static Map<String, Integer> DOUBLES_NORMAL_MAP = new HashMap<>();
-    public static Map<String, Integer> DOUBLES_INSANE_MAP = new HashMap<>();
-    public static Map<String, Integer> DOUBLES_RANKED_MAP = new HashMap<>();
+    // Group-ID based player counts
+    private static final Map<String, Integer> groupPlayerCounts = new ConcurrentHashMap<>();
 
     public static void writeLobby(Player player) {
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        Account account = Database.getInstance().getAccount(player.getUniqueId());
+        if (account != null) account.save();
 
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Lobby");
-
-        Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account != null) {
-            account.save();
-        }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-            player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
-        }, 15);
+        player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
     }
 
-    public static void writeCount(String serverType) {
-        Player faker = Bukkit.getOnlinePlayers().stream().findFirst().orElse(null);
-        if (faker != null) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    public static void writeCount(String groupId) {
+        Player player = getAnyOnlinePlayer();
+        if (player == null) return;
 
-            out.writeUTF("Count");
-            out.writeUTF(serverType);
-
-            faker.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
-        }
-    }
-
-    public static void writeMinigame(Player player, String serverType, String map) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Count");
+        out.writeUTF(groupId);
+        player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
+    }
 
-        out.writeUTF("Play");
-        out.writeUTF(serverType);
-        out.writeUTF(map);
-
+    public static void writeMinigame(Player player, String groupId, String map) {
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account != null) {
-            account.save();
-        }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> {
-            player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
-        }, 15);
+        if (account != null) account.save();
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Play");
+        out.writeUTF(groupId);
+        out.writeUTF(map);
+        player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
     }
 
-    public static void writeMapSelector(String serverType) {
-        Player faker = Bukkit.getOnlinePlayers().stream().findFirst().orElse(null);
-        if (faker != null) {
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    public static void writeMapSelector(String groupId) {
+        Player player = getAnyOnlinePlayer();
+        if (player == null) return;
 
-            out.writeUTF("MapSelector");
-            out.writeUTF(serverType);
-
-            faker.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
-        }
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("MapSelector");
+        out.writeUTF(groupId);
+        player.sendPluginMessage(SkyWars.getInstance(), "LostSWAPI", out.toByteArray());
     }
 
+    /**
+     * Gets player count for any group ID.
+     */
+    public static int getPlayerCount(String groupId) {
+        return groupPlayerCounts.getOrDefault(groupId, 0);
+    }
+
+    /**
+     * Sets up lobbies. Iterates over all registered groups instead of mode/type enums.
+     */
     public static void setupLobbies() {
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(SkyWars.getInstance(), "LostSWAPI");
+        Bukkit.getMessenger().registerOutgoingPluginChannel(SkyWars.getInstance(), "LostSWAPI");
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (Bukkit.getOnlinePlayers().size() > 0) {
-                    for (SkyWarsMode mode : SkyWarsMode.values()) {
-                        for (SkyWarsType type : SkyWarsType.values()) {
-                            writeCount(mode.name() + "_" + type.name());
-                            if (type == SkyWarsType.DUELS) {
-                                continue;
-                            }
-                            writeMapSelector(mode.name() + "_" + type.name());
-                        }
+                // Iterate all registered groups from GroupManager
+                for (ArenaGroup group : GroupManager.all()) {
+                    String groupId = group.getId();
+                    writeCount(groupId);
+
+                    // Write map selector for non-duels groups
+                    if (!group.hasTrait("duels")) {
+                        writeMapSelector(groupId);
                     }
                 }
             }
-        }.runTaskTimer(SkyWars.getInstance(), 0, 40);
+        }.runTaskTimer(SkyWars.getInstance(), 20L, 40L);
+    }
+
+    private static Player getAnyOnlinePlayer() {
+        for (Player p : Bukkit.getOnlinePlayers()) return p;
+        return null;
     }
 }

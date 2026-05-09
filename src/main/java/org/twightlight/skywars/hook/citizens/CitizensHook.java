@@ -18,7 +18,6 @@ import org.twightlight.skywars.menu.lobby.DeliveryManMenu;
 import org.twightlight.skywars.menu.lobby.StatsNPCMenu;
 import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
-import org.twightlight.skywars.menu.play.PlayRankedMenu;
 import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.player.Account;
 

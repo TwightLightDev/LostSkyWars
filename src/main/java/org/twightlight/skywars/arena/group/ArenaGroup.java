@@ -19,6 +19,7 @@ public class ArenaGroup {
     private final List<Integer> refillTimes;
     private final int dragonTime;
     private final String tutorial;
+
     public ArenaGroup(String id, ConfigurationSection section) {
         String display = section.getString("display", id);
         int teamSize = section.getInt("team-size", 1);
@@ -51,7 +52,6 @@ public class ArenaGroup {
         }
 
         String tutorial = section.getString("tutorial");
-
 
         this.id = id;
         this.display = display;
@@ -96,10 +96,6 @@ public class ArenaGroup {
 
     public boolean hasTrait(String trait) {
         return traits.contains(trait.toLowerCase());
-    }
-
-    public boolean hasStats() {
-        return hasTrait("has_stats");
     }
 
     public Map<String, Double> getRewards() {

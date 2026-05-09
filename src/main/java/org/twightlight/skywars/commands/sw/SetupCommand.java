@@ -39,11 +39,12 @@ public class SetupCommand extends SubCommand {
                 player.sendMessage("§cUse /lsw setup kits <id> <normal/insane/ranked>");
                 return;
             }
-            if (!args[2].equals("normal") && !args[2].equals("insane") && !args[2].equals("ranked")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found!"));
+            String kitType = args[2].toLowerCase();
+            if (!kitType.equals("normal") && !kitType.equals("insane") && !kitType.equals("ranked")) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found! Use: normal, insane, ranked"));
                 return;
             }
-            ConfigUtils config = ConfigUtils.getConfig(args[2] + "kits", "plugins/LostSkyWars/kits");
+            ConfigUtils config = ConfigUtils.getConfig(kitType + "kits", "plugins/LostSkyWars/kits");
             if (config != null) {
                 Menu menu = KitsSetup.init(config, args[1]);
                 menu.open(player);
@@ -62,7 +63,7 @@ public class SetupCommand extends SubCommand {
                 }
 
                 String field = args[1].toLowerCase();
-                switch (field.toLowerCase()) {
+                switch (field) {
                     case "name":
                         if (args.length < 3) {
                             player.sendMessage("§cUse /lsw setup cage name <name>");
@@ -83,8 +84,7 @@ public class SetupCommand extends SubCommand {
                             session.setRarity(rarity);
                             player.sendMessage("§aRarity set to: §e" + rarity.name());
                         } catch (IllegalArgumentException ex) {
-                            player.sendMessage("§cInvalid rarity! Use: " +
-                                    Arrays.toString(CosmeticRarity.values()));
+                            player.sendMessage("§cInvalid rarity! Use: " + Arrays.toString(CosmeticRarity.values()));
                         }
                         session.sendProgress();
                         break;
@@ -102,8 +102,7 @@ public class SetupCommand extends SubCommand {
                     case "icon":
                         if (player.getItemInHand() != null) {
                             session.setIcon(player.getItemInHand());
-                            player.sendMessage("§aIcon set to item in hand: §e" +
-                                    player.getItemInHand().getType().name());
+                            player.sendMessage("§aIcon set to item in hand: §e" + player.getItemInHand().getType().name());
                         } else {
                             player.sendMessage("§cHold an item in your hand to set as icon!");
                         }
@@ -147,7 +146,6 @@ public class SetupCommand extends SubCommand {
 
                     case "finish":
                         List<String> missing = new ArrayList<>();
-
                         if (session.getName() == null) missing.add("Name");
                         if (session.getRarity() == null) missing.add("Rarity");
                         if (session.getPermission() == null) missing.add("Permission");
@@ -171,11 +169,10 @@ public class SetupCommand extends SubCommand {
             } else {
                 player.sendMessage("§cYou are not in a cage setup session!");
                 player.sendMessage("§cUse '/lsw createcage <name>' first!");
-
-
             }
         }
     }
+
     @Override
     public String getUsage() {
         return "setup";

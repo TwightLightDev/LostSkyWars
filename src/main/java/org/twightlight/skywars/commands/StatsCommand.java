@@ -42,10 +42,7 @@ public class StatsCommand extends Command {
                 return true;
             }
 
-            CompletableFuture<Account> account = null;
-            Player target = Bukkit.getPlayer(args[0]);
-            account = Database.getInstance().loadAccountOffline(args[0]);
-
+            CompletableFuture<Account> account = Database.getInstance().loadAccountOffline(args[0]);
 
             if (account == null) {
                 player.sendMessage(Language.command$stats$user_not_found);

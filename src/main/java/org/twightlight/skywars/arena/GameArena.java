@@ -64,7 +64,7 @@ public class GameArena extends Arena {
     }
 
     private void recordKillStats(Account killerAccount, String statSuffix) {
-        if (!isPrivate && group.hasStats()) {
+        if (!isPrivate && group.hasTrait("has_stats")) {
             killerAccount.addStat(group.getId() + "_" + statSuffix);
         }
         if (!isPrivate && group.hasTrait("has_elo")) {
@@ -76,7 +76,7 @@ public class GameArena extends Arena {
     }
 
     private void recordDeathStats(Account account) {
-        if (!isPrivate && group.hasStats()) {
+        if (!isPrivate && group.hasTrait("has_stats")) {
             account.addStat(group.getId() + "_deaths");
             account.addStat(group.getId() + "_plays");
         }
@@ -396,7 +396,7 @@ public class GameArena extends Arena {
                     if (hitter != null && (killer == null || !hitter.equals(killer))
                             && (hitter.getServer() != null && hitter.getServer().equals(this))
                             && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
-                        if (!isPrivate() && group.hasStats()) hitter.addStat(group.getId() + "_assists");
+                        if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
                     }
                 }
             }
@@ -420,7 +420,7 @@ public class GameArena extends Arena {
                 if (hitter != null && (killer == null || !hitter.equals(killer))
                         && (hitter.getServer() != null && hitter.getServer().equals(this))
                         && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
-                    if (!isPrivate() && group.hasStats()) hitter.addStat(group.getId() + "_assists");
+                    if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
                 }
             }
         }
@@ -583,7 +583,7 @@ public class GameArena extends Arena {
                     Account wAccount = Database.getInstance().getAccount(wPlayer.getUniqueId());
                     wAccount.refreshPlayer();
 
-                    if (!isPrivate && group.hasStats()) {
+                    if (!isPrivate && group.hasTrait("has_stats")) {
                         wAccount.addStat(group.getId() + "_wins");
                         wAccount.addStat(group.getId() + "_plays");
                     }

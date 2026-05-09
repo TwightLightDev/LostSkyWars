@@ -4,10 +4,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.type.solo.Solo;
-import org.twightlight.skywars.arena.type.solo.SoloRanked;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -41,40 +39,42 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String params) {
 
         if (params.equals("players_solo")) {
-            int playing = CoreLobbies.SOLO_NORMAL + CoreLobbies.SOLO_INSANE;
+            int playing = CoreLobbies.getPlayerCount("solo") + CoreLobbies.getPlayerCount("solo_insane");
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (Arena<?> server : Arena.listServers()) {
-                    if (server.getMode().equals(SkyWarsMode.SOLO) && (server.getType() == SkyWarsType.NORMAL || server.getType() == SkyWarsType.INSANE)) {
+                for (Arena server : Arena.listServers()) {
+                    String gid = server.getGroup().getId();
+                    if (gid.equals("solo") || gid.equals("solo_insane")) {
                         playing += server.getOnline();
                     }
                 }
             }
             return "" + playing;
         } else if (params.equals("players_doubles")) {
-            int playing = CoreLobbies.DOUBLES_NORMAL + CoreLobbies.DOUBLES_INSANE;
+            int playing = CoreLobbies.getPlayerCount("doubles") + CoreLobbies.getPlayerCount("doubles_insane");
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (Arena<?> server : Arena.listServers()) {
-                    if (server.getMode().equals(SkyWarsMode.DOUBLES) && (server.getType() == SkyWarsType.NORMAL || server.getType() == SkyWarsType.INSANE)) {
+                for (Arena server : Arena.listServers()) {
+                    String gid = server.getGroup().getId();
+                    if (gid.equals("doubles") || gid.equals("doubles_insane")) {
                         playing += server.getOnline();
                     }
                 }
             }
             return "" + playing;
         } else if (params.equals("players_ranked")) {
-            int playing = CoreLobbies.DOUBLES_RANKED + CoreLobbies.SOLO_RANKED;
+            int playing = CoreLobbies.getPlayerCount("ranked_solo") + CoreLobbies.getPlayerCount("ranked_doubles");
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (Arena<?> server : Arena.listServers()) {
-                    if (server.getType().equals(SkyWarsType.RANKED)) {
+                for (Arena server : Arena.listServers()) {
+                    if (server.getGroup().hasTrait("has_elo")) {
                         playing += server.getOnline();
                     }
                 }
             }
             return "" + playing;
         } else if (params.equals("players_duels")) {
-            int playing = CoreLobbies.SOLO_DUELS + CoreLobbies.DOUBLES_DUELS;
+            int playing = CoreLobbies.getPlayerCount("duels");
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (Arena<?> server : Arena.listServers()) {
-                    if (server.getType().equals(SkyWarsType.DUELS)) {
+                for (Arena server : Arena.listServers()) {
+                    if (server.getGroup().getId().equals("duels")) {
                         playing += server.getOnline();
                     }
                 }
@@ -84,28 +84,26 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return Rank.getRank(player).getColoredName();
         } else if (params.equals("team_tag")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null ||
-                    account.getServer() == null ||
-                    !(account.getServer() instanceof Arena<?>) ||
-                    (account.getServer() instanceof Solo) ||
-                    (account.getServer() instanceof SoloRanked)||
-                    (account.getServer() instanceof Duels)) {
+            if (account == null || account.getServer() == null || !(account.getServer() instanceof Arena)) {
                 return "";
             }
-            Arena<?> arena = (Arena<?>) account.getServer();
-            return arena.getTeam(player).getAlphabeticalTag() + " ";
+            Arena arena = (Arena) account.getServer();
+            ArenaGroup group = arena.getGroup();
+            if (group == null || group.getTeamSize() <= 1) {
+                return "";
+            }
+            return arena.getTeam(player) != null ? arena.getTeam(player).getAlphabeticalTag() + " " : "";
         } else if (params.equals("team_alphabet")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null ||
-                    account.getServer() == null ||
-                    !(account.getServer() instanceof Arena<?>) ||
-                    (account.getServer() instanceof Solo) ||
-                    (account.getServer() instanceof SoloRanked)||
-                    (account.getServer() instanceof Duels)) {
+            if (account == null || account.getServer() == null || !(account.getServer() instanceof Arena)) {
                 return "";
             }
-            Arena<?> arena = (Arena<?>) account.getServer();
-            return arena.getTeam(player).getAlphabetical();
+            Arena arena = (Arena) account.getServer();
+            ArenaGroup group = arena.getGroup();
+            if (group == null || group.getTeamSize() <= 1) {
+                return "";
+            }
+            return arena.getTeam(player) != null ? arena.getTeam(player).getAlphabetical() : "";
         }
 
         return null;

@@ -40,7 +40,7 @@ public class MenuCommand extends Command {
             } else if (action.equalsIgnoreCase("cosmetics")) {
                 new CosmeticsMenu(player);
             } else {
-                player.sendMessage(" \n§dMenu - Help\n \n§6/lswmenu stats §f- §7Open stats menu.\n§6/lswmenu delivery §f- §7Open delivery menu.\n§6/swmenu cosmetics §f- §7Open cosmetics menu.\n ");
+                player.sendMessage(" \n§dMenu - Help\n \n§6/swmenu stats §f- §7Open stats menu.\n§6/swmenu delivery §f- §7Open delivery menu.\n§6/swmenu cosmetics §f- §7Open cosmetics menu.\n ");
             }
         }
 

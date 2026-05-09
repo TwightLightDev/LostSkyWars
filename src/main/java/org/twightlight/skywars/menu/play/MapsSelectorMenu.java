@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -56,7 +56,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("random")) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    Arena<?> server = Arena.findRandom(mode, type);
+                                    Arena server = Arena.findRandom(groupId);
                                     if (server != null) {
                                         User user = PrivateGames.getStorage().getUser(player);
                                         if (user != null && user.isEnablePrivateGame()) {
@@ -67,14 +67,14 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                         player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                     }
                                 } else {
-                                    CoreLobbies.writeMinigame(player, mode.name() + "_" + type.name(), "all");
+                                    CoreLobbies.writeMinigame(player, groupId, "all");
                                 }
                             } else if (menu.equalsIgnoreCase("favorites")) {
                                 if (can) {
                                     List<String> favorites = new ArrayList<>();
                                     for (Object object : account.getContainer("skywars").get("favorites").getAsJsonArray()) {
                                         if (object instanceof String) {
-                                            boolean canPlay = map.containsKey((String) object) && !map.get((String) object).isEmpty();
+                                            boolean canPlay = arenaMap.containsKey((String) object) && !arenaMap.get((String) object).isEmpty();
                                             if (Core.MODE != CoreMode.MULTI_ARENA) {
                                                 canPlay = getBungeeMap().containsKey((String) object) && getBungeeMap().get((String) object) > 0;
                                             }
@@ -90,7 +90,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                     }
 
                                     if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                        for (Arena<?> server : this.map.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
+                                        for (Arena server : this.arenaMap.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
                                             if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                                 player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                                 player.closeInventory();
@@ -105,17 +105,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                             }
                                         }
                                     } else {
-                                        CoreLobbies.writeMinigame(player, mode.name() + "_" + type.name(), favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())));
+                                        CoreLobbies.writeMinigame(player, groupId, favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())));
                                     }
 
                                     favorites.clear();
                                 }
                             } else if (menu.equalsIgnoreCase("play")) {
-                                if (type == SkyWarsType.RANKED) {
-                                    new PlayRankedMenu(player);
-                                } else {
-                                    new PlayMenu(player, mode);
-                                }
+                                new PlayMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("closeinv")) {
                                 player.closeInventory();
                             }
@@ -141,7 +137,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
 
                             if (can) {
                                 if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                    for (Arena<?> server : this.map.get(mapName)) {
+                                    for (Arena server : this.arenaMap.get(mapName)) {
                                         if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                             player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                             player.closeInventory();
@@ -156,7 +152,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                         }
                                     }
                                 } else {
-                                    CoreLobbies.writeMinigame(player, mode.name() + "_" + type.name(), mapName);
+                                    CoreLobbies.writeMinigame(player, groupId, mapName);
                                 }
                             }
                         }
@@ -166,17 +162,15 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
         }
     }
 
-    private SkyWarsMode mode;
-    private SkyWarsType type;
+    private String groupId;
     private boolean tick = true, can = true;
     private Map<ItemStack, String> maps = new HashMap<>();
-    private Map<String, List<Arena<?>>> map = new HashMap<>();
+    private Map<String, List<Arena>> arenaMap = new HashMap<>();
     private Map<ItemStack, ConfigAction> actions = new HashMap<>();
 
-    public MapsSelectorMenu(Player player, SkyWarsMode mode, SkyWarsType type) {
-        super(player, config.getTitle().replace("{mode}", mode.getName()).replace("{type}", type.getName()), config.getRows());
-        this.mode = mode;
-        this.type = type;
+    public MapsSelectorMenu(Player player, String groupId) {
+        super(player, config.getTitle().replace("{mode}", getDisplayName(groupId)).replace("{type}", ""), config.getRows());
+        this.groupId = groupId;
         this.previousPage = 18;
         this.nextPage = 26;
         this.onlySlots(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34);
@@ -184,6 +178,11 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
         this.update();
         this.open();
         this.register(20L);
+    }
+
+    private static String getDisplayName(String groupId) {
+        ArenaGroup group = GroupManager.get(groupId);
+        return group != null ? group.getStrippedName() : groupId;
     }
 
     @Override
@@ -198,6 +197,8 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
             can = false;
         }
 
+        String displayMode = getDisplayName(groupId);
+
         List<ItemStack> items = new ArrayList<>(), sub = new ArrayList<>();
         if (Core.MODE != CoreMode.MULTI_ARENA) {
             try {
@@ -207,13 +208,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                     ItemStack item;
                     if (account.isFavoriteMap(entry.getKey())) {
                         item = BukkitUtils.deserializeItemStack(config.getAsString("map").replace("{color}", color).replace("{map}", entry.getKey())
-                                .replace("{avaiable}", String.valueOf(entry.getValue())).replace("{bukkit_color}", config.getAsString("color-favorite")).replace("{mode}", mode.getName())
-                                .replace("{type}", type.getName()).replace("{tick}", tick ? " " : "►"));
+                                .replace("{avaiable}", String.valueOf(entry.getValue())).replace("{bukkit_color}", config.getAsString("color-favorite")).replace("{mode}", displayMode)
+                                .replace("{type}", "").replace("{tick}", tick ? " " : ""));
                         items.add(item);
                     } else {
                         item = BukkitUtils.deserializeItemStack(config.getAsString("map").replace("{color}", color).replace("{map}", entry.getKey())
-                                .replace("{avaiable}", String.valueOf(entry.getValue())).replace("{bukkit_color}", config.getAsString("color-normal")).replace("{mode}", mode.getName())
-                                .replace("{type}", type.getName()).replace("{tick}", tick ? " " : "►"));
+                                .replace("{avaiable}", String.valueOf(entry.getValue())).replace("{bukkit_color}", config.getAsString("color-normal")).replace("{mode}", displayMode)
+                                .replace("{type}", "").replace("{tick}", tick ? " " : ""));
                         sub.add(item);
                     }
 
@@ -222,9 +223,9 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
             } catch (Exception ex) {
             }
         } else {
-            this.map = Arena.getAsMap(mode, type);
-            for (Map.Entry<String, List<Arena<?>>> entry : map.entrySet()) {
-                List<Arena<?>> ss = entry.getValue();
+            this.arenaMap = Arena.getAsMap(groupId);
+            for (Map.Entry<String, List<Arena>> entry : arenaMap.entrySet()) {
+                List<Arena> ss = entry.getValue();
                 if (ss.isEmpty()) {
                     continue;
                 }
@@ -234,13 +235,13 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                 ItemStack item;
                 if (account.isFavoriteMap(entry.getKey())) {
                     item = BukkitUtils.deserializeItemStack(config.getAsString("map").replace("{color}", color).replace("{map}", entry.getKey())
-                            .replace("{avaiable}", String.valueOf(ss.size())).replace("{bukkit_color}", config.getAsString("color-favorite")).replace("{mode}", mode.getName())
-                            .replace("{type}", type.getName()).replace("{tick}", tick ? " " : "►"));
+                            .replace("{avaiable}", String.valueOf(ss.size())).replace("{bukkit_color}", config.getAsString("color-favorite")).replace("{mode}", displayMode)
+                            .replace("{type}", "").replace("{tick}", tick ? " " : ""));
                     items.add(item);
                 } else {
                     item = BukkitUtils.deserializeItemStack(config.getAsString("map").replace("{color}", color).replace("{map}", entry.getKey())
-                            .replace("{avaiable}", String.valueOf(ss.size())).replace("{bukkit_color}", config.getAsString("color-normal")).replace("{mode}", mode.getName())
-                            .replace("{type}", type.getName()).replace("{tick}", tick ? " " : "►"));
+                            .replace("{avaiable}", String.valueOf(ss.size())).replace("{bukkit_color}", config.getAsString("color-normal")).replace("{mode}", displayMode)
+                            .replace("{type}", "").replace("{tick}", tick ? " " : ""));
                     sub.add(item);
                 }
 
@@ -254,7 +255,7 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
         if (lastListSize != -1 && lastListSize != items.size()) {
             items.clear();
             items = null;
-            new MapsSelectorMenu(player, mode, type);
+            new MapsSelectorMenu(player, groupId);
             return;
         }
 
@@ -262,9 +263,9 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
             if (entry.getKey() >= 0 && entry.getKey() < 54) {
                 String stack = entry.getValue().getStack();
 
-                stack = stack.replace("{mode}", mode.getName());
-                stack = stack.replace("{type}", type.getName());
-                stack = stack.replace("{tick}", tick ? " " : "►");
+                stack = stack.replace("{mode}", displayMode);
+                stack = stack.replace("{type}", "");
+                stack = stack.replace("{tick}", tick ? " " : "");
 
                 ItemStack item = BukkitUtils.deserializeItemStack(stack);
                 this.removeSlotsWith(item, entry.getKey());
@@ -277,23 +278,18 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
     }
 
     public Map<String, Integer> getBungeeMap() {
-        try {
-            return (Map<String, Integer>) CoreLobbies.class.getDeclaredField(mode.name() + "_" + type.name() + "_MAP").get(null);
-        } catch (Exception ex) {
-            return new HashMap<>();
-        }
+        return CoreLobbies.getMapSelector(groupId);
     }
 
     public void cancel() {
         super.cancel();
-        map.clear();
-        map = null;
+        arenaMap.clear();
+        arenaMap = null;
         maps.clear();
         maps = null;
         actions.clear();
         actions = null;
-        mode = null;
-        type = null;
+        groupId = null;
         HandlerList.unregisterAll(this);
     }
 

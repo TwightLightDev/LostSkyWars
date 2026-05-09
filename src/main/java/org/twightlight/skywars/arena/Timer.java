@@ -15,8 +15,8 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.game.SkyWarsChestRefillEvent;
 import org.twightlight.skywars.api.event.game.SkyWarsDoomEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
@@ -24,6 +24,7 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
@@ -52,16 +53,16 @@ public class Timer {
 
     private void showKitActionBar() {
         ArenaGroup group = server.getGroup();
-        boolean isDuels = group.hasTrait("custom_scoreboard");
+        int kitIndex = SkyWarsPerk.getKitIndexForGroup(group);
         server.getPlayers(true).forEach(player -> {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
-                Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, group.getKitIndex());
+                Cosmetic c = kitIndex > 0 ? account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, kitIndex) : null;
                 if (c != null) {
                     NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
                 } else {
                     NMS.sendActionBar(player,
-                            Language.game$broadcast$starting$selected_kit.replace("{kit}", isDuels ? "None" : Language.options$cosmetic$default_kit));
+                            Language.game$broadcast$starting$selected_kit.replace("{kit}", kitIndex <= 0 ? "None" : Language.options$cosmetic$default_kit));
                 }
             }
         });
@@ -160,9 +161,9 @@ public class Timer {
                 entity.remove();
             }
             ArenaGroup group = server.getGroup();
-            boolean isDuels = group.hasTrait("custom_scoreboard");
+            boolean hasCustomScoreboard = group.hasTrait("custom_scoreboard");
             List<Integer> timeline = new ArrayList<>(server.getTimeline().keySet());
-            server.setTimer(isDuels ? Language.game$countdown$game_duels : timeline.get(0));
+            server.setTimer(hasCustomScoreboard ? Language.game$countdown$game_duels : timeline.get(0));
             server.getConfig().removeWaitingLobby();
             this.task = new BukkitRunnable() {
                 @Override
@@ -174,7 +175,7 @@ public class Timer {
                             return;
                         }
 
-                        if (!isDuels) {
+                        if (!hasCustomScoreboard) {
                             if (server.getTimeline().get(eventTime) == SkyWarsEvent.Refill) {
                                 server.chests.forEach(SkyWarsChest::fill);
                                 server.getPlayers(false).forEach(player -> {

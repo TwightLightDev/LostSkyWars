@@ -80,7 +80,6 @@ public class ServerManager {
             return;
         }
 
-        // SOLO_NORMAL; Boletum; STARTING;
         String motd = StringUtils.stripColors(ping.getMotd());
         String[] splitted = motd.split("; ");
         ServerType type = null;
@@ -89,7 +88,13 @@ public class ServerManager {
         if (splitted.length < 2) {
             type = ServerType.LOBBY;
         } else {
-            type = ServerType.valueOf(splitted[0]);
+            type = ServerType.fromName(splitted[0]);
+            if (type == null) {
+                type = ServerType.fromName(splitted[0]);
+            }
+            if (type == null) {
+                type = ServerType.LOBBY;
+            }
             map = splitted[1];
             state = SkyWarsState.valueOf(splitted[2]);
         }
