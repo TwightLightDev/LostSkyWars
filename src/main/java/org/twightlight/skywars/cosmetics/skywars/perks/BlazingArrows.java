@@ -17,7 +17,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BlazingArrows extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -31,7 +30,6 @@ public class BlazingArrows extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("blazingarrow.icon").replace("{percentage}", CONFIG.getInt("blazingarrow.percentage") + "%")),
                 CONFIG.getInt("blazingarrow.price"),
                 SkyWarsPerk.loadAllowedGroups("blazingarrow"));
-        this.mode = mode;
 
         this.percentage = CONFIG.getInt("blazingarrow.percentage");
 
@@ -54,8 +52,4 @@ public class BlazingArrows extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

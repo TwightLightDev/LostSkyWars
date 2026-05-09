@@ -7,7 +7,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class DecisiveStrike extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -21,7 +20,6 @@ public class DecisiveStrike extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("decisivestrike.icon").replace("{percentage}", CONFIG.getInt("decisivestrike.percentage") + "%")),
                 CONFIG.getInt("decisivestrike.price"),
                 SkyWarsPerk.loadAllowedGroups("decisivestrike"));
-        this.mode = mode;
 
         this.percentage = CONFIG.getInt("decisivestrike.percentage");
         this.register(null);
@@ -29,10 +27,5 @@ public class DecisiveStrike extends SkyWarsPerk {
 
     public int getPercentage() {
         return this.percentage;
-    }
-
-    @Override
-    public int getMode() {
-        return mode;
     }
 }

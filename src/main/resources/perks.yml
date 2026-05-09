@@ -7,6 +7,13 @@ arrowrecovery:
   icon: 'ARROW : 1 : display=Arrow Recovery : lore=&7Chance to recover arrows.|&7Percentage: &a20%'
   price: 3000
   percentage: 20
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 blazingarrow:
   id: 2
@@ -17,6 +24,13 @@ blazingarrow:
   icon: 'BLAZE_POWDER : 1 : display=Blazing Arrows : lore=&7Your arrows have a chance|&7to set enemies on fire.|&7Percentage: &a30%'
   price: 5000
   percentage: 30
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 bulldozer:
   id: 3
@@ -27,6 +41,13 @@ bulldozer:
   icon: 'DIAMOND_PICKAXE : 1 : display=Bulldozer : lore=&7You have a chance to receive|&7haste when you break blocks.|&7Percentage: &a25%'
   price: 5000
   percentage: 25
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 endermastery:
   id: 4
@@ -36,6 +57,13 @@ endermastery:
   permission: none
   icon: 'ENDER_PEARL : 1 : display=Ender Mastery : lore=&7You take no fall damage from|&7ender pearl teleportation.'
   price: 5000
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 juggernaut:
   id: 5
@@ -45,6 +73,13 @@ juggernaut:
   permission: none
   icon: 'IRON_CHESTPLATE : 1 : display=Juggernaut : lore=&7Regeneration upon getting|&7a kill.'
   price: 7000
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 knowledge:
   id: 6
@@ -55,6 +90,13 @@ knowledge:
   icon: 'BOOK : 1 : display=Knowledge : lore=&7Gain extra experience from|&7each kill.|&7Bonus: &a+50%'
   price: 4000
   multiplier: 1.5
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 nourishment:
   id: 7
@@ -64,6 +106,13 @@ nourishment:
   permission: none
   icon: 'APPLE : 1 : display=Nourishment : lore=&7Food heals an extra heart.'
   price: 3000
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 luckycharm:
   id: 8
@@ -74,6 +123,13 @@ luckycharm:
   icon: 'EMERALD : 1 : display=Lucky Charm : lore=&7Better chest loot.|&7Percentage: &a20%'
   price: 5000
   percentage: 20
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 voidmaster:
   id: 9
@@ -84,6 +140,13 @@ voidmaster:
   icon: 'OBSIDIAN : 1 : display=Void Master : lore=&7Teleport back to your island|&7when falling into the void.|&7Percentage: &a10%'
   price: 8000
   percentage: 10
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
 
 decisivestrike:
   id: 10
@@ -94,3 +157,10 @@ decisivestrike:
   icon: 'DIAMOND_SWORD : 1 : display=Decisive Strike : lore=&7Chance to deal double damage.|&7Percentage: &a5%'
   price: 12000
   percentage: 5
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles

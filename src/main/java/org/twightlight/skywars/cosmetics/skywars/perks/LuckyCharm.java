@@ -15,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LuckyCharm extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -29,7 +28,6 @@ public class LuckyCharm extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("luckycharm.icon").replace("{percentage}", CONFIG.getInt("luckycharm.percentage") + "%")),
                 CONFIG.getInt("luckycharm.price"),
                 SkyWarsPerk.loadAllowedGroups("luckycharm"));
-        this.mode = mode;
 
         this.percentage = CONFIG.getInt("luckycharm.percentage");
 
@@ -52,8 +50,4 @@ public class LuckyCharm extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

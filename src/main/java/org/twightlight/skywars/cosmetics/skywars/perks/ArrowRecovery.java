@@ -56,8 +56,4 @@ public class ArrowRecovery extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return 1;
-    }
 }

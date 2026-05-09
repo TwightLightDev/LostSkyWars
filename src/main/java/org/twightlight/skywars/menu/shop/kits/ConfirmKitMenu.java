@@ -44,18 +44,10 @@ public class ConfirmKitMenu extends PlayerMenu {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("shop")) {
-                                try {
-                                    returns.getConstructors()[0].newInstance(player, cosmetic);
-                                } catch (ReflectiveOperationException ex) {
-                                    ex.printStackTrace();
-                                }
+                                new KitsMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
                                 if (account.getInt("coins") < cosmetic.getCoins()) {
-                                    try {
-                                        returns.getConstructors()[0].newInstance(player, cosmetic);
-                                    } catch (ReflectiveOperationException ex) {
-                                        ex.printStackTrace();
-                                    }
+                                    new KitsMenu(player, groupId);
                                     return;
                                 }
 
@@ -75,13 +67,13 @@ public class ConfirmKitMenu extends PlayerMenu {
     }
 
     private Cosmetic cosmetic;
-    private Class<?> returns;
+    private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ConfirmKitMenu(Player player, Cosmetic cosmetic, Class<?> returns) {
+    public ConfirmKitMenu(Player player, Cosmetic cosmetic, String groupId) {
         super(player, config.getTitle(), config.getRows());
         this.cosmetic = cosmetic;
-        this.returns = returns;
+        this.groupId = groupId;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
@@ -103,7 +95,7 @@ public class ConfirmKitMenu extends PlayerMenu {
         map.clear();
         map = null;
         cosmetic = null;
-        returns = null;
+        groupId = null;
         HandlerList.unregisterAll(this);
     }
 

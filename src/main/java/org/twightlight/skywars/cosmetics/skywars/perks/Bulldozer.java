@@ -15,7 +15,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class Bulldozer extends SkyWarsPerk {
 
-    private int mode;
     private int seconds;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -29,7 +28,6 @@ public class Bulldozer extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("bulldozer.icon").replace("{time}", CONFIG.getInt("bulldozer.time") + "")),
                 CONFIG.getInt("bulldozer.price"),
                 SkyWarsPerk.loadAllowedGroups("bulldozer"));
-        this.mode = mode;
 
         this.seconds = CONFIG.getInt("bulldozer.time");
 
@@ -50,8 +48,4 @@ public class Bulldozer extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

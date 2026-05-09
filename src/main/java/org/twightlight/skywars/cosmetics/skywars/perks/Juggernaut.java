@@ -15,7 +15,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class Juggernaut extends SkyWarsPerk {
 
-    private int mode;
     private int seconds;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -29,7 +28,6 @@ public class Juggernaut extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("juggernaut.icon").replace("{time}", CONFIG.getInt("juggernaut.time") + "")),
                 CONFIG.getInt("juggernaut.price"),
                 SkyWarsPerk.loadAllowedGroups("juggernaut"));
-        this.mode = mode;
 
         this.seconds = CONFIG.getInt("juggernaut.time");
 
@@ -50,8 +48,4 @@ public class Juggernaut extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

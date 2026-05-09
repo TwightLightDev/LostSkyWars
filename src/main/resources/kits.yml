@@ -1,0 +1,22 @@
+# Unified kits configuration
+# Each kit has an 'allowed-groups' list determining which arena groups can use it.
+# If allowed-groups is empty or absent, the kit is available in ALL groups.
+
+default_sword:
+  id: 1
+  name: 'Default Sword'
+  rarity: COMMON
+  permission: none
+  icon: 'STONE_SWORD : 1 : display=Default Sword : lore=&7A basic stone sword.'
+  price: 0
+  allowed-groups:
+    - solo
+    - solo_insane
+    - doubles
+    - doubles_insane
+    - ranked_solo
+    - ranked_doubles
+  armor: []
+  content:
+    - 'STONE_SWORD : 1'
+  potion-effects: []

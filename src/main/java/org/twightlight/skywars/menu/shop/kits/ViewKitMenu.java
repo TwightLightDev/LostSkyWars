@@ -9,9 +9,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -50,13 +47,7 @@ public class ViewKitMenu extends PlayerMenu {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("shop")) {
-                                if (kit instanceof NormalSkyWarsKit) {
-                                    new NormalKitsMenu(player);
-                                } else if (kit instanceof InsaneSkyWarsKit) {
-                                    new InsaneKitsMenu(player);
-                                } else if (kit instanceof RankedSkyWarsKit) {
-                                    new RankedKitsMenu(player);
-                                }
+                                new KitsMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
                                 if (kit.has(account)) {
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("already-unlocked")));
@@ -68,7 +59,7 @@ public class ViewKitMenu extends PlayerMenu {
                                     return;
                                 }
 
-                                new ConfirmKitMenu(player, kit, ViewKitMenu.class);
+                                new ConfirmKitMenu(player, kit, groupId);
                             }
                         } else {
                             player.closeInventory();
@@ -81,18 +72,20 @@ public class ViewKitMenu extends PlayerMenu {
     }
 
     private SkyWarsKit kit;
+    private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ViewKitMenu(Player player, SkyWarsKit kit) {
+    public ViewKitMenu(Player player, SkyWarsKit kit, String groupId) {
         super(player, config.getTitle().replace("{kit}", kit.getRawName()), config.getRows());
         this.kit = kit;
+        this.groupId = groupId;
         Account account = Database.getInstance().getAccount(player.getUniqueId());
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
                 if (stack.equalsIgnoreCase("{kit_icon}")) {
-                    this.setItem(entry.getKey(), kit.getIcon("§a"));
+                    this.setItem(entry.getKey(), kit.getIcon("a"));
                     this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
                     continue;
                 }
@@ -104,12 +97,11 @@ public class ViewKitMenu extends PlayerMenu {
                             lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}",
                                     kit.getRarity().getName()));
                         }
-                        ItemStack item = kit.getIcon("§a", lore.toArray(new String[lore.size()]));
-                        item.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
-                        item.setDurability((short) config.getAsInt("buy-cant"));
+                        ItemStack iconItem = kit.getIcon("a", lore.toArray(new String[lore.size()]));
+                        iconItem.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
+                        iconItem.setDurability((short) config.getAsInt("buy-cant"));
                         lore.clear();
-                        lore = null;
-                        this.setItem(entry.getKey(), item);
+                        this.setItem(entry.getKey(), iconItem);
                         this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
                         continue;
                     }
@@ -120,17 +112,15 @@ public class ViewKitMenu extends PlayerMenu {
                         lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}",
                                 kit.getRarity().getName()));
                     }
-                    ItemStack item = kit.getIcon(canBuy ? "§a" : "§c", lore.toArray(new String[lore.size()]));
-                    item.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
-                    item.setDurability((short) config.getAsInt("buy-can"));
+                    ItemStack iconItem = kit.getIcon(canBuy ? "a" : "c", lore.toArray(new String[lore.size()]));
+                    iconItem.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
+                    iconItem.setDurability((short) config.getAsInt("buy-can"));
                     lore.clear();
-                    lore = null;
-                    this.setItem(entry.getKey(), item);
+                    this.setItem(entry.getKey(), iconItem);
                     this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
                     continue;
                 }
 
-                // COINS
                 stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
@@ -146,6 +136,7 @@ public class ViewKitMenu extends PlayerMenu {
         map.clear();
         map = null;
         kit = null;
+        groupId = null;
         HandlerList.unregisterAll(this);
     }
 

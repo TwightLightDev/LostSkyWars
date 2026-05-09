@@ -6,7 +6,6 @@ import org.bukkit.block.Chest;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
@@ -31,7 +30,7 @@ public class SkyWarsChest {
     }
 
     public void update() {
-        if (this.server.getType().equals(SkyWarsType.DUELS)) {
+        if (this.server.getGroup().hasTrait("no_timeline")) {
             return;
         }
 
@@ -52,7 +51,7 @@ public class SkyWarsChest {
     }
 
     public void createHologram() {
-        if (this.server.getType().equals(SkyWarsType.DUELS)) {
+        if (this.server.getGroup().hasTrait("no_timeline")) {
             return;
         }
 
@@ -67,7 +66,7 @@ public class SkyWarsChest {
     }
 
     public void destroy() {
-        if (this.server.getType().equals(SkyWarsType.DUELS)) {
+        if (this.server.getGroup().hasTrait("no_timeline")) {
             return;
         }
 
@@ -109,6 +108,5 @@ public class SkyWarsChest {
 
     public void reset() {
         fillCount = 0;
-
     }
 }

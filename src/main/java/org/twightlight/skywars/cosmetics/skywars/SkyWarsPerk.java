@@ -73,6 +73,11 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return allowedGroups.contains(group.getId());
     }
 
+    public boolean isAllowedInGroup(String groupId) {
+        if (allowedGroups.isEmpty()) return true;
+        return allowedGroups.contains(groupId);
+    }
+
     public boolean isAbleToUse(Player player) {
         if (player == null) {
             return false;
@@ -139,7 +144,9 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName(colorDisplay + meta.getDisplayName());
         List<String> list = new ArrayList<>();
-        list.addAll(meta.getLore());
+        if (meta.getLore() != null) {
+            list.addAll(meta.getLore());
+        }
         list.addAll(Arrays.asList(lores));
         meta.setLore(list);
         cloned.setItemMeta(meta);

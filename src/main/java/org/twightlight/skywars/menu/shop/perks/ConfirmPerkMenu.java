@@ -44,18 +44,10 @@ public class ConfirmPerkMenu extends PlayerMenu {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
                             if (menu.equalsIgnoreCase("shop")) {
-                                try {
-                                    returns.getConstructors()[0].newInstance(player);
-                                } catch (ReflectiveOperationException ex) {
-                                    ex.printStackTrace();
-                                }
+                                new PerksMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
                                 if (account.getInt("coins") < cosmetic.getCoins()) {
-                                    try {
-                                        returns.getConstructors()[0].newInstance(player);
-                                    } catch (ReflectiveOperationException ex) {
-                                        ex.printStackTrace();
-                                    }
+                                    new PerksMenu(player, groupId);
                                     return;
                                 }
 
@@ -75,13 +67,13 @@ public class ConfirmPerkMenu extends PlayerMenu {
     }
 
     private Cosmetic cosmetic;
-    private Class<?> returns;
+    private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ConfirmPerkMenu(Player player, Cosmetic cosmetic, Class<?> returns) {
+    public ConfirmPerkMenu(Player player, Cosmetic cosmetic, String groupId) {
         super(player, config.getTitle(), config.getRows());
         this.cosmetic = cosmetic;
-        this.returns = returns;
+        this.groupId = groupId;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
@@ -103,7 +95,7 @@ public class ConfirmPerkMenu extends PlayerMenu {
         map.clear();
         map = null;
         cosmetic = null;
-        returns = null;
+        groupId = null;
         HandlerList.unregisterAll(this);
     }
 

@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Language;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class KitSelectorMenu extends PagedPlayerMenu {
@@ -106,22 +104,22 @@ public class KitSelectorMenu extends PagedPlayerMenu {
         this.nextStack = config.getAsString("next-page");
         this.onlySlots(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43);
 
-        ArenaGroup group = GroupManager.get(groupId);
-        int kitIndex = group != null ? KitGroupResolver.getKitIndex(group) : 1;
-
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (Cosmetic c : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT).stream().filter(kit -> kit.getMode() == kitIndex).collect(Collectors.toList())) {
-            SkyWarsKit kit = (SkyWarsKit) c;
+        for (Cosmetic cosmetic : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT)) {
+            SkyWarsKit kit = (SkyWarsKit) cosmetic;
+            if (!kit.isAllowedInGroup(groupId)) {
+                continue;
+            }
             String rarity = kit.getRarity().getName();
             boolean has = kit.has(account) && kit.hasByPermission(player);
-            ItemStack icon = null;
+            ItemStack icon;
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-locked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("§c", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("c", lore.toArray(new String[lore.size()]));
                 icon.setType(Material.matchMaterial("STAINED_GLASS_PANE"));
                 icon.setDurability((short) 14);
             } else if (account.hasSelected(kit, kit.getMode())) {
@@ -129,13 +127,13 @@ public class KitSelectorMenu extends PagedPlayerMenu {
                 for (String string : config.getAsStringArray("description-selected")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("§a", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("a", lore.toArray(new String[lore.size()]));
             } else {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-unlocked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("§a", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("a", lore.toArray(new String[lore.size()]));
             }
 
             items.add(icon);
@@ -178,15 +176,6 @@ public class KitSelectorMenu extends PagedPlayerMenu {
     public void onInventoryClose(InventoryCloseEvent evt) {
         if (evt.getPlayer().equals(player) && evt.getInventory().equals(getCurrentInventory())) {
             this.cancel();
-        }
-    }
-
-    public static class KitGroupResolver {
-        public static int getKitIndex(ArenaGroup group) {
-            if (group == null) return 1;
-            String id = group.getId();
-            if (id.contains("insane")) return 2;
-            return 1;
         }
     }
 }

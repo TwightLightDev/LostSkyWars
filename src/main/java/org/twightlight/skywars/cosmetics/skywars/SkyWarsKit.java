@@ -8,6 +8,7 @@ import org.bukkit.potion.PotionEffect;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
@@ -30,8 +31,10 @@ public class SkyWarsKit extends Cosmetic {
     private ItemStack[] armor;
     private ItemStack[] content;
     private List<PotionEffect> potionEffects;
+    private List<String> allowedGroups;
 
-    public SkyWarsKit(int id, String name, CosmeticRarity rarity, String permission, ItemStack icon, int coins, ItemStack[] armor, ItemStack[] content, List<PotionEffect> potions) {
+    public SkyWarsKit(int id, String name, CosmeticRarity rarity, String permission, ItemStack icon, int coins,
+                      ItemStack[] armor, ItemStack[] content, List<PotionEffect> potions, List<String> allowedGroups) {
         super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, rarity);
         this.name = name;
         this.permission = permission;
@@ -40,20 +43,34 @@ public class SkyWarsKit extends Cosmetic {
         this.armor = armor;
         this.content = content;
         this.potionEffects = potions != null ? potions : new ArrayList<>();
+        this.allowedGroups = allowedGroups != null ? allowedGroups : new ArrayList<>();
     }
 
     public boolean canBeSold() {
         return coins > 0;
     }
 
+    public List<String> getAllowedGroups() {
+        return allowedGroups;
+    }
+
+    public boolean isAllowedInGroup(ArenaGroup group) {
+        if (group == null) return false;
+        if (allowedGroups.isEmpty()) return true;
+        return allowedGroups.contains(group.getId());
+    }
+
+    public boolean isAllowedInGroup(String groupId) {
+        if (allowedGroups.isEmpty()) return true;
+        return allowedGroups.contains(groupId);
+    }
+
     @Override
     public boolean has(Account account, int mode) {
-        if (Language.options$ranked$freekitsandperks) {
-            if (mode == 3) {
-                return true;
-            }
+        ArenaGroup group = GroupManager.get(allowedGroups.isEmpty() ? "solo" : allowedGroups.get(0));
+        if (group != null && group.hasTrait("free_kits_and_perks")) {
+            return true;
         }
-
         return super.has(account, mode);
     }
 
@@ -134,47 +151,58 @@ public class SkyWarsKit extends Cosmetic {
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Kits");
 
     public static void setupKits() {
-        for (String groupId : GroupManager.getGroupIds()) {
-            ConfigUtils cu = ConfigUtils.getConfig(groupId + "_kits", "plugins/LostSkyWars/kits");
-            for (String key : cu.getKeys(false)) {
-                LOGGER.log(Logger.Level.INFO, "Loading kit: " + key + " (group: " + groupId + ")");
+        ConfigUtils cu = ConfigUtils.getConfig("kits");
 
-                int id = cu.getInt(key + ".id");
-                String name = cu.getString(key + ".name");
-                int price = cu.getInt(key + ".price");
-                CosmeticRarity rarity = CosmeticRarity.fromName(cu.getString(key + ".rarity"));
-                String permission = cu.getString(key + ".permission");
-                ItemStack icon = BukkitUtils.fullyDeserializeItemStack(cu.getString(key + ".icon", null));
-                List<ItemStack> list = new ArrayList<>();
+        for (String key : cu.getKeys(false)) {
+            LOGGER.log(Logger.Level.INFO, "Loading kit: " + key + "...");
 
-                for (String armorStr : cu.getStringList(key + ".armor")) {
-                    list.add(BukkitUtils.fullyDeserializeItemStack(armorStr));
+            int id = cu.getInt(key + ".id");
+            String name = cu.getString(key + ".name");
+            int price = cu.getInt(key + ".price");
+            CosmeticRarity rarity = CosmeticRarity.fromName(cu.getString(key + ".rarity"));
+            String permission = cu.getString(key + ".permission", "none");
+            ItemStack icon = BukkitUtils.fullyDeserializeItemStack(cu.getString(key + ".icon", null));
+
+            List<String> allowedGroups = new ArrayList<>();
+            if (cu.contains(key + ".allowed-groups")) {
+                allowedGroups = cu.getStringList(key + ".allowed-groups");
+            } else {
+                for (ArenaGroup group : GroupManager.getGroups()) {
+                    allowedGroups.add(group.getId());
                 }
-
-                List<PotionEffect> potionEffects = new ArrayList<>();
-                if (cu.contains(key + ".potion-effects")) {
-                    for (String potion : cu.getStringList(key + ".potion-effects")) {
-                        potionEffects.add(BukkitUtils.deserializePotionEffect(potion));
-                    }
-                }
-
-                ItemStack[] armor = list.toArray(new ItemStack[list.size()]);
-                if (armor.length != 4) {
-                    armor = null;
-                    LOGGER.log(Logger.Level.WARNING, "Invalid armor list for kit \"" + name + "\"");
-                }
-                list.clear();
-                for (String contentStr : cu.getStringList(key + ".content")) {
-                    list.add(BukkitUtils.fullyDeserializeItemStack(contentStr));
-                }
-
-                ItemStack[] content = list.toArray(new ItemStack[list.size()]);
-                list.clear();
-
-                CosmeticServer.SKYWARS.addCosmetic(new SkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects));
-
-                LOGGER.log(Logger.Level.INFO, "Kit loaded: " + name);
+                cu.set(key + ".allowed-groups", allowedGroups);
             }
+
+            List<ItemStack> armorList = new ArrayList<>();
+            for (String armorStr : cu.getStringList(key + ".armor")) {
+                armorList.add(BukkitUtils.fullyDeserializeItemStack(armorStr));
+            }
+
+            List<PotionEffect> potionEffects = new ArrayList<>();
+            if (cu.contains(key + ".potion-effects")) {
+                for (String potion : cu.getStringList(key + ".potion-effects")) {
+                    potionEffects.add(BukkitUtils.deserializePotionEffect(potion));
+                }
+            }
+
+            ItemStack[] armor = armorList.toArray(new ItemStack[armorList.size()]);
+            if (armor.length != 4) {
+                armor = null;
+                LOGGER.log(Logger.Level.WARNING, "Invalid armor list for kit \"" + name + "\"");
+            }
+            armorList.clear();
+
+            List<ItemStack> contentList = new ArrayList<>();
+            for (String contentStr : cu.getStringList(key + ".content")) {
+                contentList.add(BukkitUtils.fullyDeserializeItemStack(contentStr));
+            }
+
+            ItemStack[] content = contentList.toArray(new ItemStack[contentList.size()]);
+            contentList.clear();
+
+            CosmeticServer.SKYWARS.addCosmetic(new SkyWarsKit(id, name, rarity, permission, icon, price, armor, content, potionEffects, allowedGroups));
+
+            LOGGER.log(Logger.Level.INFO, "Kit loaded: " + name);
         }
     }
 }

@@ -66,9 +66,6 @@ public abstract class Cosmetic {
         return rarity;
     }
 
-    public int getMode() {
-        return 1;
-    }
 
     public abstract String getName();
 

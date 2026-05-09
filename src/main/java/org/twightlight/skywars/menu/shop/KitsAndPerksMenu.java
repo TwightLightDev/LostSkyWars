@@ -17,12 +17,8 @@ import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
-import org.twightlight.skywars.menu.shop.kits.InsaneKitsMenu;
-import org.twightlight.skywars.menu.shop.kits.NormalKitsMenu;
-import org.twightlight.skywars.menu.shop.kits.RankedKitsMenu;
-import org.twightlight.skywars.menu.shop.perks.InsanePerksMenu;
-import org.twightlight.skywars.menu.shop.perks.NormalPerksMenu;
-import org.twightlight.skywars.menu.shop.perks.RankedPerksMenu;
+import org.twightlight.skywars.menu.shop.kits.KitsMenu;
+import org.twightlight.skywars.menu.shop.perks.PerksMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -52,18 +48,12 @@ public class KitsAndPerksMenu extends PlayerMenu {
                     if (action != null && !action.getType().equals("NOTHING")) {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
-                            if (menu.equalsIgnoreCase("kitsnormal")) {
-                                new NormalKitsMenu(player);
-                            } else if (menu.equalsIgnoreCase("kitsinsane")) {
-                                new InsaneKitsMenu(player);
-                            } else if (menu.equalsIgnoreCase("kitsranked")) {
-                                new RankedKitsMenu(player);
-                            } else if (menu.equalsIgnoreCase("perksnormal")) {
-                                new NormalPerksMenu(player);
-                            } else if (menu.equalsIgnoreCase("perksinsane")) {
-                                new InsanePerksMenu(player);
-                            } else if (menu.equalsIgnoreCase("perksranked")) {
-                                new RankedPerksMenu(player);
+                            if (menu.startsWith("kits:")) {
+                                String groupId = menu.substring("kits:".length());
+                                new KitsMenu(player, groupId);
+                            } else if (menu.startsWith("perks:")) {
+                                String groupId = menu.substring("perks:".length());
+                                new PerksMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("shop")) {
                                 new ShopMenu(player);
                             } else if (menu.equalsIgnoreCase("soulwell")) {
@@ -92,33 +82,14 @@ public class KitsAndPerksMenu extends PlayerMenu {
                 stack = stack.replace("{souls}", StringUtils.formatNumber(account.getInt("souls")));
                 stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
 
-
-                int max = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.getMode() == 1).count(),
-                        amount = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.has(account, 1) && cosmetic.getMode() == 1).count(),
-                        percentage = (int) ((100.0 * amount) / max);
-                Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 1);
-                stack = stack.replace("{nperks_has}", String.valueOf(amount));
-                stack = stack.replace("{nperks_max}", String.valueOf(max));
-                stack = stack.replace("{nperks_percentage}", percentage + "%");
-                stack = stack.replace("{nperks_current}", c == null || !(c instanceof SkyWarsPerk) ? "None" : ((SkyWarsPerk) c).getRawName());
-
-                max = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.getMode() == 2).count();
-                amount = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.has(account, 2) && cosmetic.getMode() == 2).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 2);
-                stack = stack.replace("{iperks_has}", String.valueOf(amount));
-                stack = stack.replace("{iperks_max}", String.valueOf(max));
-                stack = stack.replace("{iperks_percentage}", percentage + "%");
-                stack = stack.replace("{iperks_current}", c == null || !(c instanceof SkyWarsPerk) ? "None" : ((SkyWarsPerk) c).getRawName());
-
-                max = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.getMode() == 3).count();
-                amount = (int) CosmeticServer.SKYWARS.getByType(SkyWarsPerk.class).stream().filter(cosmetic -> cosmetic.has(account, 3) && cosmetic.getMode() == 3).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 3);
-                stack = stack.replace("{rperks_has}", String.valueOf(amount));
-                stack = stack.replace("{rperks_max}", String.valueOf(max));
-                stack = stack.replace("{rperks_percentage}", percentage + "%");
-                stack = stack.replace("{rperks_current}", c == null || !(c instanceof SkyWarsPerk) ? "None" : ((SkyWarsPerk) c).getRawName());
+                long perkTotal = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_PERK).size();
+                long perkOwned = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_PERK).stream().filter(c -> c.has(account)).count();
+                int perkPercentage = perkTotal > 0 ? (int) ((100.0 * perkOwned) / perkTotal) : 0;
+                Cosmetic selectedPerk = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 1);
+                stack = stack.replace("{perks_has}", String.valueOf(perkOwned));
+                stack = stack.replace("{perks_max}", String.valueOf(perkTotal));
+                stack = stack.replace("{perks_percentage}", perkPercentage + "%");
+                stack = stack.replace("{perks_current}", selectedPerk == null || !(selectedPerk instanceof SkyWarsPerk) ? "None" : ((SkyWarsPerk) selectedPerk).getRawName());
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());

@@ -13,7 +13,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class Knowledge extends SkyWarsPerk {
 
-    private int mode;
     private int level;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -27,7 +26,6 @@ public class Knowledge extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("knowledge.icon").replace("{level}", CONFIG.getInt("knowledge.level") + "")),
                 CONFIG.getInt("knowledge.price"),
                 SkyWarsPerk.loadAllowedGroups("knowledge"));
-        this.mode = mode;
 
         this.level = CONFIG.getInt("knowledge.level");
 
@@ -48,8 +46,4 @@ public class Knowledge extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

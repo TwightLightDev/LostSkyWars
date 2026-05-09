@@ -15,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class VoidMaster extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -29,7 +28,6 @@ public class VoidMaster extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("voidmaster.icon").replace("{percentage}", CONFIG.getInt("voidmaster.percentage") + "%")),
                 CONFIG.getInt("voidmaster.price"),
                 SkyWarsPerk.loadAllowedGroups("voidmaster"));
-        this.mode = mode;
 
         this.percentage = CONFIG.getInt("voidmaster.percentage");
 
@@ -52,8 +50,4 @@ public class VoidMaster extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

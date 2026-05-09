@@ -8,10 +8,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Language;
+import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.ConfigMenu;
 import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
@@ -27,9 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RankedKitsMenu extends PagedPlayerMenu {
+public class KitsMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("rkits");
+    private static final ConfigMenu config = ConfigMenu.getByName("kits");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {
@@ -51,7 +51,7 @@ public class RankedKitsMenu extends PagedPlayerMenu {
                     } else if (evt.getSlot() == this.nextPage) {
                         this.openNext();
                     } else if (kit != null) {
-                        new ViewKitMenu(player, kit);
+                        new ViewKitMenu(player, kit, groupId);
                     } else {
                         ConfigAction action = actions.get(item);
                         if (action != null && !action.getType().equals("NOTHING")) {
@@ -73,11 +73,13 @@ public class RankedKitsMenu extends PagedPlayerMenu {
         }
     }
 
+    private String groupId;
     private Map<ItemStack, SkyWarsKit> kits;
     private Map<ItemStack, ConfigAction> actions;
 
-    public RankedKitsMenu(Player player) {
+    public KitsMenu(Player player, String groupId) {
         super(player, config.getTitle(), config.getRows());
+        this.groupId = groupId;
         this.kits = new HashMap<>();
         this.actions = new HashMap<>();
         this.previousPage = 45;
@@ -88,22 +90,26 @@ public class RankedKitsMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (SkyWarsKit kit : CosmeticServer.SKYWARS.getByType(RankedSkyWarsKit.class)) {
+        for (Cosmetic cosmetic : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT)) {
+            SkyWarsKit kit = (SkyWarsKit) cosmetic;
+            if (!kit.isAllowedInGroup(groupId)) {
+                continue;
+            }
             String rarity = kit.getRarity().getName();
-            boolean has = Language.options$ranked$freekitsandperks ? kit.has(account) : kit.has(account) && kit.hasByPermission(player);
-            ItemStack icon = null;
+            boolean has = kit.has(account) && kit.hasByPermission(player);
+            ItemStack icon;
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-locked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("§c", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("c", lore.toArray(new String[lore.size()]));
             } else {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-unlocked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("§a", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("a", lore.toArray(new String[lore.size()]));
             }
 
             items.add(icon);
@@ -113,8 +119,6 @@ public class RankedKitsMenu extends PagedPlayerMenu {
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < (config.getRows() * 9)) {
                 String stack = entry.getValue().getStack();
-
-                // COINS
                 stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
 
                 ItemStack item = BukkitUtils.deserializeItemStack(stack);
@@ -133,6 +137,9 @@ public class RankedKitsMenu extends PagedPlayerMenu {
         HandlerList.unregisterAll(this);
         this.kits.clear();
         this.kits = null;
+        this.actions.clear();
+        this.actions = null;
+        this.groupId = null;
     }
 
     @EventHandler

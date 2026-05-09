@@ -13,7 +13,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class Nourishment extends SkyWarsPerk {
 
-    private int mode;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
@@ -26,7 +25,6 @@ public class Nourishment extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("nourishment.icon")),
                 CONFIG.getInt("nourishment.price"),
                 SkyWarsPerk.loadAllowedGroups("nourishment"));
-        this.mode = mode;
 
         this.register(SkyWars.getInstance());
     }
@@ -44,10 +42,5 @@ public class Nourishment extends SkyWarsPerk {
             evt.getKiller().setFoodLevel(20);
             evt.getKiller().setSaturation(5.0F);
         }
-    }
-
-    @Override
-    public int getMode() {
-        return mode;
     }
 }
