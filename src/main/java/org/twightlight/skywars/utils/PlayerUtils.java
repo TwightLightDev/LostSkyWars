@@ -5,7 +5,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
@@ -18,16 +20,19 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player2.getUniqueId());
-        if (account != null && account.getServer() != null && account.getServer() instanceof Duels) {
-            Duels duels = (Duels) account.getServer();
-            if (duels.getState() == SkyWarsState.WAITING || duels.getState() == SkyWarsState.STARTING) {
-                lastColor += "§k";
+        if (account != null && account.getServer() != null) {
+            SkyWarsServer server = account.getServer();
+            ArenaGroup group = server.getGroup();
+            if (group != null && group.hasTrait("opponents_tracking")) {
+                if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {
+                    lastColor += "§k";
+                }
             }
         }
 
         if (SkyWars.placeholderapi) {
             return replaceAll(player,
-            PlaceholderAPI.setPlaceholders(player2, string.replace("{player2}", player2.getName())
+                    PlaceholderAPI.setPlaceholders(player2, string.replace("{player2}", player2.getName())
                             .replace("{display2}", StringUtils.formatColors("%vault_prefix%%player_name%%vault_suffix%"))
                             .replace("{colored2}", lastColor + player2.getName() + (lastColor.contains("§k") ? "§r" : ""))));
         }
@@ -45,15 +50,18 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account != null && account.getServer() != null && account.getServer() instanceof Duels) {
-            Duels duels = (Duels) account.getServer();
-            if (duels.getState() == SkyWarsState.WAITING || duels.getState() == SkyWarsState.STARTING) {
-                lastColor += "§k";
+        if (account != null && account.getServer() != null) {
+            SkyWarsServer server = account.getServer();
+            ArenaGroup group = server.getGroup();
+            if (group != null && group.hasTrait("opponents_tracking")) {
+                if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {
+                    lastColor += "§k";
+                }
             }
         }
 
         if (SkyWars.placeholderapi) {
-            return PlaceholderAPI.setPlaceholders(player,  string.replace("{player}", player.getName())
+            return PlaceholderAPI.setPlaceholders(player, string.replace("{player}", player.getName())
                     .replace("{display}", StringUtils.formatColors("%vault_prefix%%player_name%%vault_suffix%"))
                     .replace("{colored}", lastColor + player.getName() + (lastColor.contains("§k") ? "§r" : "")));
         }

@@ -82,16 +82,13 @@ public class ServerManager {
 
         String motd = StringUtils.stripColors(ping.getMotd());
         String[] splitted = motd.split("; ");
-        ServerType type = null;
+        ServerType type;
         String map = null;
         SkyWarsState state = null;
         if (splitted.length < 2) {
             type = ServerType.LOBBY;
         } else {
             type = ServerType.fromName(splitted[0]);
-            if (type == null) {
-                type = ServerType.fromName(splitted[0]);
-            }
             if (type == null) {
                 type = ServerType.LOBBY;
             }

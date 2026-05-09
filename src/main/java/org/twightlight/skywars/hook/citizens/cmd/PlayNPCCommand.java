@@ -8,8 +8,6 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.hook.citizens.DuelsNPC;
-import org.twightlight.skywars.hook.citizens.PlayNPC;
 import org.twightlight.skywars.hook.citizens.RankedNPC;
 import org.twightlight.skywars.mojang.InvalidMojangException;
 import org.twightlight.skywars.mojang.Mojang;

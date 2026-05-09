@@ -26,7 +26,7 @@ public abstract class WorldLoaderAdapter {
 
     public abstract void unload(String world);
 
-    public abstract CompletableFuture<World> createArenaWorld(Arena<?> paramIArena);
+    public abstract CompletableFuture<World> createArenaWorld(Arena paramIArena);
 
     public abstract CompletableFuture<World> createArenaWorld(String baseName, String name);
 
@@ -36,7 +36,7 @@ public abstract class WorldLoaderAdapter {
 
     public abstract void deleteWorld(String paramString);
 
-    public abstract void deleteArenaWorld(Arena<?> arena);
+    public abstract void deleteArenaWorld(Arena arena);
 
     public abstract CompletableFuture<Void> cloneArenaWorld(String worldName1, String worldName);
 

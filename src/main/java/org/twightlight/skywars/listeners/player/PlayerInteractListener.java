@@ -26,7 +26,6 @@ import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.menu.TeleporterMenu;
 import org.twightlight.skywars.menu.lobby.MysteryVaultMenu;
 import org.twightlight.skywars.menu.lobby.ProfileMenu;
-import org.twightlight.skywars.menu.play.PlayDuelsMenu;
 import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.menu.shop.SoulWellMenu;

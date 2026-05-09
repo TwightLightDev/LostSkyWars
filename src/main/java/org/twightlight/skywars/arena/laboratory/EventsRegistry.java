@@ -1,4 +1,4 @@
-package org.twightlight.skywars.arena.type.laboratory;
+package org.twightlight.skywars.arena.laboratory;
 
 import org.twightlight.skywars.arena.Arena;
 

@@ -14,16 +14,16 @@ import java.util.List;
 public class RollBackManager {
 
     private static BukkitTask task;
-    private static final List<Arena<?>> queue = new ArrayList<>();
+    private static final List<Arena> queue = new ArrayList<>();
 
-    public static void rollBack(Arena<?> server) {
+    public static void rollBack(Arena server) {
         if (queue.contains(server)) return;
 
         queue.add(server);
 
         if (task == null) {
             task = new BukkitRunnable() {
-                Arena<?> rollbacking = null;
+                Arena rollbacking = null;
 
                 @Override
                 public void run() {
