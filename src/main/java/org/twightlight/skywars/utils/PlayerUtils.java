@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -20,7 +21,7 @@ public class PlayerUtils {
 
         Account account = Database.getInstance().getAccount(player2.getUniqueId());
         if (account != null && account.getArena() != null) {
-            SkyWarsServer server = account.getArena();
+            Arena server = account.getArena();
             ArenaGroup group = server.getGroup();
             if (group != null && group.hasTrait("opponents_tracking")) {
                 if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {
@@ -50,7 +51,7 @@ public class PlayerUtils {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null && account.getArena() != null) {
-            SkyWarsServer server = account.getArena();
+            Arena server = account.getArena();
             ArenaGroup group = server.getGroup();
             if (group != null && group.hasTrait("opponents_tracking")) {
                 if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {

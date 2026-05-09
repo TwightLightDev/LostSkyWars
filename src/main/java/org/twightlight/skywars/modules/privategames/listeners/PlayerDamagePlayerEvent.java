@@ -20,8 +20,8 @@ public class PlayerDamagePlayerEvent implements Listener {
         Account account = Database.getInstance().getAccount(attacker.getUniqueId());
         if (account == null) return;
 
-        if (!(account.getArena() instanceof Arena<?>)) return;
-        Arena<?> server = (Arena<?>) account.getArena();
+        if (!(account.getArena() instanceof Arena)) return;
+        Arena server = (Arena) account.getArena();
 
         if (server.isPrivate()) {
             User owner = server.getServerOwner();

@@ -18,11 +18,11 @@ public class GameData {
     private ReplayData replayData;
     private long startTime;
 
-    private GameData(Arena<?> server) {
+    private GameData(Arena server) {
 
     }
 
-    public static GameData createGameData(Player p, Arena<?> server, List<Player> winners, ReplayData replay) {
+    public static GameData createGameData(Player p, Arena server, List<Player> winners, ReplayData replay) {
         GameData data = new GameData(server);
         if (winners == null || winners.isEmpty()) {
             data.result = GameResult.NO_RESULT;

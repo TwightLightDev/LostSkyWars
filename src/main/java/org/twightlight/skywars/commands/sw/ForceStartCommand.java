@@ -22,7 +22,7 @@ public class ForceStartCommand extends SubCommand {
     public void perform(Player player, String[] args) {
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            Arena<?> server = (Arena<?>) account.getArena();
+            Arena server = account.getArena();
             if (server != null) {
                 if (server.getState() != SkyWarsState.WAITING && server.getState() != SkyWarsState.STARTING) {
                     return;

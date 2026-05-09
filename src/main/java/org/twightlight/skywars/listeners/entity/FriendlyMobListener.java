@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSpawnEntityEvent;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
@@ -32,7 +33,7 @@ public class FriendlyMobListener implements Listener {
         if (account == null) {
             return;
         }
-        SkyWarsServer server = account.getArena();
+        Arena server = account.getArena();
         if (server == null || server.isSpectator(event.getPlayer())) {
             return;
         }
@@ -144,7 +145,7 @@ public class FriendlyMobListener implements Listener {
         if (account == null) {
             return true;
         }
-        SkyWarsServer server = account.getArena();
+        Arena server = account.getArena();
         if (server == null || server.isSpectator(target)) {
             return true;
         }

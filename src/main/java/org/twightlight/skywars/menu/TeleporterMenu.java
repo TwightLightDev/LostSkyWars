@@ -46,10 +46,10 @@ public class TeleporterMenu extends UpdatablePlayerMenu {
         }
     }
 
-    private Arena<?> server;
+    private Arena server;
     private Map<Integer, Player> map = new HashMap<>();
 
-    public TeleporterMenu(Player player, Arena<?> server) {
+    public TeleporterMenu(Player player, Arena server) {
         super(player, config.getTitle(), Math.min(server.getAlive() / 9, 1));
         this.server = server;
 

@@ -12,6 +12,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -70,7 +71,7 @@ public class ItemFrameManager implements Listener {
         Spray spray = Spray.getSpray(frame);
         Player player = event.getPlayer();
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        SkyWarsServer server = null;
+        Arena server = null;
         if (account == null || (server = account.getArena()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
             return;
         }

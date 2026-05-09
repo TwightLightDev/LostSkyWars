@@ -16,14 +16,14 @@ import java.text.SimpleDateFormat;
 
 public class SkyWarsChest {
 
-    private Arena<?> server;
+    private Arena server;
     private String serialized;
     private String chestType;
 
     private int fillCount;
     private Hologram hologram = null;
 
-    public SkyWarsChest(Arena<?> server, String serialized) {
+    public SkyWarsChest(Arena server, String serialized) {
         this.server = server;
         this.serialized = serialized;
         this.chestType = serialized.split("; ")[6];

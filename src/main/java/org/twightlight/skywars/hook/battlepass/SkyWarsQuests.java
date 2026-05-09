@@ -19,16 +19,15 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onGameEnd(SkyWarsGameEndEvent e) {
-        if (e.getServer() instanceof Arena<?>) {
-            Arena<?> server = (Arena<?>) e.getServer();
+        if (e.getServer() != null) {
+            Arena server = e.getServer();
 
             if (e.hasWinner() && !server.isPrivate()) {
                 for (Player p : e.getWinnerTeam().getMembers()) {
                     super.executionBuilder("win")
                             .player(p)
                             .root(server.getName())
-                            .subRoot("mode", server.getConfig().getArenaMode())
-                            .subRoot("type", server.getConfig().getServerType())
+                            .subRoot("group", server.getGroup().getId())
                             .progressSingle()
                             .buildAndExecute();
                 }
@@ -39,8 +38,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerKill(SkyWarsPlayerDeathEvent e) {
-        if (e.getServer() instanceof Arena<?>) {
-            Arena<?> server = (Arena<?>) e.getServer();
+        if (e.getServer() != null) {
+            Arena server = e.getServer();
             if (!server.isPrivate() && e.getKiller() != null) {
                 executionBuilder("kill")
                         .player(e.getKiller())
@@ -55,15 +54,14 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onGameStart(SkyWarsGameStartEvent e) {
-        if (e.getServer() instanceof Arena<?>) {
-            Arena<?> server = (Arena<?>) e.getServer();
+        if (e.getServer() != null) {
+            Arena server = e.getServer();
             if (!server.isPrivate()) {
                 for (Player p : server.getPlayers(false)) {
                     executionBuilder("play")
                             .player(p)
                             .root(server.getName())
-                            .subRoot("mode", server.getConfig().getArenaMode())
-                            .subRoot("type", server.getConfig().getServerType())
+                            .subRoot("group", server.getGroup().getId())
                             .progressSingle()
                             .buildAndExecute();
                 }
@@ -73,8 +71,8 @@ public class SkyWarsQuests extends ExternalActionContainer {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMobSummon(SkyWarsPlayerSpawnEntityEvent e) {
-        if (e.getServer() instanceof Arena<?>) {
-            Arena<?> server = (Arena<?>) e.getServer();
+        if (e.getServer() != null) {
+            Arena server = e.getServer();
             if (!server.isPrivate()) {
                 executionBuilder("spawnmob")
                         .player(e.getPlayer())

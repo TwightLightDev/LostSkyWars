@@ -65,7 +65,7 @@ public class InternalLoader extends WorldLoaderAdapter {
         Bukkit.unloadWorld(world, true);
     }
     @Override
-    public CompletableFuture<World> createArenaWorld(Arena<?> arena) {
+    public CompletableFuture<World> createArenaWorld(Arena arena) {
         String worldName = arena.getConfig().getWorldName();
         return createArenaWorld(arena.getServerName(), worldName);
     }
@@ -135,7 +135,7 @@ public class InternalLoader extends WorldLoaderAdapter {
     }
 
     @Override
-    public void deleteArenaWorld(Arena<?> arena) {
+    public void deleteArenaWorld(Arena arena) {
         File zipFile = new File("plugins/LostSkyWars/maps", arena.getServerName() + ".zip");
         FileUtils.deleteFile(zipFile);
 

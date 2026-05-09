@@ -14,7 +14,6 @@ import org.twightlight.skywars.utils.ConfigUtils;
 
 public class EnderMastery extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
@@ -26,7 +25,6 @@ public class EnderMastery extends SkyWarsPerk {
                 BukkitUtils.deserializeItemStack(CONFIG.getString("endermastery.icon").replace("{percentage}", CONFIG.getInt("endermastery.percentage") + "%")),
                 CONFIG.getInt("endermastery.price"),
                 SkyWarsPerk.loadAllowedGroups("endermastery"));
-        this.mode = mode;
 
         this.percentage = CONFIG.getInt("endermastery.percentage");
 
@@ -43,7 +41,7 @@ public class EnderMastery extends SkyWarsPerk {
             if (!this.selected(account)) {
                 return;
             }
-            if (account.getArena() != null && account.getArena().getType().getIndex() == mode) {
+            if (account.getArena() != null) {
                 evt.setCancelled(true);
                 double damage = 5.0;
 
@@ -59,8 +57,4 @@ public class EnderMastery extends SkyWarsPerk {
         }
     }
 
-    @Override
-    public int getMode() {
-        return mode;
-    }
 }

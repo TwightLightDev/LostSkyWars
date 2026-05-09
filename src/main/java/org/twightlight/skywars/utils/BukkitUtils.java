@@ -351,7 +351,7 @@ public class BukkitUtils {
         return deserialized;
     }
 
-    public static Location deserializeLocation(String serialized, Arena<?> server) {
+    public static Location deserializeLocation(String serialized, Arena server) {
         String[] divPoints = serialized.split("; ");
         Location deserialized = new Location(server.getWorld(), parseDouble(divPoints[1]), parseDouble(divPoints[2]), parseDouble(divPoints[3]));
         deserialized.setYaw(parseFloat(divPoints[4]));

@@ -19,6 +19,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.SkyWarsTeam;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
@@ -38,7 +39,7 @@ public class EntityListener implements Listener {
                  if (evt.getEntity() != null && ((FishHook) evt.getDamager()).getShooter() != evt.getEntity()) {
                     Player player = (Player) ((FishHook) evt.getEntity()).getShooter();
 
-                    SkyWarsServer server = null;
+                    Arena server = null;
                     Account account = Database.getInstance().getAccount(player.getUniqueId());
                     if (account == null || (server = account.getArena()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
                         return;
@@ -82,7 +83,7 @@ public class EntityListener implements Listener {
         if (evt.getEntity() instanceof Player) {
             Player player = (Player) evt.getEntity();
 
-            SkyWarsServer server = null;
+            Arena server = null;
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account == null || (server = account.getArena()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
                 evt.setCancelled(true);
@@ -115,7 +116,7 @@ public class EntityListener implements Listener {
                     evt.setDamage(0.001D);
                 }
 
-                if ((player.getHealth() - evt.getDamage()) <= 0.0 && SkyWarsPerk.isDecisiveStrike(player, server.getType().getIndex())) {
+                if ((player.getHealth() - evt.getDamage()) <= 0.0 && SkyWarsPerk.isDecisiveStrike(player)) {
                     evt.setDamage(player.getHealth() - 0.5);
                     return;
                 }
@@ -158,7 +159,7 @@ public class EntityListener implements Listener {
 
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
-                SkyWarsServer server = account.getArena();
+                Arena server = account.getArena();
                 if (server == null) {
                     evt.setCancelled(true);
                     if (evt.getCause() == DamageCause.VOID) {
@@ -191,7 +192,7 @@ public class EntityListener implements Listener {
         if (evt.getEntity() instanceof Player) {
             Account account = Database.getInstance().getAccount(evt.getEntity().getUniqueId());
             if (account != null) {
-                SkyWarsServer server = account.getArena();
+                Arena server = account.getArena();
                 if (server != null) {
                     evt.setCancelled(server.getState() != SkyWarsState.STARTING);
                     if (!evt.isCancelled()) {

@@ -26,7 +26,7 @@ public class WaitingLobbyCommand extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
+        Arena server = Arena.getByWorldName(player.getWorld().getName());
         if (server == null) {
             player.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
@@ -63,7 +63,7 @@ public class WaitingLobbyCommand extends SubCommand {
     }
 
     public static void handleClick(Player player, Account account, String display, PlayerInteractEvent evt) {
-        Arena<?> server = (Arena<?>) WAITING_LOBBY.get(player)[0];
+        Arena server = (Arena) WAITING_LOBBY.get(player)[0];
         if (server == null) {
             evt.setCancelled(true);
             WAITING_LOBBY.remove(player);

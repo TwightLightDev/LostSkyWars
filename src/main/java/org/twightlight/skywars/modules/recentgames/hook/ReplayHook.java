@@ -14,24 +14,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReplayHook {
-    private Map<Arena<?>, ReplayHolder> replaysMap = new HashMap<>();
+    private Map<Arena, ReplayHolder> replaysMap = new HashMap<>();
 
     public ReplayAPI getReplayAPI() {
         return ReplayAPI.getInstance();
     }
 
-    public Replay getReplay(Arena<?> server) {
+    public Replay getReplay(Arena server) {
         if (replaysMap.getOrDefault(server, null) != null) {
             return replaysMap.get(server).getReplay();
         }
         return null;
     }
 
-    public ReplayHolder getReplayHolder(Arena<?> server) {
+    public ReplayHolder getReplayHolder(Arena server) {
         return replaysMap.getOrDefault(server, null);
     }
 
-    public void record(Arena<?> server) {
+    public void record(Arena server) {
         Replay replay = getReplayAPI().recordReplay(server.getServerName() + "_" + System.nanoTime(), server.getInitialPlayers());
         replaysMap.put(server, new ReplayHolder(replay, server.getConfig().getWorldName()));
     }

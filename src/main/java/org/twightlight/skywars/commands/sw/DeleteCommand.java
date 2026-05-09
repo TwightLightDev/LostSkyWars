@@ -19,7 +19,7 @@ public class DeleteCommand extends SubCommand {
             return;
         }
 
-        Arena<?> server = Arena.getByWorldName(args[0]);
+        Arena server = Arena.getByWorldName(args[0]);
         if (server == null) {
             sender.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;

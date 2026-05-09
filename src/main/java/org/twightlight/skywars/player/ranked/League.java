@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.twightlight.skywars.player.ranked.Ranked.CONFIG;
-
 public class League {
 
     private String name;

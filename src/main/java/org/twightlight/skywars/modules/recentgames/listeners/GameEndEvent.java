@@ -15,9 +15,7 @@ public class GameEndEvent implements Listener {
     @EventHandler
     public void onGameEnd(SkyWarsGameEndEvent e) {
 
-        SkyWarsServer server1 = e.getServer();
-        if (server1 instanceof Arena) {
-            Arena<?> server = (Arena<?>) server1;
+        Arena server = e.getServer();
             if (!server.isPrivate()) {
                 for (Player p : server.getInitialPlayers()) {
                     final ReplayData data1;
@@ -36,6 +34,6 @@ public class GameEndEvent implements Listener {
                     RecentGames.getReplayHook().getReplay(server).getRecorder().stop(true);
                 }
             }
-        }
+
     }
 }

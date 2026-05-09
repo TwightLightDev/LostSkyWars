@@ -18,15 +18,15 @@ import org.twightlight.skywars.player.CurrencyManager;
 import java.util.*;
 
 public class SkyWars implements Listener {
-    private static final Map<Arena<?>, List<Player>> xp_multiplier = new HashMap<>();
-    private static final Map<Arena<?>, List<Player>> coins_multiplier = new HashMap<>();
+    private static final Map<Arena, List<Player>> xp_multiplier = new HashMap<>();
+    private static final Map<Arena, List<Player>> coins_multiplier = new HashMap<>();
 
     @EventHandler
     public void onStart(SkyWarsGameStartEvent e) {
         if (e == null)
             return;
         if (e.getServer() instanceof Arena) {
-            Arena<?> server = ((Arena<?>) e.getServer());
+            Arena server = ( e.getServer());
             for (Player player : server.getPlayers(false)) {
                 Guild guild = GuildsManager.getByPlayer(player);
                 if (guild == null)
@@ -53,7 +53,7 @@ public class SkyWars implements Listener {
     @EventHandler
     public void onEnd(SkyWarsGameEndEvent e) {
         if (e.getServer() instanceof Arena) {
-            Arena<?> server = ((Arena<?>) e.getServer());
+            Arena server = ( e.getServer());
             xp_multiplier.remove(server);
         }
     }
@@ -63,7 +63,7 @@ public class SkyWars implements Listener {
         Guild guild = GuildsManager.getByPlayer(player);
         if (guild == null || !(e.getServer() instanceof Arena))
             return;
-        Arena<?> server = ((Arena<?>) e.getServer());
+        Arena server = ( e.getServer());
         if (Optional.ofNullable(xp_multiplier.get(server)).isPresent() && xp_multiplier.get(server).contains(player) ) {
             e.setAmount(e.getAmount() + e.getBaseAmount() * 2);
             guild.sendDoubleXpMessage(player);
@@ -81,7 +81,7 @@ public class SkyWars implements Listener {
         Guild guild = GuildsManager.getByPlayer(player);
         if (guild == null || !(e.getServer() instanceof Arena))
             return;
-        Arena<?> server = ((Arena<?>) e.getServer());
+        Arena server = ( e.getServer());
         if (Optional.ofNullable(coins_multiplier.get(server)).isPresent() && coins_multiplier.get(server).contains(player)) {
             e.setAmount(e.getAmount() + e.getBaseAmount() * 2);
             List<String> var10000 = Guilds.get().getLanguage().getList("guilds.settings.boosters.double-coins.reward-message");

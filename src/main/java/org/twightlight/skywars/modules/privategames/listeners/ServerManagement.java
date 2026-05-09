@@ -11,9 +11,8 @@ public class ServerManagement implements Listener {
     @EventHandler
     public void onPlayerQuit(SkyWarsPlayerQuitEvent e) {
 
-        SkyWarsServer server1 = e.getServer();
-        if (server1 instanceof Arena && server1.getState() == SkyWarsState.WAITING) {
-            Arena<?> server = (Arena<?>) server1;
+        Arena server = e.getServer();
+        if (server.getState() == SkyWarsState.WAITING) {
             if (server.isPrivate() && server.getPlayers(false).isEmpty()) {
                 Arena.removeArena(server);
             }

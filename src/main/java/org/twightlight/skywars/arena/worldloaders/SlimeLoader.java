@@ -80,7 +80,7 @@ public class SlimeLoader extends WorldLoaderAdapter {
 
     //Create a VIRTUAL world -> cannot use load();
     @Override
-    public CompletableFuture<World> createArenaWorld(Arena<?> arena) {
+    public CompletableFuture<World> createArenaWorld(Arena arena) {
         String worldName = arena.getConfig().getWorldName();
         return createArenaWorld(arena.getServerName(), worldName);
     }
@@ -124,7 +124,7 @@ public class SlimeLoader extends WorldLoaderAdapter {
     }
 
     @Override
-    public void deleteArenaWorld(Arena<?> arena) {
+    public void deleteArenaWorld(Arena arena) {
         deleteWorld(arena.getServerName());
         deleteWorld(arena.getConfig().getWorldName());
     }

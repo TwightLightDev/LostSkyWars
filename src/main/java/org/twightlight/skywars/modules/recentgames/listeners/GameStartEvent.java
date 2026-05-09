@@ -9,12 +9,10 @@ import org.twightlight.skywars.modules.recentgames.RecentGames;
 public class GameStartEvent implements Listener {
     @EventHandler
     public void onGameStart(SkyWarsGameStartEvent e) {
-        SkyWarsServer server1 = e.getServer();
-        if (server1 instanceof Arena) {
-            Arena<?> server = (Arena<?>) server1;
+        Arena server = e.getServer();
             if (!server.isPrivate() && RecentGames.hasReplayHook()) {
                 RecentGames.getReplayHook().record(server);
             }
-        }
+
     }
 }

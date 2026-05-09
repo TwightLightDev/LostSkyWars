@@ -12,14 +12,12 @@ import java.util.HashMap;
 public class PlayerDeathEvent implements Listener {
     @EventHandler
     public void onPlayerDeath(SkyWarsPlayerDeathEvent e) {
-        SkyWarsServer server1 = e.getServer();
-        if (server1 instanceof Arena) {
-            Arena<?> server = (Arena<?>) server1;
+        Arena server = e.getServer();
             if (!server.isPrivate() && RecentGames.hasReplayHook() && RecentGames.getReplayHook().getReplay(server) != null) {
                 HashMap<String, PlayerWatcher> watchers = RecentGames.getReplayHook().getReplay(server).getData().getWatchers();
                 watchers.remove(e.getPlayer().getName());
                 RecentGames.getReplayHook().getReplay(server).getData().setWatchers(watchers);
             }
-        }
+
     }
 }

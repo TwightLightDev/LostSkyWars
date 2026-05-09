@@ -12,7 +12,6 @@ import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.commands.sw.*;
 import org.twightlight.skywars.hook.boxes.cmd.BoxNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.DeliveryNPCCommand;
-import org.twightlight.skywars.hook.citizens.cmd.PlayNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.ShopkeeperNPCCommand;
 import org.twightlight.skywars.hook.citizens.cmd.StatsNPCCommand;
 
@@ -38,7 +37,6 @@ public class SkyWarsCommand extends Command {
             commands.add(new SetLobbyCommand());
             commands.add(new BuildCommand());
             if (SkyWars.citizens) {
-                commands.add(new PlayNPCCommand());
                 commands.add(new DeliveryNPCCommand());
                 commands.add(new ShopkeeperNPCCommand());
                 if (SkyWars.protocollib) {

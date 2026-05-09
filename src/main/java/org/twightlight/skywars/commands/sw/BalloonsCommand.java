@@ -23,7 +23,7 @@ public class BalloonsCommand extends SubCommand {
 
     @Override
     public void perform(Player player, String[] args) {
-        Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
+        Arena server = Arena.getByWorldName(player.getWorld().getName());
         if (server == null) {
             player.sendMessage("§5[LostSkyWars] §cThis world does not have an arena");
             return;
@@ -80,7 +80,7 @@ public class BalloonsCommand extends SubCommand {
 
     public static void handleClick(Player player, Account account, String display, PlayerInteractEvent evt) {
         Object[] arr = BALLOONS.get(player);
-        Arena<?> server = Arena.getByWorldName(player.getWorld().getName());
+        Arena server = Arena.getByWorldName(player.getWorld().getName());
         if (server == null) {
             return;
         }

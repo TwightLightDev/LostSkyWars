@@ -87,8 +87,8 @@ public class User implements ModulesUser {
         return false;
     }
 
-    public void connect(Account account, Arena<?> server) {
-        Arena<?> privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
+    public void connect(Account account, Arena server) {
+        Arena privateServer = server.cloneServer(true, server.getConfig().getId() + "_" + account.getPlayer().getUniqueId().toString());
         privateServer.getConfig().getCompletableWorld().thenAccept((world -> {
             privateServer.setServerOwner(this);
             Map<Integer, SkyWarsEvent> newTimeLine = new TreeMap<>(Comparator.reverseOrder());
