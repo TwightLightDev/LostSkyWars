@@ -31,7 +31,7 @@ public class PlayCommand extends Command {
             if (args.length == 0) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(" \n§dPlay - Help\n \n§6/play <group> §f- §7Open play menu.\n§7Available groups: ");
-                for (ArenaGroup gid : GroupManager.all()) {
+                for (ArenaGroup gid : GroupManager.getGroups()) {
                     sb.append(gid.getId()).append(", ");
                 }
                 player.sendMessage(sb.toString().trim());

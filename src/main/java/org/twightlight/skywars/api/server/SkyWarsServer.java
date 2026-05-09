@@ -1,6 +1,7 @@
 package org.twightlight.skywars.api.server;
 
 import org.bukkit.entity.Player;
+import org.twightlight.skywars.arena.SkyWarsTeam;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.player.Account;
 

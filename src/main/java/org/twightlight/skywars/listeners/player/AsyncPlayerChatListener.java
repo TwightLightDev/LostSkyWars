@@ -68,7 +68,7 @@ public class AsyncPlayerChatListener extends Listeners {
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        SkyWarsServer server = account.getServer();
+        SkyWarsServer server = account.getArena();
         if (server != null && server.getType().equals(SkyWarsType.DUELS) && (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING)) {
             return;
         }
@@ -76,9 +76,9 @@ public class AsyncPlayerChatListener extends Listeners {
         String level = Level.getByLevel(account.getLevel()).getLevel(account);
         for (Account accounts : Database.getInstance().listAccounts()) {
             Player players = accounts.getPlayer();
-            if (server == null && accounts.getServer() == null) {
+            if (server == null && accounts.getArena() == null) {
                 players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
-            } else if (accounts.getServer() != null && accounts.getServer().equals(server)) {
+            } else if (accounts.getArena() != null && accounts.getArena().equals(server)) {
                 if (server.isSpectator(player) && !server.isSpectator(players)) {
                     continue;
                 }

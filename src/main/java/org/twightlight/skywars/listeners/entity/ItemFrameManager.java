@@ -72,7 +72,7 @@ public class ItemFrameManager implements Listener {
         Player player = event.getPlayer();
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         SkyWarsServer server = null;
-        if (account == null || (server = account.getServer()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
+        if (account == null || (server = account.getArena()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
             return;
         }
         Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SPRAY, 1);

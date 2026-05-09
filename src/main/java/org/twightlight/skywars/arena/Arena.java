@@ -12,7 +12,6 @@ import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.api.server.SkyWarsTeam;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
@@ -34,10 +33,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
-public abstract class Arena extends SkyWarsServer {
+public abstract class Arena {
 
     protected static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
-
+    protected String name;
+    protected SkyWarsState state;
     protected int timer;
     protected ArenaConfig config;
     protected ArenaGroup group;
@@ -88,7 +88,6 @@ public abstract class Arena extends SkyWarsServer {
         Collections.shuffle(teamcolors);
     }
 
-    @Override
     public void destroy() {
         this.timer = 0;
         this.config.destroy();
@@ -280,12 +279,10 @@ public abstract class Arena extends SkyWarsServer {
         return serverOwner;
     }
 
-    @Override
     public ArenaGroup getGroup() {
         return this.group;
     }
 
-    @Override
     public int getMaxPlayers() {
         return config.listSpawns().size();
     }
@@ -345,13 +342,13 @@ public abstract class Arena extends SkyWarsServer {
         return null;
     }
 
-    public static void removeArena(Arena server) {
-        if (!server.isPrivate) {
-            servers.remove(server.getServerName());
+    public static void removeArena(Arena arena) {
+        if (!arena.isPrivate) {
+            servers.remove(arena.name);
         }
-        FileUtils.deleteFile(server.getConfig().getConfig().getFile());
-        SkyWars.getInstance().getWorldLoader().deleteArenaWorld(server);
-        server.destroy();
+        FileUtils.deleteFile(arena.getConfig().getConfig().getFile());
+        SkyWars.getInstance().getWorldLoader().deleteArenaWorld(arena);
+        arena.destroy();
     }
 
     public static Arena findRandom(ArenaGroup group) {
@@ -432,5 +429,13 @@ public abstract class Arena extends SkyWarsServer {
 
         SkyWars.getInstance().getWorldLoader().cloneArenaWorld(this.getConfig().getId(), newArena);
         return Arena.loadArena(cu.getFile(), null, temp);
+    }
+
+    public SkyWarsState getState() {
+        return state;
+    }
+
+    public String getName() {
+        return name;
     }
 }

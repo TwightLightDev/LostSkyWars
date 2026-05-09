@@ -2,7 +2,7 @@ package org.twightlight.skywars.api.event.game;
 
 import org.twightlight.skywars.api.event.SkyWarsEvent;
 import org.twightlight.skywars.api.server.SkyWarsServer;
-import org.twightlight.skywars.api.server.SkyWarsTeam;
+import org.twightlight.skywars.arena.SkyWarsTeam;
 
 public class SkyWarsGameEndEvent extends SkyWarsEvent {
 

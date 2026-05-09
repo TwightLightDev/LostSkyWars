@@ -19,12 +19,13 @@ public class EnderMastery extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public EnderMastery(int mode) {
+    public EnderMastery() {
         super(CONFIG.getInt("endermastery.id"), CONFIG.getString("endermastery.name"), CosmeticRarity.fromName(CONFIG.getString("endermastery.rarity")),
                 CONFIG.getBoolean("endermastery.buyable", true),
                 CONFIG.getString("endermastery.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("endermastery.icon").replace("{percentage}", CONFIG.getInt("endermastery.percentage") + "%")),
-                CONFIG.getInt("endermastery.price"));
+                CONFIG.getInt("endermastery.price"),
+                SkyWarsPerk.loadAllowedGroups("endermastery"));
         this.mode = mode;
 
         this.percentage = CONFIG.getInt("endermastery.percentage");
@@ -42,7 +43,7 @@ public class EnderMastery extends SkyWarsPerk {
             if (!this.selected(account)) {
                 return;
             }
-            if (account.getServer() != null && account.getServer().getType().getIndex() == mode) {
+            if (account.getArena() != null && account.getArena().getType().getIndex() == mode) {
                 evt.setCancelled(true);
                 double damage = 5.0;
 

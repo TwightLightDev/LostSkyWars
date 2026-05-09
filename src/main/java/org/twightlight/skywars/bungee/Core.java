@@ -22,13 +22,25 @@ public class Core {
     }
 
     private static CoreSender SENDER;
-    public static final String[] menusArray = new String[]{"profile", "leveling", "statistics", "settings", "shop", "cells", "play", "playduels", "playranked", "kitsandperks",
-            "nkits", "ikits", "rkits", "viewkit", "confirmbuy", "kitselector", "mapselector", "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "balloon", "statsnpc", "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics", "victorydance", "title"};
-    public static final List<String> filesSaved = Arrays.asList("profile", "leveling", "statistics", "settings", "shop", "cells", "play", "playduels", "playranked", "kitsandperks",
-            "nkits", "ikits", "rkits", "viewkit", "confirmbuy", "kitselector", "mapselector", "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "nperks", "iperks", "rperks", "deliveryman", "deathcry", "projectiletrail", "killmessage", "spray", "balloon", "statsnpc", "symbol", "normalkits", "insanekits", "rankedkits",
-            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails", "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title", "deliveries", "levels", "perks", "ranked", "ranks", "symbols", "lang", "cosmetics", "oosmeticspreview");
+    public static final String[] menusArray = new String[]{
+            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
+            "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
+            "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
+            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "balloon", "statsnpc",
+            "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics",
+            "victorydance", "title"
+    };
+    public static final List<String> filesSaved = Arrays.asList(
+            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
+            "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
+            "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
+            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "projectiletrail",
+            "killmessage", "spray", "balloon", "statsnpc", "symbol",
+            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails",
+            "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title",
+            "deliveries", "levels", "perks", "ranks", "symbols", "lang", "cosmetics",
+            "groups"
+    );
 
     public static CoreSender getCoreSender() {
         if (SENDER == null) {
@@ -78,59 +90,29 @@ public class Core {
                 Object bungeeConfig = Class.forName("org.twightlight.skywars.bungee.utils.BungeeConfig").getDeclaredMethod("getConfig", String.class).invoke(null, "config");
                 Method get = bungeeConfig.getClass().getDeclaredMethod("get", String.class);
                 DATABASE = new CoreDatabase() {
-
                     @Override
                     public String getName() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.name").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.name").toString(); } catch (Exception ex) { return null; }
                     }
-
                     @Override
                     public String getUser() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.username").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.username").toString(); } catch (Exception ex) { return null; }
                     }
-
                     @Override
                     public String getPort() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.port").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.port").toString(); } catch (Exception ex) { return null; }
                     }
-
                     @Override
                     public String getPassword() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.password").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.password").toString(); } catch (Exception ex) { return null; }
                     }
-
                     @Override
                     public String getHost() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.host").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.host").toString(); } catch (Exception ex) { return null; }
                     }
-
                     @Override
                     public String getDbname() {
-                        try {
-                            return get.invoke(bungeeConfig, "database.dbname").toString();
-                        } catch (Exception ex) {
-                            return null;
-                        }
+                        try { return get.invoke(bungeeConfig, "database.dbname").toString(); } catch (Exception ex) { return null; }
                     }
                 };
             } catch (Exception ex) {
@@ -139,59 +121,29 @@ public class Core {
                     Object fileConfiguration = Class.forName("org.bukkit.plugin.java.JavaPlugin").getDeclaredMethod("getConfig").invoke(main);
                     Method get = Class.forName("org.bukkit.configuration.ConfigurationSection").getDeclaredMethod("get", String.class);
                     DATABASE = new CoreDatabase() {
-
                         @Override
                         public String getName() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.name").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.name").toString(); } catch (Exception ex) { return null; }
                         }
-
                         @Override
                         public String getUser() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.username").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.username").toString(); } catch (Exception ex) { return null; }
                         }
-
                         @Override
                         public String getPort() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.port").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.port").toString(); } catch (Exception ex) { return null; }
                         }
-
                         @Override
                         public String getPassword() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.password").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.password").toString(); } catch (Exception ex) { return null; }
                         }
-
                         @Override
                         public String getHost() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.host").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.host").toString(); } catch (Exception ex) { return null; }
                         }
-
                         @Override
                         public String getDbname() {
-                            try {
-                                return get.invoke(fileConfiguration, "database.dbname").toString();
-                            } catch (Exception ex) {
-                                return null;
-                            }
+                            try { return get.invoke(fileConfiguration, "database.dbname").toString(); } catch (Exception ex) { return null; }
                         }
                     };
                 } catch (Exception ex2) {

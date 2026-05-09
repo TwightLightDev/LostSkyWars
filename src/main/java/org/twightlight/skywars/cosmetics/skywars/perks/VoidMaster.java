@@ -20,14 +20,15 @@ public class VoidMaster extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public VoidMaster(int mode) {
+    public VoidMaster() {
         super(CONFIG.getInt("voidmaster.id"),
                 CONFIG.getString("voidmaster.name"),
                 CosmeticRarity.fromName(CONFIG.getString("voidmaster.rarity")),
                 CONFIG.getBoolean("voidmaster.buyable", true),
                 CONFIG.getString("voidmaster.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("voidmaster.icon").replace("{percentage}", CONFIG.getInt("voidmaster.percentage") + "%")),
-                CONFIG.getInt("voidmaster.price"));
+                CONFIG.getInt("voidmaster.price"),
+                SkyWarsPerk.loadAllowedGroups("voidmaster"));
         this.mode = mode;
 
         this.percentage = CONFIG.getInt("voidmaster.percentage");

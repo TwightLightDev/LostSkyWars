@@ -17,14 +17,15 @@ public class Nourishment extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public Nourishment(int mode) {
+    public Nourishment() {
         super(CONFIG.getInt("nourishment.id"),
                 CONFIG.getString("nourishment.name"),
                 CosmeticRarity.fromName(CONFIG.getString("nourishment.rarity")),
                 CONFIG.getBoolean("nourishment.buyable", true),
                 CONFIG.getString("nourishment.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("nourishment.icon")),
-                CONFIG.getInt("nourishment.price"));
+                CONFIG.getInt("nourishment.price"),
+                SkyWarsPerk.loadAllowedGroups("nourishment"));
         this.mode = mode;
 
         this.register(SkyWars.getInstance());

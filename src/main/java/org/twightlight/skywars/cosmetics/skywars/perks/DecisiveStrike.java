@@ -12,14 +12,15 @@ public class DecisiveStrike extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public DecisiveStrike(int mode) {
+    public DecisiveStrike() {
         super(CONFIG.getInt("decisivestrike.id"),
                 CONFIG.getString("decisivestrike.name"),
                 CosmeticRarity.fromName(CONFIG.getString("decisivestrike.rarity")),
                 CONFIG.getBoolean("decisivestrike.buyable", true),
                 CONFIG.getString("decisivestrike.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("decisivestrike.icon").replace("{percentage}", CONFIG.getInt("decisivestrike.percentage") + "%")),
-                CONFIG.getInt("decisivestrike.price"));
+                CONFIG.getInt("decisivestrike.price"),
+                SkyWarsPerk.loadAllowedGroups("decisivestrike"));
         this.mode = mode;
 
         this.percentage = CONFIG.getInt("decisivestrike.percentage");

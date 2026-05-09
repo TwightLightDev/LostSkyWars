@@ -28,10 +28,10 @@ public class Friend {
 
     public String getStatus() {
         Account account = Database.getInstance().getAccount(uuid);
-        if (account.getServer() == null) {
+        if (account.getArena() == null) {
             return Friends.getInstance().getConfig().getString("messages.online-status.idling");
         } else {
-            return Friends.getInstance().getConfig().getString("messages.online-status.playing").replace("%0%", account.getServer().getName());
+            return Friends.getInstance().getConfig().getString("messages.online-status.playing").replace("%0%", account.getArena().getName());
         }
     }
 }

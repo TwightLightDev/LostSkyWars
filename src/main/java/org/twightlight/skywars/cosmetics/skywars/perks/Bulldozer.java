@@ -20,14 +20,15 @@ public class Bulldozer extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public Bulldozer(int mode) {
+    public Bulldozer() {
         super(CONFIG.getInt("bulldozer.id"),
                 CONFIG.getString("bulldozer.name"),
                 CosmeticRarity.fromName(CONFIG.getString("bulldozer.rarity")),
                 CONFIG.getBoolean("bulldozer.buyable", true),
                 CONFIG.getString("bulldozer.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("bulldozer.icon").replace("{time}", CONFIG.getInt("bulldozer.time") + "")),
-                CONFIG.getInt("bulldozer.price"));
+                CONFIG.getInt("bulldozer.price"),
+                SkyWarsPerk.loadAllowedGroups("bulldozer"));
         this.mode = mode;
 
         this.seconds = CONFIG.getInt("bulldozer.time");

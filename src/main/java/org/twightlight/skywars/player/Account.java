@@ -44,7 +44,7 @@ public class Account {
     private String name;
     private LostScoreboard scoreboard;
 
-    private SkyWarsServer server;
+    private Arena arena;
 
     protected Map<String, StatsContainer> account, skywars, ranked;
     private Map<UUID, Long> lastHit = new HashMap<>();
@@ -190,8 +190,8 @@ public class Account {
         return this.skywars.get("lastSelected").getAsLong() < System.currentTimeMillis();
     }
 
-    public void setServer(SkyWarsServer server) {
-        this.server = server;
+    public void setArena(Arena arena) {
+        this.arena = arena;
         this.lastHit.clear();
     }
 
@@ -241,11 +241,11 @@ public class Account {
 
         if (inLobby()) {
             setupLobbyInventory(player);
-        } else if (server.getState().canJoin()) {
+        } else if (arena.getState().canJoin()) {
             setupWaitingInventory(player);
-        } else if (server.getState() == SkyWarsState.STARTING) {
+        } else if (arena.getState() == SkyWarsState.STARTING) {
             setupStartingInventory(player);
-        } else if (server.isSpectator(player)) {
+        } else if (arena.isSpectator(player)) {
             setupSpectatorInventory(player);
         } else {
             player.setGameMode(GameMode.SURVIVAL);
@@ -290,7 +290,7 @@ public class Account {
 
     private void setupWaitingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
-        ArenaGroup group = server.getGroup();
+        ArenaGroup group = arena.getGroup();
         boolean isDuels = group != null && group.getId().equals("duels");
 
         int slot = Language.game$hotbar$kits$slot;
@@ -309,7 +309,7 @@ public class Account {
     private void setupStartingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
 
-        ArenaGroup group = server.getGroup();
+        ArenaGroup group = arena.getGroup();
         boolean isDuels = group != null && group.getId().equals("duels");
 
         int slot = Language.game$hotbar$kits$slot;
@@ -426,14 +426,14 @@ public class Account {
         this.scoreboard = new LostScoreboard() {
             @Override
             public void update() {
-                ArenaGroup group = server != null ? server.getGroup() : null;
+                ArenaGroup group = arena != null ? arena.getGroup() : null;
                 boolean isTeam = group != null && group.getTeamSize() > 1;
                 boolean hasOpponents = group != null && group.hasTrait("opponents_tracking");
 
                 List<String> clone;
-                if (server == null) {
+                if (arena == null) {
                     clone = new ArrayList<>(Language.scoreboards$lines$lobby);
-                } else if (server.getState().canJoin()) {
+                } else if (arena.getState().canJoin()) {
                     clone = new ArrayList<>(group.getScoreboardWaiting());
                 } else {
                     clone = new ArrayList<>(group.getScoreboardIngame());
@@ -448,7 +448,7 @@ public class Account {
                         line = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(getPlayer(), line);
                     }
 
-                    SkyWarsServer currentServer = getServer();
+                    SkyWarsServer currentServer = getArena();
 
                     if (currentServer == null) {
                         line = line.replace("{level}", Level.getByLevel(getLevel()).getLevel(Account.this));
@@ -640,11 +640,11 @@ public class Account {
     }
 
     public boolean inLobby() {
-        return server == null;
+        return arena == null;
     }
 
-    public SkyWarsServer getServer() {
-        return server;
+    public Arena getArena() {
+        return arena;
     }
 
     public int getLevel() {

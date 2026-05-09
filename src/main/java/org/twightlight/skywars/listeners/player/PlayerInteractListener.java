@@ -132,7 +132,7 @@ public class PlayerInteractListener extends Listeners {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(player));
                 if (CREATING.containsKey(player)) {

@@ -1,11 +1,10 @@
-package org.twightlight.skywars.api.server;
+package org.twightlight.skywars.arena;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsMode;
+import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -23,10 +22,11 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class SkyWarsTeam {
+
     private static ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
     private int id;
-    private Arena<?> server;
+    private Arena server;
     private String alphabetical;
     private ChatColor color;
     private String location;
@@ -34,26 +34,28 @@ public class SkyWarsTeam {
     private List<UUID> members;
     private UUID cageOwner;
 
-    public SkyWarsTeam(Arena<?> server, int spawns, String serialized) {
+    public SkyWarsTeam(Arena server, int spawns, String serialized) {
         this.id = spawns;
         this.server = server;
         this.location = serialized;
         this.alphabetical = alphabet[spawns];
         if (spawns >= server.getTeamColors().size()) {
             this.color = ChatColor.AQUA;
-        } else
+        } else {
             this.color = server.getTeamColors().get(spawns);
-        this.members = new ArrayList<>(server.getMode().getTeamSize());
+        }
+        this.members = new ArrayList<>(server.getGroup().getTeamSize());
     }
 
     public void destroy() {
-        SkyWarsCage.remove(cageOwner, this.getLocation(), !server.getMode().equals(SkyWarsMode.SOLO));
+        boolean isTeam = server.getGroup().getTeamSize() > 1;
+        SkyWarsCage.remove(cageOwner, this.getLocation(), isTeam);
         if (server.getState() == SkyWarsState.INGAME) {
             String ballonSerialized = this.server.getConfig().getBalloon(this.id);
 
             if (ballonSerialized != null && this.isAlive()) {
                 SkyWarsBalloon cosmetic = null;
-                Account unique = server.getMode().equals(SkyWarsMode.SOLO) ? Database.getInstance().getAccount(this.members.get(0)) : null;
+                Account unique = server.getGroup().isSolo() ? Database.getInstance().getAccount(this.members.get(0)) : null;
                 if (unique == null) {
                     List<Account> accounts = new ArrayList<>();
                     for (Player member : this.getMembers()) {
@@ -73,7 +75,7 @@ public class SkyWarsTeam {
                 }
 
                 if (cosmetic != null) {
-                    this.balloon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized, server), cosmetic);
+                    this.balloon = new Balloon(BukkitUtils.deserializeLocation(ballonSerialized, server.getConfig().getWorldName()), cosmetic);
                 }
             }
         }
@@ -94,18 +96,21 @@ public class SkyWarsTeam {
     }
 
     public void removeMember(Player player) {
-        if (cageOwner == player.getUniqueId()) {
-            SkyWarsCage.remove(cageOwner, this.getLocation(), !server.getMode().equals(SkyWarsMode.SOLO));
+        boolean isTeam = server.getGroup().getTeamSize() > 1;
+        if (cageOwner != null && cageOwner.equals(player.getUniqueId())) {
+            SkyWarsCage.remove(cageOwner, this.getLocation(), isTeam);
         }
         this.members.remove(player.getUniqueId());
         if (!members.isEmpty()) {
             cageOwner = members.get(RANDOM.nextInt(members.size()));
             Account account = Database.getInstance().getAccount(cageOwner);
-            Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
-            if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
-                ((SkyWarsCage) cosmetic).apply(account.getPlayer(), getLocation());
-            } else {
-                SkyWarsCage.defaultCage(getLocation(), false);
+            if (account != null) {
+                Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
+                if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
+                    ((SkyWarsCage) cosmetic).apply(account.getPlayer(), getLocation());
+                } else {
+                    SkyWarsCage.defaultCage(getLocation(), false);
+                }
             }
         }
     }
@@ -119,7 +124,7 @@ public class SkyWarsTeam {
     }
 
     public boolean canJoin(int players) {
-        return (this.members.size() + players) <= this.server.getMode().getTeamSize();
+        return (this.members.size() + players) <= this.server.getGroup().getTeamSize();
     }
 
     public boolean hasMember(Player player) {
@@ -127,7 +132,7 @@ public class SkyWarsTeam {
     }
 
     public int getSize() {
-        return this.server.getMode().getTeamSize();
+        return this.server.getGroup().getTeamSize();
     }
 
     public String getAlphabetical() {
@@ -139,7 +144,7 @@ public class SkyWarsTeam {
     }
 
     public Location getLocation() {
-        return BukkitUtils.deserializeLocation(this.getSerializedLocation(), server);
+        return BukkitUtils.deserializeLocation(this.getSerializedLocation(), server.getConfig().getWorldName());
     }
 
     public String getSerializedLocation() {

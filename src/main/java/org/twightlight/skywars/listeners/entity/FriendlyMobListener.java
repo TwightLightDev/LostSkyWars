@@ -33,7 +33,7 @@ public class FriendlyMobListener implements Listener {
         if (account == null) {
             return;
         }
-        SkyWarsServer server = account.getServer();
+        SkyWarsServer server = account.getArena();
         if (server == null || server.isSpectator(event.getPlayer())) {
             return;
         }
@@ -58,7 +58,7 @@ public class FriendlyMobListener implements Listener {
                 friendlyMonsters.computeIfAbsent(player, k -> new ArrayList<>());
                 friendlyMonsters.get(player).add((Monster) event.getEntity());
                 event.getEntity().setMetadata("owner", new FixedMetadataValue(SkyWars.getInstance(), player.getUniqueId().toString()));
-                SkyWarsPlayerSpawnEntityEvent e = new SkyWarsPlayerSpawnEntityEvent(player, event.getEntity(), Database.getInstance().getAccount(player.getUniqueId()).getServer());
+                SkyWarsPlayerSpawnEntityEvent e = new SkyWarsPlayerSpawnEntityEvent(player, event.getEntity(), Database.getInstance().getAccount(player.getUniqueId()).getArena());
                 Bukkit.getPluginManager().callEvent(e);
                 break;
             }
@@ -145,7 +145,7 @@ public class FriendlyMobListener implements Listener {
         if (account == null) {
             return true;
         }
-        SkyWarsServer server = account.getServer();
+        SkyWarsServer server = account.getArena();
         if (server == null || server.isSpectator(target)) {
             return true;
         }

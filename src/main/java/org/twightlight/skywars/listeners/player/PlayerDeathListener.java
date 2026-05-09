@@ -28,7 +28,7 @@ public class PlayerDeathListener extends Listeners {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setDroppedExp(0);
                 player.setHealth(20.0);
@@ -55,7 +55,7 @@ public class PlayerDeathListener extends Listeners {
                 }
 
                 for (Account hitter : hitters) {
-                    if (hitter != null && (killer == null || !hitter.equals(killer)) && (hitter.getServer() != null && hitter.getServer().equals(server)) && hitter.getPlayer() != null
+                    if (hitter != null && (killer == null || !hitter.equals(killer)) && (hitter.getArena() != null && hitter.getArena().equals(server)) && hitter.getPlayer() != null
                             && !server.isSpectator(hitter.getPlayer())) {
                         if (server.getType().equals(SkyWarsType.RANKED)) {
                             Ranked.increase(hitter, "assists");

@@ -20,8 +20,8 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player2.getUniqueId());
-        if (account != null && account.getServer() != null) {
-            SkyWarsServer server = account.getServer();
+        if (account != null && account.getArena() != null) {
+            SkyWarsServer server = account.getArena();
             ArenaGroup group = server.getGroup();
             if (group != null && group.hasTrait("opponents_tracking")) {
                 if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {
@@ -50,8 +50,8 @@ public class PlayerUtils {
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account != null && account.getServer() != null) {
-            SkyWarsServer server = account.getServer();
+        if (account != null && account.getArena() != null) {
+            SkyWarsServer server = account.getArena();
             ArenaGroup group = server.getGroup();
             if (group != null && group.hasTrait("opponents_tracking")) {
                 if (server.getState() == SkyWarsState.WAITING || server.getState() == SkyWarsState.STARTING) {

@@ -256,7 +256,7 @@ public class Timer {
                             }
 
                             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                account.setServer(null);
+                                account.setArena(null);
                                 account.reloadScoreboard();
                                 account.refreshPlayer();
                                 account.refreshPlayers();

@@ -67,7 +67,7 @@ public class LostPlayer {
     }
 
     public SkyWarsServer getServer() {
-        return a.getServer();
+        return a.getArena();
     }
 
     public Account getHandle() {

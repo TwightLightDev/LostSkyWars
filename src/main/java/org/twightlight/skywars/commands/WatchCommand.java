@@ -33,7 +33,7 @@ public class WatchCommand extends Command {
             Player player = (Player) sender;
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
-                if (account.getServer() != null) {
+                if (account.getArena() != null) {
                     return true;
                 }
 
@@ -54,7 +54,7 @@ public class WatchCommand extends Command {
                     return true;
                 }
 
-                SkyWarsServer server = acc.getServer();
+                SkyWarsServer server = acc.getArena();
                 if (server == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(target)) {
                     player.sendMessage(Language.command$watch$user_not_in_match);
                     return true;

@@ -42,7 +42,7 @@ public class CreateCommand extends SubCommand {
     public void perform(Player player, String[] args) {
         if (args.length <= 1) {
             player.sendMessage("§cUse /lsw create <group> <name>");
-            player.sendMessage("§7Available groups: " + GroupManager.all());
+            player.sendMessage("§7Available groups: " + GroupManager.getGroups());
             return;
         }
 
@@ -53,7 +53,7 @@ public class CreateCommand extends SubCommand {
 
         String groupId = args[0].toLowerCase();
         if (GroupManager.get(groupId) == null) {
-            player.sendMessage("§cInvalid group! Available: " + GroupManager.all());
+            player.sendMessage("§cInvalid group! Available: " + GroupManager.getGroups());
             return;
         }
 

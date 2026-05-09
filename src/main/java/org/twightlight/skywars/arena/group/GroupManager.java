@@ -55,11 +55,11 @@ public class GroupManager {
         return group;
     }
 
-    public static Collection<ArenaGroup> all() {
+    public static Collection<ArenaGroup> getGroups() {
         return Collections.unmodifiableCollection(GROUPS.values());
     }
 
-    public static Set<String> allIds() {
+    public static Set<String> getGroupIds() {
         return Collections.unmodifiableSet(GROUPS.keySet());
     }
 

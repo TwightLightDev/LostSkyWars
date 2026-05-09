@@ -23,7 +23,6 @@ import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.*;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent.SkyWarsDeathCause;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.api.server.SkyWarsTeam;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.cosmetics.Cosmetic;
@@ -269,7 +268,7 @@ public class GameArena extends Arena {
     @Override
     public void spectate(Account account, Player target) {
         Player player = account.getPlayer();
-        account.setServer(this);
+        account.setArena(this);
         spectators.add(player.getUniqueId());
         account.refreshPlayer();
         player.teleport(target.getLocation());
@@ -295,7 +294,7 @@ public class GameArena extends Arena {
     public void connect(Account account, String... skipParty) {
         Player player = account.getPlayer();
         if (player == null || !getState().canJoin() || players.size() >= getMaxPlayers()) return;
-        if (account.getServer() != null && account.getServer().equals(this)) return;
+        if (account.getArena() != null && account.getArena().equals(this)) return;
 
         if (skipParty.length == 0) {
             if (SkyWars.lostparties) {
@@ -317,12 +316,12 @@ public class GameArena extends Arena {
         SkyWarsTeam team = getAvailableTeam(player);
         if (team == null) return;
 
-        if (account.getServer() != null) {
-            account.getServer().disconnect(account, account.getServer().isSpectator(player) ? "-play" : "");
+        if (account.getArena() != null) {
+            account.getArena().disconnect(account, account.getArena().isSpectator(player) ? "-play" : "");
         }
 
         players.add(player.getUniqueId());
-        account.setServer(this);
+        account.setArena(this);
 
         Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
         if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
@@ -371,7 +370,7 @@ public class GameArena extends Arena {
     @Override
     public void disconnect(Account account, String options) {
         Player player = account.getPlayer();
-        if (!account.getServer().equals(this)) return;
+        if (!account.getArena().equals(this)) return;
 
         SkyWarsTeam team = getTeam(player);
         if (team != null) {
@@ -394,19 +393,19 @@ public class GameArena extends Arena {
                 this.killLeave(account, killer, false);
                 for (Account hitter : hitters) {
                     if (hitter != null && (killer == null || !hitter.equals(killer))
-                            && (hitter.getServer() != null && hitter.getServer().equals(this))
+                            && (hitter.getArena() != null && hitter.getArena().equals(this))
                             && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
                         if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
                     }
                 }
             }
-            account.setServer(null);
+            account.setArena(null);
             this.check();
             return;
         }
 
         if (options.equalsIgnoreCase("-play")) {
-            account.setServer(null);
+            account.setArena(null);
             this.updateTags();
             this.check();
             return;
@@ -418,14 +417,14 @@ public class GameArena extends Arena {
             this.killLeave(account, killer, false);
             for (Account hitter : hitters) {
                 if (hitter != null && (killer == null || !hitter.equals(killer))
-                        && (hitter.getServer() != null && hitter.getServer().equals(this))
+                        && (hitter.getArena() != null && hitter.getArena().equals(this))
                         && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
                     if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
                 }
             }
         }
 
-        account.setServer(null);
+        account.setArena(null);
         this.updateTags();
         account.reloadScoreboard();
         account.refreshPlayer();

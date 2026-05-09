@@ -22,14 +22,15 @@ public class BlazingArrows extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public BlazingArrows(int mode) {
+    public BlazingArrows() {
         super(CONFIG.getInt("blazingarrow.id"),
                 CONFIG.getString("blazingarrow.name"),
                 CosmeticRarity.fromName(CONFIG.getString("blazingarrow.rarity")),
                 CONFIG.getBoolean("blazingarrow.buyable", true),
                 CONFIG.getString("blazingarrow.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("blazingarrow.icon").replace("{percentage}", CONFIG.getInt("blazingarrow.percentage") + "%")),
-                CONFIG.getInt("blazingarrow.price"));
+                CONFIG.getInt("blazingarrow.price"),
+                SkyWarsPerk.loadAllowedGroups("blazingarrow"));
         this.mode = mode;
 
         this.percentage = CONFIG.getInt("blazingarrow.percentage");

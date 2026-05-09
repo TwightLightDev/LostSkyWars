@@ -19,8 +19,8 @@ public class PlayerQuitListener extends Listeners {
         TagUtils.reset(player.getName());
         Account account = Database.getInstance().unloadAccount(player.getUniqueId());
         if (account != null) {
-            if (account.getServer() != null) {
-                account.getServer().disconnect(account, "-quit");
+            if (account.getArena() != null) {
+                account.getArena().disconnect(account, "-quit");
             }
 
             account.save();

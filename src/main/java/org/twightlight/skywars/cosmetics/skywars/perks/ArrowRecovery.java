@@ -14,24 +14,24 @@ import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.ConfigUtils;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ArrowRecovery extends SkyWarsPerk {
 
-    private int mode;
     private int percentage;
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public ArrowRecovery(int mode) {
+    public ArrowRecovery() {
         super(CONFIG.getInt("arrowrecovery.id"),
                 CONFIG.getString("arrowrecovery.name"),
                 CosmeticRarity.fromName(CONFIG.getString("arrowrecovery.rarity")),
                 CONFIG.getBoolean("arrowrecovery.buyable", true),
                 CONFIG.getString("arrowrecovery.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("arrowrecovery.icon").replace("{percentage}", CONFIG.getInt("arrowrecovery.percentage") + "%")),
-                CONFIG.getInt("arrowrecovery.price"));
-        this.mode = mode;
+                CONFIG.getInt("arrowrecovery.price"),
+                SkyWarsPerk.loadAllowedGroups("arrowrecovery"));
 
         this.percentage = CONFIG.getInt("arrowrecovery.percentage");
 
@@ -58,6 +58,6 @@ public class ArrowRecovery extends SkyWarsPerk {
 
     @Override
     public int getMode() {
-        return mode;
+        return 1;
     }
 }

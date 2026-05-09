@@ -1,18 +1,14 @@
 package org.twightlight.skywars.cosmetics;
 
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
-import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 import org.twightlight.skywars.player.Account;
 
 public abstract class Cosmetic {
@@ -87,21 +83,14 @@ public abstract class Cosmetic {
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Cosmetics");
 
     public static void setupCosmetics() {
-        // cages
         SkyWarsCage.setupCages();
 
-        // kits
-        NormalSkyWarsKit.setupKits();
-        InsaneSkyWarsKit.setupKits();
-        RankedSkyWarsKit.setupKits();
+        SkyWarsKit.setupKits();
 
-        // perks
         SkyWarsPerk.setupPerks();
 
-        // deathcries
         SkyWarsDeathCry.setupDeathCries();
 
-        // projectiletrail
         SkyWarsTrail.setupProjectileTrails();
 
         SkyWarsKillMessage.setupKM();
@@ -110,10 +99,8 @@ public abstract class Cosmetic {
 
         SkyWarsKillEffect.setupKillEffects();
 
-        // ballons
         SkyWarsBalloon.setupBallons();
 
-        // symbols
         SkyWarsSymbol.setupSymbols();
 
         int size = 0;
@@ -121,7 +108,6 @@ public abstract class Cosmetic {
             size += server.listCosmetics().size();
         }
         LOGGER.log(Level.INFO, "Loaded " + size + " cosmetics!");
-
     }
 
     public static Cosmetic findFrom(CosmeticServer server, CosmeticType type, int index, String id) {

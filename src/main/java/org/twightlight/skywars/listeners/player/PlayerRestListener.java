@@ -21,7 +21,7 @@ public class PlayerRestListener implements Listener {
     public void onPlayerDropItem(PlayerDropItemEvent evt) {
         Account account = Database.getInstance().getAccount(evt.getPlayer().getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(true);
             } else {
@@ -36,7 +36,7 @@ public class PlayerRestListener implements Listener {
     public void onPlayerPickupItem(PlayerPickupItemEvent evt) {
         Account account = Database.getInstance().getAccount(evt.getPlayer().getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(true);
             } else {
@@ -51,7 +51,7 @@ public class PlayerRestListener implements Listener {
     public void onBlockBreak(BlockBreakEvent evt) {
         Account account = Database.getInstance().getAccount(evt.getPlayer().getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(evt.getPlayer()));
             } else {
@@ -73,7 +73,7 @@ public class PlayerRestListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent evt) {
         Account account = Database.getInstance().getAccount(evt.getPlayer().getUniqueId());
         if (account != null) {
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(evt.getPlayer()));
             } else {

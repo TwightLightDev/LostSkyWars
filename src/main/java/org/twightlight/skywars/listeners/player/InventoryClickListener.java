@@ -26,7 +26,7 @@ public class InventoryClickListener extends Listeners {
                 return;
             }
 
-            SkyWarsServer server = account.getServer();
+            SkyWarsServer server = account.getArena();
             if (server == null) {
                 evt.setCancelled(!BuildCommand.isBuilder(player));
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(player.getInventory())) {

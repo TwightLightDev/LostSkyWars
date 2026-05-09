@@ -19,7 +19,7 @@ public class LostSkyWarsAPI {
             return;
         }
 
-        SkyWarsServer server = account.getServer();
+        SkyWarsServer server = account.getArena();
         if (server == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(target)) {
             watcher.sendMessage(Language.command$watch$user_not_in_match);
             return;

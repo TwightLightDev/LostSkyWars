@@ -20,14 +20,15 @@ public class LuckyCharm extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public LuckyCharm(int mode) {
+    public LuckyCharm() {
         super(CONFIG.getInt("luckycharm.id"),
                 CONFIG.getString("luckycharm.name"),
                 CosmeticRarity.fromName(CONFIG.getString("luckycharm.rarity")),
                 CONFIG.getBoolean("luckycharm.buyable", true),
                 CONFIG.getString("luckycharm.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("luckycharm.icon").replace("{percentage}", CONFIG.getInt("luckycharm.percentage") + "%")),
-                CONFIG.getInt("luckycharm.price"));
+                CONFIG.getInt("luckycharm.price"),
+                SkyWarsPerk.loadAllowedGroups("luckycharm"));
         this.mode = mode;
 
         this.percentage = CONFIG.getInt("luckycharm.percentage");

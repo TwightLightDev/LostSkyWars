@@ -9,6 +9,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
@@ -39,7 +41,6 @@ public class KitSelectorMenu extends PagedPlayerMenu {
         if (evt.getInventory().equals(getCurrentInventory())) {
             evt.setCancelled(true);
 
-
             if (evt.getWhoClicked() instanceof Player && evt.getWhoClicked().equals(player)) {
                 ItemStack item = evt.getCurrentItem();
                 Account account = Database.getInstance().getAccount(player.getUniqueId());
@@ -55,7 +56,7 @@ public class KitSelectorMenu extends PagedPlayerMenu {
                     } else if (evt.getSlot() == this.nextPage) {
                         this.openNext();
                     } else if (kit != null) {
-                        if (Language.options$ranked$freekitsandperks && kit.getMode() == 3 ? !kit.has(account) : (!kit.has(account) || !kit.hasByPermission(player))) {
+                        if (!kit.has(account) || (kit.isPermissible() && !kit.hasByPermission(player))) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             return;
                         }
@@ -64,13 +65,13 @@ public class KitSelectorMenu extends PagedPlayerMenu {
                         if (account.hasSelected(kit, kit.getMode())) {
                             player.sendMessage(StringUtils.formatColors(config.getAsString("deselect").replace("{name}", kit.getRawName())));
                             account.setSelected(kit.getServer(), kit.getType(), kit.getMode(), 0);
-                            new KitSelectorMenu(player, kit.getMode());
+                            new KitSelectorMenu(player, groupId);
                             return;
                         }
 
                         player.sendMessage(StringUtils.formatColors(config.getAsString("select").replace("{name}", kit.getRawName())));
                         account.setSelected(kit, kit.getMode());
-                        new KitSelectorMenu(player, kit.getMode());
+                        new KitSelectorMenu(player, groupId);
                     } else {
                         ConfigAction action = actions.get(item);
                         if (action != null && !action.getType().equals("NOTHING")) {
@@ -90,11 +91,13 @@ public class KitSelectorMenu extends PagedPlayerMenu {
         }
     }
 
+    private String groupId;
     private Map<ItemStack, SkyWarsKit> kits;
     private Map<ItemStack, ConfigAction> actions;
 
-    public KitSelectorMenu(Player player, int mode) {
+    public KitSelectorMenu(Player player, String groupId) {
         super(player, config.getTitle(), config.getRows());
+        this.groupId = groupId;
         this.kits = new HashMap<>();
         this.actions = new HashMap<>();
         this.previousPage = 45;
@@ -103,12 +106,15 @@ public class KitSelectorMenu extends PagedPlayerMenu {
         this.nextStack = config.getAsString("next-page");
         this.onlySlots(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43);
 
+        ArenaGroup group = GroupManager.get(groupId);
+        int kitIndex = group != null ? KitGroupResolver.getKitIndex(group) : 1;
+
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (Cosmetic c : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT).stream().filter(kit -> kit.getMode() == mode).collect(Collectors.toList())) {
+        for (Cosmetic c : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT).stream().filter(kit -> kit.getMode() == kitIndex).collect(Collectors.toList())) {
             SkyWarsKit kit = (SkyWarsKit) c;
             String rarity = kit.getRarity().getName();
-            boolean has = mode == 3 && Language.options$ranked$freekitsandperks ? kit.has(account) : kit.has(account) && kit.hasByPermission(player);
+            boolean has = kit.has(account) && kit.hasByPermission(player);
             ItemStack icon = null;
             if (!has) {
                 List<String> lore = new ArrayList<>();
@@ -158,6 +164,7 @@ public class KitSelectorMenu extends PagedPlayerMenu {
         this.kits = null;
         this.actions.clear();
         this.actions = null;
+        this.groupId = null;
     }
 
     @EventHandler
@@ -171,6 +178,15 @@ public class KitSelectorMenu extends PagedPlayerMenu {
     public void onInventoryClose(InventoryCloseEvent evt) {
         if (evt.getPlayer().equals(player) && evt.getInventory().equals(getCurrentInventory())) {
             this.cancel();
+        }
+    }
+
+    public static class KitGroupResolver {
+        public static int getKitIndex(ArenaGroup group) {
+            if (group == null) return 1;
+            String id = group.getId();
+            if (id.contains("insane")) return 2;
+            return 1;
         }
     }
 }

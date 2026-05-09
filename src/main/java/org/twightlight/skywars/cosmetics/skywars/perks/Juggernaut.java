@@ -20,14 +20,15 @@ public class Juggernaut extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public Juggernaut(int mode) {
+    public Juggernaut() {
         super(CONFIG.getInt("juggernaut.id"),
                 CONFIG.getString("juggernaut.name"),
                 CosmeticRarity.fromName(CONFIG.getString("juggernaut.rarity")),
                 CONFIG.getBoolean("juggernaut.buyable", true),
                 CONFIG.getString("juggernaut.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("juggernaut.icon").replace("{time}", CONFIG.getInt("juggernaut.time") + "")),
-                CONFIG.getInt("juggernaut.price"));
+                CONFIG.getInt("juggernaut.price"),
+                SkyWarsPerk.loadAllowedGroups("juggernaut"));
         this.mode = mode;
 
         this.seconds = CONFIG.getInt("juggernaut.time");

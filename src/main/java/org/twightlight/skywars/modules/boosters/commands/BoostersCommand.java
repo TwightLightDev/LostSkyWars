@@ -56,7 +56,7 @@ public class BoostersCommand extends Command {
             }
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account == null) return true;
-            if (account.getServer() != null) return true;
+            if (account.getArena() != null) return true;
             SubCommand subCommand = subCommands.stream().filter(sc -> sc.getSubCommand().equalsIgnoreCase(args[0])).findFirst().orElse(null);
             if (subCommand == null) {
                 user.sendMessage(Boosters.getLanguage().getString("messages.commands.command-not-found"));

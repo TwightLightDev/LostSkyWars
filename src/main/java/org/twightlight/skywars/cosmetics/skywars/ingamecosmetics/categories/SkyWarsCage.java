@@ -137,7 +137,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                     SkyWarsCage.defaultCage(location, isBig);
                     return;
                 }
-                if (Database.getInstance().getAccount(p.getUniqueId()) == null || Database.getInstance().getAccount(p.getUniqueId()).getServer() == null) {
+                if (Database.getInstance().getAccount(p.getUniqueId()) == null || Database.getInstance().getAccount(p.getUniqueId()).getArena() == null) {
                     this.cancel();
                     return;
                 }

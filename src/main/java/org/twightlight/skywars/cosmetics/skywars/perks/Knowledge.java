@@ -18,14 +18,15 @@ public class Knowledge extends SkyWarsPerk {
 
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
-    public Knowledge(int mode) {
+    public Knowledge() {
         super(CONFIG.getInt("knowledge.id"),
                 CONFIG.getString("knowledge.name"),
                 CosmeticRarity.fromName(CONFIG.getString("knowledge.rarity")),
                 CONFIG.getBoolean("knowledge.buyable", true),
                 CONFIG.getString("knowledge.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("knowledge.icon").replace("{level}", CONFIG.getInt("knowledge.level") + "")),
-                CONFIG.getInt("knowledge.price"));
+                CONFIG.getInt("knowledge.price"),
+                SkyWarsPerk.loadAllowedGroups("knowledge"));
         this.mode = mode;
 
         this.level = CONFIG.getInt("knowledge.level");

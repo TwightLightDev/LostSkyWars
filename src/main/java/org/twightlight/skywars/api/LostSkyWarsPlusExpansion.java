@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
@@ -84,10 +83,10 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return Rank.getRank(player).getColoredName();
         } else if (params.equals("team_tag")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null || account.getServer() == null || !(account.getServer() instanceof Arena)) {
+            if (account == null || account.getArena() == null || !(account.getArena() instanceof Arena)) {
                 return "";
             }
-            Arena arena = (Arena) account.getServer();
+            Arena arena = (Arena) account.getArena();
             ArenaGroup group = arena.getGroup();
             if (group == null || group.getTeamSize() <= 1) {
                 return "";
@@ -95,10 +94,10 @@ public class LostSkyWarsPlusExpansion extends PlaceholderExpansion {
             return arena.getTeam(player) != null ? arena.getTeam(player).getAlphabeticalTag() + " " : "";
         } else if (params.equals("team_alphabet")) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account == null || account.getServer() == null || !(account.getServer() instanceof Arena)) {
+            if (account == null || account.getArena() == null || !(account.getArena() instanceof Arena)) {
                 return "";
             }
-            Arena arena = (Arena) account.getServer();
+            Arena arena = (Arena) account.getArena();
             ArenaGroup group = arena.getGroup();
             if (group == null || group.getTeamSize() <= 1) {
                 return "";

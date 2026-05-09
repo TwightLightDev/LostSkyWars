@@ -12,7 +12,6 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,7 +82,7 @@ public class CoreLobbies {
         new BukkitRunnable() {
             @Override
             public void run() {
-                for (ArenaGroup group : GroupManager.all()) {
+                for (ArenaGroup group : GroupManager.getGroups()) {
                     String groupId = group.getId();
                     writeCount(groupId);
                     writeMapSelector(groupId);

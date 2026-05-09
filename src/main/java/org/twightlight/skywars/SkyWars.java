@@ -38,7 +38,6 @@ import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.rank.TagUtils;
-import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.well.AngelOfDeath;
 import org.twightlight.skywars.systems.well.WellNPC;
@@ -108,7 +107,6 @@ public class SkyWars extends JavaPlugin {
         }
         Rank.setupRanks();
         org.twightlight.skywars.player.level.Level.setupLevels();
-        League.setupLeagues();
         GroupManager.setup();
         CustomItemsManager.load();
         new PrivateGames();

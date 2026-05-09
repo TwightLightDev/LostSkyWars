@@ -103,10 +103,6 @@ public class Language {
             "eyJ0aW1lc3RhbXAiOjE1NzE1OTI3NjkzMjYsInByb2ZpbGVJZCI6ImU0MDE1NTBiZjNkNzRlMThiMzYxNWQzNDNjNTliMjA3IiwicHJvZmlsZU5hbWUiOiJaZWFsb2NrIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hNDAyZDY4MGRhNjZjMmQyNTBiNjVlM2ZlNDZhNzE5YzM1MWFjMzQ2NzhkYTM5NjNmNzcxNjVmYWQzZWY2MzhjIiwibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn19fX0=";
     public static String lobby$npcs$deliveryman$skin_signature =
             "l8vl8BjvErK++4xnKharcxJv+Z71GqA0MYXxPbCYB2PAoKCxC+gYsIDm7aG2/cKZuz8RcANLxSp2NNMlqSUcMp8lBptVHdLtB7J+NG+QmGRvgZUd5S7wMU3jQu7VH5XIxn5qgZNZ9ef9naa9v3R9A66WmWOGuKjEJaSW4hKuxZ821zjS1QkeESAYgNzyU7EwSb3MSIuHXPvmAaYH7pUZyoZTh2sTqXTYOAZmJD5k6DWxqVuGinl1fbU07WNPJk/8frlgHWhuhtqYc7Zvx2RV9kDsWJ8Spcex6VQmEk+MJNB/VmPjXrke3YQKEF5udq3C9nJstiM6V/VgduYZTSSkTcP3lfcCwcvROYaVpsydCNS6Hn2Zp953lZseK/p3/W8Zic5zhcUbEwrNiPs37ZO9Ktz/O2YZR98djR95zqv+QImXi35mIelYuLdDEUeGZNPC41jHoeCR952T8i4l5ilN0hXoZPLPq+5NV/m4GP180gxGASVTwD4wkDmDtwjo22XT9d7dr92KTBdNndak2slJ5+hRukpNtUcRyJTsCDz8A3E6hFNjS4pIyCe0gSRIrx2xoDBwqV16ELDtrX2yv8ofQd2b6scxMBJ3zUW16mEDrbON/N8OWACYwD8jdtlExETXP7bDhtdotlaIRmd+pW7s1BZmShCKxKjrOiv/ZCMA5X0=";
-    public static List<String> lobby$npcs$play$solo$holograms = Arrays.asList("§e§lCLICK TO PLAY!", "§fSolo §7[Normal/Insane]", "§a§l{players} Players");
-    public static List<String> lobby$npcs$play$team$holograms = Arrays.asList("§e§lCLICK TO PLAY!", "§fDoubles §7[Normal/Insane]", "§a§l{players} Players");
-    public static List<String> lobby$npcs$ranked$holograms = Arrays.asList("§e§lCLICK TO PLAY!", "§fRanked §7[Solo/Doubles]", "§a§l{players} Players");
-    public static List<String> lobby$npcs$duels$holograms = Arrays.asList("§e§lCLICK TO PLAY!", "§a[BETA] §6§lDUELS §fSkyWars", "§a§l{players} Players");
     public static List<String> lobby$npcs$well$holograms = Arrays.asList("§bSoul Well", "§e§lRIGHT CLICK");
     public static List<String> lobby$npcs$box$holograms = Arrays.asList("§bMystery Vault", "§e§lRIGHT CLICK");
     public static List<String> lobby$npcs$deliveryman$holograms = Arrays.asList("§bThe Delivery Man", "§e§lRIGHT CLICK");

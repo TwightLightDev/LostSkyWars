@@ -1,6 +1,7 @@
 package org.twightlight.skywars.cosmetics.skywars;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,9 +13,11 @@ import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsServer;
+import org.twightlight.skywars.api.server.GameServer;
 import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
@@ -38,14 +41,16 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
     private ItemStack icon;
     private int coins;
     private boolean buyable;
+    private List<String> allowedGroups;
 
-    public SkyWarsPerk(int id, String name, CosmeticRarity rarity, boolean buyable, String permission, ItemStack icon, int coins) {
+    public SkyWarsPerk(int id, String name, CosmeticRarity rarity, boolean buyable, String permission, ItemStack icon, int coins, List<String> allowedGroups) {
         super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, rarity);
         this.name = name;
         this.permission = permission;
         this.icon = icon;
         this.coins = coins;
         this.buyable = buyable;
+        this.allowedGroups = allowedGroups != null ? allowedGroups : new ArrayList<>();
     }
 
     public void register(Plugin plugin) {
@@ -59,20 +64,14 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return buyable;
     }
 
-    /**
-     * Maps a group id to the old kit/perk mode index used by CosmeticType.
-     * 1 = normal groups (solo, doubles)
-     * 2 = insane groups (solo_insane, doubles_insane)
-     * 3 = ranked groups (ranked_solo, ranked_doubles)
-     * Returns -1 for groups that don't use kits/perks (e.g. duels).
-     */
-    public static int getKitIndexForGroup(ArenaGroup group) {
-        if (group == null) return -1;
-        String id = group.getId();
-        if (id.contains("insane")) return 2;
-        if (id.contains("ranked")) return 3;
-        if (id.equals("duels")) return -1;
-        return 1;
+    public List<String> getAllowedGroups() {
+        return allowedGroups;
+    }
+
+    public boolean isAllowedInGroup(ArenaGroup group) {
+        if (group == null) return false;
+        if (allowedGroups.isEmpty()) return true;
+        return allowedGroups.contains(group.getId());
     }
 
     public boolean isAbleToUse(Player player) {
@@ -81,44 +80,32 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         }
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        SkyWarsServer server = account.getServer();
+        if (account == null) return false;
+
+        Arena server = account.getArena();
 
         boolean able = true;
         if (server == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
             able = false;
         }
 
-        if (Language.options$ranked$freekitsandperks ? !has(account) : !hasByPermission(player) || !has(account)) {
+        if (!has(account) && (!isPermissible() || !hasByPermission(player))) {
             able = false;
         }
 
         if (server != null) {
             ArenaGroup group = server.getGroup();
-            int kitIndex = getKitIndexForGroup(group);
-            if (kitIndex == -1 || kitIndex != this.getMode()) {
+            if (!isAllowedInGroup(group)) {
                 able = false;
             }
         }
 
-        account = null;
-        server = null;
         return able;
     }
 
     @Override
-    public boolean has(Account account, int mode) {
-        if (Language.options$ranked$freekitsandperks) {
-            if (mode == 3) {
-                return true;
-            }
-        }
-
-        return super.has(account, mode);
-    }
-
-    @Override
     public boolean canBeFoundInBox(Player player) {
-        return Language.options$ranked$freekitsandperks ? this.getMode() != 3 && (!isPermissible() || hasByPermission(player)) : (!isPermissible() || hasByPermission(player));
+        return !isPermissible() || hasByPermission(player);
     }
 
     public boolean isPermissible() {
@@ -168,80 +155,42 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
 
     public static void setupPerks() {
-        new ArrowRecovery(1);
-        new ArrowRecovery(2);
-        if (CONFIG.getBoolean("arrowrecovery.ranked")) {
-            new ArrowRecovery(3);
-        }
+        checkIfAbsent("arrowrecovery");
+        new ArrowRecovery();
 
-        new BlazingArrows(1);
-        new BlazingArrows(2);
-        if (CONFIG.getBoolean("blazingarrow.ranked")) {
-            new BlazingArrows(3);
-        }
+        checkIfAbsent("blazingarrow");
+        new BlazingArrows();
 
-        new Bulldozer(1);
-        new Bulldozer(2);
-        if (CONFIG.getBoolean("bulldozer.ranked")) {
-            new Bulldozer(3);
-        }
+        checkIfAbsent("bulldozer");
+        new Bulldozer();
 
         checkIfAbsent("endermastery");
-        new EnderMastery(1);
-        new EnderMastery(2);
-        if (CONFIG.getBoolean("endermastery.ranked")) {
-            new EnderMastery(3);
-        }
+        new EnderMastery();
 
         checkIfAbsent("juggernaut");
-        new Juggernaut(1);
-        new Juggernaut(2);
-        if (CONFIG.getBoolean("juggernaut.ranked")) {
-            new Juggernaut(3);
-        }
+        new Juggernaut();
 
         checkIfAbsent("knowledge");
-        new Knowledge(1);
-        new Knowledge(2);
-        if (CONFIG.getBoolean("knowledge.ranked")) {
-            new Knowledge(3);
-        }
+        new Knowledge();
 
         checkIfAbsent("nourishment");
-        new Nourishment(1);
-        new Nourishment(2);
-        if (CONFIG.getBoolean("nourishment.ranked")) {
-            new Nourishment(3);
-        }
+        new Nourishment();
 
         checkIfAbsent("luckycharm");
-        new LuckyCharm(1);
-        new LuckyCharm(2);
-        if (CONFIG.getBoolean("luckycharm.ranked")) {
-            new LuckyCharm(3);
-        }
+        new LuckyCharm();
 
         checkIfAbsent("voidmaster");
-        new VoidMaster(1);
-        new VoidMaster(2);
-        if (CONFIG.getBoolean("voidmaster.ranked")) {
-            new VoidMaster(3);
-        }
+        new VoidMaster();
 
         checkIfAbsent("decisivestrike");
-        DecisiveStrike st = new DecisiveStrike(1);
-        new DecisiveStrike(2);
-        if (CONFIG.getBoolean("decisivestrike.ranked")) {
-            new DecisiveStrike(3);
-        }
-
-        decisiveStrike = String.valueOf(st.getId());
+        DecisiveStrike ds = new DecisiveStrike();
+        decisiveStrike = String.valueOf(ds.getId());
     }
 
     private static String decisiveStrike;
 
-    public static boolean isDecisiveStrike(Player player, int mode) {
-        DecisiveStrike ds = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, mode, decisiveStrike, DecisiveStrike.class);
+    public static boolean isDecisiveStrike(Player player) {
+        DecisiveStrike ds = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 1, decisiveStrike, DecisiveStrike.class);
         if (ds != null) {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account == null) {
@@ -256,15 +205,32 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return false;
     }
 
+    public static List<String> loadAllowedGroups(String key) {
+        if (CONFIG.contains(key + ".allowed-groups")) {
+            return CONFIG.getStringList(key + ".allowed-groups");
+        }
+        List<String> defaultGroups = new ArrayList<>();
+        for (ArenaGroup group : GroupManager.getGroups()) {
+            defaultGroups.add(group.getId());
+        }
+        CONFIG.set(key + ".allowed-groups", defaultGroups);
+        return defaultGroups;
+    }
+
     private static void checkIfAbsent(String key) {
-        if (CONFIG.contains(key)) {
+        if (CONFIG.contains(key + ".id")) {
             return;
         }
 
         try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("perks.yml"), "UTF-8"));
-            for (String dataKey : config.getConfigurationSection(key).getKeys(false)) {
-                CONFIG.set(key + "." + dataKey, config.get(key + "." + dataKey));
+            FileConfiguration defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("perks.yml"), "UTF-8"));
+            ConfigurationSection section = defaults.getConfigurationSection(key);
+            if (section != null) {
+                for (String dataKey : section.getKeys(true)) {
+                    if (!section.isConfigurationSection(dataKey)) {
+                        CONFIG.set(key + "." + dataKey, section.get(dataKey));
+                    }
+                }
             }
         } catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
