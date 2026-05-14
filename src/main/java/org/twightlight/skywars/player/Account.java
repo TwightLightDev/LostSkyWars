@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.json.simple.JSONArray;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.server.SkyWarsState;
@@ -16,11 +15,11 @@ import org.twightlight.skywars.arena.GameArena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.database.player.CosmeticContainer;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.systems.scoreboard.LostScoreboard;
 import org.twightlight.skywars.systems.scoreboard.ScoreboardScroller;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -92,6 +91,8 @@ public class Account {
         map.put("leveling", new StatsContainer("[]"));
         map.put("show_players", new StatsContainer(true));
         map.put("show_gore", new StatsContainer(true));
+        map.put("elo", new StatsContainer(0));
+        map.put("brave_points", new StatsContainer(0));
         return map;
     }
 
@@ -186,7 +187,7 @@ public class Account {
     }
 
     // =========================================================================
-    // PROFILE (COINS, SOULS, LEVEL, EXP, ETC.)
+    // PROFILE (COINS, SOULS, LEVEL, EXP, ELO, BRAVE_POINTS, ETC.)
     // =========================================================================
 
     public void addCoins(int amount) {
@@ -254,6 +255,89 @@ public class Account {
         }
     }
 
+    // --- ELO (now in profile, global) ---
+
+    public int getElo() {
+        return this.profile.get("elo").getAsInt();
+    }
+
+    public void addElo(int amount) {
+        this.profile.get("elo").addInt(amount);
+    }
+
+    public void removeElo(int amount) {
+        StatsContainer container = this.profile.get("elo");
+        for (int i = 0; i < amount; i++) {
+            if (container.getAsInt() <= 0) break;
+            container.removeInt(1);
+        }
+    }
+
+    public String getEloFormatted() {
+        return StringUtils.formatNumber(getElo());
+    }
+
+    // --- BRAVE POINTS (now in profile, global, capped at 100) ---
+
+    public int getBravePoints() {
+        return this.profile.get("brave_points").getAsInt();
+    }
+
+    public void addBravePoints(int amount) {
+        this.profile.get("brave_points").addInt(amount);
+        if (this.profile.get("brave_points").getAsInt() > 100) {
+            this.profile.get("brave_points").set(100);
+        }
+    }
+
+    public void removeBravePoints(int amount) {
+        StatsContainer container = this.profile.get("brave_points");
+        for (int i = 0; i < amount; i++) {
+            if (container.getAsInt() <= 0) break;
+            container.removeInt(1);
+        }
+    }
+
+    // --- LEAGUE (was Ranked.getLeague) ---
+
+    public League getLeague() {
+        int points = getElo();
+        List<League> leagues = League.listLeagues();
+        if (leagues.isEmpty()) return null;
+
+        if (points >= leagues.get(0).getPoints()) {
+            return leagues.get(0);
+        }
+
+        int min = 0;
+        int max = leagues.size() - 1;
+        int pivot;
+
+        while (min <= max) {
+            pivot = (min + max) / 2;
+            int required = leagues.get(pivot).getPoints();
+
+            if (points >= required) {
+                if (pivot == 0 || points < leagues.get(pivot - 1).getPoints()) {
+                    return leagues.get(pivot);
+                }
+                max = pivot - 1;
+            } else {
+                min = pivot + 1;
+            }
+        }
+
+        return leagues.get(leagues.size() - 1);
+    }
+
+    public String getLeagueTag() {
+        League league = getLeague();
+        if (league == null) return "";
+        return StringUtils.getFirstColor(league.getName()) + "[" + getEloFormatted() + "] ";
+    }
+
+    // --- EXP / LEVEL ---
+
     public void addExp(double exp) {
         this.profile.get("exp").addDouble(exp);
         Level current = Level.getByLevel(this.getLevel());
@@ -299,39 +383,59 @@ public class Account {
     }
 
     // =========================================================================
-    // LEVELING
+    // DELIVERIES (replaced DeliveryContainer with Map<String, Long>)
     // =========================================================================
 
-    @SuppressWarnings("unchecked")
+    public Map<String, Long> getDeliveries() {
+        return this.profile.get("deliveries").getAsLongMap();
+    }
+
+    public void putDelivery(int id, long time) {
+        Map<String, Long> deliveries = getDeliveries();
+        deliveries.put(String.valueOf(id), time);
+        this.profile.get("deliveries").setFromObject(deliveries);
+    }
+
+    public long getDelivery(int id) {
+        Map<String, Long> deliveries = getDeliveries();
+        Long val = deliveries.get(String.valueOf(id));
+        return val != null ? val : 0L;
+    }
+
+    // =========================================================================
+    // LEVELING (replaced JSONArray with List<String>)
+    // =========================================================================
+
     public void addLeveling(int level) {
-        JSONArray array = this.profile.get("leveling").getAsJsonArray();
-        array.add(String.valueOf(level));
-        this.profile.get("leveling").set(array.toString());
+        List<String> list = this.profile.get("leveling").getAsStringList();
+        list.add(String.valueOf(level));
+        this.profile.get("leveling").setFromObject(list);
     }
 
     public boolean isLeveled(int level) {
-        return this.profile.get("leveling").getAsJsonArray().contains(String.valueOf(level));
+        return this.profile.get("leveling").getAsStringList().contains(String.valueOf(level));
     }
 
     // =========================================================================
-    // FAVORITES & MAP SELECTION
+    // FAVORITES & MAP SELECTION (replaced JSONArray with List<String>)
     // =========================================================================
 
-    @SuppressWarnings("unchecked")
     public void addFavoriteMap(String mapName) {
-        JSONArray array = this.selectedContainer.getFavoritesJson().equals("[]") ? new JSONArray() : parseJsonArray(this.selectedContainer.getFavoritesJson());
-        array.add(mapName);
-        this.selectedContainer.setFavoritesJson(array.toString());
+        List<String> favorites = this.selectedContainer.getFavorites();
+        if (!favorites.contains(mapName)) {
+            favorites.add(mapName);
+        }
+        this.selectedContainer.setFavorites(favorites);
     }
 
     public void removeFavoriteMap(String mapName) {
-        JSONArray array = parseJsonArray(this.selectedContainer.getFavoritesJson());
-        array.remove(mapName);
-        this.selectedContainer.setFavoritesJson(array.toString());
+        List<String> favorites = this.selectedContainer.getFavorites();
+        favorites.remove(mapName);
+        this.selectedContainer.setFavorites(favorites);
     }
 
     public boolean isFavoriteMap(String mapName) {
-        return parseJsonArray(this.selectedContainer.getFavoritesJson()).contains(mapName);
+        return this.selectedContainer.getFavorites().contains(mapName);
     }
 
     public void updateLastSelected() {
@@ -342,26 +446,74 @@ public class Account {
         return this.selectedContainer.getLastSelected() < System.currentTimeMillis();
     }
 
-    private JSONArray parseJsonArray(String json) {
-        try {
-            return (JSONArray) new org.json.simple.parser.JSONParser().parse(json);
-        } catch (Exception ex) {
-            return new JSONArray();
-        }
-    }
-
     // =========================================================================
-    // COSMETIC OWNERSHIP
+    // COSMETIC OWNERSHIP (replaced CosmeticContainer with direct Map methods)
     // =========================================================================
 
     public Map<String, StatsContainer> getCosmeticsMap() {
         return cosmetics;
     }
 
-    public CosmeticContainer getCosmeticContainer(String column) {
+    /**
+     * Gets the owned cosmetic IDs for a given column and group key.
+     */
+    public List<String> getOwnedCosmetics(String column, String groupKey) {
         StatsContainer container = cosmetics.get(column);
-        if (container == null) return new CosmeticContainer(new StatsContainer("{}"), "{}");
-        return new CosmeticContainer(container, container.getAsString());
+        if (container == null) return new ArrayList<>();
+        Map<String, List<String>> map = container.getAsGroupedMap();
+        List<String> list = map.get(groupKey);
+        return list != null ? new ArrayList<>(list) : new ArrayList<>();
+    }
+
+    public List<String> getOwnedCosmetics(String column) {
+        return getOwnedCosmetics(column, "global");
+    }
+
+    public void addOwnedCosmetic(String column, String cosmeticId, String groupKey) {
+        StatsContainer container = cosmetics.get(column);
+        if (container == null) return;
+        Map<String, List<String>> map = container.getAsGroupedMap();
+        List<String> list = map.computeIfAbsent(groupKey, k -> new ArrayList<>());
+        if (!list.contains(cosmeticId)) {
+            list.add(cosmeticId);
+        }
+        container.setFromObject(map);
+    }
+
+    public void addOwnedCosmetic(String column, String cosmeticId) {
+        addOwnedCosmetic(column, cosmeticId, "global");
+    }
+
+    public void removeOwnedCosmetic(String column, String cosmeticId, String groupKey) {
+        StatsContainer container = cosmetics.get(column);
+        if (container == null) return;
+        Map<String, List<String>> map = container.getAsGroupedMap();
+        List<String> list = map.get(groupKey);
+        if (list != null) {
+            list.remove(cosmeticId);
+            container.setFromObject(map);
+        }
+    }
+
+    public void removeOwnedCosmetic(String column, String cosmeticId) {
+        removeOwnedCosmetic(column, cosmeticId, "global");
+    }
+
+    public boolean hasOwnedCosmetic(String column, String cosmeticId, String groupKey) {
+        return getOwnedCosmetics(column, groupKey).contains(cosmeticId);
+    }
+
+    public boolean hasOwnedCosmetic(String column, String cosmeticId) {
+        return hasOwnedCosmetic(column, cosmeticId, "global");
+    }
+
+    /**
+     * Gets the raw grouped map for a cosmetic column.
+     */
+    public Map<String, List<String>> getCosmeticGroupedMap(String column) {
+        StatsContainer container = cosmetics.get(column);
+        if (container == null) return new LinkedHashMap<>();
+        return container.getAsGroupedMap();
     }
 
     // =========================================================================
@@ -628,7 +780,7 @@ public class Account {
                         line = line.replace("{teamwins}", getStatFormatted("doubles", "wins"));
                         line = line.replace("{rankedkills}", getStatFormatted("ranked_solo", "kills"));
                         line = line.replace("{rankedwins}", getStatFormatted("ranked_solo", "wins"));
-                        line = line.replace("{rankedpoints}", getStatFormatted("ranked_solo", "elo"));
+                        line = line.replace("{rankedpoints}", getEloFormatted());
                         line = line.replace("{coins}", getCoinsFormatted());
                         line = line.replace("{souls}", getSoulsFormatted());
                         line = line.replace("{maxsouls}", StringUtils.formatNumber(getMaxSouls()));

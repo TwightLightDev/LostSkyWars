@@ -1,8 +1,9 @@
 package org.twightlight.skywars.database.player;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,9 +11,9 @@ import java.util.Map;
  * Kit and perk are JSON maps: {"normal": 3, "insane": 5}
  * All other cosmetics are global integer IDs.
  */
-@SuppressWarnings("unchecked")
 public class SelectedContainer {
 
+    private static final Gson GSON = new Gson();
     private final Map<String, StatsContainer> selections;
 
     public SelectedContainer(Map<String, StatsContainer> selections) {
@@ -78,42 +79,32 @@ public class SelectedContainer {
         }
     }
 
-    public String getFavoritesJson() {
+    public List<String> getFavorites() {
         StatsContainer container = selections.get("favorites");
-        return container != null ? container.getAsString() : "[]";
+        if (container == null) return new java.util.ArrayList<>();
+        return container.getAsStringList();
     }
 
-    public void setFavoritesJson(String json) {
+    public void setFavorites(List<String> favorites) {
         StatsContainer container = selections.get("favorites");
         if (container != null) {
-            container.set(json);
+            container.setFromObject(favorites);
         }
     }
 
     private int getPerGroupSelection(String field, String groupId) {
         StatsContainer container = selections.get(field);
         if (container == null) return 0;
-        try {
-            JSONObject json = (JSONObject) new JSONParser().parse(container.getAsString());
-            Object val = json.get(groupId);
-            if (val == null) return 0;
-            return Integer.parseInt(val.toString());
-        } catch (Exception ex) {
-            return 0;
-        }
+        Map<String, Integer> map = container.getAsIntMap();
+        Integer val = map.get(groupId);
+        return val != null ? val : 0;
     }
 
     private void setPerGroupSelection(String field, String groupId, int id) {
         StatsContainer container = selections.get(field);
         if (container == null) return;
-        try {
-            JSONObject json = (JSONObject) new JSONParser().parse(container.getAsString());
-            json.put(groupId, id);
-            container.set(json.toString());
-        } catch (Exception ex) {
-            JSONObject json = new JSONObject();
-            json.put(groupId, id);
-            container.set(json.toString());
-        }
+        Map<String, Integer> map = container.getAsIntMap();
+        map.put(groupId, id);
+        container.setFromObject(map);
     }
 }

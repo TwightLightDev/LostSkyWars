@@ -15,22 +15,22 @@ import java.util.concurrent.CompletableFuture;
 public abstract class Database {
 
     /**
-     * Loads profile data for a player. Returns a map of column->StatsContainer.
+     * Loads profile data for a player (includes elo and brave_points).
      */
     public abstract Map<String, StatsContainer> loadProfile(UUID uuid, String name);
 
     /**
-     * Saves profile data for a player.
+     * Saves profile data for a player (includes elo and brave_points).
      */
     public abstract void saveProfile(UUID uuid, Map<String, StatsContainer> data);
 
     /**
-     * Loads stats for a player in a specific group. Returns a map of statName->StatsContainer.
+     * Loads stats for a player in a specific group (no elo/brave_points).
      */
     public abstract Map<String, StatsContainer> loadStats(UUID uuid, String groupId, String name);
 
     /**
-     * Saves stats for a player in a specific group.
+     * Saves stats for a player in a specific group (no elo/brave_points).
      */
     public abstract void saveStats(UUID uuid, String groupId, Map<String, StatsContainer> data);
 

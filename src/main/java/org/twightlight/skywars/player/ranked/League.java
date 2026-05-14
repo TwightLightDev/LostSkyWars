@@ -1,6 +1,7 @@
 package org.twightlight.skywars.player.ranked;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -33,13 +34,19 @@ public class League {
 
     private static List<League> leagues = new ArrayList<>();
 
-    public static void setupLeagues() {
-        ConfigurationSection section = CONFIG.getSection("leagues");
-        section.getKeys(false).forEach(key -> leagues.add(new League(section.getString(key + ".name"), section.getInt(key + ".points"), section.getInt(key + ".fare"))));
+    public static void setupLeagues(ConfigUtils config) {
+        ConfigurationSection section = config.getSection("leagues");
+        if (section == null) return;
+        leagues.clear();
+        section.getKeys(false).forEach(key -> leagues.add(new League(
+                section.getString(key + ".name"),
+                section.getInt(key + ".points"),
+                section.getInt(key + ".fare")
+        )));
         Collections.sort(leagues, (l1, l2) -> Integer.compare(l2.getPoints(), l1.getPoints()));
     }
 
-    static List<League> listLeagues() {
+    public static List<League> listLeagues() {
         return leagues;
     }
 }

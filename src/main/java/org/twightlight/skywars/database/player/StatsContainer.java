@@ -1,10 +1,14 @@
 package org.twightlight.skywars.database.player;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class StatsContainer {
+
+    private static final Gson GSON = new Gson();
 
     private Object value;
 
@@ -56,23 +60,65 @@ public class StatsContainer {
         return Boolean.valueOf(this.getAsString());
     }
 
-    public JSONArray getAsJsonArray() {
+    /**
+     * Parses the stored JSON string as a List of Strings.
+     */
+    public List<String> getAsStringList() {
         try {
-            return (JSONArray) new JSONParser().parse(this.getAsString());
+            Type type = new TypeToken<List<String>>() {}.getType();
+            List<String> list = GSON.fromJson(this.getAsString(), type);
+            return list != null ? list : new ArrayList<>();
         } catch (Exception ex) {
-            throw new IllegalArgumentException("\"" + value + "\" is not a JsonArray: ", ex);
+            return new ArrayList<>();
         }
     }
 
-    public JSONObject getAsJsonObject() {
+    /**
+     * Parses the stored JSON string as a Map of String to List of String.
+     * Used for cosmetic ownership: {"solo": ["1","3"], "global": ["2"]}
+     */
+    public Map<String, List<String>> getAsGroupedMap() {
         try {
-            return (JSONObject) new JSONParser().parse(this.getAsString());
+            Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
+            Map<String, List<String>> map = GSON.fromJson(this.getAsString(), type);
+            return map != null ? map : new LinkedHashMap<>();
         } catch (Exception ex) {
-            throw new IllegalArgumentException("\"" + value + "\" is not a JSONObject: ", ex);
+            return new LinkedHashMap<>();
         }
     }
 
-    public DeliveryContainer getDelivery() {
-        return new DeliveryContainer(this, this.getAsString());
+    /**
+     * Parses the stored JSON string as a Map of String to Integer.
+     * Used for per-group selections: {"solo": 3, "ranked_solo": 5}
+     */
+    public Map<String, Integer> getAsIntMap() {
+        try {
+            Type type = new TypeToken<Map<String, Integer>>() {}.getType();
+            Map<String, Integer> map = GSON.fromJson(this.getAsString(), type);
+            return map != null ? map : new LinkedHashMap<>();
+        } catch (Exception ex) {
+            return new LinkedHashMap<>();
+        }
+    }
+
+    /**
+     * Parses the stored JSON string as a Map of String to Long.
+     * Used for deliveries: {"1": 1234567890}
+     */
+    public Map<String, Long> getAsLongMap() {
+        try {
+            Type type = new TypeToken<Map<String, Long>>() {}.getType();
+            Map<String, Long> map = GSON.fromJson(this.getAsString(), type);
+            return map != null ? map : new LinkedHashMap<>();
+        } catch (Exception ex) {
+            return new LinkedHashMap<>();
+        }
+    }
+
+    /**
+     * Serializes a value to JSON and stores it.
+     */
+    public void setFromObject(Object obj) {
+        this.value = GSON.toJson(obj);
     }
 }
