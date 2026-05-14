@@ -40,20 +40,6 @@ public class GroupManager {
             GROUPS.put(key, group);
         }
 
-
-        for (ArenaGroup group : GROUPS.values()) {
-            List<String> shared = group.getSharedCosmetics();
-
-            for (String group1 : shared) {
-                ArenaGroup arenaGroup = get(group1);
-                List<String> shared1 = arenaGroup.getSharedCosmetics();
-                if (!shared1.contains(group.getId())) {
-                    shared1.add(group.getId());
-                }
-
-            }
-        }
-
         LOGGER.log(Logger.Level.INFO, "Loaded " + GROUPS.size() + " arena groups!");
     }
 

@@ -21,6 +21,7 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.cosmetics.skywars.perks.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -67,7 +68,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
         return allowedGroups;
     }
 
-    public boolean isAllowedInGroup(ArenaGroup group) {
+    public boolean isAllowedInGroup(CosmeticsGroup group) {
         if (group == null) return false;
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(group.getId());

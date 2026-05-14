@@ -2,6 +2,7 @@ package org.twightlight.skywars.arena.group;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.*;
@@ -19,7 +20,7 @@ public class ArenaGroup {
     private final List<Integer> refillTimes;
     private final int dragonTime;
     private final String tutorial;
-    private List<String> shared_cosmetics;
+    private CosmeticsGroup cosmeticsGroup;
     public ArenaGroup(String id, ConfigurationSection section) {
         String display = section.getString("display", id);
         int teamSize = section.getInt("team-size", 1);
@@ -64,7 +65,14 @@ public class ArenaGroup {
         this.refillTimes = refillTimes != null ? refillTimes : new ArrayList<>();
         this.dragonTime = dragonTime;
         this.tutorial = tutorial;
-        this.shared_cosmetics = section.contains("shared_cosmetics") ? section.getStringList("shared_cosmetics") : new ArrayList<>();
+
+        String cosmeticsGroupID = section.getString("cosmetics_group");
+        if (!CosmeticsGroup.exists(cosmeticsGroupID)) {
+            CosmeticsGroup.create(cosmeticsGroupID);
+        }
+
+        CosmeticsGroup group = CosmeticsGroup.getFromID(cosmeticsGroupID);
+        group.add(this);
     }
 
     public String getId() {
@@ -170,7 +178,7 @@ public class ArenaGroup {
         return "ArenaGroup{id=" + id + ", display=" + display + ", teamSize=" + teamSize + "}";
     }
 
-    public List<String> getSharedCosmetics() {
-        return shared_cosmetics;
+    public CosmeticsGroup getCosmeticsGroup() {
+        return cosmeticsGroup;
     }
 }

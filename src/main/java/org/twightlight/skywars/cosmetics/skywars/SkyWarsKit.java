@@ -14,6 +14,7 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.config.ConfigUtils;
@@ -31,7 +32,7 @@ public class SkyWarsKit extends Cosmetic {
     private ItemStack[] armor;
     private ItemStack[] content;
     private List<PotionEffect> potionEffects;
-    private List<String> allowedGroups;
+    private List<String> allowedGroups;  //This should be CosmeticGroup id, not ArenaGroup id
 
     public SkyWarsKit(int id, String name, CosmeticRarity rarity, String permission, ItemStack icon, int coins,
                       ItemStack[] armor, ItemStack[] content, List<PotionEffect> potions, List<String> allowedGroups) {
@@ -54,7 +55,7 @@ public class SkyWarsKit extends Cosmetic {
         return allowedGroups;
     }
 
-    public boolean isAllowedInGroup(ArenaGroup group) {
+    public boolean isAllowedInGroup(CosmeticsGroup group) {
         if (group == null) return false;
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(group.getId());
