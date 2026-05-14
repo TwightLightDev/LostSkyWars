@@ -1,11 +1,10 @@
-package org.twightlight.skywars.menu;
+package org.twightlight.skywars.config;
 
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;

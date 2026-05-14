@@ -10,7 +10,7 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.menu.shop.SoulWellMenu;
 import org.twightlight.skywars.nms.Sound;

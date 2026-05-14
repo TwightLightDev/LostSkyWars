@@ -28,7 +28,7 @@ import org.twightlight.skywars.hook.guilds.GuildsHook;
 import org.twightlight.skywars.hook.protocollib.ProtocolLibHook;
 import org.twightlight.skywars.hook.worldedit.WorldEditHook;
 import org.twightlight.skywars.listeners.Listeners;
-import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.friends.Friends;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
