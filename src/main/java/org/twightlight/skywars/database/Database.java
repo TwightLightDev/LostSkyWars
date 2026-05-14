@@ -14,10 +14,49 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class Database {
 
-    public abstract Map<String, StatsContainer> loadStats(UUID id, String table, String name);
+    /**
+     * Loads profile data for a player. Returns a map of column->StatsContainer.
+     */
+    public abstract Map<String, StatsContainer> loadProfile(UUID uuid, String name);
 
-    public abstract void saveStats(UUID id, String table, Map<String, StatsContainer> map);
+    /**
+     * Saves profile data for a player.
+     */
+    public abstract void saveProfile(UUID uuid, Map<String, StatsContainer> data);
 
+    /**
+     * Loads stats for a player in a specific group. Returns a map of statName->StatsContainer.
+     */
+    public abstract Map<String, StatsContainer> loadStats(UUID uuid, String groupId, String name);
+
+    /**
+     * Saves stats for a player in a specific group.
+     */
+    public abstract void saveStats(UUID uuid, String groupId, Map<String, StatsContainer> data);
+
+    /**
+     * Loads cosmetic ownership data for a player.
+     */
+    public abstract Map<String, StatsContainer> loadCosmetics(UUID uuid, String name);
+
+    /**
+     * Saves cosmetic ownership data for a player.
+     */
+    public abstract void saveCosmetics(UUID uuid, Map<String, StatsContainer> data);
+
+    /**
+     * Loads selection data for a player.
+     */
+    public abstract Map<String, StatsContainer> loadSelections(UUID uuid, String name);
+
+    /**
+     * Saves selection data for a player.
+     */
+    public abstract void saveSelections(UUID uuid, Map<String, StatsContainer> data);
+
+    /**
+     * Loads an account from cache or creates it.
+     */
     public abstract Account loadAccount(UUID id, String name);
 
     public abstract CompletableFuture<Account> loadAccountOffline(String name);
@@ -39,6 +78,11 @@ public abstract class Database {
     public abstract Account cacheAccount(Account account);
 
     public abstract Account uncacheAccount(UUID id);
+
+    /**
+     * Runs data migration from old tables to new tables.
+     */
+    public abstract void migrateFromLegacy();
 
     private static Database instance;
     public static final Logger LOGGER = Core.getCoreLogger().getModule("Database");

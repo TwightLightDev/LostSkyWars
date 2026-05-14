@@ -39,52 +39,67 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
         }
 
         if (params.equals("coins")) {
-            return account.getFormatted("coins");
+            return account.getCoinsFormatted();
         } else if (params.equals("souls")) {
-            return account.getFormatted("souls");
+            return account.getSoulsFormatted();
         } else if (params.equals("max_souls")) {
-            return StringUtils.formatNumber(account.getContainer("account").get("sw_maxsouls").getAsInt());
+            return StringUtils.formatNumber(account.getMaxSouls());
         } else if (params.startsWith("solo_")) {
-            if (params.equals("solo_games")) {
-                return account.getFormatted("soloplays");
+            String stat = params.substring(5);
+            if (stat.equals("games")) {
+                return account.getStatFormatted("solo", "plays");
             }
-            return account.getFormatted(params.replace("_", ""));
+            String mappedStat = mapLegacyStatName(stat);
+            return account.getStatFormatted("solo", mappedStat);
         } else if (params.startsWith("team_")) {
-            if (params.equals("team_games")) {
-                return account.getFormatted("teamplays");
+            String stat = params.substring(5);
+            if (stat.equals("games")) {
+                return account.getStatFormatted("doubles", "plays");
             }
-            return account.getFormatted(params.replace("_", ""));
+            String mappedStat = mapLegacyStatName(stat);
+            return account.getStatFormatted("doubles", mappedStat);
         } else if (params.startsWith("ranked_")) {
-            String key = params.split("_")[1];
+            String key = params.substring(7);
             switch (key) {
                 case "games":
-                    return Ranked.getFormatted(account, "plays");
+                    return account.getStatFormatted("ranked_solo", "plays");
                 case "league":
-                    return Ranked.getLeague(account).getName();
+                    return Ranked.getLeague(account) != null ? Ranked.getLeague(account).getName() : "";
+                case "points":
+                    return account.getStatFormatted("ranked_solo", "elo");
                 default:
-                    return Ranked.getFormatted(account, key);
+                    String mappedStat = mapLegacyStatName(key);
+                    return account.getStatFormatted("ranked_solo", mappedStat);
             }
         } else if (params.startsWith("overall_")) {
-            String stat = params.split("_")[1];
-            String soloKey = stat.equals("games") ? "soloplays" : "solo" + stat;
-            String teamKey = stat.equals("games") ? "teamplays" : "team" + stat;
-            String rankedKey = stat.equals("games") ? "plays" : stat;
-
-            int solo = account.getInt(soloKey);
-            int team = account.getInt(teamKey);
-            int ranked = Ranked.getInt(account, rankedKey);
-
+            String stat = params.substring(8);
+            if (stat.equals("games")) {
+                int total = account.getStat("solo", "plays") + account.getStat("doubles", "plays") + account.getStat("ranked_solo", "plays");
+                return StringUtils.formatNumber(total);
+            }
+            String mappedStat = mapLegacyStatName(stat);
+            int solo = account.getStat("solo", mappedStat);
+            int team = account.getStat("doubles", mappedStat);
+            int ranked = account.getStat("ranked_solo", mappedStat);
             return StringUtils.formatNumber(solo + team + ranked);
         } else if (params.equals("level")) {
-            int level = account.getLevel();
-            return "" + level;
+            return "" + account.getLevel();
         } else if (params.equals("level_symbol")) {
             return Level.getByLevel(account.getLevel()).getLevelSymbol(account);
         } else if (params.equals("current_exp")) {
-            double level = account.getExp();
-            return "" + level;
+            return "" + account.getExp();
         }
 
         return null;
+    }
+
+    private String mapLegacyStatName(String legacyStat) {
+        switch (legacyStat) {
+            case "melee": return "melee_kills";
+            case "bow": return "bow_kills";
+            case "mob": return "mob_kills";
+            case "void": return "void_kills";
+            default: return legacyStat;
+        }
     }
 }

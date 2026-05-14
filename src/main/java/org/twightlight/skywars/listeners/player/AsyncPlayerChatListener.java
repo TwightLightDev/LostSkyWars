@@ -91,7 +91,7 @@ public class AsyncPlayerChatListener extends Listeners {
                 } else {
                     if (group != null && group.hasTrait("has_elo")) {
                         players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_ranked.replace("{level}", level).replace("{league}", Ranked.getLeague(account).getName())
-                                .replace("{points}", StringUtils.formatNumber(Ranked.getPoints(account))).replace("{color}", color).replace("{message}", evt.getMessage())));
+                                .replace("{points}", StringUtils.formatNumber(Ranked.getElo(account))).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else if (group != null && group.hasTrait("no_chat_waiting")) {
                         players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_duels.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else {

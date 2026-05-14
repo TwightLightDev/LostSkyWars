@@ -1,81 +1,119 @@
 package org.twightlight.skywars.database.player;
 
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.utils.StringUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages per-group selections stored as JSON.
+ * Kit and perk are JSON maps: {"normal": 3, "insane": 5}
+ * All other cosmetics are global integer IDs.
+ */
+@SuppressWarnings("unchecked")
 public class SelectedContainer {
 
-    private Map<Integer, String> map;
+    private final Map<String, StatsContainer> selections;
 
-    public SelectedContainer(CosmeticServer server, String selected) {
-        this.map = new LinkedHashMap<>();
-        for (CosmeticType type : CosmeticType.values()) {
-            if (type.name().startsWith(server.name()) && type.getIndex() != -1) {
-                List<String> list = new ArrayList<>(type.getSize());
-                for (int i = 0; i < type.getSize(); i++) {
-                    list.add("0");
-                }
-                this.map.put(type.getIndex() + 1, StringUtils.join(list, ":"));
-                list.clear();
-                list = null;
-            }
-        }
+    public SelectedContainer(Map<String, StatsContainer> selections) {
+        this.selections = selections;
+    }
 
-        for (int i = 0; i < selected.split(" : ").length; i++) {
-            String splitted = selected.split(" : ")[i];
-            List<String> sb = new ArrayList<>();
-            for (int j = 0; j < this.map.get(i + 1).split(":").length; j++) {
-                if (splitted.split(":").length <= j) {
-                    sb.add("0");
-                    continue;
-                }
+    /**
+     * Gets the selected kit ID for a specific group.
+     */
+    public int getSelectedKit(String groupId) {
+        return getPerGroupSelection("kit", groupId);
+    }
 
-                sb.add(splitted.split(":")[j]);
-            }
+    /**
+     * Sets the selected kit ID for a specific group.
+     */
+    public void setSelectedKit(String groupId, int kitId) {
+        setPerGroupSelection("kit", groupId, kitId);
+    }
 
-            splitted = StringUtils.join(sb, ":");
-            this.map.put(i + 1, splitted);
-            sb.clear();
-            sb = null;
-            splitted = null;
+    /**
+     * Gets the selected perk ID for a specific group.
+     */
+    public int getSelectedPerk(String groupId) {
+        return getPerGroupSelection("perk", groupId);
+    }
+
+    /**
+     * Sets the selected perk ID for a specific group.
+     */
+    public void setSelectedPerk(String groupId, int perkId) {
+        setPerGroupSelection("perk", groupId, perkId);
+    }
+
+    /**
+     * Gets a global cosmetic selection (cage, death_cry, trail, etc.).
+     */
+    public int getGlobalSelection(String key) {
+        StatsContainer container = selections.get(key);
+        if (container == null) return 0;
+        return container.getAsInt();
+    }
+
+    /**
+     * Sets a global cosmetic selection.
+     */
+    public void setGlobalSelection(String key, int id) {
+        StatsContainer container = selections.get(key);
+        if (container != null) {
+            container.set(id);
         }
     }
 
-    public void set(CosmeticType type, int index, String value) {
-        String old = this.map.get(type.getIndex() + 1);
-        List<String> append = new ArrayList<>();
-        for (int i = 0; i < old.split(":").length; i++) {
-            if ((i + 1) == index) {
-                append.add(value);
-                continue;
-            }
+    public long getLastSelected() {
+        StatsContainer container = selections.get("last_selected");
+        return container != null ? container.getAsLong() : 0L;
+    }
 
-            append.add(old.split(":")[i]);
+    public void setLastSelected(long value) {
+        StatsContainer container = selections.get("last_selected");
+        if (container != null) {
+            container.set(value);
         }
-
-        old = StringUtils.join(append, ":");
-        this.map.put(type.getIndex() + 1, old);
-        append.clear();
-        append = null;
     }
 
-    public String get(CosmeticType type, int index) {
-        String returns = this.map.get(type.getIndex() + 1).split(":")[index - 1];
-        this.map.clear();
-        this.map = null;
-        return returns;
+    public String getFavoritesJson() {
+        StatsContainer container = selections.get("favorites");
+        return container != null ? container.getAsString() : "[]";
     }
 
-    public String build() {
-        String returns = StringUtils.join(map.values(), " : ");
-        this.map.clear();
-        this.map = null;
-        return returns;
+    public void setFavoritesJson(String json) {
+        StatsContainer container = selections.get("favorites");
+        if (container != null) {
+            container.set(json);
+        }
+    }
+
+    private int getPerGroupSelection(String field, String groupId) {
+        StatsContainer container = selections.get(field);
+        if (container == null) return 0;
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(container.getAsString());
+            Object val = json.get(groupId);
+            if (val == null) return 0;
+            return Integer.parseInt(val.toString());
+        } catch (Exception ex) {
+            return 0;
+        }
+    }
+
+    private void setPerGroupSelection(String field, String groupId, int id) {
+        StatsContainer container = selections.get(field);
+        if (container == null) return;
+        try {
+            JSONObject json = (JSONObject) new JSONParser().parse(container.getAsString());
+            json.put(groupId, id);
+            container.set(json.toString());
+        } catch (Exception ex) {
+            JSONObject json = new JSONObject();
+            json.put(groupId, id);
+            container.set(json.toString());
+        }
     }
 }

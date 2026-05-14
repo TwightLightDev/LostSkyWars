@@ -1,9 +1,8 @@
 package org.twightlight.skywars.database.player;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
 
 public class StatsContainer {
 
@@ -65,15 +64,15 @@ public class StatsContainer {
         }
     }
 
-    public CosmeticContainer getCosmetics(CosmeticType type) {
-        return new CosmeticContainer(this, type, this.getAsString());
+    public JSONObject getAsJsonObject() {
+        try {
+            return (JSONObject) new JSONParser().parse(this.getAsString());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("\"" + value + "\" is not a JSONObject: ", ex);
+        }
     }
 
     public DeliveryContainer getDelivery() {
         return new DeliveryContainer(this, this.getAsString());
-    }
-
-    public SelectedContainer getSelected(CosmeticServer server) {
-        return new SelectedContainer(server, this.getAsString());
     }
 }

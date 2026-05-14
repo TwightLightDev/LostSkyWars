@@ -37,240 +37,681 @@ public class MySQLDatabase extends Database {
 
         this.openConnection();
         this.executor = Executors.newCachedThreadPool();
-        this.createAccountTable();
-        this.createSkyWarsTable();
-        this.createRankedTable();
 
-        // Safe schema migrations — add missing columns
-        addColumnIfMissing("premium_lostedaccount", "leveling", "TEXT DEFAULT NULL", "deliveries");
-        addColumnIfMissing("premium_lostedskywars", "deathcry", "TEXT DEFAULT NULL", "cages");
-        addColumnIfMissing("premium_lostedskywars", "trail", "TEXT DEFAULT NULL", "deathcry");
-        addColumnIfMissing("premium_lostedskywars", "ballons", "TEXT DEFAULT NULL", "trail");
-        addColumnIfMissing("premium_lostedskywars", "killmessage", "TEXT DEFAULT NULL", "ballons");
-        addColumnIfMissing("premium_lostedskywars", "killeffect", "TEXT DEFAULT NULL", "killmessage");
-        addColumnIfMissing("premium_lostedskywars", "spray", "TEXT DEFAULT NULL", "killeffect");
-        addColumnIfMissing("premium_lostedskywars", "victorydance", "TEXT DEFAULT NULL", "spray");
+        this.migrateFromLegacy();
+
+        this.createProfileTable();
+        this.createStatsTable();
+        this.createCosmeticsTable();
+        this.createSelectionsTable();
     }
 
-    private void addColumnIfMissing(String table, String column, String definition, String after) {
-        if (query("SHOW COLUMNS FROM " + table + " LIKE '" + column + "'") == null) {
-            update("ALTER TABLE " + table + " ADD COLUMN " + column + " " + definition + " AFTER " + after + ";");
+    private void createProfileTable() {
+        this.update("CREATE TABLE IF NOT EXISTS profile ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "name VARCHAR(32) NOT NULL,"
+                + "coins INTEGER DEFAULT 0,"
+                + "souls INTEGER DEFAULT 0,"
+                + "level INTEGER DEFAULT 1,"
+                + "exp DOUBLE DEFAULT 0.0,"
+                + "max_souls INTEGER DEFAULT 100,"
+                + "well_roll INTEGER DEFAULT 1,"
+                + "souls_per_win INTEGER DEFAULT 0,"
+                + "mystery_dusts INTEGER DEFAULT 0,"
+                + "last_rank VARCHAR(8) DEFAULT '&7',"
+                + "deliveries TEXT DEFAULT '{}',"
+                + "leveling TEXT DEFAULT '[]',"
+                + "show_players BOOLEAN DEFAULT TRUE,"
+                + "show_gore BOOLEAN DEFAULT TRUE"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    }
+
+    private void createStatsTable() {
+        this.update("CREATE TABLE IF NOT EXISTS stats ("
+                + "uuid VARCHAR(36) NOT NULL,"
+                + "group_id VARCHAR(32) NOT NULL,"
+                + "kills INTEGER DEFAULT 0,"
+                + "wins INTEGER DEFAULT 0,"
+                + "assists INTEGER DEFAULT 0,"
+                + "deaths INTEGER DEFAULT 0,"
+                + "plays INTEGER DEFAULT 0,"
+                + "melee_kills INTEGER DEFAULT 0,"
+                + "bow_kills INTEGER DEFAULT 0,"
+                + "mob_kills INTEGER DEFAULT 0,"
+                + "void_kills INTEGER DEFAULT 0,"
+                + "elo INTEGER DEFAULT 0,"
+                + "brave_points INTEGER DEFAULT 0,"
+                + "PRIMARY KEY (uuid, group_id)"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    }
+
+    private void createCosmeticsTable() {
+        this.update("CREATE TABLE IF NOT EXISTS cosmetics ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "kits TEXT DEFAULT '{}',"
+                + "perks TEXT DEFAULT '{}',"
+                + "cages TEXT DEFAULT '{}',"
+                + "death_cries TEXT DEFAULT '{}',"
+                + "trails TEXT DEFAULT '{}',"
+                + "balloons TEXT DEFAULT '{}',"
+                + "kill_messages TEXT DEFAULT '{}',"
+                + "kill_effects TEXT DEFAULT '{}',"
+                + "sprays TEXT DEFAULT '{}',"
+                + "victory_dances TEXT DEFAULT '{}',"
+                + "titles TEXT DEFAULT '{}',"
+                + "symbols TEXT DEFAULT '{}'"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    }
+
+    private void createSelectionsTable() {
+        this.update("CREATE TABLE IF NOT EXISTS selections ("
+                + "uuid VARCHAR(36) PRIMARY KEY,"
+                + "kit TEXT DEFAULT '{}',"
+                + "perk TEXT DEFAULT '{}',"
+                + "cage INTEGER DEFAULT 0,"
+                + "death_cry INTEGER DEFAULT 0,"
+                + "trail INTEGER DEFAULT 0,"
+                + "balloon INTEGER DEFAULT 0,"
+                + "kill_message INTEGER DEFAULT 0,"
+                + "kill_effect INTEGER DEFAULT 0,"
+                + "spray INTEGER DEFAULT 0,"
+                + "victory_dance INTEGER DEFAULT 0,"
+                + "title INTEGER DEFAULT 0,"
+                + "symbol INTEGER DEFAULT 0,"
+                + "last_selected BIGINT DEFAULT 0,"
+                + "favorites TEXT DEFAULT '[]'"
+                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    }
+
+    // =========================================================================
+    // MIGRATION
+    // =========================================================================
+
+    @Override
+    public void migrateFromLegacy() {
+        if (!tableExists("premium_lostedaccount")) {
+            return;
+        }
+        LOGGER.info("Legacy tables detected. Starting migration...");
+
+        this.createProfileTable();
+        this.createStatsTable();
+        this.createCosmeticsTable();
+        this.createSelectionsTable();
+
+        CachedRowSet accountRs = this.query("SELECT * FROM premium_lostedaccount");
+        if (accountRs == null) {
+            LOGGER.info("No data in premium_lostedaccount to migrate.");
+            renameLegacyTables();
+            return;
+        }
+
+        try {
+            Map<String, String> uuidToName = new LinkedHashMap<>();
+            Map<String, Map<String, Object>> accountData = new LinkedHashMap<>();
+
+            while (accountRs.next()) {
+                String uuid = accountRs.getString("id");
+                String name = accountRs.getString("name");
+                uuidToName.put(uuid, name);
+
+                Map<String, Object> data = new LinkedHashMap<>();
+                data.put("last_rank", safeGetString(accountRs, "lastRank", "&7"));
+                data.put("mystery_dusts", safeGetInt(accountRs, "mysterydusts", 0));
+                data.put("max_souls", safeGetInt(accountRs, "sw_maxsouls", 100));
+                data.put("well_roll", safeGetInt(accountRs, "sw_wellroll", 1));
+                data.put("souls_per_win", safeGetInt(accountRs, "sw_soulswin", 0));
+                data.put("deliveries", safeGetString(accountRs, "deliveries", "{}"));
+                data.put("leveling", safeGetString(accountRs, "leveling", "[]"));
+                data.put("show_players", safeGetBoolean(accountRs, "players", true));
+                data.put("show_gore", safeGetBoolean(accountRs, "gore", true));
+                accountData.put(uuid, data);
+            }
+            closeQuietly(accountRs);
+
+            CachedRowSet swRs = this.query("SELECT * FROM premium_lostedskywars");
+            Map<String, Map<String, Object>> swData = new LinkedHashMap<>();
+            if (swRs != null) {
+                while (swRs.next()) {
+                    String uuid = swRs.getString("id");
+                    Map<String, Object> data = new LinkedHashMap<>();
+
+                    data.put("coins", safeGetInt(swRs, "coins", 0));
+                    data.put("souls", safeGetInt(swRs, "souls", 0));
+                    data.put("level", safeGetInt(swRs, "level", 1));
+                    data.put("exp", safeGetDouble(swRs, "exp", 0.0));
+
+                    data.put("solokills", safeGetInt(swRs, "solokills", 0));
+                    data.put("solowins", safeGetInt(swRs, "solowins", 0));
+                    data.put("soloassists", safeGetInt(swRs, "soloassists", 0));
+                    data.put("solodeaths", safeGetInt(swRs, "solodeaths", 0));
+                    data.put("soloplays", safeGetInt(swRs, "soloplays", 0));
+                    data.put("solomelee", safeGetInt(swRs, "solomelee", 0));
+                    data.put("solobow", safeGetInt(swRs, "solobow", 0));
+                    data.put("solomob", safeGetInt(swRs, "solomob", 0));
+                    data.put("solovoid", safeGetInt(swRs, "solovoid", 0));
+
+                    data.put("teamkills", safeGetInt(swRs, "teamkills", 0));
+                    data.put("teamwins", safeGetInt(swRs, "teamwins", 0));
+                    data.put("teamassists", safeGetInt(swRs, "teamassists", 0));
+                    data.put("teamdeaths", safeGetInt(swRs, "teamdeaths", 0));
+                    data.put("teamplays", safeGetInt(swRs, "teamplays", 0));
+                    data.put("teammelee", safeGetInt(swRs, "teammelee", 0));
+                    data.put("teambow", safeGetInt(swRs, "teambow", 0));
+                    data.put("teammob", safeGetInt(swRs, "teammob", 0));
+                    data.put("teamvoid", safeGetInt(swRs, "teamvoid", 0));
+
+                    data.put("kits", safeGetString(swRs, "kits", "{}"));
+                    data.put("perks", safeGetString(swRs, "perks", "{}"));
+                    data.put("cages", safeGetString(swRs, "cages", "{}"));
+                    data.put("deathcry", safeGetString(swRs, "deathcry", "{}"));
+                    data.put("trail", safeGetString(swRs, "trail", "{}"));
+                    data.put("ballons", safeGetString(swRs, "ballons", "{}"));
+                    data.put("killmessage", safeGetString(swRs, "killmessage", "{}"));
+                    data.put("killeffect", safeGetString(swRs, "killeffect", "{}"));
+                    data.put("spray", safeGetString(swRs, "spray", "{}"));
+                    data.put("victorydance", safeGetString(swRs, "victorydance", "{}"));
+                    data.put("title", safeGetString(swRs, "title", "{}"));
+                    data.put("selected", safeGetString(swRs, "selected", "0:0:0 : 0"));
+                    data.put("lastSelected", safeGetLong(swRs, "lastSelected", 0L));
+                    data.put("favorites", safeGetString(swRs, "favorites", "[]"));
+
+                    swData.put(uuid, data);
+                }
+                closeQuietly(swRs);
+            }
+
+            Map<String, Map<String, Object>> rankedData = new LinkedHashMap<>();
+            if (tableExists("ranked_lostedskywars")) {
+                CachedRowSet rankedRs = this.query("SELECT * FROM ranked_lostedskywars");
+                if (rankedRs != null) {
+                    while (rankedRs.next()) {
+                        String uuid = rankedRs.getString("id");
+                        Map<String, Object> data = new LinkedHashMap<>();
+                        data.put("kills", safeGetInt(rankedRs, "kills", 0));
+                        data.put("wins", safeGetInt(rankedRs, "wins", 0));
+                        data.put("assists", safeGetInt(rankedRs, "assists", 0));
+                        data.put("deaths", safeGetInt(rankedRs, "deaths", 0));
+                        data.put("plays", safeGetInt(rankedRs, "plays", 0));
+                        data.put("melee", safeGetInt(rankedRs, "melee", 0));
+                        data.put("bow", safeGetInt(rankedRs, "bow", 0));
+                        data.put("mob", safeGetInt(rankedRs, "mob", 0));
+                        data.put("void", safeGetInt(rankedRs, "void", 0));
+                        data.put("points", safeGetInt(rankedRs, "points", 0));
+                        data.put("brave_points", safeGetInt(rankedRs, "brave_points", 0));
+                        rankedData.put(uuid, data);
+                    }
+                    closeQuietly(rankedRs);
+                }
+            }
+
+            for (Map.Entry<String, String> entry : uuidToName.entrySet()) {
+                String uuid = entry.getKey();
+                String name = entry.getValue();
+                Map<String, Object> accData = accountData.get(uuid);
+                Map<String, Object> sw = swData.get(uuid);
+
+                int coins = sw != null ? (int) sw.getOrDefault("coins", 0) : 0;
+                int souls = sw != null ? (int) sw.getOrDefault("souls", 0) : 0;
+                int level = sw != null ? (int) sw.getOrDefault("level", 1) : 1;
+                double exp = sw != null ? (double) sw.getOrDefault("exp", 0.0) : 0.0;
+
+                this.update("INSERT IGNORE INTO profile (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        uuid, name, coins, souls, level, exp,
+                        accData.get("max_souls"), accData.get("well_roll"), accData.get("souls_per_win"),
+                        accData.get("mystery_dusts"), accData.get("last_rank"),
+                        accData.get("deliveries"), accData.get("leveling"),
+                        accData.get("show_players"), accData.get("show_gore"));
+
+                if (sw != null) {
+                    this.update("INSERT IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            uuid, "solo",
+                            sw.get("solokills"), sw.get("solowins"), sw.get("soloassists"),
+                            sw.get("solodeaths"), sw.get("soloplays"),
+                            sw.get("solomelee"), sw.get("solobow"), sw.get("solomob"), sw.get("solovoid"),
+                            0, 0);
+
+                    this.update("INSERT IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            uuid, "doubles",
+                            sw.get("teamkills"), sw.get("teamwins"), sw.get("teamassists"),
+                            sw.get("teamdeaths"), sw.get("teamplays"),
+                            sw.get("teammelee"), sw.get("teambow"), sw.get("teammob"), sw.get("teamvoid"),
+                            0, 0);
+
+                    this.update("INSERT IGNORE INTO cosmetics (uuid, kits, perks, cages, death_cries, trails, balloons, kill_messages, kill_effects, sprays, victory_dances, titles, symbols) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            uuid,
+                            sw.getOrDefault("kits", "{}"), sw.getOrDefault("perks", "{}"),
+                            sw.getOrDefault("cages", "{}"), sw.getOrDefault("deathcry", "{}"),
+                            sw.getOrDefault("trail", "{}"), sw.getOrDefault("ballons", "{}"),
+                            sw.getOrDefault("killmessage", "{}"), sw.getOrDefault("killeffect", "{}"),
+                            sw.getOrDefault("spray", "{}"), sw.getOrDefault("victorydance", "{}"),
+                            sw.getOrDefault("title", "{}"), "{}");
+
+                    String oldSelected = (String) sw.getOrDefault("selected", "0:0:0 : 0");
+                    long lastSelected = (long) sw.getOrDefault("lastSelected", 0L);
+                    String favorites = (String) sw.getOrDefault("favorites", "[]");
+
+                    Map<String, Object> parsedSelection = parseLegacySelected(oldSelected);
+
+                    this.update("INSERT IGNORE INTO selections (uuid, kit, perk, cage, death_cry, trail, balloon, kill_message, kill_effect, spray, victory_dance, title, symbol, last_selected, favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            uuid,
+                            parsedSelection.get("kit"), parsedSelection.get("perk"),
+                            parsedSelection.get("cage"), parsedSelection.get("death_cry"),
+                            parsedSelection.get("trail"), parsedSelection.get("balloon"),
+                            parsedSelection.get("kill_message"), parsedSelection.get("kill_effect"),
+                            parsedSelection.get("spray"), parsedSelection.get("victory_dance"),
+                            parsedSelection.get("title"), parsedSelection.get("symbol"),
+                            lastSelected, favorites);
+                }
+
+                Map<String, Object> ranked = rankedData.get(uuid);
+                if (ranked != null) {
+                    this.update("INSERT IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            uuid, "ranked_solo",
+                            ranked.get("kills"), ranked.get("wins"), ranked.get("assists"),
+                            ranked.get("deaths"), ranked.get("plays"),
+                            ranked.get("melee"), ranked.get("bow"), ranked.get("mob"), ranked.get("void"),
+                            ranked.get("points"), ranked.get("brave_points"));
+                }
+            }
+
+            LOGGER.info("Migration complete! Migrated " + uuidToName.size() + " players.");
+            renameLegacyTables();
+
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Migration failed: ", ex);
         }
     }
 
-    private void createAccountTable() {
-        this.update("CREATE TABLE IF NOT EXISTS premium_lostedaccount ("
-                + "id VARCHAR(36) NOT NULL,"
-                + "name VARCHAR(32) NOT NULL,"
-                + "lastRank VARCHAR(2) NOT NULL,"
-                + "mysterydusts INTEGER NOT NULL,"
-                + "sw_maxsouls INTEGER DEFAULT 100,"
-                + "sw_wellroll INTEGER DEFAULT 1,"
-                + "sw_soulswin INTEGER DEFAULT 0,"
-                + "deliveries TEXT DEFAULT NULL,"
-                + "leveling TEXT DEFAULT NULL,"
-                + "players BOOLEAN NOT NULL,"
-                + "gore BOOLEAN NOT NULL,"
-                + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseLegacySelected(String selected) {
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        String[] parts = selected.split(" : ");
+
+        String kitPart = parts.length > 0 ? parts[0] : "0:0:0:0";
+        String[] kitModes = kitPart.split(":");
+
+        org.json.simple.JSONObject kitJson = new org.json.simple.JSONObject();
+        if (kitModes.length > 0 && !kitModes[0].trim().equals("0")) kitJson.put("solo", Integer.parseInt(kitModes[0].trim()));
+        if (kitModes.length > 1 && !kitModes[1].trim().equals("0")) kitJson.put("solo_insane", Integer.parseInt(kitModes[1].trim()));
+        if (kitModes.length > 2 && !kitModes[2].trim().equals("0")) kitJson.put("ranked_solo", Integer.parseInt(kitModes[2].trim()));
+        if (kitModes.length > 3 && !kitModes[3].trim().equals("0")) kitJson.put("duels", Integer.parseInt(kitModes[3].trim()));
+        result.put("kit", kitJson.toString());
+
+        String perkPart = parts.length > 1 ? parts[1] : "0:0:0";
+        String[] perkModes = perkPart.split(":");
+
+        org.json.simple.JSONObject perkJson = new org.json.simple.JSONObject();
+        if (perkModes.length > 0 && !perkModes[0].trim().equals("0")) perkJson.put("solo", Integer.parseInt(perkModes[0].trim()));
+        if (perkModes.length > 1 && !perkModes[1].trim().equals("0")) perkJson.put("solo_insane", Integer.parseInt(perkModes[1].trim()));
+        if (perkModes.length > 2 && !perkModes[2].trim().equals("0")) perkJson.put("ranked_solo", Integer.parseInt(perkModes[2].trim()));
+        result.put("perk", perkJson.toString());
+
+        result.put("cage", safeParseInt(parts, 2));
+        result.put("death_cry", safeParseInt(parts, 3));
+        result.put("balloon", safeParseInt(parts, 4));
+        result.put("symbol", safeParseInt(parts, 5));
+        result.put("trail", safeParseInt(parts, 6));
+        result.put("kill_message", safeParseInt(parts, 7));
+        result.put("spray", safeParseInt(parts, 8));
+        result.put("kill_effect", safeParseInt(parts, 9));
+        result.put("victory_dance", safeParseInt(parts, 10));
+        result.put("title", safeParseInt(parts, 11));
+
+        return result;
     }
 
-    private void createRankedTable() {
-        this.update("CREATE TABLE IF NOT EXISTS ranked_lostedskywars ("
-                + "id VARCHAR(36) NOT NULL,"
-                + "name VARCHAR(32) NOT NULL,"
-                + "kills INTEGER NOT NULL,"
-                + "wins INTEGER NOT NULL,"
-                + "assists INTEGER NOT NULL,"
-                + "deaths INTEGER NOT NULL,"
-                + "melee INTEGER NOT NULL,"
-                + "bow INTEGER NOT NULL,"
-                + "mob INTEGER NOT NULL,"
-                + "void INTEGER NOT NULL,"
-                + "plays INTEGER NOT NULL,"
-                + "points INTEGER NOT NULL,"
-                + "brave_points INTEGER NOT NULL,"
-                + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    private int safeParseInt(String[] parts, int index) {
+        if (index >= parts.length) return 0;
+        try {
+            return Integer.parseInt(parts[index].trim().split(":")[0]);
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
-    private void createSkyWarsTable() {
-        this.update("CREATE TABLE IF NOT EXISTS premium_lostedskywars ("
-                + "id VARCHAR(36) NOT NULL,"
-                + "name VARCHAR(32) NOT NULL,"
-                + "solokills INTEGER NOT NULL,"
-                + "solowins INTEGER NOT NULL,"
-                + "soloassists INTEGER NOT NULL,"
-                + "solodeaths INTEGER NOT NULL,"
-                + "solomelee INTEGER NOT NULL,"
-                + "solobow INTEGER NOT NULL,"
-                + "solomob INTEGER NOT NULL,"
-                + "solovoid INTEGER NOT NULL,"
-                + "soloplays INTEGER NOT NULL,"
-                + "teamkills INTEGER NOT NULL,"
-                + "teamwins INTEGER NOT NULL,"
-                + "teamassists INTEGER NOT NULL,"
-                + "teamdeaths INTEGER NOT NULL,"
-                + "teammelee INTEGER NOT NULL,"
-                + "teambow INTEGER NOT NULL,"
-                + "teammob INTEGER NOT NULL,"
-                + "teamvoid INTEGER NOT NULL,"
-                + "teamplays INTEGER NOT NULL,"
-                + "coins INTEGER NOT NULL,"
-                + "souls INTEGER NOT NULL,"
-                + "level INTEGER NOT NULL,"
-                + "exp DOUBLE NOT NULL,"
-                + "kits TEXT DEFAULT NULL,"
-                + "perks TEXT DEFAULT NULL,"
-                + "cages TEXT DEFAULT NULL,"
-                + "deathcry TEXT DEFAULT NULL,"
-                + "trail TEXT DEFAULT NULL,"
-                + "ballons TEXT DEFAULT NULL,"
-                + "killmessage TEXT DEFAULT NULL,"
-                + "killeffect TEXT DEFAULT NULL,"
-                + "spray TEXT DEFAULT NULL,"
-                + "victorydance TEXT DEFAULT NULL,"
-                + "title TEXT DEFAULT NULL,"
-                + "selected TEXT DEFAULT NULL,"
-                + "lastSelected LONG,"
-                + "favorites TEXT,"
-                + "PRIMARY KEY(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;");
+    private boolean tableExists(String tableName) {
+        CachedRowSet rs = query("SHOW TABLES LIKE '" + tableName + "'");
+        boolean exists = rs != null;
+        closeQuietly(rs);
+        return exists;
     }
+
+    private void renameLegacyTables() {
+        if (tableExists("premium_lostedaccount")) {
+            this.update("RENAME TABLE premium_lostedaccount TO premium_lostedaccount_backup");
+        }
+        if (tableExists("premium_lostedskywars")) {
+            this.update("RENAME TABLE premium_lostedskywars TO premium_lostedskywars_backup");
+        }
+        if (tableExists("ranked_lostedskywars")) {
+            this.update("RENAME TABLE ranked_lostedskywars TO ranked_lostedskywars_backup");
+        }
+        LOGGER.info("Legacy tables renamed to *_backup.");
+    }
+
+    private String safeGetString(CachedRowSet rs, String col, String def) {
+        try {
+            String val = rs.getString(col);
+            return val != null ? val : def;
+        } catch (Exception ex) {
+            return def;
+        }
+    }
+
+    private int safeGetInt(CachedRowSet rs, String col, int def) {
+        try {
+            return rs.getInt(col);
+        } catch (Exception ex) {
+            return def;
+        }
+    }
+
+    private long safeGetLong(CachedRowSet rs, String col, long def) {
+        try {
+            return rs.getLong(col);
+        } catch (Exception ex) {
+            return def;
+        }
+    }
+
+    private double safeGetDouble(CachedRowSet rs, String col, double def) {
+        try {
+            return rs.getDouble(col);
+        } catch (Exception ex) {
+            return def;
+        }
+    }
+
+    private boolean safeGetBoolean(CachedRowSet rs, String col, boolean def) {
+        try {
+            return rs.getBoolean(col);
+        } catch (Exception ex) {
+            return def;
+        }
+    }
+
+    // =========================================================================
+    // PROFILE
+    // =========================================================================
 
     @Override
-    public Map<String, StatsContainer> loadStats(UUID id, String table, String name) {
-        table = (table.equalsIgnoreCase("ranked_lostedskywars") ? table : "premium_" + table);
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        CachedRowSet rs = this.query("SELECT * FROM `" + table + "` WHERE `id` = ?", id.toString());
+    public Map<String, StatsContainer> loadProfile(UUID uuid, String name) {
+        CachedRowSet rs = this.query("SELECT * FROM `profile` WHERE `uuid` = ?", uuid.toString());
 
         if (rs != null) {
             try {
                 if (rs.next()) {
-                    for (int column = 2; column <= rs.getMetaData().getColumnCount(); column++) {
-                        String key = rs.getMetaData().getColumnName(column);
-                        if (key.equals("name")) {
-                            String oldName = rs.getString(key);
-                            if (!oldName.equals(name)) {
-                                this.execute("UPDATE `" + table + "` SET `name` = ? WHERE `id` = ?", name, id.toString());
-                            }
-                            continue;
-                        }
-
-                        if (key.equals("players") || key.equals("gore")) {
-                            map.put(key, new StatsContainer(rs.getBoolean(key)));
-                        } else {
-                            map.put(key, new StatsContainer(rs.getObject(key)));
-                        }
+                    Map<String, StatsContainer> map = new LinkedHashMap<>();
+                    String oldName = rs.getString("name");
+                    if (!oldName.equals(name)) {
+                        this.execute("UPDATE `profile` SET `name` = ? WHERE `uuid` = ?", name, uuid.toString());
                     }
+                    map.put("coins", new StatsContainer(rs.getInt("coins")));
+                    map.put("souls", new StatsContainer(rs.getInt("souls")));
+                    map.put("level", new StatsContainer(rs.getInt("level")));
+                    map.put("exp", new StatsContainer(rs.getDouble("exp")));
+                    map.put("max_souls", new StatsContainer(rs.getInt("max_souls")));
+                    map.put("well_roll", new StatsContainer(rs.getInt("well_roll")));
+                    map.put("souls_per_win", new StatsContainer(rs.getInt("souls_per_win")));
+                    map.put("mystery_dusts", new StatsContainer(rs.getInt("mystery_dusts")));
+                    map.put("last_rank", new StatsContainer(rs.getString("last_rank")));
+                    map.put("deliveries", new StatsContainer(rs.getString("deliveries")));
+                    map.put("leveling", new StatsContainer(rs.getString("leveling")));
+                    map.put("show_players", new StatsContainer(rs.getBoolean("show_players")));
+                    map.put("show_gore", new StatsContainer(rs.getBoolean("show_gore")));
+                    return map;
                 }
             } catch (SQLException ex) {
-                LOGGER.log(Level.SEVERE, "Could not loadStats(\"" + name + "\"): ", ex);
+                LOGGER.log(Level.SEVERE, "Could not loadProfile(\"" + name + "\"): ", ex);
             } finally {
                 closeQuietly(rs);
             }
-
-            if (!map.isEmpty()) {
-                return map;
-            }
         }
 
-        // No existing row — build defaults and INSERT
-        map = buildDefaultMap(table);
-
-        List<Object> list = new ArrayList<>();
-        list.add(id.toString());
-        list.add(name);
-        list.addAll(map.values().stream().map(StatsContainer::get).collect(Collectors.toList()));
-        this.execute("INSERT INTO `" + table + "` VALUES (?, ?, "
-                + StringUtils.repeat("?, ", map.size() - 1) + "?)", list.toArray(new Object[0]));
-
-        return map;
+        Map<String, StatsContainer> defaults = buildDefaultProfile();
+        this.execute("INSERT INTO `profile` (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), name, 0, 0, 1, 0.0, 100, 1, 0, 0, "&7", "{}", "[]", true, true);
+        return defaults;
     }
 
-    private Map<String, StatsContainer> buildDefaultMap(String table) {
+    private Map<String, StatsContainer> buildDefaultProfile() {
         Map<String, StatsContainer> map = new LinkedHashMap<>();
-
-        if (table.equals("premium_lostedskywars")) {
-            map.put("solokills", new StatsContainer(0));
-            map.put("solowins", new StatsContainer(0));
-            map.put("soloassists", new StatsContainer(0));
-            map.put("solodeaths", new StatsContainer(0));
-            map.put("solomelee", new StatsContainer(0));
-            map.put("solobow", new StatsContainer(0));
-            map.put("solomob", new StatsContainer(0));
-            map.put("solovoid", new StatsContainer(0));
-            map.put("soloplays", new StatsContainer(0));
-            map.put("teamkills", new StatsContainer(0));
-            map.put("teamwins", new StatsContainer(0));
-            map.put("teamassists", new StatsContainer(0));
-            map.put("teamdeaths", new StatsContainer(0));
-            map.put("teammelee", new StatsContainer(0));
-            map.put("teambow", new StatsContainer(0));
-            map.put("teammob", new StatsContainer(0));
-            map.put("teamvoid", new StatsContainer(0));
-            map.put("teamplays", new StatsContainer(0));
-            map.put("coins", new StatsContainer(0));
-            map.put("souls", new StatsContainer(0));
-            map.put("level", new StatsContainer(1));
-            map.put("exp", new StatsContainer(0.0D));
-            map.put("kits", new StatsContainer("{}"));
-            map.put("perks", new StatsContainer("{}"));
-            map.put("cages", new StatsContainer("{}"));
-            map.put("deathcry", new StatsContainer("{}"));
-            map.put("trail", new StatsContainer("{}"));
-            map.put("killmessage", new StatsContainer("{}"));
-            map.put("killeffect", new StatsContainer("{}"));
-            map.put("spray", new StatsContainer("{}"));
-            map.put("ballons", new StatsContainer("{}"));
-            map.put("victorydance", new StatsContainer("{}"));
-            map.put("title", new StatsContainer("{}"));
-            map.put("selected", new StatsContainer("0:0:0 : 0"));
-            map.put("lastSelected", new StatsContainer(0L));
-            map.put("favorites", new StatsContainer("[]"));
-        } else if (table.equals("ranked_lostedskywars")) {
-            map.put("kills", new StatsContainer(0));
-            map.put("wins", new StatsContainer(0));
-            map.put("assists", new StatsContainer(0));
-            map.put("deaths", new StatsContainer(0));
-            map.put("melee", new StatsContainer(0));
-            map.put("bow", new StatsContainer(0));
-            map.put("mob", new StatsContainer(0));
-            map.put("void", new StatsContainer(0));
-            map.put("plays", new StatsContainer(0));
-            map.put("points", new StatsContainer(0));
-            map.put("brave_points", new StatsContainer(0));
-        } else {
-            map.put("lastRank", new StatsContainer("&7"));
-            map.put("mysterydusts", new StatsContainer(0));
-            map.put("sw_maxsouls", new StatsContainer(100));
-            map.put("sw_wellroll", new StatsContainer(1));
-            map.put("sw_soulswin", new StatsContainer(0));
-            map.put("deliveries", new StatsContainer("{}"));
-            map.put("leveling", new StatsContainer("[]"));
-            map.put("players", new StatsContainer(true));
-            map.put("gore", new StatsContainer(true));
-        }
-
+        map.put("coins", new StatsContainer(0));
+        map.put("souls", new StatsContainer(0));
+        map.put("level", new StatsContainer(1));
+        map.put("exp", new StatsContainer(0.0));
+        map.put("max_souls", new StatsContainer(100));
+        map.put("well_roll", new StatsContainer(1));
+        map.put("souls_per_win", new StatsContainer(0));
+        map.put("mystery_dusts", new StatsContainer(0));
+        map.put("last_rank", new StatsContainer("&7"));
+        map.put("deliveries", new StatsContainer("{}"));
+        map.put("leveling", new StatsContainer("[]"));
+        map.put("show_players", new StatsContainer(true));
+        map.put("show_gore", new StatsContainer(true));
         return map;
     }
 
     @Override
-    public void saveStats(UUID id, String table, Map<String, StatsContainer> map) {
-        table = (table.equalsIgnoreCase("ranked_lostedskywars") ? table : "premium_" + table);
-        StringBuilder sb = new StringBuilder("UPDATE `" + table + "` SET ");
-        List<String> keys = new ArrayList<>(map.keySet());
+    public void saveProfile(UUID uuid, Map<String, StatsContainer> data) {
+        this.execute("UPDATE `profile` SET coins = ?, souls = ?, level = ?, exp = ?, max_souls = ?, well_roll = ?, souls_per_win = ?, mystery_dusts = ?, last_rank = ?, deliveries = ?, leveling = ?, show_players = ?, show_gore = ? WHERE uuid = ?",
+                data.get("coins").get(), data.get("souls").get(), data.get("level").get(), data.get("exp").get(),
+                data.get("max_souls").get(), data.get("well_roll").get(), data.get("souls_per_win").get(),
+                data.get("mystery_dusts").get(), data.get("last_rank").get(),
+                data.get("deliveries").get(), data.get("leveling").get(),
+                data.get("show_players").get(), data.get("show_gore").get(),
+                uuid.toString());
+    }
 
-        for (int i = 0; i < keys.size(); i++) {
-            sb.append("`").append(keys.get(i)).append("` = ?");
-            if (i + 1 < keys.size()) {
-                sb.append(", ");
+    // =========================================================================
+    // STATS
+    // =========================================================================
+
+    @Override
+    public Map<String, StatsContainer> loadStats(UUID uuid, String groupId, String name) {
+        CachedRowSet rs = this.query("SELECT * FROM `stats` WHERE `uuid` = ? AND `group_id` = ?", uuid.toString(), groupId);
+
+        if (rs != null) {
+            try {
+                if (rs.next()) {
+                    Map<String, StatsContainer> map = new LinkedHashMap<>();
+                    map.put("kills", new StatsContainer(rs.getInt("kills")));
+                    map.put("wins", new StatsContainer(rs.getInt("wins")));
+                    map.put("assists", new StatsContainer(rs.getInt("assists")));
+                    map.put("deaths", new StatsContainer(rs.getInt("deaths")));
+                    map.put("plays", new StatsContainer(rs.getInt("plays")));
+                    map.put("melee_kills", new StatsContainer(rs.getInt("melee_kills")));
+                    map.put("bow_kills", new StatsContainer(rs.getInt("bow_kills")));
+                    map.put("mob_kills", new StatsContainer(rs.getInt("mob_kills")));
+                    map.put("void_kills", new StatsContainer(rs.getInt("void_kills")));
+                    map.put("elo", new StatsContainer(rs.getInt("elo")));
+                    map.put("brave_points", new StatsContainer(rs.getInt("brave_points")));
+                    return map;
+                }
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Could not loadStats(\"" + name + "\", \"" + groupId + "\"): ", ex);
+            } finally {
+                closeQuietly(rs);
             }
         }
 
-        sb.append(" WHERE `id` = ?");
-
-        List<Object> values = map.values().stream().map(StatsContainer::get).collect(Collectors.toList());
-        values.add(id.toString());
-        this.execute(sb.toString(), values.toArray(new Object[0]));
+        Map<String, StatsContainer> defaults = buildDefaultStats();
+        this.execute("INSERT INTO `stats` (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), groupId, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        return defaults;
     }
+
+    private Map<String, StatsContainer> buildDefaultStats() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("kills", new StatsContainer(0));
+        map.put("wins", new StatsContainer(0));
+        map.put("assists", new StatsContainer(0));
+        map.put("deaths", new StatsContainer(0));
+        map.put("plays", new StatsContainer(0));
+        map.put("melee_kills", new StatsContainer(0));
+        map.put("bow_kills", new StatsContainer(0));
+        map.put("mob_kills", new StatsContainer(0));
+        map.put("void_kills", new StatsContainer(0));
+        map.put("elo", new StatsContainer(0));
+        map.put("brave_points", new StatsContainer(0));
+        return map;
+    }
+
+    @Override
+    public void saveStats(UUID uuid, String groupId, Map<String, StatsContainer> data) {
+        this.execute("UPDATE `stats` SET kills = ?, wins = ?, assists = ?, deaths = ?, plays = ?, melee_kills = ?, bow_kills = ?, mob_kills = ?, void_kills = ?, elo = ?, brave_points = ? WHERE uuid = ? AND group_id = ?",
+                data.get("kills").get(), data.get("wins").get(), data.get("assists").get(),
+                data.get("deaths").get(), data.get("plays").get(),
+                data.get("melee_kills").get(), data.get("bow_kills").get(),
+                data.get("mob_kills").get(), data.get("void_kills").get(),
+                data.get("elo").get(), data.get("brave_points").get(),
+                uuid.toString(), groupId);
+    }
+
+    // =========================================================================
+    // COSMETICS
+    // =========================================================================
+
+    @Override
+    public Map<String, StatsContainer> loadCosmetics(UUID uuid, String name) {
+        CachedRowSet rs = this.query("SELECT * FROM `cosmetics` WHERE `uuid` = ?", uuid.toString());
+
+        if (rs != null) {
+            try {
+                if (rs.next()) {
+                    Map<String, StatsContainer> map = new LinkedHashMap<>();
+                    map.put("kits", new StatsContainer(rs.getString("kits")));
+                    map.put("perks", new StatsContainer(rs.getString("perks")));
+                    map.put("cages", new StatsContainer(rs.getString("cages")));
+                    map.put("death_cries", new StatsContainer(rs.getString("death_cries")));
+                    map.put("trails", new StatsContainer(rs.getString("trails")));
+                    map.put("balloons", new StatsContainer(rs.getString("balloons")));
+                    map.put("kill_messages", new StatsContainer(rs.getString("kill_messages")));
+                    map.put("kill_effects", new StatsContainer(rs.getString("kill_effects")));
+                    map.put("sprays", new StatsContainer(rs.getString("sprays")));
+                    map.put("victory_dances", new StatsContainer(rs.getString("victory_dances")));
+                    map.put("titles", new StatsContainer(rs.getString("titles")));
+                    map.put("symbols", new StatsContainer(rs.getString("symbols")));
+                    return map;
+                }
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Could not loadCosmetics(\"" + name + "\"): ", ex);
+            } finally {
+                closeQuietly(rs);
+            }
+        }
+
+        Map<String, StatsContainer> defaults = buildDefaultCosmetics();
+        this.execute("INSERT INTO `cosmetics` (uuid, kits, perks, cages, death_cries, trails, balloons, kill_messages, kill_effects, sprays, victory_dances, titles, symbols) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}");
+        return defaults;
+    }
+
+    private Map<String, StatsContainer> buildDefaultCosmetics() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("kits", new StatsContainer("{}"));
+        map.put("perks", new StatsContainer("{}"));
+        map.put("cages", new StatsContainer("{}"));
+        map.put("death_cries", new StatsContainer("{}"));
+        map.put("trails", new StatsContainer("{}"));
+        map.put("balloons", new StatsContainer("{}"));
+        map.put("kill_messages", new StatsContainer("{}"));
+        map.put("kill_effects", new StatsContainer("{}"));
+        map.put("sprays", new StatsContainer("{}"));
+        map.put("victory_dances", new StatsContainer("{}"));
+        map.put("titles", new StatsContainer("{}"));
+        map.put("symbols", new StatsContainer("{}"));
+        return map;
+    }
+
+    @Override
+    public void saveCosmetics(UUID uuid, Map<String, StatsContainer> data) {
+        this.execute("UPDATE `cosmetics` SET kits = ?, perks = ?, cages = ?, death_cries = ?, trails = ?, balloons = ?, kill_messages = ?, kill_effects = ?, sprays = ?, victory_dances = ?, titles = ?, symbols = ? WHERE uuid = ?",
+                data.get("kits").get(), data.get("perks").get(), data.get("cages").get(),
+                data.get("death_cries").get(), data.get("trails").get(), data.get("balloons").get(),
+                data.get("kill_messages").get(), data.get("kill_effects").get(), data.get("sprays").get(),
+                data.get("victory_dances").get(), data.get("titles").get(), data.get("symbols").get(),
+                uuid.toString());
+    }
+
+    // =========================================================================
+    // SELECTIONS
+    // =========================================================================
+
+    @Override
+    public Map<String, StatsContainer> loadSelections(UUID uuid, String name) {
+        CachedRowSet rs = this.query("SELECT * FROM `selections` WHERE `uuid` = ?", uuid.toString());
+
+        if (rs != null) {
+            try {
+                if (rs.next()) {
+                    Map<String, StatsContainer> map = new LinkedHashMap<>();
+                    map.put("kit", new StatsContainer(rs.getString("kit")));
+                    map.put("perk", new StatsContainer(rs.getString("perk")));
+                    map.put("cage", new StatsContainer(rs.getInt("cage")));
+                    map.put("death_cry", new StatsContainer(rs.getInt("death_cry")));
+                    map.put("trail", new StatsContainer(rs.getInt("trail")));
+                    map.put("balloon", new StatsContainer(rs.getInt("balloon")));
+                    map.put("kill_message", new StatsContainer(rs.getInt("kill_message")));
+                    map.put("kill_effect", new StatsContainer(rs.getInt("kill_effect")));
+                    map.put("spray", new StatsContainer(rs.getInt("spray")));
+                    map.put("victory_dance", new StatsContainer(rs.getInt("victory_dance")));
+                    map.put("title", new StatsContainer(rs.getInt("title")));
+                    map.put("symbol", new StatsContainer(rs.getInt("symbol")));
+                    map.put("last_selected", new StatsContainer(rs.getLong("last_selected")));
+                    map.put("favorites", new StatsContainer(rs.getString("favorites")));
+                    return map;
+                }
+            } catch (SQLException ex) {
+                LOGGER.log(Level.SEVERE, "Could not loadSelections(\"" + name + "\"): ", ex);
+            } finally {
+                closeQuietly(rs);
+            }
+        }
+
+        Map<String, StatsContainer> defaults = buildDefaultSelections();
+        this.execute("INSERT INTO `selections` (uuid, kit, perk, cage, death_cry, trail, balloon, kill_message, kill_effect, spray, victory_dance, title, symbol, last_selected, favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), "{}", "{}", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0L, "[]");
+        return defaults;
+    }
+
+    private Map<String, StatsContainer> buildDefaultSelections() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("kit", new StatsContainer("{}"));
+        map.put("perk", new StatsContainer("{}"));
+        map.put("cage", new StatsContainer(0));
+        map.put("death_cry", new StatsContainer(0));
+        map.put("trail", new StatsContainer(0));
+        map.put("balloon", new StatsContainer(0));
+        map.put("kill_message", new StatsContainer(0));
+        map.put("kill_effect", new StatsContainer(0));
+        map.put("spray", new StatsContainer(0));
+        map.put("victory_dance", new StatsContainer(0));
+        map.put("title", new StatsContainer(0));
+        map.put("symbol", new StatsContainer(0));
+        map.put("last_selected", new StatsContainer(0L));
+        map.put("favorites", new StatsContainer("[]"));
+        return map;
+    }
+
+    @Override
+    public void saveSelections(UUID uuid, Map<String, StatsContainer> data) {
+        this.execute("UPDATE `selections` SET kit = ?, perk = ?, cage = ?, death_cry = ?, trail = ?, balloon = ?, kill_message = ?, kill_effect = ?, spray = ?, victory_dance = ?, title = ?, symbol = ?, last_selected = ?, favorites = ? WHERE uuid = ?",
+                data.get("kit").get(), data.get("perk").get(),
+                data.get("cage").get(), data.get("death_cry").get(),
+                data.get("trail").get(), data.get("balloon").get(),
+                data.get("kill_message").get(), data.get("kill_effect").get(),
+                data.get("spray").get(), data.get("victory_dance").get(),
+                data.get("title").get(), data.get("symbol").get(),
+                data.get("last_selected").get(), data.get("favorites").get(),
+                uuid.toString());
+    }
+
+    // =========================================================================
+    // ACCOUNT MANAGEMENT
+    // =========================================================================
 
     private final Map<UUID, Account> accounts = new ConcurrentHashMap<>();
     private final Map<UUID, Account> offlineaccounts = new ConcurrentHashMap<>();
@@ -282,25 +723,22 @@ public class MySQLDatabase extends Database {
             account = new Account(id, name);
             this.accounts.put(id, account);
         }
-
         return account;
     }
 
     @Override
     public CompletableFuture<Account> loadAccountOffline(String name) {
         return CompletableFuture.supplyAsync(() -> {
-            CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE LOWER(`name`) = ?",
+            CachedRowSet rs = query("SELECT * FROM `profile` WHERE LOWER(`name`) = ?",
                     name.toLowerCase());
-
             if (rs == null) {
                 return null;
             }
-
             try {
                 if (!rs.next()) {
                     return null;
                 }
-                return new Account(UUID.fromString(rs.getString("id")), name);
+                return new Account(UUID.fromString(rs.getString("uuid")), name);
             } catch (SQLException ex) {
                 LOGGER.log(Level.SEVERE, "loadOffline(\"" + name + "\") error: ", ex);
                 return null;
@@ -317,15 +755,10 @@ public class MySQLDatabase extends Database {
             if (account != null) {
                 return account;
             }
-
-            // Fixed: removed LOWER() on UUID — UUIDs are case-insensitive but should match directly
-            CachedRowSet rs = query("SELECT * FROM `premium_lostedaccount` WHERE `id` = ?",
-                    uuid.toString());
-
+            CachedRowSet rs = query("SELECT * FROM `profile` WHERE `uuid` = ?", uuid.toString());
             if (rs == null) {
                 return null;
             }
-
             try {
                 if (!rs.next()) {
                     return null;
@@ -379,6 +812,10 @@ public class MySQLDatabase extends Database {
         return ImmutableList.copyOf(offlineaccounts.values());
     }
 
+    // =========================================================================
+    // SQL UTILITIES
+    // =========================================================================
+
     public void openConnection() {
         try {
             boolean reconnected = this.connection != null;
@@ -386,7 +823,6 @@ public class MySQLDatabase extends Database {
                     "jdbc:mysql://" + host + ":" + port + "/" + dbname
                             + "?verifyServerCertificate=false&useSSL=false&useUnicode=yes&characterEncoding=UTF-8",
                     username, password);
-
             LOGGER.info(reconnected ? "Reconnected to MySQL!" : "Connected to MySQL!");
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Could not open MySQL connection: ", ex);
@@ -407,7 +843,6 @@ public class MySQLDatabase extends Database {
         if (!isConnected()) {
             this.openConnection();
         }
-
         return connection;
     }
 
@@ -426,7 +861,6 @@ public class MySQLDatabase extends Database {
             LOGGER.log(Level.WARNING, "Could not execute SQL (PreparedStatement was null): " + sql);
             return;
         }
-
         try {
             ps.execute();
         } catch (SQLException e) {
@@ -453,14 +887,9 @@ public class MySQLDatabase extends Database {
         } catch (SQLException e) {
             LOGGER.log(Level.WARNING, "Could not Prepare Statement: ", e);
         }
-
         return null;
     }
 
-    /**
-     * Executes a query and returns a CachedRowSet with the cursor positioned
-     * BEFORE the first row (ready for rs.next()). Returns null if no rows.
-     */
     public CachedRowSet query(String query, Object... vars) {
         CachedRowSet rowSet = null;
         try {
@@ -469,14 +898,12 @@ public class MySQLDatabase extends Database {
                 if (ps == null) {
                     return null;
                 }
-
                 try {
                     ResultSet rs = ps.executeQuery();
                     CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
                     crs.populate(rs);
                     rs.close();
                     ps.close();
-
                     if (crs.size() > 0) {
                         crs.beforeFirst();
                         return crs;
@@ -484,15 +911,12 @@ public class MySQLDatabase extends Database {
                 } catch (Exception e) {
                     LOGGER.log(Level.WARNING, "Could not Execute Query: ", e);
                 }
-
                 return null;
             });
-
             rowSet = future.get();
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, "Could not Call FutureTask: ", e);
         }
-
         return rowSet;
     }
 

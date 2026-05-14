@@ -15,17 +15,12 @@ import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.GameArena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
 import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.database.player.CosmeticContainer;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.StatsContainer;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
-import org.twightlight.skywars.player.ranked.Ranked;
 import org.twightlight.skywars.systems.scoreboard.LostScoreboard;
 import org.twightlight.skywars.systems.scoreboard.ScoreboardScroller;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -45,13 +40,13 @@ public class Account {
 
     private Arena arena;
 
-    protected Map<String, StatsContainer> account, skywars, ranked;
-    private Map<UUID, Long> lastHit = new HashMap<>();
+    protected Map<String, StatsContainer> profile;
+    protected Map<String, Map<String, StatsContainer>> statsPerGroup;
+    protected Map<String, StatsContainer> cosmetics;
+    protected Map<String, StatsContainer> selections;
+    protected SelectedContainer selectedContainer;
 
-    private static final String[] SKYWARS_JSON_FIELDS = {
-            "deathcry", "trail", "killmessage", "spray", "ballons",
-            "killeffect", "victorydance", "perks"
-    };
+    private Map<UUID, Long> lastHit = new HashMap<>();
 
     public Account(UUID id, String name) {
         this(id, name, false);
@@ -60,134 +55,330 @@ public class Account {
     protected Account(UUID id, String name, boolean virtual) {
         this.id = id;
         this.name = name;
+        this.statsPerGroup = new LinkedHashMap<>();
 
         if (!virtual) {
-            this.account = Database.getInstance().loadStats(id, "lostedaccount", name);
-            this.skywars = Database.getInstance().loadStats(id, "lostedskywars", name);
-            this.ranked = Database.getInstance().loadStats(id, "ranked_lostedskywars", name);
+            this.profile = Database.getInstance().loadProfile(id, name);
+            this.cosmetics = Database.getInstance().loadCosmetics(id, name);
+            this.selections = Database.getInstance().loadSelections(id, name);
         } else {
-            this.account = buildDefaultAccountStats();
-            this.skywars = buildDefaultSkyWarsStats();
-            this.ranked = buildDefaultRankedStats();
+            this.profile = buildDefaultProfile();
+            this.cosmetics = buildDefaultCosmetics();
+            this.selections = buildDefaultSelections();
         }
 
-        if (this.account.get("leveling").get() == null) {
-            this.account.get("leveling").set("[]");
-        }
+        this.selectedContainer = new SelectedContainer(this.selections);
 
-        for (String field : SKYWARS_JSON_FIELDS) {
-            if (this.skywars.get(field).get() == null) {
-                this.skywars.get(field).set("{}");
-            }
+        if (this.profile.get("leveling").get() == null) {
+            this.profile.get("leveling").set("[]");
+        }
+        if (this.profile.get("deliveries").get() == null) {
+            this.profile.get("deliveries").set("{}");
         }
     }
 
-    private static Map<String, StatsContainer> buildDefaultAccountStats() {
+    private static Map<String, StatsContainer> buildDefaultProfile() {
         Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("lastRank", new StatsContainer("&7"));
-        map.put("mysterydusts", new StatsContainer(0));
-        map.put("sw_maxsouls", new StatsContainer(100));
-        map.put("sw_wellroll", new StatsContainer(1));
-        map.put("sw_soulswin", new StatsContainer(0));
-        map.put("deliveries", new StatsContainer("{}"));
-        map.put("leveling", new StatsContainer("[]"));
-        map.put("players", new StatsContainer(true));
-        map.put("gore", new StatsContainer(true));
-        return map;
-    }
-
-    private static Map<String, StatsContainer> buildDefaultSkyWarsStats() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("solokills", new StatsContainer(0));
-        map.put("solowins", new StatsContainer(0));
-        map.put("soloassists", new StatsContainer(0));
-        map.put("solodeaths", new StatsContainer(0));
-        map.put("solomelee", new StatsContainer(0));
-        map.put("solobow", new StatsContainer(0));
-        map.put("solomob", new StatsContainer(0));
-        map.put("solovoid", new StatsContainer(0));
-        map.put("soloplays", new StatsContainer(0));
-        map.put("teamkills", new StatsContainer(0));
-        map.put("teamwins", new StatsContainer(0));
-        map.put("teamassists", new StatsContainer(0));
-        map.put("teamdeaths", new StatsContainer(0));
-        map.put("teammelee", new StatsContainer(0));
-        map.put("teambow", new StatsContainer(0));
-        map.put("teammob", new StatsContainer(0));
-        map.put("teamvoid", new StatsContainer(0));
-        map.put("teamplays", new StatsContainer(0));
         map.put("coins", new StatsContainer(0));
         map.put("souls", new StatsContainer(0));
         map.put("level", new StatsContainer(1));
-        map.put("exp", new StatsContainer(0.0D));
+        map.put("exp", new StatsContainer(0.0));
+        map.put("max_souls", new StatsContainer(100));
+        map.put("well_roll", new StatsContainer(1));
+        map.put("souls_per_win", new StatsContainer(0));
+        map.put("mystery_dusts", new StatsContainer(0));
+        map.put("last_rank", new StatsContainer("&7"));
+        map.put("deliveries", new StatsContainer("{}"));
+        map.put("leveling", new StatsContainer("[]"));
+        map.put("show_players", new StatsContainer(true));
+        map.put("show_gore", new StatsContainer(true));
+        return map;
+    }
+
+    private static Map<String, StatsContainer> buildDefaultCosmetics() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
         map.put("kits", new StatsContainer("{}"));
         map.put("perks", new StatsContainer("{}"));
         map.put("cages", new StatsContainer("{}"));
-        map.put("deathcry", new StatsContainer("{}"));
-        map.put("trail", new StatsContainer("{}"));
-        map.put("killmessage", new StatsContainer("{}"));
-        map.put("killeffect", new StatsContainer("{}"));
-        map.put("spray", new StatsContainer("{}"));
-        map.put("ballons", new StatsContainer("{}"));
-        map.put("victorydance", new StatsContainer("{}"));
-        map.put("title", new StatsContainer("{}"));
-        map.put("selected", new StatsContainer("0:0:0 : 0"));
-        map.put("lastSelected", new StatsContainer(0L));
+        map.put("death_cries", new StatsContainer("{}"));
+        map.put("trails", new StatsContainer("{}"));
+        map.put("balloons", new StatsContainer("{}"));
+        map.put("kill_messages", new StatsContainer("{}"));
+        map.put("kill_effects", new StatsContainer("{}"));
+        map.put("sprays", new StatsContainer("{}"));
+        map.put("victory_dances", new StatsContainer("{}"));
+        map.put("titles", new StatsContainer("{}"));
+        map.put("symbols", new StatsContainer("{}"));
+        return map;
+    }
+
+    private static Map<String, StatsContainer> buildDefaultSelections() {
+        Map<String, StatsContainer> map = new LinkedHashMap<>();
+        map.put("kit", new StatsContainer("{}"));
+        map.put("perk", new StatsContainer("{}"));
+        map.put("cage", new StatsContainer(0));
+        map.put("death_cry", new StatsContainer(0));
+        map.put("trail", new StatsContainer(0));
+        map.put("balloon", new StatsContainer(0));
+        map.put("kill_message", new StatsContainer(0));
+        map.put("kill_effect", new StatsContainer(0));
+        map.put("spray", new StatsContainer(0));
+        map.put("victory_dance", new StatsContainer(0));
+        map.put("title", new StatsContainer(0));
+        map.put("symbol", new StatsContainer(0));
+        map.put("last_selected", new StatsContainer(0L));
         map.put("favorites", new StatsContainer("[]"));
         return map;
     }
 
-    private static Map<String, StatsContainer> buildDefaultRankedStats() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kills", new StatsContainer(0));
-        map.put("wins", new StatsContainer(0));
-        map.put("assists", new StatsContainer(0));
-        map.put("deaths", new StatsContainer(0));
-        map.put("melee", new StatsContainer(0));
-        map.put("bow", new StatsContainer(0));
-        map.put("mob", new StatsContainer(0));
-        map.put("void", new StatsContainer(0));
-        map.put("plays", new StatsContainer(0));
-        map.put("points", new StatsContainer(0));
-        map.put("brave_points", new StatsContainer(0));
-        return map;
+    public Map<String, StatsContainer> getStatsForGroup(String groupId) {
+        Map<String, StatsContainer> stats = statsPerGroup.get(groupId);
+        if (stats == null) {
+            stats = Database.getInstance().loadStats(id, groupId, name);
+            statsPerGroup.put(groupId, stats);
+        }
+        return stats;
     }
+
+    public void addStat(String groupId, String statName) {
+        addStat(groupId, statName, 1);
+    }
+
+    public void addStat(String groupId, String statName, int amount) {
+        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
+        StatsContainer container = stats.get(statName);
+        if (container != null) {
+            container.addInt(amount);
+        }
+    }
+
+    public void removeStat(String groupId, String statName, int amount) {
+        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
+        StatsContainer container = stats.get(statName);
+        if (container != null) {
+            for (int i = 0; i < amount; i++) {
+                if (container.getAsInt() <= 0) break;
+                container.removeInt(1);
+            }
+        }
+    }
+
+    public int getStat(String groupId, String statName) {
+        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
+        StatsContainer container = stats.get(statName);
+        return container != null ? container.getAsInt() : 0;
+    }
+
+    public String getStatFormatted(String groupId, String statName) {
+        return StringUtils.formatNumber(getStat(groupId, statName));
+    }
+
+    public int getStatAcrossGroups(String statName, String... groupIds) {
+        int total = 0;
+        for (String groupId : groupIds) {
+            total += getStat(groupId, statName);
+        }
+        return total;
+    }
+
+    public String getStatAcrossGroupsFormatted(String statName, String... groupIds) {
+        return StringUtils.formatNumber(getStatAcrossGroups(statName, groupIds));
+    }
+
+    // =========================================================================
+    // PROFILE (COINS, SOULS, LEVEL, EXP, ETC.)
+    // =========================================================================
+
+    public void addCoins(int amount) {
+        if (SkyWars.vault && SkyWars.economy != null) {
+            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).depositPlayer(this.getPlayer(), amount);
+            return;
+        }
+        this.profile.get("coins").addInt(amount);
+    }
+
+    public void removeCoins(int amount) {
+        if (SkyWars.vault && SkyWars.economy != null) {
+            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).withdrawPlayer(this.getPlayer(), amount);
+            return;
+        }
+        this.profile.get("coins").removeInt(amount);
+    }
+
+    public int getCoins() {
+        if (SkyWars.vault && SkyWars.economy != null) {
+            return (int) ((net.milkbowl.vault.economy.Economy) SkyWars.economy).getBalance(this.getPlayer());
+        }
+        return this.profile.get("coins").getAsInt();
+    }
+
+    public String getCoinsFormatted() {
+        return StringUtils.formatNumber(getCoins());
+    }
+
+    public void addSouls(int amount) {
+        this.profile.get("souls").addInt(amount);
+    }
+
+    public void removeSouls(int amount) {
+        this.profile.get("souls").removeInt(amount);
+    }
+
+    public int getSouls() {
+        return this.profile.get("souls").getAsInt();
+    }
+
+    public String getSoulsFormatted() {
+        return StringUtils.formatNumber(getSouls());
+    }
+
+    public int getMaxSouls() {
+        return this.profile.get("max_souls").getAsInt();
+    }
+
+    public int getWellRoll() {
+        return this.profile.get("well_roll").getAsInt();
+    }
+
+    public int getSoulsPerWin() {
+        return this.profile.get("souls_per_win").getAsInt();
+    }
+
+    public int getMysteryDusts() {
+        return this.profile.get("mystery_dusts").getAsInt();
+    }
+
+    public void addMysteryDusts(int dusts) {
+        if (SkyWars.lostboxes) {
+            io.github.losteddev.boxes.api.LostBoxesAPI.addMysteryDusts(this.getPlayer(), dusts);
+        }
+    }
+
+    public void addExp(double exp) {
+        this.profile.get("exp").addDouble(exp);
+        Level current = Level.getByLevel(this.getLevel());
+        Level nextLevel = current.getNext();
+        if (current.getExperienceUntil(this.getExp()) <= 0.0) {
+            if (nextLevel != null) {
+                this.profile.get("level").addInt(1);
+                this.profile.get("exp").set(0.0D);
+            }
+        }
+    }
+
+    public int getLevel() {
+        return this.profile.get("level").getAsInt();
+    }
+
+    public double getExp() {
+        return this.profile.get("exp").getAsDouble();
+    }
+
+    public String getLastRank() {
+        return this.profile.get("last_rank").getAsString();
+    }
+
+    public boolean canSeePlayers() {
+        return this.profile.get("show_players").getAsBoolean();
+    }
+
+    public void setCanSeePlayers(boolean flag) {
+        this.profile.get("show_players").set(flag);
+    }
+
+    public boolean canSeeBlood() {
+        return this.profile.get("show_gore").getAsBoolean();
+    }
+
+    public void setCanSeeBlood(boolean flag) {
+        this.profile.get("show_gore").set(flag);
+    }
+
+    public Map<String, StatsContainer> getProfile() {
+        return profile;
+    }
+
+    // =========================================================================
+    // LEVELING
+    // =========================================================================
 
     @SuppressWarnings("unchecked")
     public void addLeveling(int level) {
-        JSONArray array = this.account.get("leveling").getAsJsonArray();
+        JSONArray array = this.profile.get("leveling").getAsJsonArray();
         array.add(String.valueOf(level));
-        this.account.get("leveling").set(array.toString());
-    }
-
-    @SuppressWarnings("unchecked")
-    public void addFavoriteMap(String mapName) {
-        JSONArray array = this.skywars.get("favorites").getAsJsonArray();
-        array.add(mapName);
-        this.skywars.get("favorites").set(array.toString());
-    }
-
-    public void removeFavoriteMap(String mapName) {
-        JSONArray array = this.skywars.get("favorites").getAsJsonArray();
-        array.remove(mapName);
-        this.skywars.get("favorites").set(array.toString());
-    }
-
-    public void updateLastSelected() {
-        this.skywars.get("lastSelected").set(TimeUtils.getExpireIn(1));
+        this.profile.get("leveling").set(array.toString());
     }
 
     public boolean isLeveled(int level) {
-        return this.account.get("leveling").getAsJsonArray().contains(String.valueOf(level));
+        return this.profile.get("leveling").getAsJsonArray().contains(String.valueOf(level));
+    }
+
+    // =========================================================================
+    // FAVORITES & MAP SELECTION
+    // =========================================================================
+
+    @SuppressWarnings("unchecked")
+    public void addFavoriteMap(String mapName) {
+        JSONArray array = this.selectedContainer.getFavoritesJson().equals("[]") ? new JSONArray() : parseJsonArray(this.selectedContainer.getFavoritesJson());
+        array.add(mapName);
+        this.selectedContainer.setFavoritesJson(array.toString());
+    }
+
+    public void removeFavoriteMap(String mapName) {
+        JSONArray array = parseJsonArray(this.selectedContainer.getFavoritesJson());
+        array.remove(mapName);
+        this.selectedContainer.setFavoritesJson(array.toString());
     }
 
     public boolean isFavoriteMap(String mapName) {
-        return this.skywars.get("favorites").getAsJsonArray().contains(mapName);
+        return parseJsonArray(this.selectedContainer.getFavoritesJson()).contains(mapName);
+    }
+
+    public void updateLastSelected() {
+        this.selectedContainer.setLastSelected(TimeUtils.getExpireIn(1));
     }
 
     public boolean canSelectMap() {
-        return this.skywars.get("lastSelected").getAsLong() < System.currentTimeMillis();
+        return this.selectedContainer.getLastSelected() < System.currentTimeMillis();
     }
+
+    private JSONArray parseJsonArray(String json) {
+        try {
+            return (JSONArray) new org.json.simple.parser.JSONParser().parse(json);
+        } catch (Exception ex) {
+            return new JSONArray();
+        }
+    }
+
+    // =========================================================================
+    // COSMETIC OWNERSHIP
+    // =========================================================================
+
+    public Map<String, StatsContainer> getCosmeticsMap() {
+        return cosmetics;
+    }
+
+    public CosmeticContainer getCosmeticContainer(String column) {
+        StatsContainer container = cosmetics.get(column);
+        if (container == null) return new CosmeticContainer(new StatsContainer("{}"), "{}");
+        return new CosmeticContainer(container, container.getAsString());
+    }
+
+    // =========================================================================
+    // SELECTIONS
+    // =========================================================================
+
+    public SelectedContainer getSelectedContainer() {
+        return selectedContainer;
+    }
+
+    public Map<String, StatsContainer> getSelectionsMap() {
+        return selections;
+    }
+
+    // =========================================================================
+    // ARENA
+    // =========================================================================
 
     public void setArena(Arena arena) {
         this.arena = arena;
@@ -198,29 +389,21 @@ public class Account {
         this.lastHit.put(id, System.currentTimeMillis() + 8000);
     }
 
-    public void addMysteryDusts(int dusts) {
-        if (SkyWars.lostboxes) {
-            io.github.losteddev.boxes.api.LostBoxesAPI.addMysteryDusts(this.getPlayer(), dusts);
-        }
+    public boolean inLobby() {
+        return arena == null;
     }
 
-    public void addExp(double exp) {
-        this.skywars.get("exp").addDouble(exp);
-        Level current = Level.getByLevel(this.skywars.get("level").getAsInt());
-        Level nextLevel = current.getNext();
-        if (current.getExperienceUntil(this.getExp()) <= 0.0) {
-            if (nextLevel != null) {
-                this.skywars.get("level").addInt(1);
-                this.skywars.get("exp").set(0.0D);
-            }
-        }
+    public Arena getArena() {
+        return arena;
     }
+
+    // =========================================================================
+    // PLAYER REFRESH / UI
+    // =========================================================================
 
     public void refreshPlayer() {
         Player player = getPlayer();
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
 
         player.setMaxHealth(20.0);
         player.setHealth(20.0);
@@ -234,7 +417,6 @@ public class Account {
         for (PotionEffect pe : player.getActivePotionEffects()) {
             player.removePotionEffect(pe.getType());
         }
-
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
 
@@ -249,7 +431,6 @@ public class Account {
         } else {
             player.setGameMode(GameMode.SURVIVAL);
         }
-
         player.updateInventory();
     }
 
@@ -262,20 +443,17 @@ public class Account {
                     BukkitUtils.putProfileOnSkull(player, BukkitUtils.deserializeItemStack(
                             "SKULL_ITEM:3 : 1 : display=" + Language.lobby$hotbar$profile$name)));
         }
-
         slot = Language.lobby$hotbar$shop$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("EMERALD : 1 : display=" + Language.lobby$hotbar$shop$name));
         }
-
         slot = Language.lobby$hotbar$players$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
                     "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display="
                             + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
         }
-
         Rank.getRank(player).apply(player);
         player.teleport(SetLobbyCommand.getSpawnLocation());
 
@@ -297,7 +475,6 @@ public class Account {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("BOW : 1 : display=" + Language.game$hotbar$kits$name));
         }
-
         slot = Language.game$hotbar$quit$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot,
@@ -307,7 +484,6 @@ public class Account {
 
     private void setupStartingInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
-
         ArenaGroup group = arena.getGroup();
         boolean isDuels = group != null && group.hasTrait("no_kits");
 
@@ -329,13 +505,11 @@ public class Account {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("COMPASS : 1 : display=" + Language.game$hotbar$compass$name));
         }
-
         slot = Language.game$hotbar$play_again$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot,
                     BukkitUtils.deserializeItemStack("PAPER : 1 : display=" + Language.game$hotbar$play_again$name));
         }
-
         slot = Language.game$hotbar$quit_spectator$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot,
@@ -345,9 +519,7 @@ public class Account {
 
     public void refreshPlayers() {
         Player player = getPlayer();
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
 
         int slot = Language.lobby$hotbar$players$slot;
         if (slot >= 0 && slot < 9) {
@@ -359,17 +531,13 @@ public class Account {
 
         Database.getInstance().listAccounts().forEach(account -> {
             Player other = account.getPlayer();
-            if (other == null) {
-                return;
-            }
-
+            if (other == null) return;
             if (account.inLobby()) {
                 if (canSeePlayers()) {
                     player.showPlayer(other);
                 } else {
                     player.hidePlayer(other);
                 }
-
                 if (account.canSeePlayers()) {
                     other.showPlayer(player);
                 } else {
@@ -381,6 +549,10 @@ public class Account {
             }
         });
     }
+
+    // =========================================================================
+    // PROGRESS BAR
+    // =========================================================================
 
     public String makeProgressBar(boolean utf8) {
         Level level = Level.getByLevel(this.getLevel());
@@ -399,7 +571,6 @@ public class Account {
 
         for (double d = step; d <= 100.0; d += step) {
             boolean filled = percentage >= d;
-
             if (filled && !lastWasFilled) {
                 progressBar.append(filledColor);
                 lastWasFilled = true;
@@ -409,18 +580,18 @@ public class Account {
                 lastWasFilled = false;
                 hasColor = true;
             }
-
             progressBar.append(symbol);
         }
-
         return progressBar.toString();
     }
 
+    // =========================================================================
+    // SCOREBOARD
+    // =========================================================================
+
     public void reloadScoreboard() {
         Player player = getPlayer();
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
 
         this.scoreboard = new LostScoreboard() {
             @Override
@@ -436,7 +607,6 @@ public class Account {
                 } else {
                     clone = new ArrayList<>(group.getScoreboardIngame());
                 }
-
                 Collections.reverse(clone);
 
                 for (int i = 0; i < clone.size(); i++) {
@@ -450,18 +620,18 @@ public class Account {
 
                     if (currentServer == null) {
                         line = line.replace("{level}", Level.getByLevel(getLevel()).getLevel(Account.this));
-                        line = line.replace("{kills}", getFormatted("solokills", "teamkills"));
-                        line = line.replace("{wins}", getFormatted("solowins", "teamwins"));
-                        line = line.replace("{solokills}", getFormatted("solokills"));
-                        line = line.replace("{solowins}", getFormatted("solowins"));
-                        line = line.replace("{teamkills}", getFormatted("teamkills"));
-                        line = line.replace("{teamwins}", getFormatted("teamwins"));
-                        line = line.replace("{rankedkills}", Ranked.getFormatted(Account.this, "kills"));
-                        line = line.replace("{rankedwins}", Ranked.getFormatted(Account.this, "wins"));
-                        line = line.replace("{rankedpoints}", Ranked.getFormatted(Account.this, "points"));
-                        line = line.replace("{coins}", getFormatted("coins"));
-                        line = line.replace("{souls}", getFormatted("souls"));
-                        line = line.replace("{maxsouls}", StringUtils.formatNumber(account.get("sw_maxsouls").getAsInt()));
+                        line = line.replace("{kills}", getStatAcrossGroupsFormatted("kills", "solo", "doubles"));
+                        line = line.replace("{wins}", getStatAcrossGroupsFormatted("wins", "solo", "doubles"));
+                        line = line.replace("{solokills}", getStatFormatted("solo", "kills"));
+                        line = line.replace("{solowins}", getStatFormatted("solo", "wins"));
+                        line = line.replace("{teamkills}", getStatFormatted("doubles", "kills"));
+                        line = line.replace("{teamwins}", getStatFormatted("doubles", "wins"));
+                        line = line.replace("{rankedkills}", getStatFormatted("ranked_solo", "kills"));
+                        line = line.replace("{rankedwins}", getStatFormatted("ranked_solo", "wins"));
+                        line = line.replace("{rankedpoints}", getStatFormatted("ranked_solo", "elo"));
+                        line = line.replace("{coins}", getCoinsFormatted());
+                        line = line.replace("{souls}", getSoulsFormatted());
+                        line = line.replace("{maxsouls}", StringUtils.formatNumber(getMaxSouls()));
                     } else {
                         line = line.replace("{date}", new SimpleDateFormat("MM/dd/yy").format(System.currentTimeMillis()));
                         line = line.replace("{world}", currentServer.isPrivate()
@@ -479,10 +649,7 @@ public class Account {
 
                             if (line.contains("{opponent")) {
                                 String opponents = gameArena.getOpponent(getPlayer());
-                                if (opponents.isEmpty()) {
-                                    continue;
-                                }
-
+                                if (opponents.isEmpty()) continue;
                                 String[] parts = opponents.split("\n");
                                 line = line.replace("{opponent}", parts[0]);
                                 if (parts.length > 1) {
@@ -498,7 +665,6 @@ public class Account {
                                 : Language.scoreboard$replace$starting.replace("{time}", String.valueOf(currentServer.getTimer())));
                         line = line.replace("{kills}", String.valueOf(currentServer.getKills(getPlayer())));
                     }
-
                     this.add(i + 1, line);
                 }
             }
@@ -508,196 +674,55 @@ public class Account {
         this.scoreboard.scroll();
     }
 
-    public void addStat(String key) {
-        this.addStat(key, 1);
-    }
-
-    public void addStat(String key, int amount) {
-        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
-            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).depositPlayer(this.getPlayer(), amount);
-            return;
-        }
-
-        if (SkyWars.lostboxes && Rank.getRank(getPlayer()).receiveBox()
-                && (key.endsWith("_plays") || key.equalsIgnoreCase("soloplays") || key.equalsIgnoreCase("teamplays"))) {
-            io.github.losteddev.boxes.player.Account bc =
-                    io.github.losteddev.boxes.database.Database.getInstance().getAccount(id);
-            if (bc != null) {
-                io.github.losteddev.boxes.api.box.Box box = io.github.losteddev.boxes.api.LostBoxesAPI.randomBox(7);
-                bc.addBox(box);
-                this.getPlayer().sendMessage(
-                        Language.game$player$ingame$receive_box
-                                .replace("{stars}", String.valueOf((int) box.getStars()))
-                                .replace("{s}", box.getStars() >= 2.0 ? "s" : ""));
-            }
-        }
-
-        this.skywars.get(key).addInt(amount);
-    }
-
-    public void removeStat(String key, int amount) {
-        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
-            ((net.milkbowl.vault.economy.Economy) SkyWars.economy).withdrawPlayer(this.getPlayer(), amount);
-            return;
-        }
-
-        this.skywars.get(key).removeInt(amount);
-    }
-
-    public void setCanSeePlayers(boolean flag) {
-        this.account.get("players").set(flag);
-    }
-
-    public void setCanSeeBlood(boolean flag) {
-        this.account.get("gore").set(flag);
-    }
-
-    public int getInt(String key) {
-        if (SkyWars.vault && SkyWars.economy != null && key.equalsIgnoreCase("coins")) {
-            return (int) ((net.milkbowl.vault.economy.Economy) SkyWars.economy).getBalance(this.getPlayer());
-        }
-
-        return skywars.get(key).getAsInt();
-    }
-
-    public String getString(String key) {
-        return skywars.get(key).getAsString();
-    }
-
-    public String getFormatted(String... keys) {
-        int amount = 0;
-        for (String key : keys) {
-            amount += this.getInt(key);
-        }
-
-        return StringUtils.formatNumber(amount);
-    }
-
-    public int getIntegers(String... keys) {
-        int amount = 0;
-        for (String key : keys) {
-            amount += this.getInt(key);
-        }
-
-        return amount;
-    }
-
-    public Map<String, StatsContainer> getContainer(String field) {
-        if (field.equals("skywars")) {
-            return skywars;
-        } else if (field.equals("ranked")) {
-            return ranked;
-        }
-
-        return account;
-    }
-
-    public void setSelected(Cosmetic cosmetic) {
-        this.setSelected(cosmetic, 1);
-    }
-
-    public void setSelected(Cosmetic cosmetic, int index) {
-        this.setSelected(cosmetic.getServer(), cosmetic.getType(), index, cosmetic.getId());
-    }
-
-    public void setSelected(CosmeticServer server, CosmeticType type, int index, int id) {
-        SelectedContainer container = getContainer(server.name().toLowerCase()).get("selected").getSelected(server);
-        container.set(type, index, String.valueOf(id));
-        getContainer(server.name().toLowerCase()).get("selected").set(container.build());
-    }
-
-    public Cosmetic getSelected(CosmeticServer server, CosmeticType type, int index) {
-        Cosmetic c = Cosmetic.findFrom(server, type, index,
-                getContainer(server.name().toLowerCase()).get("selected").getSelected(server).get(type, index));
-        if (c != null) {
-            if (c instanceof SkyWarsKit) {
-                if (!((SkyWarsKit) c).has(this)) {
-                    setSelected(server, type, index, 0);
-                    return null;
-                }
-            } else if (c instanceof SkyWarsCage) {
-                if (!c.has(this)) {
-                    setSelected(server, type, index, 0);
-                    return null;
-                }
-            }
-        }
-
-        return c;
-    }
-
-    public boolean hasSelected(Cosmetic cosmetic) {
-        return hasSelected(cosmetic, 1);
-    }
-
-    public boolean hasSelected(Cosmetic cosmetic, int index) {
-        Cosmetic c = this.getSelected(cosmetic.getServer(), cosmetic.getType(), index);
-        return c != null && c.equals(cosmetic);
-    }
-
-    public boolean inLobby() {
-        return arena == null;
-    }
-
-    public Arena getArena() {
-        return arena;
-    }
-
-    public int getLevel() {
-        return skywars.get("level").getAsInt();
-    }
-
-    public double getExp() {
-        return skywars.get("exp").getAsDouble();
-    }
-
-    public int getMysteryDusts() {
-        return account.get("mysterydusts").getAsInt();
-    }
-
-    public boolean canSeePlayers() {
-        return account.get("players").getAsBoolean();
-    }
-
-    public boolean canSeeBlood() {
-        return account.get("gore").getAsBoolean();
-    }
+    // =========================================================================
+    // SAVE / DESTROY
+    // =========================================================================
 
     public void save() {
-        Database.getInstance().saveStats(id, "lostedaccount", account);
-        Database.getInstance().saveStats(id, "lostedskywars", skywars);
-        Database.getInstance().saveStats(id, "ranked_lostedskywars", ranked);
+        Database.getInstance().saveProfile(id, profile);
+        for (Map.Entry<String, Map<String, StatsContainer>> entry : statsPerGroup.entrySet()) {
+            Database.getInstance().saveStats(id, entry.getKey(), entry.getValue());
+        }
+        Database.getInstance().saveCosmetics(id, cosmetics);
+        Database.getInstance().saveSelections(id, selections);
     }
 
     public void destroy() {
         this.id = null;
         this.name = null;
-        if (this.skywars != null) {
-            this.skywars.clear();
-            this.skywars = null;
+        if (this.profile != null) {
+            this.profile.clear();
+            this.profile = null;
         }
-        if (this.account != null) {
-            this.account.clear();
-            this.account = null;
+        if (this.statsPerGroup != null) {
+            this.statsPerGroup.clear();
+            this.statsPerGroup = null;
         }
-        if (this.ranked != null) {
-            this.ranked.clear();
-            this.ranked = null;
+        if (this.cosmetics != null) {
+            this.cosmetics.clear();
+            this.cosmetics = null;
         }
+        if (this.selections != null) {
+            this.selections.clear();
+            this.selections = null;
+        }
+        this.selectedContainer = null;
         this.scoreboard = null;
         this.lastHit.clear();
     }
 
+    // =========================================================================
+    // LAST HITTERS
+    // =========================================================================
+
     public List<Account> getLastHitters() {
         long now = System.currentTimeMillis();
         List<Map.Entry<UUID, Long>> validEntries = new ArrayList<>();
-
         for (Entry<UUID, Long> entry : lastHit.entrySet()) {
             if (entry.getValue() > now) {
                 validEntries.add(entry);
             }
         }
-
         validEntries.sort((a, b) -> Long.compare(b.getValue(), a.getValue()));
 
         List<Account> result = new ArrayList<>(validEntries.size());
@@ -707,9 +732,12 @@ public class Account {
                 result.add(acc);
             }
         }
-
         return result;
     }
+
+    // =========================================================================
+    // GETTERS
+    // =========================================================================
 
     public LostScoreboard getScoreboard() {
         return scoreboard;

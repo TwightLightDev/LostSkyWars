@@ -10,6 +10,7 @@ import org.twightlight.skywars.arena.Arena;
 import java.util.Arrays;
 
 public class CurrencyManager {
+
     private int coinsEarned = 0;
     private double xpEarned = 0;
     private int soulsEarned = 0;
@@ -32,23 +33,23 @@ public class CurrencyManager {
         Arena server = account.getArena();
         SkyWarsPlayerCoinEarnEvent e = new SkyWarsPlayerCoinEarnEvent(server, account.getPlayer(), amount, source);
         Bukkit.getPluginManager().callEvent(e);
-        int final_amount = e.getAmount();
+        int finalAmount = e.getAmount();
 
         if (!server.isPrivate()) {
-            account.addStat("coins", final_amount);
-            this.coinsEarned += final_amount;
+            account.addCoins(finalAmount);
+            this.coinsEarned += finalAmount;
             switch (source) {
                 case PLAY:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_play.
-                            replace("{coins}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_play
+                            .replace("{coins}", String.valueOf(finalAmount)));
                     break;
                 case KILL:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_kill.
-                            replace("{coins}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_kill
+                            .replace("{coins}", String.valueOf(finalAmount)));
                     break;
                 case WIN:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_win.
-                            replace("{coins}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$coins_per_win
+                            .replace("{coins}", String.valueOf(finalAmount)));
                     break;
             }
         }
@@ -61,31 +62,29 @@ public class CurrencyManager {
     public void addXp(double amount, SkyWarsPlayerXpGainEvent.XpSource source) {
         Arena server = account.getArena();
 
-
         SkyWarsPlayerXpGainEvent e = new SkyWarsPlayerXpGainEvent(server, account.getPlayer(), amount, source);
         Bukkit.getPluginManager().callEvent(e);
-        double final_amount = e.getAmount();
+        double finalAmount = e.getAmount();
 
         if (!server.isPrivate()) {
-            account.addExp(final_amount);
-            this.xpEarned += final_amount;
+            account.addExp(finalAmount);
+            this.xpEarned += finalAmount;
             switch (source) {
                 case PLAY:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_play.
-                            replace("{xp}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_play
+                            .replace("{xp}", String.valueOf(finalAmount)));
                     break;
                 case KILL:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_kill.
-                            replace("{xp}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_kill
+                            .replace("{xp}", String.valueOf(finalAmount)));
                     break;
                 case WIN:
-                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_win.
-                            replace("{xp}", String.valueOf(final_amount)));
+                    account.getPlayer().sendMessage(Language.game$rewards_message$exp_per_win
+                            .replace("{xp}", String.valueOf(finalAmount)));
                     break;
             }
         }
-
-        e.getFinalTask().forEach(c -> c.accept(Arrays.asList(this, final_amount)));
+        e.getFinalTask().forEach(c -> c.accept(Arrays.asList(this, finalAmount)));
     }
 
     public int getSoulsEarned() {
@@ -101,17 +100,16 @@ public class CurrencyManager {
     }
 
     public void addSouls(int amount) {
-
         Arena server = account.getArena();
         SkyWarsPlayerSoulEarnEvent e = new SkyWarsPlayerSoulEarnEvent(server, account.getPlayer(), amount);
         Bukkit.getPluginManager().callEvent(e);
-        int final_amount = e.getAmount();
+        int finalAmount = e.getAmount();
 
         if (!server.isPrivate()) {
-            account.addStat("souls", final_amount);
-            this.soulsEarned += final_amount;
-            account.getPlayer().sendMessage(Language.game$rewards_message$soul.
-                    replace("{xp}", String.valueOf(final_amount)));
+            account.addSouls(finalAmount);
+            this.soulsEarned += finalAmount;
+            account.getPlayer().sendMessage(Language.game$rewards_message$soul
+                    .replace("{xp}", String.valueOf(finalAmount)));
         }
     }
 }

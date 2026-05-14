@@ -64,20 +64,20 @@ public class GameArena extends Arena {
 
     private void recordKillStats(Account killerAccount, String statSuffix) {
         if (!isPrivate && group.hasTrait("has_stats")) {
-            killerAccount.addStat(group.getId() + "_" + statSuffix);
+            killerAccount.addStat(group.getId(), statSuffix);
         }
         if (!isPrivate && group.hasTrait("has_elo")) {
             int eloPerKill = group.getRewardInt("elo-per-kill");
             int killCount = getKills(killerAccount.getPlayer());
             int eloAmount = (int) (eloPerKill + killCount * eloPerKill * 0.05);
-            killerAccount.addStat(group.getId() + "_elo", eloAmount);
+            killerAccount.addStat(group.getId(), "elo", eloAmount);
         }
     }
 
     private void recordDeathStats(Account account) {
         if (!isPrivate && group.hasTrait("has_stats")) {
-            account.addStat(group.getId() + "_deaths");
-            account.addStat(group.getId() + "_plays");
+            account.addStat(group.getId(), "deaths");
+            account.addStat(group.getId(), "plays");
         }
     }
 
@@ -86,7 +86,7 @@ public class GameArena extends Arena {
         double expPerKill = group.getReward("exp-per-kill");
         dataContainer.get(killer.getUniqueId()).addCoins(coinsPerKill, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
         dataContainer.get(killer.getUniqueId()).addXp(expPerKill, SkyWarsPlayerXpGainEvent.XpSource.KILL);
-        if (killerAccount.getInt("souls") < killerAccount.getContainer("account").get("sw_maxsouls").getAsInt()) {
+        if (killerAccount.getSouls() < killerAccount.getMaxSouls()) {
             dataContainer.get(killer.getUniqueId()).addSouls(1);
         }
     }
@@ -123,20 +123,20 @@ public class GameArena extends Arena {
             recordKillStats(ack, "kills");
             if (byMob) {
                 cause = SkyWarsDeathCause.KILLED_MOB;
-                recordKillStats(ack, "mob");
+                recordKillStats(ack, "mob_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
                 cause = SkyWarsDeathCause.KILLED_VOID;
-                recordKillStats(ack, "void");
+                recordKillStats(ack, "void_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause() instanceof EntityDamageByEntityEvent
                     && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Arrow) {
                 cause = SkyWarsDeathCause.KILLED_BOW;
-                recordKillStats(ack, "bow");
+                recordKillStats(ack, "bow_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow);
             } else {
                 cause = SkyWarsDeathCause.KILLED_MELEE;
-                recordKillStats(ack, "melee");
+                recordKillStats(ack, "melee_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal);
             }
             giveKillRewards(killer, ack);
@@ -145,10 +145,14 @@ public class GameArena extends Arena {
         recordDeathStats(account);
         givePlayRewards(player);
 
-        SkyWarsDeathCry cry = (SkyWarsDeathCry) account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
-        if (cry != null) {
-            cry.getSound().play(player.getLocation(), cry.getVolume(), cry.getPitch());
+        int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
+        if (deathCryId > 0) {
+            Cosmetic cry = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
+            if (cry != null && cry instanceof SkyWarsDeathCry) {
+                ((SkyWarsDeathCry) cry).getSound().play(player.getLocation(), ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
+            }
         }
+
         SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
         Bukkit.getPluginManager().callEvent(deathEvent);
         broadcast(deathEvent.getKillMessage());
@@ -190,20 +194,20 @@ public class GameArena extends Arena {
             recordKillStats(ack, "kills");
             if (byMob) {
                 cause = SkyWarsDeathCause.KILLED_MOB;
-                recordKillStats(ack, "mob");
+                recordKillStats(ack, "mob_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$mob);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause().getCause() == DamageCause.VOID) {
                 cause = SkyWarsDeathCause.KILLED_VOID;
-                recordKillStats(ack, "void");
+                recordKillStats(ack, "void_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$void);
             } else if (player.getLastDamageCause() != null && player.getLastDamageCause() instanceof EntityDamageByEntityEvent
                     && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Arrow) {
                 cause = SkyWarsDeathCause.KILLED_BOW;
-                recordKillStats(ack, "bow");
+                recordKillStats(ack, "bow_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$bow);
             } else {
                 cause = SkyWarsDeathCause.KILLED_MELEE;
-                recordKillStats(ack, "melee");
+                recordKillStats(ack, "melee_kills");
                 killMessage = PlayerUtils.replaceAll(player, killer, Language.game$broadcast$ingame$death_messages$killed$normal);
             }
             giveKillRewards(killer, ack);
@@ -253,10 +257,14 @@ public class GameArena extends Arena {
             }
         }, 3);
 
-        SkyWarsDeathCry cry = (SkyWarsDeathCry) account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
-        if (cry != null) {
-            cry.getSound().play(dieLocation, cry.getVolume(), cry.getPitch());
+        int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
+        if (deathCryId > 0) {
+            Cosmetic cry = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
+            if (cry != null && cry instanceof SkyWarsDeathCry) {
+                ((SkyWarsDeathCry) cry).getSound().play(dieLocation, ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
+            }
         }
+
         SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
         Bukkit.getPluginManager().callEvent(deathEvent);
         broadcast(deathEvent.getKillMessage());
@@ -323,9 +331,14 @@ public class GameArena extends Arena {
         players.add(player.getUniqueId());
         account.setArena(this);
 
-        Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
-        if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
-            ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation());
+        int cageId = account.getSelectedContainer().getGlobalSelection("cage");
+        if (cageId > 0) {
+            Cosmetic cosmetic = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1, String.valueOf(cageId));
+            if (cosmetic != null && cosmetic instanceof SkyWarsCage && cosmetic.has(account)) {
+                ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation());
+            } else {
+                SkyWarsCage.defaultCage(team.getLocation(), false);
+            }
         } else {
             SkyWarsCage.defaultCage(team.getLocation(), false);
         }
@@ -395,7 +408,7 @@ public class GameArena extends Arena {
                     if (hitter != null && (killer == null || !hitter.equals(killer))
                             && (hitter.getArena() != null && hitter.getArena().equals(this))
                             && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
-                        if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
+                        if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId(), "assists");
                     }
                 }
             }
@@ -419,7 +432,7 @@ public class GameArena extends Arena {
                 if (hitter != null && (killer == null || !hitter.equals(killer))
                         && (hitter.getArena() != null && hitter.getArena().equals(this))
                         && hitter.getPlayer() != null && !this.isSpectator(hitter.getPlayer())) {
-                    if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId() + "_assists");
+                    if (!isPrivate() && group.hasTrait("has_stats")) hitter.addStat(group.getId(), "assists");
                 }
             }
         }
@@ -518,17 +531,19 @@ public class GameArena extends Arena {
                 account.reloadScoreboard();
                 account.refreshPlayer();
                 dataContainer.put(player.getUniqueId(), new CurrencyManager(account));
-                Cosmetic cosmeticKit = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1);
-                if (cosmeticKit != null && cosmeticKit instanceof SkyWarsKit) {
-                    ((SkyWarsKit) cosmeticKit).apply(player);
-                } else {
-                    if (Language.options$game$default_kit && !group.hasTrait("no_default_kit")) {
-                        player.getInventory().addItem(
-                                new ItemStack(Material.matchMaterial("WOOD_PICKAXE")),
-                                new ItemStack(Material.matchMaterial("WOOD_AXE")),
-                                new ItemStack(Material.matchMaterial("WOOD_SPADE")));
+
+                int kitId = account.getSelectedContainer().getSelectedKit(group.getId());
+                if (kitId > 0) {
+                    Cosmetic cosmeticKit = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1, String.valueOf(kitId));
+                    if (cosmeticKit != null && cosmeticKit instanceof SkyWarsKit && ((SkyWarsKit) cosmeticKit).has(account)) {
+                        ((SkyWarsKit) cosmeticKit).apply(player);
+                    } else {
+                        applyDefaultKit(player);
                     }
+                } else {
+                    applyDefaultKit(player);
                 }
+
                 player.setNoDamageTicks(80);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 100, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 0));
@@ -543,6 +558,15 @@ public class GameArena extends Arena {
         Bukkit.getPluginManager().callEvent(new SkyWarsGameStartEvent(this));
         this.updateTags();
         this.check();
+    }
+
+    private void applyDefaultKit(Player player) {
+        if (Language.options$game$default_kit && !group.hasTrait("no_default_kit")) {
+            player.getInventory().addItem(
+                    new ItemStack(Material.matchMaterial("WOOD_PICKAXE")),
+                    new ItemStack(Material.matchMaterial("WOOD_AXE")),
+                    new ItemStack(Material.matchMaterial("WOOD_SPADE")));
+        }
     }
 
     private void check() {
@@ -582,12 +606,12 @@ public class GameArena extends Arena {
                     wAccount.refreshPlayer();
 
                     if (!isPrivate && group.hasTrait("has_stats")) {
-                        wAccount.addStat(group.getId() + "_wins");
-                        wAccount.addStat(group.getId() + "_plays");
+                        wAccount.addStat(group.getId(), "wins");
+                        wAccount.addStat(group.getId(), "plays");
                     }
                     if (!isPrivate && group.hasTrait("has_elo")) {
                         int eloPerWin = group.getRewardInt("elo-per-win");
-                        wAccount.addStat(group.getId() + "_elo", eloPerWin);
+                        wAccount.addStat(group.getId(), "elo", eloPerWin);
                     }
 
                     int coinsPerWin = group.getRewardInt("coins-per-win");
@@ -600,8 +624,8 @@ public class GameArena extends Arena {
                     dataContainer.get(wPlayer.getUniqueId()).addCoins(coinsPerWin, SkyWarsPlayerCoinEarnEvent.CoinSource.WIN);
                     dataContainer.get(wPlayer.getUniqueId()).addXp(expPerWin, SkyWarsPlayerXpGainEvent.XpSource.WIN);
 
-                    for (int i = 0; i < wAccount.getContainer("account").get("sw_soulswin").getAsInt(); i++) {
-                        if (wAccount.getInt("souls") < wAccount.getContainer("account").get("sw_maxsouls").getAsInt()) {
+                    for (int i = 0; i < wAccount.getSoulsPerWin(); i++) {
+                        if (wAccount.getSouls() < wAccount.getMaxSouls()) {
                             dataContainer.get(wPlayer.getUniqueId()).addSouls(1);
                         }
                     }
