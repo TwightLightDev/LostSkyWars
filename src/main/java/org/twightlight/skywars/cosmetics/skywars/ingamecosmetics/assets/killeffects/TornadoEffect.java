@@ -9,7 +9,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 public class TornadoEffect extends SkyWarsKillEffect {
     private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killeffects");

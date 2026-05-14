@@ -20,7 +20,7 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class TeleporterMenu extends UpdatablePlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("teleporter");
+    private static final MenuConfig config = MenuConfig.getByName("teleporter");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

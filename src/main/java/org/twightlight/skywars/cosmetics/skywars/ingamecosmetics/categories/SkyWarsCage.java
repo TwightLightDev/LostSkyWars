@@ -29,7 +29,7 @@ import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.hook.worldedit.WorldEditHook;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;

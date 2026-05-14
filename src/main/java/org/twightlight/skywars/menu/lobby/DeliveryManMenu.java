@@ -11,9 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.DeliveryContainer;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
@@ -27,7 +27,7 @@ import java.util.*;
 @SuppressWarnings("deprecation")
 public class DeliveryManMenu extends UpdatablePlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("deliveryman");
+    private static final MenuConfig config = MenuConfig.getByName("deliveryman");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

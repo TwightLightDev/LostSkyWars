@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 import java.util.*;
 import java.util.function.Consumer;

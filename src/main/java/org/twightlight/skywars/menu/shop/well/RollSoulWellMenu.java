@@ -10,7 +10,7 @@ import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
+import org.twightlight.skywars.menu.MenuConfig;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.menu.shop.SoulWellMenu;
 import org.twightlight.skywars.nms.Sound;
@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("deprecation")
 public class RollSoulWellMenu extends UpdatablePlayerMenu {
 
-    protected static final ConfigMenu config = ConfigMenu.getByName("wellroll");
+    protected static final MenuConfig config = MenuConfig.getByName("wellroll");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

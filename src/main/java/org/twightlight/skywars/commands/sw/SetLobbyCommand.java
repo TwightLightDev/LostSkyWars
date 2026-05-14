@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 public class SetLobbyCommand extends SubCommand {
 

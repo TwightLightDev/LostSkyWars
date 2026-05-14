@@ -8,7 +8,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.FileUtils;
 import org.twightlight.skywars.utils.StringUtils;
 

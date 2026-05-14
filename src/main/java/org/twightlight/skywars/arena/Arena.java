@@ -22,7 +22,7 @@ import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.FileUtils;
 
 import java.io.File;

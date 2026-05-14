@@ -8,16 +8,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
@@ -32,7 +30,7 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class KitSelectorMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("kitselector");
+    private static final MenuConfig config = MenuConfig.getByName("kitselector");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

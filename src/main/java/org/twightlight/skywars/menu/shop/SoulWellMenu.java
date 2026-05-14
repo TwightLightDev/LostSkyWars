@@ -11,9 +11,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.shop.well.RollSoulWellMenu;
 import org.twightlight.skywars.menu.shop.well.SoulHarvestersMenu;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class SoulWellMenu extends PlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("well");
+    private static final MenuConfig config = MenuConfig.getByName("well");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.utils;
+package org.twightlight.skywars.config;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,6 +10,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
+import org.twightlight.skywars.utils.FileUtils;
 
 import java.io.*;
 import java.util.*;

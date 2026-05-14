@@ -1,10 +1,3 @@
-# groups.yml — Defines all game mode groups. Add/remove freely.
-# Each group has a unique key used as its identifier everywhere (stats, config, etc.)
-# 'traits' is a list of string tags. Game logic checks for trait presence, not hardcoded booleans.
-#   Built-in traits: has_stats, has_elo, custom_scoreboard, opponents_tracking, free_kits_and_perks
-# 'track-stats' is implied by has_stats trait.
-# Rewards define what players earn.
-
 groups:
   solo:
     display: "&fSolo &7Normal"
@@ -51,7 +44,8 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-
+    shared_cosmetics:
+      - doubles
   solo_insane:
     display: "&fSolo &cInsane"
     team-size: 1
@@ -97,7 +91,8 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-
+    shared_cosmetics:
+      - doubles_insane
   doubles:
     display: "&fDoubles &7Normal"
     team-size: 2

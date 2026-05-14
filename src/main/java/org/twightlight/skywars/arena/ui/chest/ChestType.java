@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.NumberUtils;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 

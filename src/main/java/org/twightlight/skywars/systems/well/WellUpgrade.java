@@ -1,6 +1,6 @@
 package org.twightlight.skywars.systems.well;
 
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.List;

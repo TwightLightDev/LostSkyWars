@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 public class PreviewCommand extends SubCommand {

@@ -25,7 +25,7 @@ import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.SpiralFactory;
 
 import java.util.ArrayList;

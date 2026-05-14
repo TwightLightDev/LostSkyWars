@@ -3,7 +3,7 @@ package org.twightlight.skywars.systems.delivery;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;

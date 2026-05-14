@@ -9,9 +9,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.lobby.ProfileMenu;
 import org.twightlight.skywars.nms.Sound;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class LevelingMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("leveling");
+    private static final MenuConfig config = MenuConfig.getByName("leveling");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -13,9 +13,9 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 import org.twightlight.skywars.player.Account;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class ShopMenu extends PlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("shop");
+    private static final MenuConfig config = MenuConfig.getByName("shop");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

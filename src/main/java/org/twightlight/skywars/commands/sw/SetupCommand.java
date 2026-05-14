@@ -10,7 +10,7 @@ import org.twightlight.skywars.setup.Menu;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.setup.chests.Browser;
 import org.twightlight.skywars.setup.kits.KitsSetup;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

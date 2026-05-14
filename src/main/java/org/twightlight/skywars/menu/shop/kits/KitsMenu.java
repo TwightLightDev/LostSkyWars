@@ -13,9 +13,9 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.shop.KitsAndPerksMenu;
 import org.twightlight.skywars.player.Account;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class KitsMenu extends PagedPlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("kits");
+    private static final MenuConfig config = MenuConfig.getByName("kits");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

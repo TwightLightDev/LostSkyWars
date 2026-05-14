@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
@@ -26,8 +26,8 @@ import java.util.Map;
 
 public class ConfirmMenu extends PlayerMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("confirmbuy");
-    private static final ConfigMenu config1 = ConfigMenu.getByName("killmessage");
+    private static final MenuConfig config = MenuConfig.getByName("confirmbuy");
+    private static final MenuConfig config1 = MenuConfig.getByName("killmessage");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -16,9 +16,9 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.menu.ConfigMenu;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigAction;
-import org.twightlight.skywars.menu.ConfigMenu.ConfigItem;
+import org.twightlight.skywars.menu.MenuConfig;
+import org.twightlight.skywars.menu.MenuConfig.ConfigAction;
+import org.twightlight.skywars.menu.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.UpdatablePlayerPagedMenu;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.privategames.User;
@@ -34,7 +34,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @SuppressWarnings("unchecked")
 public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
 
-    private static final ConfigMenu config = ConfigMenu.getByName("mapselector");
+    private static final MenuConfig config = MenuConfig.getByName("mapselector");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

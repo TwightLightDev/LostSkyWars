@@ -5,7 +5,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
-public class ConfigMenu {
+public class MenuConfig {
 
     private String name;
     private String title;
@@ -22,7 +22,7 @@ public class ConfigMenu {
     private Map<Integer, ConfigItem> items = new HashMap<>();
     private Map<String, Object> extras = new HashMap<>();
 
-    public ConfigMenu(String name, String title, int rows) {
+    public MenuConfig(String name, String title, int rows) {
         this.name = name;
         this.title = title;
         this.rows = rows;
@@ -73,12 +73,12 @@ public class ConfigMenu {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Menus");
-    private static final List<ConfigMenu> menus = new ArrayList<>();
+    private static final List<MenuConfig> menus = new ArrayList<>();
 
     public static void setupMenus() {
         for (String menu : Core.menusArray) {
             ConfigUtils cu = ConfigUtils.getConfig(menu, "plugins/LostSkyWars/menus");
-            ConfigMenu cm = new ConfigMenu(menu, StringUtils.formatColors(cu.getString("title")), cu.getInt("rows"));
+            MenuConfig cm = new MenuConfig(menu, StringUtils.formatColors(cu.getString("title")), cu.getInt("rows"));
             for (String key : cu.getSection("items").getKeys(false)) {
                 int slot = cu.getInt("items." + key + ".slot", 0);
                 String action = cu.getString("items." + key + ".action");
@@ -102,8 +102,8 @@ public class ConfigMenu {
         }
     }
 
-    public static ConfigMenu getByName(String name) {
-        for (ConfigMenu cm : menus) {
+    public static MenuConfig getByName(String name) {
+        for (MenuConfig cm : menus) {
             if (cm.getName().equalsIgnoreCase(name)) {
                 return cm;
             }

@@ -12,9 +12,8 @@ import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ArrowRecovery extends SkyWarsPerk {

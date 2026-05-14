@@ -3,7 +3,7 @@ package org.twightlight.skywars.cosmetics.skywars.perks;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 
 public class DecisiveStrike extends SkyWarsPerk {
 

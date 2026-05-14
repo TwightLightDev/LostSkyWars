@@ -26,7 +26,7 @@ import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.RenderUtils;
 
 import java.awt.image.BufferedImage;

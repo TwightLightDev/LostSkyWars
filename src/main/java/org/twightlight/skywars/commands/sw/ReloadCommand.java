@@ -7,10 +7,8 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
-import org.twightlight.skywars.cosmetics.skywars.kits.InsaneSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.NormalSkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.kits.RankedSkyWarsKit;
 
 @SuppressWarnings("deprecation")
 public class ReloadCommand extends SubCommand {
@@ -29,13 +27,9 @@ public class ReloadCommand extends SubCommand {
         }
 
         if (args[0].equalsIgnoreCase("kits")) {
-            CosmeticServer.SKYWARS.removeByType(NormalSkyWarsKit.class);
-            CosmeticServer.SKYWARS.removeByType(InsaneSkyWarsKit.class);
-            CosmeticServer.SKYWARS.removeByType(RankedSkyWarsKit.class);
+            CosmeticServer.SKYWARS.removeByType(SkyWarsKit.class);
 
-            NormalSkyWarsKit.setupKits();
-            InsaneSkyWarsKit.setupKits();
-            RankedSkyWarsKit.setupKits();
+            SkyWarsKit.setupKits();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all kit's cache!"));
         } else if (args[0].equalsIgnoreCase("projectiletrails")) {
             CosmeticServer.SKYWARS.removeByType(SkyWarsTrail.class);

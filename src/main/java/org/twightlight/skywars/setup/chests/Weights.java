@@ -9,7 +9,7 @@ import org.twightlight.skywars.setup.ChatSession;
 import org.twightlight.skywars.setup.ContentsMenu;
 import org.twightlight.skywars.setup.InventoryHolder;
 import org.twightlight.skywars.setup.Menu;
-import org.twightlight.skywars.utils.ConfigUtils;
+import org.twightlight.skywars.config.ConfigUtils;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
