@@ -9,7 +9,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.RenderUtils;
 import org.twightlight.skywars.utils.VectorUtils;
 
@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 
 public class CryingEffect extends SkyWarsKillEffect {
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killeffects");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public CryingEffect() {
         super(CONFIG.getInt("crying.id"),

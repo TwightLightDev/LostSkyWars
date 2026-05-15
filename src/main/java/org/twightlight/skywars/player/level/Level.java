@@ -8,7 +8,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.FileUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -81,7 +81,7 @@ public class Level {
     private static List<Level> levels = new ArrayList<>();
 
     public static void setupLevels() {
-        ConfigUtils cu = ConfigUtils.getConfig("levels");
+        ConfigWrapper cu = ConfigWrapper.getConfig("levels");
         for (String key : cu.getSection("levels").getKeys(false)) {
             if (!cu.contains("levels." + key + ".reward")) {
                 FileUtils.deleteFile(new File("plugins/LostSkyWars/levels.yml"));

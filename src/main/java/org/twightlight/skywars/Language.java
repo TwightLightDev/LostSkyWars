@@ -6,7 +6,7 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.LanguageWriter;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -252,11 +252,11 @@ public class Language {
     public static String cosmetics$sprays$holograms = "§eClick!";
 
     public static Logger LOGGER;
-    private static ConfigUtils CONFIG;
+    private static ConfigWrapper CONFIG;
 
     public static void setupLanguage() {
         LOGGER = SkyWars.LOGGER.getModule("Language");
-        CONFIG = ConfigUtils.getConfig("lang");
+        CONFIG = ConfigWrapper.getConfig("lang");
 
         boolean save = false;
         LanguageWriter writer = new LanguageWriter(CONFIG.getFile());

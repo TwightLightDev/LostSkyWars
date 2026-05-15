@@ -25,7 +25,7 @@ import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.SpiralFactory;
 
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class SkyWarsTrail extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("ProjectileTrails");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("projectiletrails");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("projectiletrails");
 
     public static void setupProjectileTrails() {
         CONFIG.reload();

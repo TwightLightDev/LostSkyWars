@@ -3,7 +3,7 @@ package org.twightlight.skywars.systems.delivery;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class Delivery {
     private static List<Delivery> deliveries = new ArrayList<>();
 
     public static void setupDeliveries() {
-        ConfigUtils cu = ConfigUtils.getConfig("deliveries");
+        ConfigWrapper cu = ConfigWrapper.getConfig("deliveries");
 
         ConfigurationSection section = cu.getSection("deliveries");
         for (String key : section.getKeys(false)) {

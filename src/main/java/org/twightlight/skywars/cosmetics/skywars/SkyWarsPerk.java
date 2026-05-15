@@ -25,7 +25,7 @@ import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.cosmetics.skywars.perks.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -165,7 +165,7 @@ public abstract class SkyWarsPerk extends Cosmetic implements Listener {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Perks");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
 
     public static void setupPerks() {
         checkIfAbsent("arrowrecovery");

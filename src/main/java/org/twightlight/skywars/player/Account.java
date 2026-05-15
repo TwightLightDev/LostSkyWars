@@ -16,7 +16,7 @@ import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
-import org.twightlight.skywars.database.player.StatsContainer;
+import org.twightlight.skywars.database.player.ValueContainer;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
@@ -39,10 +39,10 @@ public class Account {
 
     private Arena arena;
 
-    protected Map<String, StatsContainer> profile;
-    protected Map<String, Map<String, StatsContainer>> statsPerGroup;
-    protected Map<String, StatsContainer> cosmetics;
-    protected Map<String, StatsContainer> selections;
+    protected Map<String, ValueContainer> profile;
+    protected Map<String, Map<String, ValueContainer>> statsPerGroup;
+    protected Map<String, ValueContainer> cosmetics;
+    protected Map<String, ValueContainer> selections;
     protected SelectedContainer selectedContainer;
 
     private Map<UUID, Long> lastHit = new HashMap<>();
@@ -76,64 +76,64 @@ public class Account {
         }
     }
 
-    private static Map<String, StatsContainer> buildDefaultProfile() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("coins", new StatsContainer(0));
-        map.put("souls", new StatsContainer(0));
-        map.put("level", new StatsContainer(1));
-        map.put("exp", new StatsContainer(0.0));
-        map.put("max_souls", new StatsContainer(100));
-        map.put("well_roll", new StatsContainer(1));
-        map.put("souls_per_win", new StatsContainer(0));
-        map.put("mystery_dusts", new StatsContainer(0));
-        map.put("last_rank", new StatsContainer("&7"));
-        map.put("deliveries", new StatsContainer("{}"));
-        map.put("leveling", new StatsContainer("[]"));
-        map.put("show_players", new StatsContainer(true));
-        map.put("show_gore", new StatsContainer(true));
-        map.put("elo", new StatsContainer(0));
-        map.put("brave_points", new StatsContainer(0));
+    private static Map<String, ValueContainer> buildDefaultProfile() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("coins", new ValueContainer(0));
+        map.put("souls", new ValueContainer(0));
+        map.put("level", new ValueContainer(1));
+        map.put("exp", new ValueContainer(0.0));
+        map.put("max_souls", new ValueContainer(100));
+        map.put("well_roll", new ValueContainer(1));
+        map.put("souls_per_win", new ValueContainer(0));
+        map.put("mystery_dusts", new ValueContainer(0));
+        map.put("last_rank", new ValueContainer("&7"));
+        map.put("deliveries", new ValueContainer("{}"));
+        map.put("leveling", new ValueContainer("[]"));
+        map.put("show_players", new ValueContainer(true));
+        map.put("show_gore", new ValueContainer(true));
+        map.put("elo", new ValueContainer(0));
+        map.put("brave_points", new ValueContainer(0));
         return map;
     }
 
-    private static Map<String, StatsContainer> buildDefaultCosmetics() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kits", new StatsContainer("{}"));
-        map.put("perks", new StatsContainer("{}"));
-        map.put("cages", new StatsContainer("{}"));
-        map.put("death_cries", new StatsContainer("{}"));
-        map.put("trails", new StatsContainer("{}"));
-        map.put("balloons", new StatsContainer("{}"));
-        map.put("kill_messages", new StatsContainer("{}"));
-        map.put("kill_effects", new StatsContainer("{}"));
-        map.put("sprays", new StatsContainer("{}"));
-        map.put("victory_dances", new StatsContainer("{}"));
-        map.put("titles", new StatsContainer("{}"));
-        map.put("symbols", new StatsContainer("{}"));
+    private static Map<String, ValueContainer> buildDefaultCosmetics() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("kits", new ValueContainer("{}"));
+        map.put("perks", new ValueContainer("{}"));
+        map.put("cages", new ValueContainer("{}"));
+        map.put("death_cries", new ValueContainer("{}"));
+        map.put("trails", new ValueContainer("{}"));
+        map.put("balloons", new ValueContainer("{}"));
+        map.put("kill_messages", new ValueContainer("{}"));
+        map.put("kill_effects", new ValueContainer("{}"));
+        map.put("sprays", new ValueContainer("{}"));
+        map.put("victory_dances", new ValueContainer("{}"));
+        map.put("titles", new ValueContainer("{}"));
+        map.put("symbols", new ValueContainer("{}"));
         return map;
     }
 
-    private static Map<String, StatsContainer> buildDefaultSelections() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kit", new StatsContainer("{}"));
-        map.put("perk", new StatsContainer("{}"));
-        map.put("cage", new StatsContainer(0));
-        map.put("death_cry", new StatsContainer(0));
-        map.put("trail", new StatsContainer(0));
-        map.put("balloon", new StatsContainer(0));
-        map.put("kill_message", new StatsContainer(0));
-        map.put("kill_effect", new StatsContainer(0));
-        map.put("spray", new StatsContainer(0));
-        map.put("victory_dance", new StatsContainer(0));
-        map.put("title", new StatsContainer(0));
-        map.put("symbol", new StatsContainer(0));
-        map.put("last_selected", new StatsContainer(0L));
-        map.put("favorites", new StatsContainer("[]"));
+    private static Map<String, ValueContainer> buildDefaultSelections() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("kit", new ValueContainer("{}"));
+        map.put("perk", new ValueContainer("{}"));
+        map.put("cage", new ValueContainer(0));
+        map.put("death_cry", new ValueContainer(0));
+        map.put("trail", new ValueContainer(0));
+        map.put("balloon", new ValueContainer(0));
+        map.put("kill_message", new ValueContainer(0));
+        map.put("kill_effect", new ValueContainer(0));
+        map.put("spray", new ValueContainer(0));
+        map.put("victory_dance", new ValueContainer(0));
+        map.put("title", new ValueContainer(0));
+        map.put("symbol", new ValueContainer(0));
+        map.put("last_selected", new ValueContainer(0L));
+        map.put("favorites", new ValueContainer("[]"));
         return map;
     }
 
-    public Map<String, StatsContainer> getStatsForGroup(String groupId) {
-        Map<String, StatsContainer> stats = statsPerGroup.get(groupId);
+    public Map<String, ValueContainer> getStatsForGroup(String groupId) {
+        Map<String, ValueContainer> stats = statsPerGroup.get(groupId);
         if (stats == null) {
             stats = Database.getInstance().loadStats(id, groupId, name);
             statsPerGroup.put(groupId, stats);
@@ -146,16 +146,16 @@ public class Account {
     }
 
     public void addStat(String groupId, String statName, int amount) {
-        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
-        StatsContainer container = stats.get(statName);
+        Map<String, ValueContainer> stats = getStatsForGroup(groupId);
+        ValueContainer container = stats.get(statName);
         if (container != null) {
             container.addInt(amount);
         }
     }
 
     public void removeStat(String groupId, String statName, int amount) {
-        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
-        StatsContainer container = stats.get(statName);
+        Map<String, ValueContainer> stats = getStatsForGroup(groupId);
+        ValueContainer container = stats.get(statName);
         if (container != null) {
             for (int i = 0; i < amount; i++) {
                 if (container.getAs(Integer.class) <= 0) break;
@@ -165,8 +165,8 @@ public class Account {
     }
 
     public int getStat(String groupId, String statName) {
-        Map<String, StatsContainer> stats = getStatsForGroup(groupId);
-        StatsContainer container = stats.get(statName);
+        Map<String, ValueContainer> stats = getStatsForGroup(groupId);
+        ValueContainer container = stats.get(statName);
         return container != null ? container.getAs(Integer.class) : 0;
     }
 
@@ -266,7 +266,7 @@ public class Account {
     }
 
     public void removeElo(int amount) {
-        StatsContainer container = this.profile.get("elo");
+        ValueContainer container = this.profile.get("elo");
         for (int i = 0; i < amount; i++) {
             if (container.getAs(Integer.class) <= 0) break;
             container.removeInt(1);
@@ -291,7 +291,7 @@ public class Account {
     }
 
     public void removeBravePoints(int amount) {
-        StatsContainer container = this.profile.get("brave_points");
+        ValueContainer container = this.profile.get("brave_points");
         for (int i = 0; i < amount; i++) {
             if (container.getAs(Integer.class) <= 0) break;
             container.removeInt(1);
@@ -378,7 +378,7 @@ public class Account {
         this.profile.get("show_gore").set(flag);
     }
 
-    public Map<String, StatsContainer> getProfile() {
+    public Map<String, ValueContainer> getProfile() {
         return profile;
     }
 
@@ -450,12 +450,12 @@ public class Account {
     // COSMETIC OWNERSHIP (direct Map methods via StatsContainer)
     // =========================================================================
 
-    public Map<String, StatsContainer> getCosmeticsMap() {
+    public Map<String, ValueContainer> getCosmeticsMap() {
         return cosmetics;
     }
 
     public List<String> getOwnedCosmetics(String column, String groupKey) {
-        StatsContainer container = cosmetics.get(column);
+        ValueContainer container = cosmetics.get(column);
         if (container == null) return new ArrayList<>();
         Map<String, List<String>> map = container.getAsGroupedMap();
         List<String> list = map.get(groupKey);
@@ -467,7 +467,7 @@ public class Account {
     }
 
     public void addOwnedCosmetic(String column, String cosmeticId, String groupKey) {
-        StatsContainer container = cosmetics.get(column);
+        ValueContainer container = cosmetics.get(column);
         if (container == null) return;
         Map<String, List<String>> map = container.getAsGroupedMap();
         List<String> list = map.computeIfAbsent(groupKey, k -> new ArrayList<>());
@@ -482,7 +482,7 @@ public class Account {
     }
 
     public void removeOwnedCosmetic(String column, String cosmeticId, String groupKey) {
-        StatsContainer container = cosmetics.get(column);
+        ValueContainer container = cosmetics.get(column);
         if (container == null) return;
         Map<String, List<String>> map = container.getAsGroupedMap();
         List<String> list = map.get(groupKey);
@@ -505,7 +505,7 @@ public class Account {
     }
 
     public Map<String, List<String>> getCosmeticGroupedMap(String column) {
-        StatsContainer container = cosmetics.get(column);
+        ValueContainer container = cosmetics.get(column);
         if (container == null) return new LinkedHashMap<>();
         return container.getAsGroupedMap();
     }
@@ -518,7 +518,7 @@ public class Account {
         return selectedContainer;
     }
 
-    public Map<String, StatsContainer> getSelectionsMap() {
+    public Map<String, ValueContainer> getSelectionsMap() {
         return selections;
     }
 
@@ -826,7 +826,7 @@ public class Account {
 
     public void save() {
         Database.getInstance().saveProfile(id, profile);
-        for (Map.Entry<String, Map<String, StatsContainer>> entry : statsPerGroup.entrySet()) {
+        for (Map.Entry<String, Map<String, ValueContainer>> entry : statsPerGroup.entrySet()) {
             Database.getInstance().saveStats(id, entry.getKey(), entry.getValue());
         }
         Database.getInstance().saveCosmetics(id, cosmetics);

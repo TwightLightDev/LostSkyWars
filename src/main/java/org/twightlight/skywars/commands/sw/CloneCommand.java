@@ -7,7 +7,7 @@ import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class CloneCommand extends SubCommand {
         }
 
         sender.sendMessage("§5[LostSkyWars] §aCloning the arena...");
-        ConfigUtils cu = ConfigUtils.getConfig(worldName, "plugins/LostSkyWars/servers");
+        ConfigWrapper cu = ConfigWrapper.getConfig(worldName, "plugins/LostSkyWars/servers");
         cu.set("name", server.getName());
         cu.set("group", server.getGroup().getId());
         cu.set("cube", server.getConfig().getWorldCube().toString().replace(args[0], worldName));

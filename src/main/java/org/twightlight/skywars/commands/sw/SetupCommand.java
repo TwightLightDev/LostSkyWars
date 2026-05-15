@@ -10,7 +10,7 @@ import org.twightlight.skywars.setup.Menu;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.setup.chests.Browser;
 import org.twightlight.skywars.setup.kits.KitsSetup;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class SetupCommand extends SubCommand {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found! Use: normal, insane, ranked"));
                 return;
             }
-            ConfigUtils config = ConfigUtils.getConfig(kitType + "kits", "plugins/LostSkyWars/kits");
+            ConfigWrapper config = ConfigWrapper.getConfig(kitType + "kits", "plugins/LostSkyWars/kits");
             if (config != null) {
                 Menu menu = KitsSetup.init(config, args[1]);
                 menu.open(player);
@@ -52,7 +52,7 @@ public class SetupCommand extends SubCommand {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found!"));
             }
         } else if (action.equalsIgnoreCase("chesttypes")) {
-            Browser.init(ConfigUtils.getConfig("chesttypes")).open(player);
+            Browser.init(ConfigWrapper.getConfig("chesttypes")).open(player);
         } else if (action.equalsIgnoreCase("cage")) {
             CageSetupSession session = CageSetupSession.getSessionFromUUID(player.getUniqueId());
 

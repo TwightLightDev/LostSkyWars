@@ -11,7 +11,7 @@ import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,7 +19,7 @@ public class BlazingArrows extends SkyWarsPerk {
 
     private int percentage;
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("perks");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
 
     public BlazingArrows() {
         super(CONFIG.getInt("blazingarrow.id"),

@@ -11,7 +11,7 @@ import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +72,7 @@ public class WellNPC {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("SoulWell");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("locations");
 
     private static List<WellNPC> npcs = new ArrayList<>();
 

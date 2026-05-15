@@ -3,7 +3,7 @@ package org.twightlight.skywars.database;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
-import org.twightlight.skywars.database.player.StatsContainer;
+import org.twightlight.skywars.database.player.ValueContainer;
 import org.twightlight.skywars.player.Account;
 
 import javax.sql.rowset.CachedRowSet;
@@ -17,42 +17,42 @@ public abstract class Database {
     /**
      * Loads profile data for a player (includes elo and brave_points).
      */
-    public abstract Map<String, StatsContainer> loadProfile(UUID uuid, String name);
+    public abstract Map<String, ValueContainer> loadProfile(UUID uuid, String name);
 
     /**
      * Saves profile data for a player (includes elo and brave_points).
      */
-    public abstract void saveProfile(UUID uuid, Map<String, StatsContainer> data);
+    public abstract void saveProfile(UUID uuid, Map<String, ValueContainer> data);
 
     /**
      * Loads stats for a player in a specific group (no elo/brave_points).
      */
-    public abstract Map<String, StatsContainer> loadStats(UUID uuid, String groupId, String name);
+    public abstract Map<String, ValueContainer> loadStats(UUID uuid, String groupId, String name);
 
     /**
      * Saves stats for a player in a specific group (no elo/brave_points).
      */
-    public abstract void saveStats(UUID uuid, String groupId, Map<String, StatsContainer> data);
+    public abstract void saveStats(UUID uuid, String groupId, Map<String, ValueContainer> data);
 
     /**
      * Loads cosmetic ownership data for a player.
      */
-    public abstract Map<String, StatsContainer> loadCosmetics(UUID uuid, String name);
+    public abstract Map<String, ValueContainer> loadCosmetics(UUID uuid, String name);
 
     /**
      * Saves cosmetic ownership data for a player.
      */
-    public abstract void saveCosmetics(UUID uuid, Map<String, StatsContainer> data);
+    public abstract void saveCosmetics(UUID uuid, Map<String, ValueContainer> data);
 
     /**
      * Loads selection data for a player.
      */
-    public abstract Map<String, StatsContainer> loadSelections(UUID uuid, String name);
+    public abstract Map<String, ValueContainer> loadSelections(UUID uuid, String name);
 
     /**
      * Saves selection data for a player.
      */
-    public abstract void saveSelections(UUID uuid, Map<String, StatsContainer> data);
+    public abstract void saveSelections(UUID uuid, Map<String, ValueContainer> data);
 
     /**
      * Loads an account from cache or creates it.

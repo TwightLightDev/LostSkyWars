@@ -13,7 +13,7 @@ import org.twightlight.skywars.setup.Menu;
 import org.twightlight.skywars.setup.chests.content_fills.Guaranteed;
 import org.twightlight.skywars.setup.chests.content_fills.Regular;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.ItemBuilder;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
@@ -22,10 +22,10 @@ import java.util.List;
 
 public class ChestsSetup extends Menu {
 
-    private ConfigUtils config;
+    private ConfigWrapper config;
     private String path;
 
-    private ChestsSetup(ConfigUtils config, String path) {
+    private ChestsSetup(ConfigWrapper config, String path) {
         super(45, true);
         this.config = config;
         this.path = path;
@@ -174,7 +174,7 @@ public class ChestsSetup extends Menu {
 
     }
 
-    public static Menu init(ConfigUtils config, String path) {
+    public static Menu init(ConfigWrapper config, String path) {
         return new ChestsSetup(config, path);
     }
 

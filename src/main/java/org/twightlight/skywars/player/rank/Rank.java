@@ -7,7 +7,7 @@ import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class Rank {
     private static final List<Rank> ranks = new ArrayList<>();
 
     public static void setupRanks() {
-        ConfigUtils cu = ConfigUtils.getConfig("ranks");
+        ConfigWrapper cu = ConfigWrapper.getConfig("ranks");
         for (String key : cu.getSection("ranks").getKeys(false)) {
             if (!cu.contains("ranks." + key + ".onJoin")) {
                 cu.set("ranks." + key + ".onJoin", cu.getString("ranks." + key + ".permission").equalsIgnoreCase("none") ? "" : "{display} &6joined the lobby!");

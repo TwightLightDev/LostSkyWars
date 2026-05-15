@@ -5,16 +5,14 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreDatabase;
-import org.twightlight.skywars.database.player.StatsContainer;
+import org.twightlight.skywars.database.player.ValueContainer;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.StringUtils;
 
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class MySQLDatabase extends Database {
 
@@ -437,30 +435,30 @@ public class MySQLDatabase extends Database {
     // =========================================================================
 
     @Override
-    public Map<String, StatsContainer> loadProfile(UUID uuid, String name) {
+    public Map<String, ValueContainer> loadProfile(UUID uuid, String name) {
         CachedRowSet rs = this.query("SELECT * FROM `profile` WHERE `uuid` = ?", uuid.toString());
 
         if (rs != null) {
             try {
                 if (rs.next()) {
-                    Map<String, StatsContainer> map = new LinkedHashMap<>();
+                    Map<String, ValueContainer> map = new LinkedHashMap<>();
                     String oldName = rs.getString("name");
                     if (!oldName.equals(name)) {
                         this.execute("UPDATE `profile` SET `name` = ? WHERE `uuid` = ?", name, uuid.toString());
                     }
-                    map.put("coins", new StatsContainer(rs.getInt("coins")));
-                    map.put("souls", new StatsContainer(rs.getInt("souls")));
-                    map.put("level", new StatsContainer(rs.getInt("level")));
-                    map.put("exp", new StatsContainer(rs.getDouble("exp")));
-                    map.put("max_souls", new StatsContainer(rs.getInt("max_souls")));
-                    map.put("well_roll", new StatsContainer(rs.getInt("well_roll")));
-                    map.put("souls_per_win", new StatsContainer(rs.getInt("souls_per_win")));
-                    map.put("mystery_dusts", new StatsContainer(rs.getInt("mystery_dusts")));
-                    map.put("last_rank", new StatsContainer(rs.getString("last_rank")));
-                    map.put("deliveries", new StatsContainer(rs.getString("deliveries")));
-                    map.put("leveling", new StatsContainer(rs.getString("leveling")));
-                    map.put("show_players", new StatsContainer(rs.getBoolean("show_players")));
-                    map.put("show_gore", new StatsContainer(rs.getBoolean("show_gore")));
+                    map.put("coins", new ValueContainer(rs.getInt("coins")));
+                    map.put("souls", new ValueContainer(rs.getInt("souls")));
+                    map.put("level", new ValueContainer(rs.getInt("level")));
+                    map.put("exp", new ValueContainer(rs.getDouble("exp")));
+                    map.put("max_souls", new ValueContainer(rs.getInt("max_souls")));
+                    map.put("well_roll", new ValueContainer(rs.getInt("well_roll")));
+                    map.put("souls_per_win", new ValueContainer(rs.getInt("souls_per_win")));
+                    map.put("mystery_dusts", new ValueContainer(rs.getInt("mystery_dusts")));
+                    map.put("last_rank", new ValueContainer(rs.getString("last_rank")));
+                    map.put("deliveries", new ValueContainer(rs.getString("deliveries")));
+                    map.put("leveling", new ValueContainer(rs.getString("leveling")));
+                    map.put("show_players", new ValueContainer(rs.getBoolean("show_players")));
+                    map.put("show_gore", new ValueContainer(rs.getBoolean("show_gore")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -470,32 +468,32 @@ public class MySQLDatabase extends Database {
             }
         }
 
-        Map<String, StatsContainer> defaults = buildDefaultProfile();
+        Map<String, ValueContainer> defaults = buildDefaultProfile();
         this.execute("INSERT INTO `profile` (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 uuid.toString(), name, 0, 0, 1, 0.0, 100, 1, 0, 0, "&7", "{}", "[]", true, true);
         return defaults;
     }
 
-    private Map<String, StatsContainer> buildDefaultProfile() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("coins", new StatsContainer(0));
-        map.put("souls", new StatsContainer(0));
-        map.put("level", new StatsContainer(1));
-        map.put("exp", new StatsContainer(0.0));
-        map.put("max_souls", new StatsContainer(100));
-        map.put("well_roll", new StatsContainer(1));
-        map.put("souls_per_win", new StatsContainer(0));
-        map.put("mystery_dusts", new StatsContainer(0));
-        map.put("last_rank", new StatsContainer("&7"));
-        map.put("deliveries", new StatsContainer("{}"));
-        map.put("leveling", new StatsContainer("[]"));
-        map.put("show_players", new StatsContainer(true));
-        map.put("show_gore", new StatsContainer(true));
+    private Map<String, ValueContainer> buildDefaultProfile() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("coins", new ValueContainer(0));
+        map.put("souls", new ValueContainer(0));
+        map.put("level", new ValueContainer(1));
+        map.put("exp", new ValueContainer(0.0));
+        map.put("max_souls", new ValueContainer(100));
+        map.put("well_roll", new ValueContainer(1));
+        map.put("souls_per_win", new ValueContainer(0));
+        map.put("mystery_dusts", new ValueContainer(0));
+        map.put("last_rank", new ValueContainer("&7"));
+        map.put("deliveries", new ValueContainer("{}"));
+        map.put("leveling", new ValueContainer("[]"));
+        map.put("show_players", new ValueContainer(true));
+        map.put("show_gore", new ValueContainer(true));
         return map;
     }
 
     @Override
-    public void saveProfile(UUID uuid, Map<String, StatsContainer> data) {
+    public void saveProfile(UUID uuid, Map<String, ValueContainer> data) {
         this.execute("UPDATE `profile` SET coins = ?, souls = ?, level = ?, exp = ?, max_souls = ?, well_roll = ?, souls_per_win = ?, mystery_dusts = ?, last_rank = ?, deliveries = ?, leveling = ?, show_players = ?, show_gore = ? WHERE uuid = ?",
                 data.get("coins").get(), data.get("souls").get(), data.get("level").get(), data.get("exp").get(),
                 data.get("max_souls").get(), data.get("well_roll").get(), data.get("souls_per_win").get(),
@@ -510,24 +508,24 @@ public class MySQLDatabase extends Database {
     // =========================================================================
 
     @Override
-    public Map<String, StatsContainer> loadStats(UUID uuid, String groupId, String name) {
+    public Map<String, ValueContainer> loadStats(UUID uuid, String groupId, String name) {
         CachedRowSet rs = this.query("SELECT * FROM `stats` WHERE `uuid` = ? AND `group_id` = ?", uuid.toString(), groupId);
 
         if (rs != null) {
             try {
                 if (rs.next()) {
-                    Map<String, StatsContainer> map = new LinkedHashMap<>();
-                    map.put("kills", new StatsContainer(rs.getInt("kills")));
-                    map.put("wins", new StatsContainer(rs.getInt("wins")));
-                    map.put("assists", new StatsContainer(rs.getInt("assists")));
-                    map.put("deaths", new StatsContainer(rs.getInt("deaths")));
-                    map.put("plays", new StatsContainer(rs.getInt("plays")));
-                    map.put("melee_kills", new StatsContainer(rs.getInt("melee_kills")));
-                    map.put("bow_kills", new StatsContainer(rs.getInt("bow_kills")));
-                    map.put("mob_kills", new StatsContainer(rs.getInt("mob_kills")));
-                    map.put("void_kills", new StatsContainer(rs.getInt("void_kills")));
-                    map.put("elo", new StatsContainer(rs.getInt("elo")));
-                    map.put("brave_points", new StatsContainer(rs.getInt("brave_points")));
+                    Map<String, ValueContainer> map = new LinkedHashMap<>();
+                    map.put("kills", new ValueContainer(rs.getInt("kills")));
+                    map.put("wins", new ValueContainer(rs.getInt("wins")));
+                    map.put("assists", new ValueContainer(rs.getInt("assists")));
+                    map.put("deaths", new ValueContainer(rs.getInt("deaths")));
+                    map.put("plays", new ValueContainer(rs.getInt("plays")));
+                    map.put("melee_kills", new ValueContainer(rs.getInt("melee_kills")));
+                    map.put("bow_kills", new ValueContainer(rs.getInt("bow_kills")));
+                    map.put("mob_kills", new ValueContainer(rs.getInt("mob_kills")));
+                    map.put("void_kills", new ValueContainer(rs.getInt("void_kills")));
+                    map.put("elo", new ValueContainer(rs.getInt("elo")));
+                    map.put("brave_points", new ValueContainer(rs.getInt("brave_points")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -537,30 +535,30 @@ public class MySQLDatabase extends Database {
             }
         }
 
-        Map<String, StatsContainer> defaults = buildDefaultStats();
+        Map<String, ValueContainer> defaults = buildDefaultStats();
         this.execute("INSERT INTO `stats` (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 uuid.toString(), groupId, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         return defaults;
     }
 
-    private Map<String, StatsContainer> buildDefaultStats() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kills", new StatsContainer(0));
-        map.put("wins", new StatsContainer(0));
-        map.put("assists", new StatsContainer(0));
-        map.put("deaths", new StatsContainer(0));
-        map.put("plays", new StatsContainer(0));
-        map.put("melee_kills", new StatsContainer(0));
-        map.put("bow_kills", new StatsContainer(0));
-        map.put("mob_kills", new StatsContainer(0));
-        map.put("void_kills", new StatsContainer(0));
-        map.put("elo", new StatsContainer(0));
-        map.put("brave_points", new StatsContainer(0));
+    private Map<String, ValueContainer> buildDefaultStats() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("kills", new ValueContainer(0));
+        map.put("wins", new ValueContainer(0));
+        map.put("assists", new ValueContainer(0));
+        map.put("deaths", new ValueContainer(0));
+        map.put("plays", new ValueContainer(0));
+        map.put("melee_kills", new ValueContainer(0));
+        map.put("bow_kills", new ValueContainer(0));
+        map.put("mob_kills", new ValueContainer(0));
+        map.put("void_kills", new ValueContainer(0));
+        map.put("elo", new ValueContainer(0));
+        map.put("brave_points", new ValueContainer(0));
         return map;
     }
 
     @Override
-    public void saveStats(UUID uuid, String groupId, Map<String, StatsContainer> data) {
+    public void saveStats(UUID uuid, String groupId, Map<String, ValueContainer> data) {
         this.execute("UPDATE `stats` SET kills = ?, wins = ?, assists = ?, deaths = ?, plays = ?, melee_kills = ?, bow_kills = ?, mob_kills = ?, void_kills = ?, elo = ?, brave_points = ? WHERE uuid = ? AND group_id = ?",
                 data.get("kills").get(), data.get("wins").get(), data.get("assists").get(),
                 data.get("deaths").get(), data.get("plays").get(),
@@ -575,25 +573,25 @@ public class MySQLDatabase extends Database {
     // =========================================================================
 
     @Override
-    public Map<String, StatsContainer> loadCosmetics(UUID uuid, String name) {
+    public Map<String, ValueContainer> loadCosmetics(UUID uuid, String name) {
         CachedRowSet rs = this.query("SELECT * FROM `cosmetics` WHERE `uuid` = ?", uuid.toString());
 
         if (rs != null) {
             try {
                 if (rs.next()) {
-                    Map<String, StatsContainer> map = new LinkedHashMap<>();
-                    map.put("kits", new StatsContainer(rs.getString("kits")));
-                    map.put("perks", new StatsContainer(rs.getString("perks")));
-                    map.put("cages", new StatsContainer(rs.getString("cages")));
-                    map.put("death_cries", new StatsContainer(rs.getString("death_cries")));
-                    map.put("trails", new StatsContainer(rs.getString("trails")));
-                    map.put("balloons", new StatsContainer(rs.getString("balloons")));
-                    map.put("kill_messages", new StatsContainer(rs.getString("kill_messages")));
-                    map.put("kill_effects", new StatsContainer(rs.getString("kill_effects")));
-                    map.put("sprays", new StatsContainer(rs.getString("sprays")));
-                    map.put("victory_dances", new StatsContainer(rs.getString("victory_dances")));
-                    map.put("titles", new StatsContainer(rs.getString("titles")));
-                    map.put("symbols", new StatsContainer(rs.getString("symbols")));
+                    Map<String, ValueContainer> map = new LinkedHashMap<>();
+                    map.put("kits", new ValueContainer(rs.getString("kits")));
+                    map.put("perks", new ValueContainer(rs.getString("perks")));
+                    map.put("cages", new ValueContainer(rs.getString("cages")));
+                    map.put("death_cries", new ValueContainer(rs.getString("death_cries")));
+                    map.put("trails", new ValueContainer(rs.getString("trails")));
+                    map.put("balloons", new ValueContainer(rs.getString("balloons")));
+                    map.put("kill_messages", new ValueContainer(rs.getString("kill_messages")));
+                    map.put("kill_effects", new ValueContainer(rs.getString("kill_effects")));
+                    map.put("sprays", new ValueContainer(rs.getString("sprays")));
+                    map.put("victory_dances", new ValueContainer(rs.getString("victory_dances")));
+                    map.put("titles", new ValueContainer(rs.getString("titles")));
+                    map.put("symbols", new ValueContainer(rs.getString("symbols")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -603,31 +601,31 @@ public class MySQLDatabase extends Database {
             }
         }
 
-        Map<String, StatsContainer> defaults = buildDefaultCosmetics();
+        Map<String, ValueContainer> defaults = buildDefaultCosmetics();
         this.execute("INSERT INTO `cosmetics` (uuid, kits, perks, cages, death_cries, trails, balloons, kill_messages, kill_effects, sprays, victory_dances, titles, symbols) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 uuid.toString(), "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}", "{}");
         return defaults;
     }
 
-    private Map<String, StatsContainer> buildDefaultCosmetics() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kits", new StatsContainer("{}"));
-        map.put("perks", new StatsContainer("{}"));
-        map.put("cages", new StatsContainer("{}"));
-        map.put("death_cries", new StatsContainer("{}"));
-        map.put("trails", new StatsContainer("{}"));
-        map.put("balloons", new StatsContainer("{}"));
-        map.put("kill_messages", new StatsContainer("{}"));
-        map.put("kill_effects", new StatsContainer("{}"));
-        map.put("sprays", new StatsContainer("{}"));
-        map.put("victory_dances", new StatsContainer("{}"));
-        map.put("titles", new StatsContainer("{}"));
-        map.put("symbols", new StatsContainer("{}"));
+    private Map<String, ValueContainer> buildDefaultCosmetics() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("kits", new ValueContainer("{}"));
+        map.put("perks", new ValueContainer("{}"));
+        map.put("cages", new ValueContainer("{}"));
+        map.put("death_cries", new ValueContainer("{}"));
+        map.put("trails", new ValueContainer("{}"));
+        map.put("balloons", new ValueContainer("{}"));
+        map.put("kill_messages", new ValueContainer("{}"));
+        map.put("kill_effects", new ValueContainer("{}"));
+        map.put("sprays", new ValueContainer("{}"));
+        map.put("victory_dances", new ValueContainer("{}"));
+        map.put("titles", new ValueContainer("{}"));
+        map.put("symbols", new ValueContainer("{}"));
         return map;
     }
 
     @Override
-    public void saveCosmetics(UUID uuid, Map<String, StatsContainer> data) {
+    public void saveCosmetics(UUID uuid, Map<String, ValueContainer> data) {
         this.execute("UPDATE `cosmetics` SET kits = ?, perks = ?, cages = ?, death_cries = ?, trails = ?, balloons = ?, kill_messages = ?, kill_effects = ?, sprays = ?, victory_dances = ?, titles = ?, symbols = ? WHERE uuid = ?",
                 data.get("kits").get(), data.get("perks").get(), data.get("cages").get(),
                 data.get("death_cries").get(), data.get("trails").get(), data.get("balloons").get(),
@@ -641,27 +639,27 @@ public class MySQLDatabase extends Database {
     // =========================================================================
 
     @Override
-    public Map<String, StatsContainer> loadSelections(UUID uuid, String name) {
+    public Map<String, ValueContainer> loadSelections(UUID uuid, String name) {
         CachedRowSet rs = this.query("SELECT * FROM `selections` WHERE `uuid` = ?", uuid.toString());
 
         if (rs != null) {
             try {
                 if (rs.next()) {
-                    Map<String, StatsContainer> map = new LinkedHashMap<>();
-                    map.put("kit", new StatsContainer(rs.getString("kit")));
-                    map.put("perk", new StatsContainer(rs.getString("perk")));
-                    map.put("cage", new StatsContainer(rs.getInt("cage")));
-                    map.put("death_cry", new StatsContainer(rs.getInt("death_cry")));
-                    map.put("trail", new StatsContainer(rs.getInt("trail")));
-                    map.put("balloon", new StatsContainer(rs.getInt("balloon")));
-                    map.put("kill_message", new StatsContainer(rs.getInt("kill_message")));
-                    map.put("kill_effect", new StatsContainer(rs.getInt("kill_effect")));
-                    map.put("spray", new StatsContainer(rs.getInt("spray")));
-                    map.put("victory_dance", new StatsContainer(rs.getInt("victory_dance")));
-                    map.put("title", new StatsContainer(rs.getInt("title")));
-                    map.put("symbol", new StatsContainer(rs.getInt("symbol")));
-                    map.put("last_selected", new StatsContainer(rs.getLong("last_selected")));
-                    map.put("favorites", new StatsContainer(rs.getString("favorites")));
+                    Map<String, ValueContainer> map = new LinkedHashMap<>();
+                    map.put("kit", new ValueContainer(rs.getString("kit")));
+                    map.put("perk", new ValueContainer(rs.getString("perk")));
+                    map.put("cage", new ValueContainer(rs.getInt("cage")));
+                    map.put("death_cry", new ValueContainer(rs.getInt("death_cry")));
+                    map.put("trail", new ValueContainer(rs.getInt("trail")));
+                    map.put("balloon", new ValueContainer(rs.getInt("balloon")));
+                    map.put("kill_message", new ValueContainer(rs.getInt("kill_message")));
+                    map.put("kill_effect", new ValueContainer(rs.getInt("kill_effect")));
+                    map.put("spray", new ValueContainer(rs.getInt("spray")));
+                    map.put("victory_dance", new ValueContainer(rs.getInt("victory_dance")));
+                    map.put("title", new ValueContainer(rs.getInt("title")));
+                    map.put("symbol", new ValueContainer(rs.getInt("symbol")));
+                    map.put("last_selected", new ValueContainer(rs.getLong("last_selected")));
+                    map.put("favorites", new ValueContainer(rs.getString("favorites")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -671,33 +669,33 @@ public class MySQLDatabase extends Database {
             }
         }
 
-        Map<String, StatsContainer> defaults = buildDefaultSelections();
+        Map<String, ValueContainer> defaults = buildDefaultSelections();
         this.execute("INSERT INTO `selections` (uuid, kit, perk, cage, death_cry, trail, balloon, kill_message, kill_effect, spray, victory_dance, title, symbol, last_selected, favorites) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 uuid.toString(), "{}", "{}", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0L, "[]");
         return defaults;
     }
 
-    private Map<String, StatsContainer> buildDefaultSelections() {
-        Map<String, StatsContainer> map = new LinkedHashMap<>();
-        map.put("kit", new StatsContainer("{}"));
-        map.put("perk", new StatsContainer("{}"));
-        map.put("cage", new StatsContainer(0));
-        map.put("death_cry", new StatsContainer(0));
-        map.put("trail", new StatsContainer(0));
-        map.put("balloon", new StatsContainer(0));
-        map.put("kill_message", new StatsContainer(0));
-        map.put("kill_effect", new StatsContainer(0));
-        map.put("spray", new StatsContainer(0));
-        map.put("victory_dance", new StatsContainer(0));
-        map.put("title", new StatsContainer(0));
-        map.put("symbol", new StatsContainer(0));
-        map.put("last_selected", new StatsContainer(0L));
-        map.put("favorites", new StatsContainer("[]"));
+    private Map<String, ValueContainer> buildDefaultSelections() {
+        Map<String, ValueContainer> map = new LinkedHashMap<>();
+        map.put("kit", new ValueContainer("{}"));
+        map.put("perk", new ValueContainer("{}"));
+        map.put("cage", new ValueContainer(0));
+        map.put("death_cry", new ValueContainer(0));
+        map.put("trail", new ValueContainer(0));
+        map.put("balloon", new ValueContainer(0));
+        map.put("kill_message", new ValueContainer(0));
+        map.put("kill_effect", new ValueContainer(0));
+        map.put("spray", new ValueContainer(0));
+        map.put("victory_dance", new ValueContainer(0));
+        map.put("title", new ValueContainer(0));
+        map.put("symbol", new ValueContainer(0));
+        map.put("last_selected", new ValueContainer(0L));
+        map.put("favorites", new ValueContainer("[]"));
         return map;
     }
 
     @Override
-    public void saveSelections(UUID uuid, Map<String, StatsContainer> data) {
+    public void saveSelections(UUID uuid, Map<String, ValueContainer> data) {
         this.execute("UPDATE `selections` SET kit = ?, perk = ?, cage = ?, death_cry = ?, trail = ?, balloon = ?, kill_message = ?, kill_effect = ?, spray = ?, victory_dance = ?, title = ?, symbol = ?, last_selected = ?, favorites = ? WHERE uuid = ?",
                 data.get("kit").get(), data.get("perk").get(),
                 data.get("cage").get(), data.get("death_cry").get(),

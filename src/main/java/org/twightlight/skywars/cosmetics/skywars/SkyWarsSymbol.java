@@ -10,7 +10,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,7 +86,7 @@ public class SkyWarsSymbol extends Cosmetic {
         return cloned;
     }
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("symbols");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("symbols");
 
     public static void setupSymbols() {
         for (String key : CONFIG.getKeys(false)) {

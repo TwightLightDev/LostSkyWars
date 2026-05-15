@@ -7,13 +7,13 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.VectorUtils;
 
 
 public class ThorEffect extends SkyWarsVictoryDance {
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("victorydances");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("victorydances");
 
     public ThorEffect() {
         super(CONFIG.getInt("thor.id"),

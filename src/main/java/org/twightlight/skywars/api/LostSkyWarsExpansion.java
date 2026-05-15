@@ -47,10 +47,10 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
         // e.g. %lostskywars_players_solo%, %lostskywars_players_ranked_solo%
         // =====================================================================
         if (params.startsWith("players_")) {
-            String targetGroup = params.substring(8); // after "players_"
+            String targetGroup = params.substring(8);
             int playing = CoreLobbies.getPlayerCount(targetGroup);
             if (Core.MODE == CoreMode.MULTI_ARENA) {
-                for (Arena server : Arena.listServers()) {
+                for (Arena server : Arena.listArenas()) {
                     if (server.getGroup().getId().equals(targetGroup)) {
                         playing += server.getOnline();
                     }
@@ -70,7 +70,7 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
                 if (group.hasTrait(trait)) {
                     playing += CoreLobbies.getPlayerCount(group.getId());
                     if (Core.MODE == CoreMode.MULTI_ARENA) {
-                        for (Arena server : Arena.listServers()) {
+                        for (Arena server : Arena.listArenas()) {
                             if (server.getGroup().getId().equals(group.getId())) {
                                 playing += server.getOnline();
                             }

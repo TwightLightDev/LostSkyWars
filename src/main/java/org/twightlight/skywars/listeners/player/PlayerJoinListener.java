@@ -29,8 +29,8 @@ public class PlayerJoinListener extends Listeners {
         TagUtils.sendTeams(player);
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (Core.MODE == CoreMode.ARENA) {
-            if (Arena.listServers().size() > 0) {
-                Arena.listServers().stream().findFirst().get().connect(account);
+            if (Arena.listArenas().size() > 0) {
+                Arena.listArenas().stream().findFirst().get().connect(account);
             }
         } else {
             account.reloadScoreboard();

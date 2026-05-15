@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.NumberUtils;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
@@ -109,7 +109,7 @@ public class ChestType {
     private static Map<String, ChestType> types = new HashMap<>();
 
     public static void setupTypes() {
-        ConfigUtils cu = ConfigUtils.getConfig("chesttypes");
+        ConfigWrapper cu = ConfigWrapper.getConfig("chesttypes");
 
         for (String key : cu.getKeys(false)) {
             String name = cu.getString(key + ".name");

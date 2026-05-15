@@ -16,12 +16,12 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ConfigUtils {
+public class ConfigWrapper {
 
     private File file;
     private YamlConfiguration config;
 
-    private ConfigUtils(String path, String name) {
+    private ConfigWrapper(String path, String name) {
         if (Core.MODE != CoreMode.MULTI_ARENA) {
             if (Core.filesSaved.contains(name)) {
                 try {
@@ -160,15 +160,15 @@ public class ConfigUtils {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("ConfigUtils");
-    private static Map<String, ConfigUtils> cache = new HashMap<>();
+    private static Map<String, ConfigWrapper> cache = new HashMap<>();
 
-    public static ConfigUtils getConfig(String name) {
+    public static ConfigWrapper getConfig(String name) {
         return getConfig(name, "plugins/LostSkyWars");
     }
 
-    public static ConfigUtils getConfig(String name, String path) {
+    public static ConfigWrapper getConfig(String name, String path) {
         if (!cache.containsKey(path + "/" + name)) {
-            cache.put(path + "/" + name, new ConfigUtils(path, name));
+            cache.put(path + "/" + name, new ConfigWrapper(path, name));
         }
 
         return cache.get(path + "/" + name);
@@ -178,8 +178,8 @@ public class ConfigUtils {
         cache.remove("plugins/LostSkyWars/" + name);
     }
 
-    public static void removeConfig(ConfigUtils config) {
-        for (Map.Entry<String, ConfigUtils> cu : ImmutableList.copyOf(cache.entrySet())) {
+    public static void removeConfig(ConfigWrapper config) {
+        for (Map.Entry<String, ConfigWrapper> cu : ImmutableList.copyOf(cache.entrySet())) {
             if (cu.getValue().equals(config)) {
                 cache.remove(cu.getKey());
                 return;

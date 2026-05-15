@@ -22,7 +22,7 @@ import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.FileUtils;
 
 import java.io.File;
@@ -375,7 +375,7 @@ public abstract class Arena {
     }
 
     public static Arena findRandom(ArenaGroup group) {
-        List<Arena> matching = listServers().stream()
+        List<Arena> matching = listArenas().stream()
                 .filter(server -> server.getGroup().equals(group) && server.getState().canJoin()
                         && !server.isPrivate() && server.getAlive() < server.getMaxPlayers())
                 .collect(Collectors.toList());
@@ -394,7 +394,7 @@ public abstract class Arena {
 
     public static Map<String, List<Arena>> getAsMap(ArenaGroup group) {
         Map<String, List<Arena>> result = new HashMap<>();
-        listServers().stream()
+        listArenas().stream()
                 .filter(server -> !server.isPrivate() && server.getGroup().equals(group))
                 .forEach(arena -> {
                     List<Arena> list = result.computeIfAbsent(arena.getName(), k -> new ArrayList<>());
@@ -414,7 +414,7 @@ public abstract class Arena {
         return servers.get(name);
     }
 
-    public static Collection<Arena> listServers() {
+    public static Collection<Arena> listArenas() {
         return ImmutableList.copyOf(servers.values().stream()
                 .filter(worldServer -> !worldServer.isPrivate())
                 .collect(Collectors.toList()));
@@ -425,7 +425,7 @@ public abstract class Arena {
             newArena += "_temp";
         }
 
-        ConfigUtils cu = ConfigUtils.getConfig(newArena, "plugins/LostSkyWars/servers");
+        ConfigWrapper cu = ConfigWrapper.getConfig(newArena, "plugins/LostSkyWars/servers");
         cu.set("name", getName());
         cu.set("group", getGroup().getId());
         cu.set("cube", getConfig().getWorldCube().toString().replace(getConfig().getId(), newArena));

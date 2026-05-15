@@ -14,7 +14,7 @@ import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,7 +38,7 @@ public class ArenaConfig {
     protected List<String> chests;
     protected List<String> balloons;
 
-    protected ConfigUtils config;
+    protected ConfigWrapper config;
     protected String worldName;
     protected CompletableFuture<World> cf;
 
@@ -53,7 +53,7 @@ public class ArenaConfig {
         this.spawns = new ArrayList<>();
         this.chests = new ArrayList<>();
         this.balloons = new ArrayList<>();
-        this.config = ConfigUtils.getConfig(yaml, "plugins/LostSkyWars/servers");
+        this.config = ConfigWrapper.getConfig(yaml, "plugins/LostSkyWars/servers");
 
         this.name = config.getString("name");
 
@@ -150,7 +150,7 @@ public class ArenaConfig {
         this.chests.clear();
         this.chests = null;
         this.world = null;
-        ConfigUtils.removeConfig(config);
+        ConfigWrapper.removeConfig(config);
         this.config = null;
     }
 
@@ -176,7 +176,7 @@ public class ArenaConfig {
         });
     }
 
-    public ConfigUtils getConfig() {
+    public ConfigWrapper getConfig() {
         return config;
     }
 

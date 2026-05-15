@@ -25,7 +25,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,7 +155,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Ballons");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("balloons");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("balloons");
 
     public static void setupBallons() {
         CONFIG.reload();

@@ -28,7 +28,7 @@ import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.lang.reflect.Constructor;
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public abstract class PreviewableCosmetic extends Cosmetic {
-    protected static final ConfigUtils PREVIEWCONFIG = ConfigUtils.getConfig("cosmeticspreview");
+    protected static final ConfigWrapper PREVIEWCONFIG = ConfigWrapper.getConfig("cosmeticspreview");
     protected static final Map<UUID, PreviewSession> sessionUUID = new ConcurrentHashMap<>();
     protected static final Map<CosmeticType, List<PreviewSession>> sessionCosmeticType = new ConcurrentHashMap<>();
 
@@ -238,7 +238,7 @@ public abstract class PreviewableCosmetic extends Cosmetic {
         PacketEvents.getAPI().getPlayerManager().sendPacket(p, packet);
     }
 
-    public static ConfigUtils getPreviewConfig() {
+    public static ConfigWrapper getPreviewConfig() {
         return PREVIEWCONFIG;
     }
 

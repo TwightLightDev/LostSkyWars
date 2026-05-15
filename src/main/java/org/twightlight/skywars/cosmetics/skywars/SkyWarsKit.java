@@ -17,7 +17,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,7 +152,7 @@ public class SkyWarsKit extends Cosmetic {
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Kits");
 
     public static void setupKits() {
-        ConfigUtils cu = ConfigUtils.getConfig("kits");
+        ConfigWrapper cu = ConfigWrapper.getConfig("kits");
 
         for (String key : cu.getKeys(false)) {
             LOGGER.log(Logger.Level.INFO, "Loading kit: " + key + "...");

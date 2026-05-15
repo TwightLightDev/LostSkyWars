@@ -6,11 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 public class SetLobbyCommand extends SubCommand {
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("locations");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("locations");
 
     public SetLobbyCommand() {
         super("setlobby");

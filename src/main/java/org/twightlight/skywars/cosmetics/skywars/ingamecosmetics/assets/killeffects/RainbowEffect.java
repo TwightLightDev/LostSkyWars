@@ -10,7 +10,7 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.VectorUtils;
 
 import java.util.Random;
@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class RainbowEffect extends SkyWarsKillEffect {
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killeffects");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     private static final Color[] COLORS = new Color[] { Color.fromRGB(146, 65, 146),
             Color.fromRGB(1, 37, 184),

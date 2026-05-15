@@ -9,7 +9,7 @@ import org.twightlight.skywars.setup.ChatSession;
 import org.twightlight.skywars.setup.ContentsMenu;
 import org.twightlight.skywars.setup.InventoryHolder;
 import org.twightlight.skywars.setup.Menu;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.ItemBuilder;
 
 import java.util.Arrays;
@@ -19,10 +19,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class Guaranteed extends Menu {
-    private ConfigUtils config;
+    private ConfigWrapper config;
     private Consumer<Player> backAction;
     private String path;
-    private Guaranteed(ConfigUtils config, Consumer<Player> backAction, String path) {
+    private Guaranteed(ConfigWrapper config, Consumer<Player> backAction, String path) {
         super(45, true);
         this.config = config;
         this.backAction = backAction;
@@ -83,7 +83,7 @@ public class Guaranteed extends Menu {
         });
     }
 
-    public static Menu init(ConfigUtils config, Consumer<Player> backAction, String path) {
+    public static Menu init(ConfigWrapper config, Consumer<Player> backAction, String path) {
         return new Guaranteed(config, backAction, path);
     }
 }

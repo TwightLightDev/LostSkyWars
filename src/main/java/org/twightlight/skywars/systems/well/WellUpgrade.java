@@ -1,6 +1,6 @@
 package org.twightlight.skywars.systems.well;
 
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class WellUpgrade {
     private static List<WellUpgrade> wins = new ArrayList<>(), maxs = new ArrayList<>();
 
     public static void setupUpgrades() {
-        ConfigUtils cu = ConfigUtils.getConfig("wellupgrades", "plugins/LostSkyWars/menus");
+        ConfigWrapper cu = ConfigWrapper.getConfig("wellupgrades", "plugins/LostSkyWars/menus");
 
         for (String key : cu.getSection("winupgrades").getKeys(false)) {
             wins.add(new WellUpgrade(cu.getString("winupgrades." + key + ".name"), cu.getInt("winupgrades." + key + ".requires"), cu.getInt("winupgrades." + key + ".amount"),

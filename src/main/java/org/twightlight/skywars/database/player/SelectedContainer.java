@@ -10,9 +10,9 @@ import java.util.Map;
  */
 public class SelectedContainer {
 
-    private final Map<String, StatsContainer> selections;
+    private final Map<String, ValueContainer> selections;
 
-    public SelectedContainer(Map<String, StatsContainer> selections) {
+    public SelectedContainer(Map<String, ValueContainer> selections) {
         this.selections = selections;
     }
 
@@ -48,7 +48,7 @@ public class SelectedContainer {
      * Gets a global cosmetic selection (cage, death_cry, trail, etc.).
      */
     public int getGlobalSelection(String key) {
-        StatsContainer container = selections.get(key);
+        ValueContainer container = selections.get(key);
         if (container == null) return 0;
         return container.getAs(Integer.class);
     }
@@ -57,39 +57,39 @@ public class SelectedContainer {
      * Sets a global cosmetic selection.
      */
     public void setGlobalSelection(String key, int id) {
-        StatsContainer container = selections.get(key);
+        ValueContainer container = selections.get(key);
         if (container != null) {
             container.set(id);
         }
     }
 
     public long getLastSelected() {
-        StatsContainer container = selections.get("last_selected");
+        ValueContainer container = selections.get("last_selected");
         return container != null ? container.getAs(Long.class) : 0L;
     }
 
     public void setLastSelected(long value) {
-        StatsContainer container = selections.get("last_selected");
+        ValueContainer container = selections.get("last_selected");
         if (container != null) {
             container.set(value);
         }
     }
 
     public List<String> getFavorites() {
-        StatsContainer container = selections.get("favorites");
+        ValueContainer container = selections.get("favorites");
         if (container == null) return new java.util.ArrayList<>();
         return container.getAsStringList();
     }
 
     public void setFavorites(List<String> favorites) {
-        StatsContainer container = selections.get("favorites");
+        ValueContainer container = selections.get("favorites");
         if (container != null) {
             container.setFromObject(favorites);
         }
     }
 
     private int getPerGroupSelection(String field, String groupId) {
-        StatsContainer container = selections.get(field);
+        ValueContainer container = selections.get(field);
         if (container == null) return 0;
         Map<String, Integer> map = container.getAsIntMap();
         Integer val = map.get(groupId);
@@ -97,7 +97,7 @@ public class SelectedContainer {
     }
 
     private void setPerGroupSelection(String field, String groupId, int id) {
-        StatsContainer container = selections.get(field);
+        ValueContainer container = selections.get(field);
         if (container == null) return;
         Map<String, Integer> map = container.getAsIntMap();
         map.put(groupId, id);

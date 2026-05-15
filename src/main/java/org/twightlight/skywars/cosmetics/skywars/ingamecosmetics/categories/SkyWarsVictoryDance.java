@@ -15,7 +15,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -109,7 +109,7 @@ public abstract class SkyWarsVictoryDance extends Cosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("VictoryDance");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("victorydances");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("victorydances");
 
     public static void setupVictoryDances() {
         CONFIG.reload();

@@ -17,7 +17,7 @@ import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +115,7 @@ public class SkyWarsDeathCry extends Cosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("DeathCries");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("deathcries");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("deathcries");
 
     public static void setupDeathCries() {
         CONFIG.reload();

@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.StringUtils;
 
 public class PreviewCommand extends SubCommand {
 
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("cosmeticspreview");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("cosmeticspreview");
 
     public PreviewCommand() {
         super("preview");

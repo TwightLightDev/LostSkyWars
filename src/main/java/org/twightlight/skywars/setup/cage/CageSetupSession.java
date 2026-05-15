@@ -19,7 +19,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.ItemBuilder;
 
 import java.util.*;
@@ -30,7 +30,7 @@ public class CageSetupSession implements Listener {
     private static ItemStack bigMode = new ItemBuilder(XMaterial.GOLD_BLOCK).setName("&aBig cage mode &8(Click to toggle!)").toItemStack();
     private static ItemStack add = new ItemBuilder(XMaterial.LIME_WOOL).setDurability(Short.parseShort("5")).setName("&aAdd a frame").toItemStack();
     private static ItemStack remove = new ItemBuilder(XMaterial.RED_WOOL).setDurability(Short.parseShort("14")).setName("&cRemove the last frame").toItemStack();
-    private static ConfigUtils CONFIG = ConfigUtils.getConfig("cages");
+    private static ConfigWrapper CONFIG = ConfigWrapper.getConfig("cages");
 
     private String key;
     private final UUID uuid;

@@ -27,7 +27,7 @@ public class ServerListener implements Listener {
             if (Core.MODE == CoreMode.LOBBY) {
                 evt.setMotd("LOBBY; ");
             } else {
-                Arena server = Arena.listServers().stream().findFirst().orElse(null);
+                Arena server = Arena.listArenas().stream().findFirst().orElse(null);
                 if (server == null) {
                     evt.setMotd("");
                     return;

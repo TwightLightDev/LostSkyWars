@@ -115,7 +115,7 @@ public class PlayMenu extends PlayerMenu {
         int playingNormal = CoreLobbies.getPlayerCount(normalGroupId);
         int playingInsane = CoreLobbies.getPlayerCount(insaneGroupId);
         if (Core.MODE == CoreMode.MULTI_ARENA) {
-            for (Arena server : Arena.listServers()) {
+            for (Arena server : Arena.listArenas()) {
                 String gid = server.getGroup().getId();
                 if (gid.equals(normalGroupId)) {
                     playingNormal += server.getOnline();

@@ -14,10 +14,10 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 public class SquidMissileEffect extends SkyWarsKillEffect {
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("killeffects");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public SquidMissileEffect() {
         super(CONFIG.getInt("squid-missile.id"),

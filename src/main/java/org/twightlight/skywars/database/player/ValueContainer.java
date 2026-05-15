@@ -6,13 +6,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class StatsContainer {
+public class ValueContainer {
 
     private static final Gson GSON = new Gson();
 
     private Object value;
 
-    public StatsContainer(Object value) {
+    public ValueContainer(Object value) {
         this.value = value;
     }
 

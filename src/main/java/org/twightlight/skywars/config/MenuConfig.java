@@ -67,8 +67,8 @@ public class MenuConfig {
         return extras;
     }
 
-    public ConfigUtils getConfig() {
-        return ConfigUtils.getConfig(name, "plugins/LostSkyWars/menus");
+    public ConfigWrapper getConfig() {
+        return ConfigWrapper.getConfig(name, "plugins/LostSkyWars/menus");
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Menus");
@@ -76,7 +76,7 @@ public class MenuConfig {
 
     public static void setupMenus() {
         for (String menu : Core.menusArray) {
-            ConfigUtils cu = ConfigUtils.getConfig(menu, "plugins/LostSkyWars/menus");
+            ConfigWrapper cu = ConfigWrapper.getConfig(menu, "plugins/LostSkyWars/menus");
             MenuConfig cm = new MenuConfig(menu, StringUtils.formatColors(cu.getString("title")), cu.getInt("rows"));
             for (String key : cu.getSection("items").getKeys(false)) {
                 int slot = cu.getInt("items." + key + ".slot", 0);

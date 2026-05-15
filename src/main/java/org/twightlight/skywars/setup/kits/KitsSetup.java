@@ -13,7 +13,7 @@ import org.twightlight.skywars.setup.ContentsMenu;
 import org.twightlight.skywars.setup.InventoryHolder;
 import org.twightlight.skywars.setup.Menu;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.StringCheckerUtils;
 
 import java.util.ArrayList;
@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 
 public class KitsSetup extends Menu {
 
-    private ConfigUtils config;
+    private ConfigWrapper config;
     private String path;
     private final List<String> rarities = Arrays.stream(CosmeticRarity.values())
             .map(CosmeticRarity::getUncoloredName)
             .collect(Collectors.toList());
 
-    private KitsSetup(ConfigUtils config, String path) {
+    private KitsSetup(ConfigWrapper config, String path) {
         super(45, true);
         this.config = config;
         this.path = path;
@@ -336,7 +336,7 @@ public class KitsSetup extends Menu {
                 });
     }
 
-    public static Menu init(ConfigUtils config, String path) {
+    public static Menu init(ConfigWrapper config, String path) {
         return new KitsSetup(config, path);
     }
 

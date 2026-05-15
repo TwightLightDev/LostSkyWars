@@ -14,7 +14,7 @@ import org.twightlight.skywars.cosmetics.CosmeticServer;
 import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.config.ConfigUtils;
+import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,7 +99,7 @@ public class SkyWarsTitle extends Cosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Title");
-    private static final ConfigUtils CONFIG = ConfigUtils.getConfig("titles");
+    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("titles");
 
     public static void setupTitles() {
         for (String key : CONFIG.getKeys(false)) {
