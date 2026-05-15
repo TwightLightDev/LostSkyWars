@@ -7,9 +7,6 @@ import org.bukkit.craftbukkit.libs.jline.internal.InputStreamReader;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.utils.FileUtils;
 
 import java.io.*;
@@ -22,19 +19,6 @@ public class ConfigWrapper {
     private YamlConfiguration config;
 
     private ConfigWrapper(String path, String name) {
-        if (Core.MODE != CoreMode.MULTI_ARENA) {
-            if (Core.filesSaved.contains(name)) {
-                try {
-                    String config = Database.getInstance().query("SELECT * FROM `lostskywars_files` WHERE `name` = ?", name).getString("file");
-                    this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new ByteArrayInputStream(config.getBytes("UTF-8")), "UTF-8"));
-                } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE, "Unexpected error ocurred loading config " + name + ": ", e);
-                }
-
-                return;
-            }
-        }
-
         this.file = new File(path + "/" + name + ".yml");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -89,7 +73,7 @@ public class ConfigWrapper {
             return new ArrayList<>();
         }
         return rawList.stream()
-                .map(s -> s.replace("&", "§"))
+                .map(s -> s.replace("&", "\u00a7"))
                 .collect(Collectors.toList());
     }
 

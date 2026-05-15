@@ -94,7 +94,7 @@ public class BalloonsMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            if (account.getInt("coins") < balloon.getCoins()) {
+                            if (account.getCoins() < balloon.getCoins()) {
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("enoughcoins").replace("{name}", balloon.getRawName())));
                                 return;
                             }
@@ -173,7 +173,7 @@ public class BalloonsMenu extends PagedPlayerMenu {
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config
-                        .getAsStringArray(balloon.canBeSold() ? account.getInt("coins") < balloon.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
+                        .getAsStringArray(balloon.canBeSold() ? account.getCoins() < balloon.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", balloon.getRawName()).replace("{rarity}", rarity).replace("{price}", StringUtils.formatNumber(balloon.getCoins())));
                 }
                 icon = balloon.getIcon("§c", lore.toArray(new String[lore.size()]));
@@ -201,7 +201,7 @@ public class BalloonsMenu extends PagedPlayerMenu {
                 String stack = entry.getValue().getStack();
 
                 // COINS
-                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
+                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getCoins()));
 
                 ItemStack item = BukkitUtils.deserializeItemStack(stack);
                 this.removeSlotsWith(item, entry.getKey());

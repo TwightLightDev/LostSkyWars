@@ -1,7 +1,6 @@
 package org.twightlight.skywars.menu.shop.well;
 
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -43,7 +42,7 @@ public class RollList {
                 c.give(menu.getAccount());
             } else {
                 int coins = RollSoulWellMenu.config.getAsInt("coins-" + c.getRarity().name().toLowerCase());
-                menu.getAccount().addStat("coins", coins);
+                menu.getAccount().addCoins(coins);
                 menu.getAccount().getPlayer()
                         .sendMessage(StringUtils.formatColors(RollSoulWellMenu.config.getAsString("already-have")
                                 .replace("{name}", c.getRarity().getColor() + c.getRawName() + " (" + c.getType().getName() + " - " + SkyWarsType.fromIndex(c.getMode()).getName() + ")")

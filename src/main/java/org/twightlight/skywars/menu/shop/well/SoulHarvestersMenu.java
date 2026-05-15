@@ -43,7 +43,7 @@ public class SoulHarvestersMenu extends PlayerMenu {
                     if (action != null && !action.getType().equals("NOTHING")) {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
-                            int coins = account.getInt("coins");
+                            int coins = account.getCoins();
 
                             if (menu.equalsIgnoreCase("pack1") || menu.equalsIgnoreCase("pack2") || menu.equalsIgnoreCase("pack3")) {
                                 if (coins >= config.getAsInt(menu + "-price")) {
@@ -69,7 +69,7 @@ public class SoulHarvestersMenu extends PlayerMenu {
         super(player, config.getTitle(), config.getRows());
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         this.back = back;
-        int coins = account.getInt("coins");
+        int coins = account.getCoins();
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {

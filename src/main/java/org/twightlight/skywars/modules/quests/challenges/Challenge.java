@@ -58,7 +58,6 @@ public class Challenge implements Refreshable, Identifiable, ProgressGoal {
 
         challenge.displayName = section.getString("placeholders.display-name");
         challenge.shortDescription = section.getString("placeholders.short-description");
-        challenge.shortDescription = section.getString("placeholders.short-description");
         challenge.startMessages = section.getStringList("placeholders.start");
         challenge.completedMessages = section.getStringList("placeholders.complete");
 
@@ -140,10 +139,10 @@ public class Challenge implements Refreshable, Identifiable, ProgressGoal {
                 account.addExp(Double.parseDouble(elements[1]));
             } else if (type.equals("[coins]")) {
                 Account account = Database.getInstance().getAccount(user.getPlayer().getUniqueId());
-                account.addStat("coins", Integer.parseInt(elements[1]));
+                account.addCoins(Integer.parseInt(elements[1]));
             } else if (type.equals("[souls]")) {
                 Account account = Database.getInstance().getAccount(user.getPlayer().getUniqueId());
-                account.addStat("souls", Integer.parseInt(elements[1]));
+                account.addSoulsCapped(Integer.parseInt(elements[1]));
             } else if (type.equals("[message]")) {
                 user.sendMessage(elements[1]);
             } else if (type.equals("[command]")) {

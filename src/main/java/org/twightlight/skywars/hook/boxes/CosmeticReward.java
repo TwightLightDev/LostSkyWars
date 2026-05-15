@@ -3,7 +3,6 @@ package org.twightlight.skywars.hook.boxes;
 import io.github.losteddev.boxes.api.box.BoxReward;
 import io.github.losteddev.boxes.api.box.RewardRarity;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsType;
 import org.twightlight.skywars.cosmetics.Cosmetic;
 import org.twightlight.skywars.database.Database;
 

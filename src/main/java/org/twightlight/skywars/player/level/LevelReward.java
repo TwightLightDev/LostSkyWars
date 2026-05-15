@@ -35,12 +35,9 @@ public class LevelReward {
 
     public void apply(Account account) {
         if (type == RewardType.COINS) {
-            account.addStat("coins", Integer.parseInt(this.value));
+            account.addCoins(Integer.parseInt(this.value));
         } else if (type == RewardType.SOULS) {
-            account.addStat("souls", Integer.parseInt(this.value));
-            if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
-            }
+            account.addSoulsCapped(Integer.parseInt(this.value));
         } else if (type == RewardType.MYSTERY_BOX) {
             if (SkyWars.lostboxes) {
                 for (int i = 0; i < Integer.parseInt(this.value); i++) {

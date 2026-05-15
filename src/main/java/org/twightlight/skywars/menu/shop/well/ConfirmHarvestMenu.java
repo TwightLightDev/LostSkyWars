@@ -45,16 +45,13 @@ public class ConfirmHarvestMenu extends PlayerMenu {
                             if (menu.equalsIgnoreCase("shop")) {
                                 new SoulHarvestersMenu(player, back);
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (account.getInt("coins") < price) {
+                                if (account.getCoins() < price) {
                                     new SoulHarvestersMenu(player, back);
                                     return;
                                 }
 
-                                account.removeStat("coins", price);
-                                account.addStat("souls", amount);
-                                if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                                    account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
-                                }
+                                account.removeCoins(price);
+                                account.addSoulsCapped(amount);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", name)));
                                 player.closeInventory();
                             }

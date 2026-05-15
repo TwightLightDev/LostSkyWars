@@ -50,8 +50,7 @@ public class SkyWars implements Listener {
                         {
                             int affiliateReward = (int) (value * (booster.getAmplifier() - 1) * booster.getAffiliateRate());
                             if (affiliateReward > 0) {
-                                account.addStat("coins", affiliateReward);
-
+                                account.addCoins(affiliateReward);
                             }
                         }
                 );
@@ -88,9 +87,8 @@ public class SkyWars implements Listener {
                 Database.getInstance().getAccountOffline(pair.getOwner()).thenAccept((account) ->
                         {
                             if (chanceOf((int) (booster.getAffiliateRate() * 100 * booster.getAmplifier()))) {
-                                account.addStat("souls", value);
-
-                            };
+                                account.addSoulsCapped(value);
+                            }
                         }
                 );
             });
@@ -129,8 +127,7 @@ public class SkyWars implements Listener {
                             double affiliateReward = value * (booster.getAmplifier() - 1) * booster.getAffiliateRate();
                             if (affiliateReward > 0) {
                                 account.addExp(affiliateReward);
-
-                            };
+                            }
                         }
                 );
             });

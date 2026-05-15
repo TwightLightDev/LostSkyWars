@@ -55,7 +55,7 @@ public class ConfirmMenu extends PlayerMenu {
                                     ex.printStackTrace();
                                 }
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (account.getInt("coins") < cosmetic.getCoins()) {
+                                if (account.getCoins() < cosmetic.getCoins()) {
                                     try {
                                         Constructor<?> constructor = returns.getConstructor(Player.class, Order.class, Filter.class, String.class);
                                         constructor.newInstance(player, order, filter, searchQuery);
@@ -65,7 +65,7 @@ public class ConfirmMenu extends PlayerMenu {
                                     return;
                                 }
 
-                                account.removeStat("coins", cosmetic.getCoins());
+                                account.removeCoins(cosmetic.getCoins());
                                 cosmetic.give(account);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
                                 player.sendMessage(StringUtils.formatColors(config1.getAsString("select").replace("{name}", cosmetic.getRawName())));

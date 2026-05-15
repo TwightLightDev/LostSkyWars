@@ -33,7 +33,6 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
         if (evt.getInventory().equals(getInventory())) {
             evt.setCancelled(true);
 
-
             if (evt.getWhoClicked() instanceof Player && evt.getWhoClicked().equals(player)) {
                 ItemStack item = evt.getCurrentItem();
                 Account account = Database.getInstance().getAccount(player.getUniqueId());
@@ -45,16 +44,16 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(evt.getInventory()) && item != null && item.getType() != Material.AIR) {
                     Delivery delivery = deliveries.get(item);
                     if (delivery != null) {
-                        DeliveryContainer dc = account.getContainer("account").get("deliveries").getDelivery();
-                        if (dc.get(delivery.getId()) > System.currentTimeMillis()) {
+                        long deliveryTime = account.getDelivery(delivery.getId());
+                        if (deliveryTime > System.currentTimeMillis()) {
                             Sound.ANVIL_LAND.play(player, 1.0f, 1.0f);
-                            player.sendMessage(StringUtils.formatColors(config.getAsString("warn-claimed").replace("{time}", TimeUtils.getTimeUntil(dc.get(delivery.getId())))));
+                            player.sendMessage(StringUtils.formatColors(config.getAsString("warn-claimed").replace("{time}", TimeUtils.getTimeUntil(deliveryTime))));
                         } else if (!delivery.hasPermission(player)) {
                             player.sendMessage(StringUtils.formatColors(config.getAsString("warn-cant")));
                             player.closeInventory();
                         } else {
                             Sound.LEVEL_UP.play(player, 1.0f, 1.0f);
-                            dc.put(delivery.getId(), System.currentTimeMillis() + delivery.getDays());
+                            account.putDelivery(delivery.getId(), System.currentTimeMillis() + delivery.getDays());
                             delivery.listRewards().forEach(dr -> dr.apply(account));
                             player.sendMessage(delivery.getClaim());
                         }
@@ -98,10 +97,10 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
             return;
         }
 
-        DeliveryContainer dc = account.getContainer("account").get("deliveries").getDelivery();
         for (Delivery delivery : Delivery.listDeliveries()) {
+            long deliveryTime = account.getDelivery(delivery.getId());
             String stack = delivery.getIcon();
-            if (dc.get(delivery.getId()) > System.currentTimeMillis() || !delivery.hasPermission(player)) {
+            if (deliveryTime > System.currentTimeMillis() || !delivery.hasPermission(player)) {
                 stack = stack.replace("{color}", "&c");
             } else {
                 stack = stack.replace("{color}", "&a");
@@ -111,13 +110,13 @@ public class DeliveryManMenu extends UpdatablePlayerMenu {
             String lore = config.getAsString("lore-can");
             if (!delivery.hasPermission(player)) {
                 lore = config.getAsString("lore-cant");
-            } else if (dc.get(delivery.getId()) > System.currentTimeMillis()) {
-                lore = config.getAsString("lore-claimed").replace("{next}", TimeUtils.getTimeUntil(dc.get(delivery.getId()))).replace("\\n", "\n");
+            } else if (deliveryTime > System.currentTimeMillis()) {
+                lore = config.getAsString("lore-claimed").replace("{next}", TimeUtils.getTimeUntil(deliveryTime)).replace("\\n", "\n");
             }
             stack = stack.replace("{lore}", lore);
 
             ItemStack icon = BukkitUtils.deserializeItemStack(stack);
-            if (dc.get(delivery.getId()) > System.currentTimeMillis()) {
+            if (deliveryTime > System.currentTimeMillis()) {
                 if (icon.getType().name().contains("STORAGE_MINECART")) {
                     icon.setType(Material.MINECART);
                     icon.setDurability((short) 0);

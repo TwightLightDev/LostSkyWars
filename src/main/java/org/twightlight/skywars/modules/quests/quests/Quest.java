@@ -62,7 +62,6 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
 
         quest.displayName = section.getString("placeholders.display-name");
         quest.shortDescription = section.getString("placeholders.short-description");
-        quest.shortDescription = section.getString("placeholders.short-description");
         quest.startMessages = section.getStringList("placeholders.start");
         quest.completedMessages = section.getStringList("placeholders.complete");
 
@@ -102,7 +101,6 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
         return quest;
     }
 
-
     public ChronoUnit getRefreshTimeUnit() {
         return refreshTimeUnit;
     }
@@ -112,7 +110,6 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
     }
 
     public void generateNextRefresh() {
-
         if (getNextRefresh() == 0L) {
             Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
 
@@ -129,13 +126,11 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
                 current += refreshTimeMultiplication * refreshTimeUnit.getDuration().toMillis();
             }
             Quests.getInstance().getDatabase().getSQLHelper().setNextRefresh(this, current);
-
         }
     }
 
     @Override
     public long getNextRefresh() {
-
         return Quests.getInstance().getDatabase().getSQLHelper().getNextRefresh(this);
     }
 
@@ -171,10 +166,10 @@ public class Quest implements Refreshable, ProgressGoal, Identifiable {
                 account.addExp(Double.parseDouble(elements[1]));
             } else if (type.equals("[coins]")) {
                 Account account = Database.getInstance().getAccount(user.getPlayer().getUniqueId());
-                account.addStat("coins", Integer.parseInt(elements[1]));
+                account.addCoins(Integer.parseInt(elements[1]));
             } else if (type.equals("[souls]")) {
                 Account account = Database.getInstance().getAccount(user.getPlayer().getUniqueId());
-                account.addStat("souls", Integer.parseInt(elements[1]));
+                account.addSoulsCapped(Integer.parseInt(elements[1]));
             } else if (type.equals("[message]")) {
                 user.sendMessage(elements[1]);
             } else if (type.equals("[command]")) {

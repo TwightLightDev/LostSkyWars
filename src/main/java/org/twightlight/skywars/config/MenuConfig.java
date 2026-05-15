@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -74,8 +73,17 @@ public class MenuConfig {
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Menus");
     private static final List<MenuConfig> menus = new ArrayList<>();
 
+    public static final String[] MENUS_ARRAY = new String[]{
+            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
+            "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
+            "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
+            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "balloon", "statsnpc",
+            "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics",
+            "victorydance", "title"
+    };
+
     public static void setupMenus() {
-        for (String menu : Core.menusArray) {
+        for (String menu : MENUS_ARRAY) {
             ConfigWrapper cu = ConfigWrapper.getConfig(menu, "plugins/LostSkyWars/menus");
             MenuConfig cm = new MenuConfig(menu, StringUtils.formatColors(cu.getString("title")), cu.getInt("rows"));
             for (String key : cu.getSection("items").getKeys(false)) {

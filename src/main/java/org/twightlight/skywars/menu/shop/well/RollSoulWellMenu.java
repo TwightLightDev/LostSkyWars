@@ -93,7 +93,7 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
         }
 
         if (ticks == 100) {
-            account.removeStat("souls", list.size() * 10);
+            account.removeSouls(list.size() * 10);
             this.removeAll();
             Sound.LEVEL_UP.play(player, 1.0f, 1.0f);
         }
@@ -117,7 +117,6 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
         this.rewards = null;
         HandlerList.unregisterAll(this);
     }
-
 
     protected Account getAccount() {
         return account;

@@ -14,6 +14,9 @@ import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.GameArena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
+import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.CosmeticServer;
+import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.ValueContainer;
@@ -40,7 +43,8 @@ public class Account {
     private Arena arena;
 
     protected Map<String, ValueContainer> profile;
-    protected Map<String, Map<String, ValueContainer>> statsPerGroup;
+    protected Map<String, Map<String, ValueContainer>> stats;
+
     protected Map<String, ValueContainer> cosmetics;
     protected Map<String, ValueContainer> selections;
     protected SelectedContainer selectedContainer;
@@ -54,7 +58,7 @@ public class Account {
     protected Account(UUID id, String name, boolean virtual) {
         this.id = id;
         this.name = name;
-        this.statsPerGroup = new LinkedHashMap<>();
+        this.stats = new LinkedHashMap<>();
 
         if (!virtual) {
             this.profile = Database.getInstance().loadProfile(id, name);
@@ -133,10 +137,10 @@ public class Account {
     }
 
     public Map<String, ValueContainer> getStatsForGroup(String groupId) {
-        Map<String, ValueContainer> stats = statsPerGroup.get(groupId);
+        Map<String, ValueContainer> stats = this.stats.get(groupId);
         if (stats == null) {
             stats = Database.getInstance().loadStats(id, groupId, name);
-            statsPerGroup.put(groupId, stats);
+            this.stats.put(groupId, stats);
         }
         return stats;
     }
@@ -231,6 +235,17 @@ public class Account {
 
     public String getSoulsFormatted() {
         return StringUtils.formatNumber(getSouls());
+    }
+
+    /**
+     * Adds souls with max-soul cap enforcement.
+     */
+    public void addSoulsCapped(int amount) {
+        addSouls(amount);
+        int max = getMaxSouls();
+        if (getSouls() > max) {
+            this.profile.get("souls").set(max);
+        }
     }
 
     public int getMaxSouls() {
@@ -383,7 +398,7 @@ public class Account {
     }
 
     // =========================================================================
-    // DELIVERIES (using Map<String, Long> via StatsContainer)
+    // DELIVERIES (using Map<String, Long> via ValueContainer)
     // =========================================================================
 
     public Map<String, Long> getDeliveries() {
@@ -403,7 +418,7 @@ public class Account {
     }
 
     // =========================================================================
-    // LEVELING (using List<String> via StatsContainer)
+    // LEVELING (using List<String> via ValueContainer)
     // =========================================================================
 
     public void addLeveling(int level) {
@@ -417,7 +432,7 @@ public class Account {
     }
 
     // =========================================================================
-    // FAVORITES & MAP SELECTION (using List<String> via StatsContainer)
+    // FAVORITES & MAP SELECTION (using List<String> via ValueContainer)
     // =========================================================================
 
     public void addFavoriteMap(String mapName) {
@@ -447,13 +462,16 @@ public class Account {
     }
 
     // =========================================================================
-    // COSMETIC OWNERSHIP (direct Map methods via StatsContainer)
+    // COSMETIC OWNERSHIP (direct Map methods via ValueContainer)
     // =========================================================================
 
     public Map<String, ValueContainer> getCosmeticsMap() {
         return cosmetics;
     }
 
+
+
+    //What the fuck is this method??? its really hard to use, why use String column??
     public List<String> getOwnedCosmetics(String column, String groupKey) {
         ValueContainer container = cosmetics.get(column);
         if (container == null) return new ArrayList<>();
@@ -710,7 +728,7 @@ public class Account {
         double step = utf8 ? 10.0 : 2.5;
         String filledColor = utf8 ? "b" : "3";
         String emptyColor = utf8 ? "7" : "8";
-        String symbol = utf8 ? "" : "|";
+        String symbol = utf8 ? "\u25AC" : "|";
 
         boolean lastWasFilled = false;
         boolean hasColor = false;
@@ -826,7 +844,7 @@ public class Account {
 
     public void save() {
         Database.getInstance().saveProfile(id, profile);
-        for (Map.Entry<String, Map<String, ValueContainer>> entry : statsPerGroup.entrySet()) {
+        for (Map.Entry<String, Map<String, ValueContainer>> entry : stats.entrySet()) {
             Database.getInstance().saveStats(id, entry.getKey(), entry.getValue());
         }
         Database.getInstance().saveCosmetics(id, cosmetics);
@@ -840,9 +858,9 @@ public class Account {
             this.profile.clear();
             this.profile = null;
         }
-        if (this.statsPerGroup != null) {
-            this.statsPerGroup.clear();
-            this.statsPerGroup = null;
+        if (this.stats != null) {
+            this.stats.clear();
+            this.stats = null;
         }
         if (this.cosmetics != null) {
             this.cosmetics.clear();
