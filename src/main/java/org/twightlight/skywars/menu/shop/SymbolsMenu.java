@@ -8,10 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSymbol;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -101,7 +99,7 @@ public class SymbolsMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (Cosmetic c : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_SYMBOL)) {
+        for (VisualCosmetic c : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_SYMBOL)) {
             SkyWarsSymbol symbol = (SkyWarsSymbol) c;
             boolean has = symbol.has(account);
             ItemStack icon = null;

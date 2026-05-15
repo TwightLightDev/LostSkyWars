@@ -1,7 +1,7 @@
 package org.twightlight.skywars.menu.shop.well;
 
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class RollList {
                     menu.remove(slot);
                 }
             }
-            Cosmetic c = menu.getItemMap().get(reward);
+            VisualCosmetic c = menu.getItemMap().get(reward);
             menu.getAccount().getPlayer().sendMessage(StringUtils.formatColors(RollSoulWellMenu.config.getAsString("received").replace("{name}",
                     c.getRarity().getColor() + c.getRawName() + " (" + c.getType().getName() + " - " + SkyWarsType.fromIndex(c.getMode()).getName() + ")")));
             if (!c.has(menu.getAccount())) {

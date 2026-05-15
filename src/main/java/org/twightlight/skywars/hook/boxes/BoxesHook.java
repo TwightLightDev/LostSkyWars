@@ -6,9 +6,7 @@ import org.twightlight.skywars.Language;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 
 public class BoxesHook {
 
@@ -17,7 +15,7 @@ public class BoxesHook {
     public static void setupBoxes() {
         LOGGER.log(Level.INFO, "LostBoxes found, hooking...");
 
-        for (Cosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
+        for (VisualCosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
             if (cosmetic.getType() == CosmeticType.SKYWARS_SYMBOL) {
                 continue;
             }

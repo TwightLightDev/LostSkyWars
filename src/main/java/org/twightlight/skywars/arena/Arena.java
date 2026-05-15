@@ -17,7 +17,7 @@ import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
+import org.twightlight.skywars.cosmetics.visual.assets.sprays.Spray;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;

@@ -8,10 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.categories.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -81,7 +79,7 @@ public class ShopMenu extends PlayerMenu {
                 int max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT).size(),
                         amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT).stream().filter(cosmetic -> cosmetic.has(account)).count(),
                         percentage = (int) ((100.0 * amount) / max);
-                Cosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1);
+                VisualCosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1);
                 stack = stack.replace("{kits_has}", String.valueOf(amount));
                 stack = stack.replace("{kits_max}", String.valueOf(max));
                 stack = stack.replace("{kits_percentage}", percentage + "%");

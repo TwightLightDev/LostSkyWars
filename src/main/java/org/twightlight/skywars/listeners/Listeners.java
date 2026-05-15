@@ -8,7 +8,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.listeners.entity.EntityListener;
 import org.twightlight.skywars.listeners.entity.FriendlyMobListener;
 import org.twightlight.skywars.listeners.entity.ItemFrameManager;

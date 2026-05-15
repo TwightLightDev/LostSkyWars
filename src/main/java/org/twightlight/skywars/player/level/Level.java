@@ -3,10 +3,8 @@ package org.twightlight.skywars.player.level;
 import com.google.common.collect.ImmutableList;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsSymbol;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.config.ConfigWrapper;
 import org.twightlight.skywars.utils.FileUtils;
@@ -35,7 +33,7 @@ public class Level {
     }
 
     public String getLevel(Account account) {
-        Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
+        VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
         if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }
@@ -44,7 +42,7 @@ public class Level {
     }
 
     public String getLevelSymbol(Account account) {
-        Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
+        VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
         if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }

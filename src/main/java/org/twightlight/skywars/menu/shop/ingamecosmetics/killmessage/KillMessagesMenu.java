@@ -10,10 +10,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillMessage;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillMessage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -197,11 +195,11 @@ public class KillMessagesMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        List<Cosmetic> cosmetics = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLMESSAGE);
+        List<VisualCosmetic> cosmetics = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLMESSAGE);
         order.accept(cosmetics);
         cosmetics = filter.accept(cosmetics, player);
         cosmetics = cosmetics.stream().filter(cos -> cos.getRawName().toLowerCase().startsWith(searchQuery)).collect(Collectors.toList());
-        for (Cosmetic c : cosmetics) {
+        for (VisualCosmetic c : cosmetics) {
             SkyWarsKillMessage trail = (SkyWarsKillMessage) c;
             String rarity = trail.getRarity().getName();
             boolean has = trail.has(account);

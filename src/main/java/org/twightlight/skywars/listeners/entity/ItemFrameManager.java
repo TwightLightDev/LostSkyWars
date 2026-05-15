@@ -13,11 +13,9 @@ import org.bukkit.event.hanging.HangingBreakEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsSpray;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.assets.sprays.Spray;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSpray;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 
@@ -75,7 +73,7 @@ public class ItemFrameManager implements Listener {
         if (account == null || (server = account.getArena()) == null || server.getState() != SkyWarsState.INGAME || server.isSpectator(player)) {
             return;
         }
-        Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SPRAY, 1);
+        VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SPRAY, 1);
         if (cos instanceof SkyWarsSpray) {
             SkyWarsSpray spray1 = (SkyWarsSpray) cos;
             spray.applyImage(player, spray1);

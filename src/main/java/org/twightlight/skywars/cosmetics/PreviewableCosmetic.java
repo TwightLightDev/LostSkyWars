@@ -37,7 +37,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-public abstract class PreviewableCosmetic extends Cosmetic {
+public abstract class PreviewableCosmetic extends VisualCosmetic {
     protected static final ConfigWrapper PREVIEWCONFIG = ConfigWrapper.getConfig("cosmeticspreview");
     protected static final Map<UUID, PreviewSession> sessionUUID = new ConcurrentHashMap<>();
     protected static final Map<CosmeticType, List<PreviewSession>> sessionCosmeticType = new ConcurrentHashMap<>();

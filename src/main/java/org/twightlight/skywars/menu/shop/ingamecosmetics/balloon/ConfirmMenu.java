@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -82,14 +82,14 @@ public class ConfirmMenu extends PlayerMenu {
         }
     }
 
-    private Cosmetic cosmetic;
+    private VisualCosmetic cosmetic;
     private Class<?> returns;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
     private Order order;
     private Filter filter;
     private String searchQuery;
 
-    public ConfirmMenu(Player player, Cosmetic cosmetic, Class<?> returns, Order order, Filter filter, String searchQuery) {
+    public ConfirmMenu(Player player, VisualCosmetic cosmetic, Class<?> returns, Order order, Filter filter, String searchQuery) {
         super(player, config.getTitle(), config.getRows());
         this.cosmetic = cosmetic;
         this.returns = returns;

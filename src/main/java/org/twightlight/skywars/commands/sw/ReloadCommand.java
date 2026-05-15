@@ -6,9 +6,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.*;
+import org.twightlight.skywars.cosmetics.visual.categories.*;
 
 @SuppressWarnings("deprecation")
 public class ReloadCommand extends SubCommand {

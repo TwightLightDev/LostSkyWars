@@ -15,7 +15,7 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.commands.Commands;
-import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.SQLiteDatabase;
 import org.twightlight.skywars.fun.customitems.CustomItemsManager;
@@ -130,7 +130,7 @@ public class SkyWars extends JavaPlugin {
             CoreLobbies.setupLobbies();
         }
 
-        Cosmetic.setupCosmetics();
+        VisualCosmetic.setupCosmetics();
 
         this.setupVault();
         this.setupPlaceholderAPI();

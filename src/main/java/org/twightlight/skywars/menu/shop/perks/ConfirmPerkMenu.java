@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -66,11 +66,11 @@ public class ConfirmPerkMenu extends PlayerMenu {
         }
     }
 
-    private Cosmetic cosmetic;
+    private VisualCosmetic cosmetic;
     private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ConfirmPerkMenu(Player player, Cosmetic cosmetic, String groupId) {
+    public ConfirmPerkMenu(Player player, VisualCosmetic cosmetic, String groupId) {
         super(player, config.getTitle(), config.getRows());
         this.cosmetic = cosmetic;
         this.groupId = groupId;

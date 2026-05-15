@@ -14,9 +14,6 @@ import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.GameArena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.ValueContainer;
@@ -45,9 +42,15 @@ public class Account {
     protected Map<String, ValueContainer> profile;
     protected Map<String, Map<String, ValueContainer>> stats;
 
-    protected Map<String, ValueContainer> cosmetics;
-    protected Map<String, ValueContainer> selections;
+    protected CosmeticHelper cosmeticHelper;
+
+    //Map favourites and cosmetic selection should be in 2 different container.
+    //Map can stay here but cosmetic related should stay in Cosmetics helper
+    //Kit, perk, visual cosmetics should stay in 3 different Selected container
     protected SelectedContainer selectedContainer;
+
+    //What is the fucking purpose of this field??
+    protected Map<String, ValueContainer> selections;
 
     private Map<UUID, Long> lastHit = new HashMap<>();
 
@@ -59,18 +62,19 @@ public class Account {
         this.id = id;
         this.name = name;
         this.stats = new LinkedHashMap<>();
-
+        Map<String, ValueContainer> cosmetics;
         if (!virtual) {
             this.profile = Database.getInstance().loadProfile(id, name);
-            this.cosmetics = Database.getInstance().loadCosmetics(id, name);
+            cosmetics = Database.getInstance().loadCosmetics(id, name);
             this.selections = Database.getInstance().loadSelections(id, name);
         } else {
             this.profile = buildDefaultProfile();
-            this.cosmetics = buildDefaultCosmetics();
+            cosmetics = buildDefaultCosmetics();
             this.selections = buildDefaultSelections();
         }
 
         this.selectedContainer = new SelectedContainer(this.selections);
+        cosmeticHelper = new CosmeticHelper(cosmetics);
 
         if (this.profile.get("leveling").get() == null) {
             this.profile.get("leveling").set("[]");
@@ -431,10 +435,6 @@ public class Account {
         return this.profile.get("leveling").getAsStringList().contains(String.valueOf(level));
     }
 
-    // =========================================================================
-    // FAVORITES & MAP SELECTION (using List<String> via ValueContainer)
-    // =========================================================================
-
     public void addFavoriteMap(String mapName) {
         List<String> favorites = this.selectedContainer.getFavorites();
         if (!favorites.contains(mapName)) {
@@ -459,77 +459,6 @@ public class Account {
 
     public boolean canSelectMap() {
         return this.selectedContainer.getLastSelected() < System.currentTimeMillis();
-    }
-
-    //Separate those method to a helper, linked with this class
-    //Make sure to preserve the consistency
-    //Kits and perk should be distinctive as they depends on CosmeticsGroup, other types just saved as a list
-
-    // =========================================================================
-    // COSMETIC OWNERSHIP (direct Map methods via ValueContainer)
-    // =========================================================================
-
-    public Map<String, ValueContainer> getCosmeticsMap() {
-        return cosmetics;
-    }
-
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public List<String> get(String column, String groupKey) {
-        ValueContainer container = cosmetics.get(column);
-        if (container == null) return new ArrayList<>();
-        Map<String, List<String>> map = container.getAsGroupedMap();
-        List<String> list = map.get(groupKey);
-        return list != null ? new ArrayList<>(list) : new ArrayList<>();
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public List<String> get(String column) {
-        return get(column, "global");
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public void add(String column, String cosmeticId, String groupKey) {
-        ValueContainer container = cosmetics.get(column);
-        if (container == null) return;
-        Map<String, List<String>> map = container.getAsGroupedMap();
-        List<String> list = map.computeIfAbsent(groupKey, k -> new ArrayList<>());
-        if (!list.contains(cosmeticId)) {
-            list.add(cosmeticId);
-        }
-        container.setFromObject(map);
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public void add(String column, String cosmeticId) {
-        add(column, cosmeticId, "global");
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public void remove(String column, String cosmeticId, String groupKey) {
-        ValueContainer container = cosmetics.get(column);
-        if (container == null) return;
-        Map<String, List<String>> map = container.getAsGroupedMap();
-        List<String> list = map.get(groupKey);
-        if (list != null) {
-            list.remove(cosmeticId);
-            container.setFromObject(map);
-        }
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public void remove(String column, String cosmeticId) {
-        remove(column, cosmeticId, "global");
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public boolean has(String column, String cosmeticId, String groupKey) {
-        return get(column, groupKey).contains(cosmeticId);
-    }
-    //What the fuck is this method??? its really hard to use, why use String column??
-    //Use CosmeticType enum
-    public boolean has(String column, String cosmeticId) {
-        return has(column, cosmeticId, "global");
     }
 
     // =========================================================================
@@ -851,7 +780,7 @@ public class Account {
         for (Map.Entry<String, Map<String, ValueContainer>> entry : stats.entrySet()) {
             Database.getInstance().saveStats(id, entry.getKey(), entry.getValue());
         }
-        Database.getInstance().saveCosmetics(id, cosmetics);
+        Database.getInstance().saveCosmetics(id, cosmeticHelper.getRawMap());
         Database.getInstance().saveSelections(id, selections);
     }
 
@@ -866,10 +795,7 @@ public class Account {
             this.stats.clear();
             this.stats = null;
         }
-        if (this.cosmetics != null) {
-            this.cosmetics.clear();
-            this.cosmetics = null;
-        }
+
         if (this.selections != null) {
             this.selections.clear();
             this.selections = null;
@@ -921,5 +847,9 @@ public class Account {
 
     public Player getPlayer() {
         return id != null ? Bukkit.getPlayer(id) : null;
+    }
+
+    public CosmeticHelper getCosmeticHelper() {
+        return cosmeticHelper;
     }
 }

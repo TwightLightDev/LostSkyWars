@@ -5,12 +5,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.balloons.Balloon;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsBalloon;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.assets.balloons.Balloon;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsBalloon;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -105,7 +103,7 @@ public class SkyWarsTeam {
             cageOwner = members.get(RANDOM.nextInt(members.size()));
             Account account = Database.getInstance().getAccount(cageOwner);
             if (account != null) {
-                Cosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
+                VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
                 if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
                     ((SkyWarsCage) cosmetic).apply(account.getPlayer(), getLocation());
                 } else {

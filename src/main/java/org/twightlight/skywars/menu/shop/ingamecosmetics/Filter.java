@@ -1,7 +1,7 @@
 package org.twightlight.skywars.menu.shop.ingamecosmetics;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.cosmetics.Cosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 
 import java.util.List;
@@ -20,13 +20,13 @@ public enum Filter {
             }).collect(Collectors.toList()));
 
 
-    private final BiFunction<Player, List<Cosmetic>, List<Cosmetic>> function;
+    private final BiFunction<Player, List<VisualCosmetic>, List<VisualCosmetic>> function;
 
-    Filter(BiFunction<Player, List<Cosmetic>, List<Cosmetic>> function) {
+    Filter(BiFunction<Player, List<VisualCosmetic>, List<VisualCosmetic>> function) {
         this.function = function;
     }
 
-    public List<Cosmetic> accept(List<Cosmetic> cosmetics, Player player) {
+    public List<VisualCosmetic> accept(List<VisualCosmetic> cosmetics, Player player) {
         return function.apply(player, cosmetics);
     }
 

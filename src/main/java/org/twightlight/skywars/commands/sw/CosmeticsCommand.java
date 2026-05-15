@@ -4,9 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -29,7 +27,7 @@ public class CosmeticsCommand extends SubCommand {
                 sendHelp(sender);
             }
             try {
-                Cosmetic cosmetic = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.valueOf(args[1]), 1, args[2]);
+                VisualCosmetic cosmetic = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.valueOf(args[1]), 1, args[2]);
                 cosmetic.give(Database.getInstance().getAccount(Bukkit.getPlayer(args[3]).getUniqueId()));
                 sender.sendMessage(StringUtils.formatColors("&aSuccessfully gave a cosmetic to " + args[3]));
             } catch (NullPointerException | NumberFormatException e) {

@@ -21,11 +21,9 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsVictoryDance;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
@@ -57,7 +55,7 @@ public class Timer {
         server.getPlayers(true).forEach(player -> {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
-                Cosmetic c = kitIndex > 0 ? account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, kitIndex) : null;
+                VisualCosmetic c = kitIndex > 0 ? account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, kitIndex) : null;
                 if (c != null) {
                     NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
                 } else {
@@ -239,7 +237,7 @@ public class Timer {
                 if (account == null) {
                     return;
                 }
-                Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
+                VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
                 if (cos instanceof SkyWarsVictoryDance) {
                     SkyWarsVictoryDance cos1 = (SkyWarsVictoryDance) cos;
                     cos1.execute(player);

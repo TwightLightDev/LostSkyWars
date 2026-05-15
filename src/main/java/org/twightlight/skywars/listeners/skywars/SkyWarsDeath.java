@@ -3,11 +3,9 @@ package org.twightlight.skywars.listeners.skywars;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillEffect;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsKillMessage;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillMessage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.PlayerUtils;
@@ -21,7 +19,7 @@ public class SkyWarsDeath implements Listener {
         if (e.getKiller() == null) return;
         Account account = Database.getInstance().getAccount(e.getKiller().getUniqueId());
         if (account == null) {return;}
-        Cosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLMESSAGE, 1);
+        VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLMESSAGE, 1);
         if (cos instanceof SkyWarsKillMessage) {
             SkyWarsKillMessage cos1 = (SkyWarsKillMessage) cos;
             SkyWarsPlayerDeathEvent.SkyWarsDeathCause cause = e.getCause();
@@ -70,7 +68,7 @@ public class SkyWarsDeath implements Listener {
                     break;
             }
         }
-        Cosmetic cos1 = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLEFFECT, 1);
+        VisualCosmetic cos1 = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLEFFECT, 1);
         if (cos1 instanceof SkyWarsKillEffect) {
             SkyWarsKillEffect cos2 = (SkyWarsKillEffect) cos1;
             cos2.execute(e.getKiller(), e.getPlayer(), e.getPlayer().getLocation());

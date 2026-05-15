@@ -3,11 +3,6 @@ package org.twightlight.skywars.database.player;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Manages per-group selections stored as JSON.
- * Kit and perk are JSON maps: {"normal": 3, "insane": 5}
- * All other cosmetics are global integer IDs.
- */
 public class SelectedContainer {
 
     private final Map<String, ValueContainer> selections;
@@ -16,46 +11,28 @@ public class SelectedContainer {
         this.selections = selections;
     }
 
-    /**
-     * Gets the selected kit ID for a specific group.
-     */
-    public int getSelectedKit(String groupId) {
-        return getPerGroupSelection("kit", groupId);
+    public int getSelectedKit(String cosmeticsGroupId) {
+        return getPerGroupSelection("kit", cosmeticsGroupId);
     }
 
-    /**
-     * Sets the selected kit ID for a specific group.
-     */
-    public void setSelectedKit(String groupId, int kitId) {
-        setPerGroupSelection("kit", groupId, kitId);
+    public void setSelectedKit(String cosmeticsGroupId, int kitId) {
+        setPerGroupSelection("kit", cosmeticsGroupId, kitId);
     }
 
-    /**
-     * Gets the selected perk ID for a specific group.
-     */
-    public int getSelectedPerk(String groupId) {
-        return getPerGroupSelection("perk", groupId);
+    public int getSelectedPerk(String cosmeticsGroupId) {
+        return getPerGroupSelection("perk", cosmeticsGroupId);
     }
 
-    /**
-     * Sets the selected perk ID for a specific group.
-     */
-    public void setSelectedPerk(String groupId, int perkId) {
-        setPerGroupSelection("perk", groupId, perkId);
+    public void setSelectedPerk(String cosmeticsGroupId, int perkId) {
+        setPerGroupSelection("perk", cosmeticsGroupId, perkId);
     }
 
-    /**
-     * Gets a global cosmetic selection (cage, death_cry, trail, etc.).
-     */
     public int getGlobalSelection(String key) {
         ValueContainer container = selections.get(key);
         if (container == null) return 0;
         return container.getAs(Integer.class);
     }
 
-    /**
-     * Sets a global cosmetic selection.
-     */
     public void setGlobalSelection(String key, int id) {
         ValueContainer container = selections.get(key);
         if (container != null) {

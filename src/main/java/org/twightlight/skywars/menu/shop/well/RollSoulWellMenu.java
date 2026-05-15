@@ -6,9 +6,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
@@ -35,8 +33,8 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
     private boolean back;
     private Account account;
     private List<RollList> list;
-    private List<Cosmetic> rewards;
-    private Map<ItemStack, Cosmetic> itemMap;
+    private List<VisualCosmetic> rewards;
+    private Map<ItemStack, VisualCosmetic> itemMap;
 
     public RollSoulWellMenu(Player player, boolean back, int rolls) {
         super(player, config.getTitle(), config.getRows());
@@ -45,7 +43,7 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
         this.list = new ArrayList<>(rolls);
         this.rewards = new ArrayList<>();
         this.itemMap = new HashMap<>();
-        for (Cosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
+        for (VisualCosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
             if (cosmetic.getType() == CosmeticType.SKYWARS_KIT || cosmetic.getType() == CosmeticType.SKYWARS_PERK || cosmetic.getType() == CosmeticType.SKYWARS_CAGE) {
                 if (cosmetic.canBeFoundInBox(player)) {
                     rewards.add(cosmetic);
@@ -122,11 +120,11 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
         return account;
     }
 
-    protected Map<ItemStack, Cosmetic> getItemMap() {
+    protected Map<ItemStack, VisualCosmetic> getItemMap() {
         return itemMap;
     }
 
-    protected List<Cosmetic> getRewardsList() {
+    protected List<VisualCosmetic> getRewardsList() {
         return rewards;
     }
 

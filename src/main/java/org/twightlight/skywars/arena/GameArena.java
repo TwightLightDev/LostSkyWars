@@ -25,13 +25,10 @@ import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent.SkyWarsD
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
-import org.twightlight.skywars.cosmetics.Cosmetic;
-import org.twightlight.skywars.cosmetics.CosmeticServer;
-import org.twightlight.skywars.cosmetics.CosmeticType;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsKit;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.assets.sprays.Spray;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsCage;
-import org.twightlight.skywars.cosmetics.skywars.ingamecosmetics.categories.SkyWarsDeathCry;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.assets.sprays.Spray;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
+import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsDeathCry;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
@@ -148,7 +145,7 @@ public class GameArena extends Arena {
 
         int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
         if (deathCryId > 0) {
-            Cosmetic cry = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
+            VisualCosmetic cry = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
             if (cry != null && cry instanceof SkyWarsDeathCry) {
                 ((SkyWarsDeathCry) cry).getSound().play(player.getLocation(), ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
             }
@@ -260,7 +257,7 @@ public class GameArena extends Arena {
 
         int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
         if (deathCryId > 0) {
-            Cosmetic cry = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
+            VisualCosmetic cry = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
             if (cry != null && cry instanceof SkyWarsDeathCry) {
                 ((SkyWarsDeathCry) cry).getSound().play(dieLocation, ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
             }
@@ -334,7 +331,7 @@ public class GameArena extends Arena {
 
         int cageId = account.getSelectedContainer().getGlobalSelection("cage");
         if (cageId > 0) {
-            Cosmetic cosmetic = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1, String.valueOf(cageId));
+            VisualCosmetic cosmetic = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1, String.valueOf(cageId));
             if (cosmetic != null && cosmetic instanceof SkyWarsCage && cosmetic.has(account)) {
                 ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation());
             } else {
@@ -535,7 +532,7 @@ public class GameArena extends Arena {
 
                 int kitId = account.getSelectedContainer().getSelectedKit(group.getId());
                 if (kitId > 0) {
-                    Cosmetic cosmeticKit = Cosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1, String.valueOf(kitId));
+                    VisualCosmetic cosmeticKit = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1, String.valueOf(kitId));
                     if (cosmeticKit != null && cosmeticKit instanceof SkyWarsKit && ((SkyWarsKit) cosmeticKit).has(account)) {
                         ((SkyWarsKit) cosmeticKit).apply(player);
                     } else {

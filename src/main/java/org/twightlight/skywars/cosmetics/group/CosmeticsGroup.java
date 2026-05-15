@@ -3,6 +3,7 @@ package org.twightlight.skywars.cosmetics.group;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,8 @@ import java.util.Map;
 public class CosmeticsGroup {
 
     private String id;
-
     private final List<ArenaGroup> ARENA_GROUPS = new ArrayList<>();
     private static final Map<String, CosmeticsGroup> GROUPS = new LinkedHashMap<>();
-
 
     private CosmeticsGroup(String id) {
         GROUPS.put(id, this);
@@ -50,5 +49,9 @@ public class CosmeticsGroup {
 
     public static CosmeticsGroup getFromID(String id) {
         return GROUPS.get(id);
+    }
+
+    public static Collection<CosmeticsGroup> listAll() {
+        return GROUPS.values();
     }
 }
