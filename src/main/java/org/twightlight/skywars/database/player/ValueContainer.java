@@ -73,10 +73,6 @@ public class ValueContainer {
         }
     }
 
-    /**
-     * Parses the stored JSON string as a Map of String to List of String.
-     * Used for cosmetic ownership: {"solo": ["1","3"], "global": ["2"]}
-     */
     public Map<String, List<String>> getAsGroupedMap() {
         try {
             Type type = new TypeToken<Map<String, List<String>>>() {}.getType();
@@ -87,10 +83,6 @@ public class ValueContainer {
         }
     }
 
-    /**
-     * Parses the stored JSON string as a Map of String to Integer.
-     * Used for per-group selections: {"solo": 3, "ranked_solo": 5}
-     */
     public Map<String, Integer> getAsIntMap() {
         try {
             Type type = new TypeToken<Map<String, Integer>>() {}.getType();

@@ -461,6 +461,10 @@ public class Account {
         return this.selectedContainer.getLastSelected() < System.currentTimeMillis();
     }
 
+    //Separate those method to a helper, linked with this class
+    //Make sure to preserve the consistency
+    //Kits and perk should be distinctive as they depends on CosmeticsGroup, other types just saved as a list
+
     // =========================================================================
     // COSMETIC OWNERSHIP (direct Map methods via ValueContainer)
     // =========================================================================
@@ -469,22 +473,23 @@ public class Account {
         return cosmetics;
     }
 
-
-
     //What the fuck is this method??? its really hard to use, why use String column??
-    public List<String> getOwnedCosmetics(String column, String groupKey) {
+    //Use CosmeticType enum
+    public List<String> get(String column, String groupKey) {
         ValueContainer container = cosmetics.get(column);
         if (container == null) return new ArrayList<>();
         Map<String, List<String>> map = container.getAsGroupedMap();
         List<String> list = map.get(groupKey);
         return list != null ? new ArrayList<>(list) : new ArrayList<>();
     }
-
-    public List<String> getOwnedCosmetics(String column) {
-        return getOwnedCosmetics(column, "global");
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public List<String> get(String column) {
+        return get(column, "global");
     }
-
-    public void addOwnedCosmetic(String column, String cosmeticId, String groupKey) {
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public void add(String column, String cosmeticId, String groupKey) {
         ValueContainer container = cosmetics.get(column);
         if (container == null) return;
         Map<String, List<String>> map = container.getAsGroupedMap();
@@ -494,12 +499,14 @@ public class Account {
         }
         container.setFromObject(map);
     }
-
-    public void addOwnedCosmetic(String column, String cosmeticId) {
-        addOwnedCosmetic(column, cosmeticId, "global");
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public void add(String column, String cosmeticId) {
+        add(column, cosmeticId, "global");
     }
-
-    public void removeOwnedCosmetic(String column, String cosmeticId, String groupKey) {
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public void remove(String column, String cosmeticId, String groupKey) {
         ValueContainer container = cosmetics.get(column);
         if (container == null) return;
         Map<String, List<String>> map = container.getAsGroupedMap();
@@ -509,23 +516,20 @@ public class Account {
             container.setFromObject(map);
         }
     }
-
-    public void removeOwnedCosmetic(String column, String cosmeticId) {
-        removeOwnedCosmetic(column, cosmeticId, "global");
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public void remove(String column, String cosmeticId) {
+        remove(column, cosmeticId, "global");
     }
-
-    public boolean hasOwnedCosmetic(String column, String cosmeticId, String groupKey) {
-        return getOwnedCosmetics(column, groupKey).contains(cosmeticId);
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public boolean has(String column, String cosmeticId, String groupKey) {
+        return get(column, groupKey).contains(cosmeticId);
     }
-
-    public boolean hasOwnedCosmetic(String column, String cosmeticId) {
-        return hasOwnedCosmetic(column, cosmeticId, "global");
-    }
-
-    public Map<String, List<String>> getCosmeticGroupedMap(String column) {
-        ValueContainer container = cosmetics.get(column);
-        if (container == null) return new LinkedHashMap<>();
-        return container.getAsGroupedMap();
+    //What the fuck is this method??? its really hard to use, why use String column??
+    //Use CosmeticType enum
+    public boolean has(String column, String cosmeticId) {
+        return has(column, cosmeticId, "global");
     }
 
     // =========================================================================
