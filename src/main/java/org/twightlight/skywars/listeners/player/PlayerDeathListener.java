@@ -56,7 +56,7 @@ public class PlayerDeathListener extends Listeners {
                             && (hitter.getArena() != null && hitter.getArena().equals(server))
                             && hitter.getPlayer() != null && !server.isSpectator(hitter.getPlayer())) {
                         if (!server.isPrivate() && server.getGroup().hasTrait("has_stats")) {
-                            hitter.addStat(server.getGroup().getId() + "_assists");
+                            hitter.addStat(server.getGroup().getId(), server.getGroup().getId() + "_assists");
                         }
                     }
                 }

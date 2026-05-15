@@ -174,7 +174,7 @@ public class Account {
         return StringUtils.formatNumber(getStat(groupId, statName));
     }
 
-    public int getStatAcrossGroups(String statName, String... groupIds) {
+    public int getSumStat(String statName, String... groupIds) {
         int total = 0;
         for (String groupId : groupIds) {
             total += getStat(groupId, statName);
@@ -182,8 +182,8 @@ public class Account {
         return total;
     }
 
-    public String getStatAcrossGroupsFormatted(String statName, String... groupIds) {
-        return StringUtils.formatNumber(getStatAcrossGroups(statName, groupIds));
+    public String getSumStatFormatted(String statName, String... groupIds) {
+        return StringUtils.formatNumber(getSumStat(statName, groupIds));
     }
 
     // =========================================================================
@@ -766,8 +766,8 @@ public class Account {
 
                     if (currentServer == null) {
                         line = line.replace("{level}", Level.getByLevel(getLevel()).getLevel(Account.this));
-                        line = line.replace("{kills}", getStatAcrossGroupsFormatted("kills", "solo", "doubles"));
-                        line = line.replace("{wins}", getStatAcrossGroupsFormatted("wins", "solo", "doubles"));
+                        line = line.replace("{kills}", getSumStatFormatted("kills", "solo", "doubles"));
+                        line = line.replace("{wins}", getSumStatFormatted("wins", "solo", "doubles"));
                         line = line.replace("{solokills}", getStatFormatted("solo", "kills"));
                         line = line.replace("{solowins}", getStatFormatted("solo", "wins"));
                         line = line.replace("{teamkills}", getStatFormatted("doubles", "kills"));

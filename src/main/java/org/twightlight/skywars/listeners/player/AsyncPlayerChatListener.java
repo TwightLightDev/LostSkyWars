@@ -13,6 +13,7 @@ import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
+import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.setup.ChatSession;
 import org.twightlight.skywars.utils.PlayerUtils;
 import org.twightlight.skywars.utils.StringUtils;
@@ -89,8 +90,10 @@ public class AsyncPlayerChatListener extends Listeners {
                             PlayerUtils.replaceAll(player, Language.lobby$chat$format_spectator.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                 } else {
                     if (group != null && group.hasTrait("has_elo")) {
-                        players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_ranked.replace("{level}", level).replace("{league}", Ranked.getLeague(account).getName())
-                                .replace("{points}", StringUtils.formatNumber(Ranked.getElo(account))).replace("{color}", color).replace("{message}", evt.getMessage())));
+                        League league = account.getLeague();
+                        String leagueName = league != null ? league.getName() : "";
+                        players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_ranked.replace("{level}", level).replace("{league}", leagueName)
+                                .replace("{points}", account.getEloFormatted()).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else if (group != null && group.hasTrait("no_chat_waiting")) {
                         players.sendMessage(PlayerUtils.replaceAll(player, Language.lobby$chat$format_duels.replace("{level}", level).replace("{color}", color).replace("{message}", evt.getMessage())));
                     } else {

@@ -15,6 +15,7 @@ import org.twightlight.skywars.config.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.lobby.ProfileMenu;
 import org.twightlight.skywars.player.Account;
+import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
@@ -73,50 +74,62 @@ public class StatisticsMenu extends PlayerMenu {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
 
-                // Total
-                stack = stack.replace("{wins}", StringUtils.formatNumber(account.getIntegers("solowins", "teamwins") + Ranked.getInt(account, "wins")));
-                stack = stack.replace("{kills}", StringUtils.formatNumber(account.getIntegers("solokills", "teamkills") + Ranked.getInt(account, "kills")));
-                stack = stack.replace("{melee}", StringUtils.formatNumber(account.getIntegers("solomelee", "teammelee") + Ranked.getInt(account, "melee")));
-                stack = stack.replace("{void}", StringUtils.formatNumber(account.getIntegers("solovoid", "teamvoid") + Ranked.getInt(account, "void")));
-                stack = stack.replace("{bow}", StringUtils.formatNumber(account.getIntegers("solobow", "teambow") + Ranked.getInt(account, "bow")));
-                stack = stack.replace("{assists}", StringUtils.formatNumber(account.getIntegers("soloassists", "teamassists") + Ranked.getInt(account, "assists")));
-                stack = stack.replace("{deaths}", StringUtils.formatNumber(account.getIntegers("solodeaths", "teamdeaths") + Ranked.getInt(account, "deaths")));
-                stack = stack.replace("{games}", StringUtils.formatNumber(account.getIntegers("soloplays", "teamplays") + Ranked.getInt(account, "plays")));
-                stack = stack.replace("{coins}", account.getFormatted("coins"));
-                stack = stack.replace("{souls}", account.getFormatted("souls"));
-                stack = stack.replace("{maxsouls}", StringUtils.formatNumber(account.getContainer("account").get("sw_maxsouls").getAsInt()));
+                // Total (across solo + doubles + ranked_solo)
+                stack = stack.replace("{wins}", StringUtils.formatNumber(
+                        account.getSumStat("wins", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{kills}", StringUtils.formatNumber(
+                        account.getSumStat("kills", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{melee}", StringUtils.formatNumber(
+                        account.getSumStat("melee_kills", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{void}", StringUtils.formatNumber(
+                        account.getSumStat("void_kills", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{bow}", StringUtils.formatNumber(
+                        account.getSumStat("bow_kills", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{assists}", StringUtils.formatNumber(
+                        account.getSumStat("assists", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{deaths}", StringUtils.formatNumber(
+                        account.getSumStat("deaths", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{games}", StringUtils.formatNumber(
+                        account.getSumStat("plays", "solo", "doubles", "ranked_solo")));
+                stack = stack.replace("{coins}", account.getCoinsFormatted());
+                stack = stack.replace("{souls}", account.getSoulsFormatted());
+                stack = stack.replace("{maxsouls}", StringUtils.formatNumber(account.getMaxSouls()));
 
                 // Solo
-                stack = stack.replace("{solowins}", account.getFormatted("solowins"));
-                stack = stack.replace("{solokills}", account.getFormatted("solokills"));
-                stack = stack.replace("{solomelee}", account.getFormatted("solomelee"));
-                stack = stack.replace("{solovoid}", account.getFormatted("solovoid"));
-                stack = stack.replace("{solobow}", account.getFormatted("solobow"));
-                stack = stack.replace("{soloassists}", account.getFormatted("soloassists"));
-                stack = stack.replace("{solodeaths}", account.getFormatted("solodeaths"));
-                stack = stack.replace("{sologames}", account.getFormatted("soloplays"));
+                stack = stack.replace("{solowins}",   account.getStatFormatted("solo", "wins"));
+                stack = stack.replace("{solokills}",  account.getStatFormatted("solo", "kills"));
+                stack = stack.replace("{solomelee}",  account.getStatFormatted("solo", "melee_kills"));
+                stack = stack.replace("{solovoid}",   account.getStatFormatted("solo", "void_kills"));
+                stack = stack.replace("{solobow}",    account.getStatFormatted("solo", "bow_kills"));
+                stack = stack.replace("{soloassists}",account.getStatFormatted("solo", "assists"));
+                stack = stack.replace("{solodeaths}", account.getStatFormatted("solo", "deaths"));
+                stack = stack.replace("{sologames}",  account.getStatFormatted("solo", "plays"));
 
                 // Doubles
-                stack = stack.replace("{teamwins}", account.getFormatted("teamwins"));
-                stack = stack.replace("{teamkills}", account.getFormatted("teamkills"));
-                stack = stack.replace("{teammelee}", account.getFormatted("teammelee"));
-                stack = stack.replace("{teamvoid}", account.getFormatted("teamvoid"));
-                stack = stack.replace("{teambow}", account.getFormatted("teambow"));
-                stack = stack.replace("{teamassists}", account.getFormatted("teamassists"));
-                stack = stack.replace("{teamdeaths}", account.getFormatted("teamdeaths"));
-                stack = stack.replace("{teamgames}", account.getFormatted("teamplays"));
+                stack = stack.replace("{teamwins}",   account.getStatFormatted("doubles", "wins"));
+                stack = stack.replace("{teamkills}",  account.getStatFormatted("doubles", "kills"));
+                stack = stack.replace("{teammelee}",  account.getStatFormatted("doubles", "melee_kills"));
+                stack = stack.replace("{teamvoid}",   account.getStatFormatted("doubles", "void_kills"));
+                stack = stack.replace("{teambow}",    account.getStatFormatted("doubles", "bow_kills"));
+                stack = stack.replace("{teamassists}",account.getStatFormatted("doubles", "assists"));
+                stack = stack.replace("{teamdeaths}", account.getStatFormatted("doubles", "deaths"));
+                stack = stack.replace("{teamgames}",  account.getStatFormatted("doubles", "plays"));
 
                 // Ranked
-                stack = stack.replace("{rankedwins}", Ranked.getFormatted(account, "wins"));
-                stack = stack.replace("{rankedkills}", Ranked.getFormatted(account, "kills"));
-                stack = stack.replace("{rankedmelee}", Ranked.getFormatted(account, "melee"));
-                stack = stack.replace("{rankedvoid}", Ranked.getFormatted(account, "void"));
-                stack = stack.replace("{rankedbow}", Ranked.getFormatted(account, "bow"));
-                stack = stack.replace("{rankedassists}", Ranked.getFormatted(account, "assists"));
-                stack = stack.replace("{rankeddeaths}", Ranked.getFormatted(account, "deaths"));
-                stack = stack.replace("{rankedgames}", Ranked.getFormatted(account, "plays"));
-                stack = stack.replace("{points}", Ranked.getFormatted(account, "points"));
-                stack = stack.replace("{league}", Ranked.getLeague(account).getName());
+                stack = stack.replace("{rankedwins}",   account.getStatFormatted("ranked_solo", "wins"));
+                stack = stack.replace("{rankedkills}",  account.getStatFormatted("ranked_solo", "kills"));
+                stack = stack.replace("{rankedmelee}",  account.getStatFormatted("ranked_solo", "melee_kills"));
+                stack = stack.replace("{rankedvoid}",   account.getStatFormatted("ranked_solo", "void_kills"));
+                stack = stack.replace("{rankedbow}",    account.getStatFormatted("ranked_solo", "bow_kills"));
+                stack = stack.replace("{rankedassists}",account.getStatFormatted("ranked_solo", "assists"));
+                stack = stack.replace("{rankeddeaths}", account.getStatFormatted("ranked_solo", "deaths"));
+                stack = stack.replace("{rankedgames}",  account.getStatFormatted("ranked_solo", "plays"));
+
+                // Elo / League now live on the profile, not on ranked stats
+                stack = stack.replace("{points}", account.getEloFormatted());
+                League league = account.getLeague();
+                stack = stack.replace("{league}", league != null ? league.getName() : "");
+                stack = stack.replace("{brave_points}", StringUtils.formatNumber(account.getBravePoints()));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());

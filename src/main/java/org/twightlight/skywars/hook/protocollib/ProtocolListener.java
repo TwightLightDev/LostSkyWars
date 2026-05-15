@@ -68,8 +68,10 @@ public class ProtocolListener extends PacketAdapter {
                 toReplace = toReplace.replace("{level}", level.getLevel(account));
                 toReplace = toReplace.replace("{exp}", StringUtils.formatPerMil(account.getExp()));
                 toReplace = toReplace.replace("{nextExp}", level.getNext() != null ? StringUtils.formatPerMil(level.getNext().getExp()) : "Max");
-                toReplace = toReplace.replace("{wins}", StringUtils.formatNumber(account.getIntegers("solowins", "teamwins") + Ranked.getInt(account, "wins")));
-                toReplace = toReplace.replace("{kills}", StringUtils.formatNumber(account.getIntegers("solokills", "teamkills") + Ranked.getInt(account, "kills")));
+                toReplace = toReplace.replace("{wins}", StringUtils.formatNumber(
+                        account.getSumStat("wins", "solo", "doubles", "ranked_solo")));
+                toReplace = toReplace.replace("{kills}", StringUtils.formatNumber(
+                        account.getSumStat("kills", "solo", "doubles", "ranked_solo")));
                 customName.setValue(toReplace);
                 evt.setPacket(packet);
             } else {

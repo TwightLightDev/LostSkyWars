@@ -58,7 +58,9 @@ public class SQLiteDatabase extends Database {
                 + "deliveries TEXT DEFAULT '{}',"
                 + "leveling TEXT DEFAULT '[]',"
                 + "show_players BOOLEAN DEFAULT 1,"
-                + "show_gore BOOLEAN DEFAULT 1"
+                + "show_gore BOOLEAN DEFAULT 1,"
+                + "elo INTEGER DEFAULT 0,"
+                + "brave_points INTEGER DEFAULT 0"
                 + ");");
     }
 
@@ -75,8 +77,6 @@ public class SQLiteDatabase extends Database {
                 + "bow_kills INTEGER DEFAULT 0,"
                 + "mob_kills INTEGER DEFAULT 0,"
                 + "void_kills INTEGER DEFAULT 0,"
-                + "elo INTEGER DEFAULT 0,"
-                + "brave_points INTEGER DEFAULT 0,"
                 + "PRIMARY KEY (uuid, group_id)"
                 + ");");
     }
@@ -250,27 +250,31 @@ public class SQLiteDatabase extends Database {
                 int level = sw != null ? (int) sw.getOrDefault("level", 1) : 1;
                 double exp = sw != null ? (double) sw.getOrDefault("exp", 0.0) : 0.0;
 
-                this.update("INSERT OR IGNORE INTO profile (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                // elo and brave_points go into profile (global), summed from ranked data
+                Map<String, Object> ranked = rankedData.get(uuid);
+                int elo = ranked != null ? (int) ranked.getOrDefault("points", 0) : 0;
+                int bravePoints = ranked != null ? (int) ranked.getOrDefault("brave_points", 0) : 0;
+
+                this.update("INSERT OR IGNORE INTO profile (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         uuid, name, coins, souls, level, exp,
                         accData.get("max_souls"), accData.get("well_roll"), accData.get("souls_per_win"),
                         accData.get("mystery_dusts"), accData.get("last_rank"),
                         accData.get("deliveries"), accData.get("leveling"),
-                        accData.get("show_players"), accData.get("show_gore"));
+                        accData.get("show_players"), accData.get("show_gore"),
+                        elo, bravePoints);
 
                 if (sw != null) {
-                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             uuid, "solo",
                             sw.get("solokills"), sw.get("solowins"), sw.get("soloassists"),
                             sw.get("solodeaths"), sw.get("soloplays"),
-                            sw.get("solomelee"), sw.get("solobow"), sw.get("solomob"), sw.get("solovoid"),
-                            0, 0);
+                            sw.get("solomelee"), sw.get("solobow"), sw.get("solomob"), sw.get("solovoid"));
 
-                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             uuid, "doubles",
                             sw.get("teamkills"), sw.get("teamwins"), sw.get("teamassists"),
                             sw.get("teamdeaths"), sw.get("teamplays"),
-                            sw.get("teammelee"), sw.get("teambow"), sw.get("teammob"), sw.get("teamvoid"),
-                            0, 0);
+                            sw.get("teammelee"), sw.get("teambow"), sw.get("teammob"), sw.get("teamvoid"));
 
                     this.update("INSERT OR IGNORE INTO cosmetics (uuid, kits, perks, cages, death_cries, trails, balloons, kill_messages, kill_effects, sprays, victory_dances, titles, symbols) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             uuid,
@@ -298,14 +302,13 @@ public class SQLiteDatabase extends Database {
                             lastSelected, favorites);
                 }
 
-                Map<String, Object> ranked = rankedData.get(uuid);
+                // Ranked stats go into stats table WITHOUT elo/brave_points
                 if (ranked != null) {
-                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    this.update("INSERT OR IGNORE INTO stats (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             uuid, "ranked_solo",
                             ranked.get("kills"), ranked.get("wins"), ranked.get("assists"),
                             ranked.get("deaths"), ranked.get("plays"),
-                            ranked.get("melee"), ranked.get("bow"), ranked.get("mob"), ranked.get("void"),
-                            ranked.get("points"), ranked.get("brave_points"));
+                            ranked.get("melee"), ranked.get("bow"), ranked.get("mob"), ranked.get("void"));
                 }
             }
 
@@ -427,7 +430,7 @@ public class SQLiteDatabase extends Database {
     }
 
     // =========================================================================
-    // PROFILE
+    // PROFILE — now includes elo and brave_points
     // =========================================================================
 
     @Override
@@ -454,6 +457,8 @@ public class SQLiteDatabase extends Database {
                     map.put("leveling", new ValueContainer(rs.getString("leveling")));
                     map.put("show_players", new ValueContainer(rs.getBoolean("show_players")));
                     map.put("show_gore", new ValueContainer(rs.getBoolean("show_gore")));
+                    map.put("elo", new ValueContainer(rs.getInt("elo")));
+                    map.put("brave_points", new ValueContainer(rs.getInt("brave_points")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -463,8 +468,8 @@ public class SQLiteDatabase extends Database {
             }
         }
         Map<String, ValueContainer> defaults = buildDefaultProfile();
-        this.execute("INSERT INTO `profile` (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                uuid.toString(), name, 0, 0, 1, 0.0, 100, 1, 0, 0, "&7", "{}", "[]", true, true);
+        this.execute("INSERT INTO `profile` (uuid, name, coins, souls, level, exp, max_souls, well_roll, souls_per_win, mystery_dusts, last_rank, deliveries, leveling, show_players, show_gore, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), name, 0, 0, 1, 0.0, 100, 1, 0, 0, "&7", "{}", "[]", true, true, 0, 0);
         return defaults;
     }
 
@@ -483,22 +488,25 @@ public class SQLiteDatabase extends Database {
         map.put("leveling", new ValueContainer("[]"));
         map.put("show_players", new ValueContainer(true));
         map.put("show_gore", new ValueContainer(true));
+        map.put("elo", new ValueContainer(0));
+        map.put("brave_points", new ValueContainer(0));
         return map;
     }
 
     @Override
     public void saveProfile(UUID uuid, Map<String, ValueContainer> data) {
-        this.execute("UPDATE `profile` SET coins = ?, souls = ?, level = ?, exp = ?, max_souls = ?, well_roll = ?, souls_per_win = ?, mystery_dusts = ?, last_rank = ?, deliveries = ?, leveling = ?, show_players = ?, show_gore = ? WHERE uuid = ?",
+        this.execute("UPDATE `profile` SET coins = ?, souls = ?, level = ?, exp = ?, max_souls = ?, well_roll = ?, souls_per_win = ?, mystery_dusts = ?, last_rank = ?, deliveries = ?, leveling = ?, show_players = ?, show_gore = ?, elo = ?, brave_points = ? WHERE uuid = ?",
                 data.get("coins").get(), data.get("souls").get(), data.get("level").get(), data.get("exp").get(),
                 data.get("max_souls").get(), data.get("well_roll").get(), data.get("souls_per_win").get(),
                 data.get("mystery_dusts").get(), data.get("last_rank").get(),
                 data.get("deliveries").get(), data.get("leveling").get(),
                 data.get("show_players").get(), data.get("show_gore").get(),
+                data.get("elo").get(), data.get("brave_points").get(),
                 uuid.toString());
     }
 
     // =========================================================================
-    // STATS
+    // STATS — NO elo/brave_points
     // =========================================================================
 
     @Override
@@ -517,8 +525,6 @@ public class SQLiteDatabase extends Database {
                     map.put("bow_kills", new ValueContainer(rs.getInt("bow_kills")));
                     map.put("mob_kills", new ValueContainer(rs.getInt("mob_kills")));
                     map.put("void_kills", new ValueContainer(rs.getInt("void_kills")));
-                    map.put("elo", new ValueContainer(rs.getInt("elo")));
-                    map.put("brave_points", new ValueContainer(rs.getInt("brave_points")));
                     return map;
                 }
             } catch (SQLException ex) {
@@ -528,8 +534,8 @@ public class SQLiteDatabase extends Database {
             }
         }
         Map<String, ValueContainer> defaults = buildDefaultStats();
-        this.execute("INSERT INTO `stats` (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills, elo, brave_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                uuid.toString(), groupId, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        this.execute("INSERT INTO `stats` (uuid, group_id, kills, wins, assists, deaths, plays, melee_kills, bow_kills, mob_kills, void_kills) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                uuid.toString(), groupId, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         return defaults;
     }
 
@@ -544,19 +550,16 @@ public class SQLiteDatabase extends Database {
         map.put("bow_kills", new ValueContainer(0));
         map.put("mob_kills", new ValueContainer(0));
         map.put("void_kills", new ValueContainer(0));
-        map.put("elo", new ValueContainer(0));
-        map.put("brave_points", new ValueContainer(0));
         return map;
     }
 
     @Override
     public void saveStats(UUID uuid, String groupId, Map<String, ValueContainer> data) {
-        this.execute("UPDATE `stats` SET kills = ?, wins = ?, assists = ?, deaths = ?, plays = ?, melee_kills = ?, bow_kills = ?, mob_kills = ?, void_kills = ?, elo = ?, brave_points = ? WHERE uuid = ? AND group_id = ?",
+        this.execute("UPDATE `stats` SET kills = ?, wins = ?, assists = ?, deaths = ?, plays = ?, melee_kills = ?, bow_kills = ?, mob_kills = ?, void_kills = ? WHERE uuid = ? AND group_id = ?",
                 data.get("kills").get(), data.get("wins").get(), data.get("assists").get(),
                 data.get("deaths").get(), data.get("plays").get(),
                 data.get("melee_kills").get(), data.get("bow_kills").get(),
                 data.get("mob_kills").get(), data.get("void_kills").get(),
-                data.get("elo").get(), data.get("brave_points").get(),
                 uuid.toString(), groupId);
     }
 
