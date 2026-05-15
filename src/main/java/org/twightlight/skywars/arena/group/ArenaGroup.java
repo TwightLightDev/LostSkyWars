@@ -115,10 +115,6 @@ public class ArenaGroup {
         return rewards.getOrDefault(key, 0.0);
     }
 
-    public int getRewardInt(String key) {
-        return (int) getReward(key);
-    }
-
     public List<String> getScoreboardWaiting() {
         return scoreboardWaiting;
     }

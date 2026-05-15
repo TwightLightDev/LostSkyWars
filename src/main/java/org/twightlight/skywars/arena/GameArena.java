@@ -67,12 +67,13 @@ public class GameArena extends Arena {
             killerAccount.addStat(group.getId(), statSuffix);
         }
         if (!isPrivate && group.hasTrait("has_elo")) {
-            int eloPerKill = group.getRewardInt("elo-per-kill");
+            int eloPerKill = (int) group.getReward("elo-per-kill");
             int killCount = getKills(killerAccount.getPlayer());
             int eloAmount = (int) (eloPerKill + killCount * eloPerKill * 0.05);
-            killerAccount.addStat(group.getId(), "elo", eloAmount);
+            killerAccount.addElo(eloAmount);
         }
     }
+
 
     private void recordDeathStats(Account account) {
         if (!isPrivate && group.hasTrait("has_stats")) {
@@ -82,7 +83,7 @@ public class GameArena extends Arena {
     }
 
     private void giveKillRewards(Player killer, Account killerAccount) {
-        int coinsPerKill = group.getRewardInt("coins-per-kill");
+        int coinsPerKill = (int) group.getReward("coins-per-kill");
         double expPerKill = group.getReward("exp-per-kill");
         dataContainer.get(killer.getUniqueId()).addCoins(coinsPerKill, SkyWarsPlayerCoinEarnEvent.CoinSource.KILL);
         dataContainer.get(killer.getUniqueId()).addXp(expPerKill, SkyWarsPlayerXpGainEvent.XpSource.KILL);
@@ -92,7 +93,7 @@ public class GameArena extends Arena {
     }
 
     private void givePlayRewards(Player player) {
-        int coinsPerPlay = group.getRewardInt("coins-per-play");
+        int coinsPerPlay = (int) group.getReward("coins-per-play");
         double expPerPlay = group.getReward("exp-per-play");
         dataContainer.get(player.getUniqueId()).addCoins(coinsPerPlay, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
         dataContainer.get(player.getUniqueId()).addXp(expPerPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
@@ -610,12 +611,12 @@ public class GameArena extends Arena {
                         wAccount.addStat(group.getId(), "plays");
                     }
                     if (!isPrivate && group.hasTrait("has_elo")) {
-                        int eloPerWin = group.getRewardInt("elo-per-win");
-                        wAccount.addStat(group.getId(), "elo", eloPerWin);
+                        int eloPerWin = (int) group.getReward("elo-per-win");
+                        wAccount.addElo(eloPerWin);
                     }
 
-                    int coinsPerWin = group.getRewardInt("coins-per-win");
-                    int coinsPerPlay = group.getRewardInt("coins-per-play");
+                    int coinsPerWin = (int) group.getReward("coins-per-win");
+                    int coinsPerPlay = (int) group.getReward("coins-per-play");
                     double expPerWin = group.getReward("exp-per-win");
                     double expPerPlay = group.getReward("exp-per-play");
 

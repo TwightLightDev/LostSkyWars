@@ -15,7 +15,6 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.citizens.StatsNPC;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
-import org.twightlight.skywars.player.ranked.Ranked;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.utils.StringUtils;

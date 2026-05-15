@@ -158,7 +158,7 @@ public class Account {
         StatsContainer container = stats.get(statName);
         if (container != null) {
             for (int i = 0; i < amount; i++) {
-                if (container.getAsInt() <= 0) break;
+                if (container.getAs(Integer.class) <= 0) break;
                 container.removeInt(1);
             }
         }
@@ -167,7 +167,7 @@ public class Account {
     public int getStat(String groupId, String statName) {
         Map<String, StatsContainer> stats = getStatsForGroup(groupId);
         StatsContainer container = stats.get(statName);
-        return container != null ? container.getAsInt() : 0;
+        return container != null ? container.getAs(Integer.class) : 0;
     }
 
     public String getStatFormatted(String groupId, String statName) {
@@ -210,7 +210,7 @@ public class Account {
         if (SkyWars.vault && SkyWars.economy != null) {
             return (int) ((net.milkbowl.vault.economy.Economy) SkyWars.economy).getBalance(this.getPlayer());
         }
-        return this.profile.get("coins").getAsInt();
+        return this.profile.get("coins").getAs(Integer.class);
     }
 
     public String getCoinsFormatted() {
@@ -226,7 +226,7 @@ public class Account {
     }
 
     public int getSouls() {
-        return this.profile.get("souls").getAsInt();
+        return this.profile.get("souls").getAs(Integer.class);
     }
 
     public String getSoulsFormatted() {
@@ -234,19 +234,19 @@ public class Account {
     }
 
     public int getMaxSouls() {
-        return this.profile.get("max_souls").getAsInt();
+        return this.profile.get("max_souls").getAs(Integer.class);
     }
 
     public int getWellRoll() {
-        return this.profile.get("well_roll").getAsInt();
+        return this.profile.get("well_roll").getAs(Integer.class);
     }
 
     public int getSoulsPerWin() {
-        return this.profile.get("souls_per_win").getAsInt();
+        return this.profile.get("souls_per_win").getAs(Integer.class);
     }
 
     public int getMysteryDusts() {
-        return this.profile.get("mystery_dusts").getAsInt();
+        return this.profile.get("mystery_dusts").getAs(Integer.class);
     }
 
     public void addMysteryDusts(int dusts) {
@@ -255,10 +255,10 @@ public class Account {
         }
     }
 
-    // --- ELO (now in profile, global) ---
+    // --- ELO (in profile, global) ---
 
     public int getElo() {
-        return this.profile.get("elo").getAsInt();
+        return this.profile.get("elo").getAs(Integer.class);
     }
 
     public void addElo(int amount) {
@@ -268,7 +268,7 @@ public class Account {
     public void removeElo(int amount) {
         StatsContainer container = this.profile.get("elo");
         for (int i = 0; i < amount; i++) {
-            if (container.getAsInt() <= 0) break;
+            if (container.getAs(Integer.class) <= 0) break;
             container.removeInt(1);
         }
     }
@@ -277,15 +277,15 @@ public class Account {
         return StringUtils.formatNumber(getElo());
     }
 
-    // --- BRAVE POINTS (now in profile, global, capped at 100) ---
+    // --- BRAVE POINTS (in profile, global, capped at 100) ---
 
     public int getBravePoints() {
-        return this.profile.get("brave_points").getAsInt();
+        return this.profile.get("brave_points").getAs(Integer.class);
     }
 
     public void addBravePoints(int amount) {
         this.profile.get("brave_points").addInt(amount);
-        if (this.profile.get("brave_points").getAsInt() > 100) {
+        if (this.profile.get("brave_points").getAs(Integer.class) > 100) {
             this.profile.get("brave_points").set(100);
         }
     }
@@ -293,12 +293,12 @@ public class Account {
     public void removeBravePoints(int amount) {
         StatsContainer container = this.profile.get("brave_points");
         for (int i = 0; i < amount; i++) {
-            if (container.getAsInt() <= 0) break;
+            if (container.getAs(Integer.class) <= 0) break;
             container.removeInt(1);
         }
     }
 
-    // --- LEAGUE (was Ranked.getLeague) ---
+    // --- LEAGUE (direct method, no Ranked.java wrapper) ---
 
     public League getLeague() {
         int points = getElo();
@@ -351,19 +351,19 @@ public class Account {
     }
 
     public int getLevel() {
-        return this.profile.get("level").getAsInt();
+        return this.profile.get("level").getAs(Integer.class);
     }
 
     public double getExp() {
-        return this.profile.get("exp").getAsDouble();
+        return this.profile.get("exp").getAs(Double.class);
     }
 
     public String getLastRank() {
-        return this.profile.get("last_rank").getAsString();
+        return this.profile.get("last_rank").getAs(String.class);
     }
 
     public boolean canSeePlayers() {
-        return this.profile.get("show_players").getAsBoolean();
+        return this.profile.get("show_players").getAs(Boolean.class);
     }
 
     public void setCanSeePlayers(boolean flag) {
@@ -371,7 +371,7 @@ public class Account {
     }
 
     public boolean canSeeBlood() {
-        return this.profile.get("show_gore").getAsBoolean();
+        return this.profile.get("show_gore").getAs(Boolean.class);
     }
 
     public void setCanSeeBlood(boolean flag) {
@@ -383,7 +383,7 @@ public class Account {
     }
 
     // =========================================================================
-    // DELIVERIES (replaced DeliveryContainer with Map<String, Long>)
+    // DELIVERIES (using Map<String, Long> via StatsContainer)
     // =========================================================================
 
     public Map<String, Long> getDeliveries() {
@@ -403,7 +403,7 @@ public class Account {
     }
 
     // =========================================================================
-    // LEVELING (replaced JSONArray with List<String>)
+    // LEVELING (using List<String> via StatsContainer)
     // =========================================================================
 
     public void addLeveling(int level) {
@@ -417,7 +417,7 @@ public class Account {
     }
 
     // =========================================================================
-    // FAVORITES & MAP SELECTION (replaced JSONArray with List<String>)
+    // FAVORITES & MAP SELECTION (using List<String> via StatsContainer)
     // =========================================================================
 
     public void addFavoriteMap(String mapName) {
@@ -447,16 +447,13 @@ public class Account {
     }
 
     // =========================================================================
-    // COSMETIC OWNERSHIP (replaced CosmeticContainer with direct Map methods)
+    // COSMETIC OWNERSHIP (direct Map methods via StatsContainer)
     // =========================================================================
 
     public Map<String, StatsContainer> getCosmeticsMap() {
         return cosmetics;
     }
 
-    /**
-     * Gets the owned cosmetic IDs for a given column and group key.
-     */
     public List<String> getOwnedCosmetics(String column, String groupKey) {
         StatsContainer container = cosmetics.get(column);
         if (container == null) return new ArrayList<>();
@@ -507,9 +504,6 @@ public class Account {
         return hasOwnedCosmetic(column, cosmeticId, "global");
     }
 
-    /**
-     * Gets the raw grouped map for a cosmetic column.
-     */
     public Map<String, List<String>> getCosmeticGroupedMap(String column) {
         StatsContainer container = cosmetics.get(column);
         if (container == null) return new LinkedHashMap<>();

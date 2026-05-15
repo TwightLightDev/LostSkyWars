@@ -1,8 +1,5 @@
 package org.twightlight.skywars.database.player;
 
-import com.google.gson.Gson;
-
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +10,6 @@ import java.util.Map;
  */
 public class SelectedContainer {
 
-    private static final Gson GSON = new Gson();
     private final Map<String, StatsContainer> selections;
 
     public SelectedContainer(Map<String, StatsContainer> selections) {
@@ -54,7 +50,7 @@ public class SelectedContainer {
     public int getGlobalSelection(String key) {
         StatsContainer container = selections.get(key);
         if (container == null) return 0;
-        return container.getAsInt();
+        return container.getAs(Integer.class);
     }
 
     /**
@@ -69,7 +65,7 @@ public class SelectedContainer {
 
     public long getLastSelected() {
         StatsContainer container = selections.get("last_selected");
-        return container != null ? container.getAsLong() : 0L;
+        return container != null ? container.getAs(Long.class) : 0L;
     }
 
     public void setLastSelected(long value) {

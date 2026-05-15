@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.database.player.DeliveryContainer;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
 import org.twightlight.skywars.config.MenuConfig.ConfigItem;

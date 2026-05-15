@@ -37,8 +37,8 @@ public class Rank {
     public void apply(Player player) {
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account != null) {
-            account.getContainer("account").get("lastRank").set(StringUtils.deformatColors(StringUtils.getLastColor(this.prefix)));
-            account = null;
+            // Store last rank color into profile directly
+            account.getProfile().get("last_rank").set(StringUtils.deformatColors(StringUtils.getLastColor(this.prefix)));
         }
         if (Language.options$ranks$chat) {
             player.setDisplayName(this.prefix + player.getName());
@@ -48,33 +48,13 @@ public class Rank {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getColoredName() {
-        return coloredName;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public String getOnJoin() {
-        return onJoin.isEmpty() ? null : onJoin;
-    }
-
-    public boolean receiveBox() {
-        return ThreadLocalRandom.current().nextInt(100) <= boxPercentage;
-    }
-
-    public int ordinal() {
-        return ordinal;
-    }
+    public String getName() { return name; }
+    public String getColoredName() { return coloredName; }
+    public String getPrefix() { return prefix; }
+    public String getPermission() { return permission; }
+    public String getOnJoin() { return onJoin.isEmpty() ? null : onJoin; }
+    public boolean receiveBox() { return ThreadLocalRandom.current().nextInt(100) <= boxPercentage; }
+    public int ordinal() { return ordinal; }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Ranks");
     private static final List<Rank> ranks = new ArrayList<>();
@@ -106,7 +86,6 @@ public class Rank {
                 return rank;
             }
         }
-
         return ranks.get(ranks.size() - 1);
     }
 }

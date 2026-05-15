@@ -115,6 +115,36 @@ public class StatsContainer {
         }
     }
 
+    public <T> T getAs(Type type, T fallback) {
+        try {
+            T result = GSON.fromJson(this.getAsString(), type);
+            return result != null ? result : fallback;
+        } catch (Exception ex) {
+            return fallback;
+        }
+    }
+
+    /**
+     * Generic typed getter. Supports Integer, Long, Double, String, Boolean.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getAs(Class<T> type) {
+        if (value == null) return null;
+        String str = value.toString();
+        if (type == Integer.class || type == int.class) {
+            return (T) Integer.valueOf((int) Double.parseDouble(str));
+        } else if (type == Long.class || type == long.class) {
+            return (T) Long.valueOf((long) Double.parseDouble(str));
+        } else if (type == Double.class || type == double.class) {
+            return (T) Double.valueOf(Double.parseDouble(str));
+        } else if (type == String.class) {
+            return (T) str;
+        } else if (type == Boolean.class || type == boolean.class) {
+            return (T) Boolean.valueOf(str);
+        }
+        throw new IllegalArgumentException("Unsupported type: " + type.getName());
+    }
+
     /**
      * Serializes a value to JSON and stores it.
      */

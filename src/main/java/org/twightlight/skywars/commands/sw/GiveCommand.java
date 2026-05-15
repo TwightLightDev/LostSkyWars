@@ -31,41 +31,46 @@ public class GiveCommand extends SubCommand {
                 return;
             }
 
-            Player target = Bukkit.getPlayerExact(args[1]);
-            CompletableFuture<Account> account1;
-            boolean save;
-            account1 = Database.getInstance().loadAccountOffline(args[1]);
+            CompletableFuture<Account> accountFuture = Database.getInstance().loadAccountOffline(args[1]);
 
-            if (account1 == null) {
+            if (accountFuture == null) {
                 sender.sendMessage("§5[LostSkyWars] §cUser not found!");
                 return;
             }
-            if (target == null || !target.isOnline()) {
-                save = true;
-            } else {
-                save = false;
-            }
 
-            account1.thenAccept((account -> {
+            Player target = Bukkit.getPlayerExact(args[1]);
+            boolean save = (target == null || !target.isOnline());
+
+            accountFuture.thenAccept((account -> {
+                if (account == null) {
+                    sender.sendMessage("§5[LostSkyWars] §cUser not found!");
+                    return;
+                }
                 try {
                     if (args[2].startsWith("-") || args[2].equals("0")) {
                         throw new NumberFormatException();
                     }
 
                     int amount = Integer.parseInt(args[2]);
-                    account.addStat(type.toLowerCase(), amount);
-                    if (account.getInt(type.toLowerCase()) < 0) {
-                        account.getContainer("skywars").get(type.toLowerCase()).set(0);
-                    }
 
-                    if (type.equalsIgnoreCase("souls")) {
-                        if (account.getInt("souls") > account.getContainer("account").get("sw_maxsouls").getAsInt()) {
-                            account.getContainer("skywars").get("souls").set(account.getContainer("account").get("sw_maxsouls").getAsInt());
+                    if (type.equalsIgnoreCase("coins")) {
+                        account.addCoins(amount);
+                        int current = account.getCoins();
+                        if (current < 0) {
+                            account.getProfile().get("coins").set(0);
                         }
+                        sender.sendMessage("§5[LostSkyWars] §aChanged " + account.getName() + " coins to §b" + StringUtils.formatNumber(account.getCoins()) + "§a.");
+                    } else {
+                        account.addSouls(amount);
+                        int current = account.getSouls();
+                        if (current < 0) {
+                            account.getProfile().get("souls").set(0);
+                        }
+                        if (account.getSouls() > account.getMaxSouls()) {
+                            account.getProfile().get("souls").set(account.getMaxSouls());
+                        }
+                        sender.sendMessage("§5[LostSkyWars] §aChanged " + account.getName() + " souls to §b" + StringUtils.formatNumber(account.getSouls()) + "§a.");
                     }
-
-                    sender.sendMessage(
-                            "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
 
                     if (save) {
                         account.save();
