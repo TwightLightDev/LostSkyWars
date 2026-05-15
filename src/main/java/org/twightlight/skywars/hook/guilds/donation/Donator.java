@@ -23,6 +23,7 @@ public class Donator {
     private int coins;
     private Account account;
     private static Map<UUID, Donator> donatorList = new HashMap<>();
+
     public Donator(Player p) {
         this.uuid = p.getUniqueId();
         donatorList.put(p.getUniqueId(), this);
@@ -43,7 +44,6 @@ public class Donator {
         coins = GuildsHook.getExternalDB().getData(p, "coins", new TypeToken<Integer>() {}, 0);
         level = new Level(this);
         account = Database.getInstance().getAccount(p.getUniqueId());
-
     }
 
     public static Donator getFromUUID(UUID uuid) {
@@ -95,13 +95,12 @@ public class Donator {
                 addAmount = (int) Math.round(left * ratio);
                 donation_today += left;
                 finalAmount = left;
-                account.removeStat("coins", left);
-
+                account.removeCoins(left);
             } else {
                 addAmount = (int) Math.round(donation_amount * ratio);
                 donation_today += donation_amount;
                 finalAmount = donation_amount;
-                account.removeStat("coins", donation_amount);
+                account.removeCoins(donation_amount);
             }
             GuildsHook.getLanguage().getList("guilds.donation.success").
                     forEach(line -> account.getPlayer().
@@ -115,7 +114,6 @@ public class Donator {
             level.addXP(addAmount);
             GuildsHook.getExternalDB().updateData(Bukkit.getPlayer(uuid), donation_today, "donation_today");
             GuildsHook.getExternalDB().updateData(Bukkit.getPlayer(uuid), coins, "coins");
-
         }
     }
 

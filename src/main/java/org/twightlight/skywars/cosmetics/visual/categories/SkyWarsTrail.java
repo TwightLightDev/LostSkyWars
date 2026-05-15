@@ -20,6 +20,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -41,6 +42,7 @@ public class SkyWarsTrail extends PreviewableCosmetic {
     private ItemStack icon;
     private Consumer<ProjectileLaunchEvent> consumer;
     private boolean canBeFoundInBox;
+
     public SkyWarsTrail(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity,
                         boolean buyable, boolean canBeFoundInBox, int coins, Consumer<ProjectileLaunchEvent> consumer) {
         super(id, VisualCosmeticType.TRAIL, rarity);
@@ -52,19 +54,18 @@ public class SkyWarsTrail extends PreviewableCosmetic {
         this.consumer = consumer;
         this.canBeFoundInBox = canBeFoundInBox;
     }
+
     @Override
     public void preview(Player player, Object... objects) {
         Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
             Location start = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.trails"));
 
             Arrow arrow = start.getWorld().spawn(start, Arrow.class);
-
             arrow.setShooter(player);
             arrow.setCritical(false);
             arrow.setVelocity(start.getDirection());
 
             ProjectileLaunchEvent e = new ProjectileLaunchEvent(arrow);
-
             consumer.accept(e);
 
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), arrow::remove, 15L);
@@ -87,6 +88,7 @@ public class SkyWarsTrail extends PreviewableCosmetic {
             return false;
         return canBeFoundInBox;
     }
+
     public boolean isPermissible() {
         return !this.permission.isEmpty() && !this.permission.equals("none");
     }
@@ -98,9 +100,9 @@ public class SkyWarsTrail extends PreviewableCosmetic {
     @Override
     public boolean has(Account account) {
         if (isPermissible()) {
-            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
+            return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId()) || this.hasByPermission(account.getPlayer());
         }
-        return this.has(account, this.getMode());
+        return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId());
     }
 
     @Override
@@ -178,20 +180,17 @@ public class SkyWarsTrail extends PreviewableCosmetic {
                         if (type == TrailType.PARTICLE) {
                             SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) ->
                                             finalParticle.spawn(e.getEntity().getWorld(), loc, count, 0, 0, 0, 0), e.getEntity(), p
-                            , 0, rotationSpeed, radius, spacing, false);
+                                    , 0, rotationSpeed, radius, spacing, false);
                         } else if (type == TrailType.DROPPED_ITEM) {
                             SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
                                 World world = loc.getWorld();
                                 if (world != null) {
                                     Item dropped = world.dropItem(loc, finalItem);
                                     dropped.setVelocity(new Vector(0, 0, 0));
-
                                     dropped.setPickupDelay(Integer.MAX_VALUE);
-
                                     Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                 }
-                            }, e.getEntity(), p
-                                    , 0, rotationSpeed, radius, spacing, false);
+                            }, e.getEntity(), p, 0, rotationSpeed, radius, spacing, false);
                         }
                     } else if (shape == TrailShape.DOUBLE_SPIRAL) {
                         int rotationSpeed = sec.getInt("options.rotation_speed", 30);
@@ -207,35 +206,28 @@ public class SkyWarsTrail extends PreviewableCosmetic {
                                     , 0, rotationSpeed, radius, spacing, true);
                         } else if (type == TrailType.DROPPED_ITEM) {
                             SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
-                                        World world = loc.getWorld();
-                                        if (world != null) {
-                                            Item dropped = world.dropItem(loc, finalItem);
-                                            dropped.setVelocity(new Vector(0, 0, 0));
-
-                                            dropped.setPickupDelay(Integer.MAX_VALUE);
-
-                                            Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
-                                        }
-                                    }, e.getEntity(), p
-                                    , 0, rotationSpeed, radius, spacing, false);
+                                World world = loc.getWorld();
+                                if (world != null) {
+                                    Item dropped = world.dropItem(loc, finalItem);
+                                    dropped.setVelocity(new Vector(0, 0, 0));
+                                    dropped.setPickupDelay(Integer.MAX_VALUE);
+                                    Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
+                                }
+                            }, e.getEntity(), p, 0, rotationSpeed, radius, spacing, false);
                             SpiralFactory.createNewSpiral(SkyWars.getInstance(), (loc, shooter) -> {
-                                        World world = loc.getWorld();
-                                        if (world != null) {
-                                            Item dropped = world.dropItem(loc, finalItem);
-                                            dropped.setVelocity(new Vector(0, 0, 0));
-
-                                            dropped.setPickupDelay(Integer.MAX_VALUE);
-
-                                            Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
-                                        }
-                                    }, e.getEntity(), p
-                                    , 0, rotationSpeed, radius, spacing, true);
+                                World world = loc.getWorld();
+                                if (world != null) {
+                                    Item dropped = world.dropItem(loc, finalItem);
+                                    dropped.setVelocity(new Vector(0, 0, 0));
+                                    dropped.setPickupDelay(Integer.MAX_VALUE);
+                                    Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
+                                }
+                            }, e.getEntity(), p, 0, rotationSpeed, radius, spacing, true);
                         }
                     } else if (shape == TrailShape.LINE) {
                         if (type == TrailType.PARTICLE) {
                             new BukkitRunnable() {
                                 final Projectile proj = e.getEntity();
-
                                 @Override
                                 public void run() {
                                     if (proj.isDead() || proj.isOnGround()) {
@@ -245,11 +237,9 @@ public class SkyWarsTrail extends PreviewableCosmetic {
                                     finalParticle.spawn(e.getEntity().getWorld(), e.getEntity().getLocation(), 1, 0, 0, 0, 0);
                                 }
                             }.runTaskTimer(SkyWars.getInstance(), 2, 0L);
-
                         } else if (type == TrailType.DROPPED_ITEM) {
                             new BukkitRunnable() {
                                 final Projectile proj = e.getEntity();
-
                                 @Override
                                 public void run() {
                                     if (proj.isDead() || proj.isOnGround()) {
@@ -260,9 +250,7 @@ public class SkyWarsTrail extends PreviewableCosmetic {
                                     if (world != null) {
                                         Item dropped = world.dropItem(proj.getLocation(), finalItem);
                                         dropped.setVelocity(new Vector(0, 0, 0));
-
                                         dropped.setPickupDelay(Integer.MAX_VALUE);
-
                                         Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), dropped::remove, 100L);
                                     }
                                 }
@@ -274,35 +262,23 @@ public class SkyWarsTrail extends PreviewableCosmetic {
 
             SkyWarsTrail trail = new SkyWarsTrail(id, name, permission, icon, rarity, buyable, canBeFoundInBox, price, consumer);
 
-            CosmeticServer.SKYWARS.addCosmetic(trail);
+            VisualCosmetic.register(trail);
         }
     }
 
     public enum TrailShape {
-        SPIRAL,
-        DOUBLE_SPIRAL,
-        LINE;
-
+        SPIRAL, DOUBLE_SPIRAL, LINE;
         public static TrailShape fromString(String string) {
-            try {
-                return TrailShape.valueOf(string.toUpperCase());
-            } catch (IllegalArgumentException | NullPointerException e) {
-                return TrailShape.LINE;
-            }
+            try { return TrailShape.valueOf(string.toUpperCase()); }
+            catch (IllegalArgumentException | NullPointerException e) { return TrailShape.LINE; }
         }
     }
 
     public enum TrailType {
-        DROPPED_ITEM,
-        PARTICLE;
-
+        DROPPED_ITEM, PARTICLE;
         public static TrailType fromString(String string) {
-            try {
-                return TrailType.valueOf(string.toUpperCase());
-            } catch (IllegalArgumentException | NullPointerException e) {
-                return TrailType.PARTICLE;
-            }
+            try { return TrailType.valueOf(string.toUpperCase()); }
+            catch (IllegalArgumentException | NullPointerException e) { return TrailType.PARTICLE; }
         }
     }
 }
-

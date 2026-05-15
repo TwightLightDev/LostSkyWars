@@ -53,13 +53,22 @@ public class RemoveCommand extends SubCommand {
                     }
 
                     int amount = Integer.parseInt(args[2]);
-                    account.removeStat(type.toLowerCase(), amount);
-                    if (account.getInt(type.toLowerCase()) < 0) {
-                        account.getContainer("skywars").get(type.toLowerCase()).set(0);
-                    }
 
-                    sender.sendMessage(
-                            "§5[LostSkyWars] §aChanged " + account.getName() + " " + type.toLowerCase() + " to §b" + StringUtils.formatNumber(account.getInt(type.toLowerCase())) + "§a.");
+                    if (type.equalsIgnoreCase("coins")) {
+                        account.removeCoins(amount);
+                        if (account.getCoins() < 0) {
+                            account.getProfile().get("coins").set(0);
+                        }
+                        sender.sendMessage(
+                                "§5[LostSkyWars] §aChanged " + account.getName() + " coins to §b" + StringUtils.formatNumber(account.getCoins()) + "§a.");
+                    } else {
+                        account.removeSouls(amount);
+                        if (account.getSouls() < 0) {
+                            account.getProfile().get("souls").set(0);
+                        }
+                        sender.sendMessage(
+                                "§5[LostSkyWars] §aChanged " + account.getName() + " souls to §b" + StringUtils.formatNumber(account.getSouls()) + "§a.");
+                    }
 
                     if (save) {
                         account.save();

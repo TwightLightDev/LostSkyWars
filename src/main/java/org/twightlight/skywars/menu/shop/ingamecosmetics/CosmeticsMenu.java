@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
@@ -31,6 +32,7 @@ import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CosmeticsMenu extends PlayerMenu {
@@ -55,7 +57,7 @@ public class CosmeticsMenu extends PlayerMenu {
                     if (action != null && !action.getType().equals("NOTHING")) {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
-                             if (menu.equalsIgnoreCase("cages")) {
+                            if (menu.equalsIgnoreCase("cages")) {
                                 new CagesMenu(player);
                             } else if (menu.equalsIgnoreCase("deathcry")) {
                                 new DeathCriesMenu(player);
@@ -63,17 +65,17 @@ public class CosmeticsMenu extends PlayerMenu {
                                 new KillMessagesMenu(player);
                             } else if (menu.equalsIgnoreCase("killeffect")) {
                                 new KillEffectsMenu(player);
-                            }  else if (menu.equalsIgnoreCase("spray")) {
+                            } else if (menu.equalsIgnoreCase("spray")) {
                                 new SpraysMenu(player);
                             } else if (menu.equalsIgnoreCase("trail")) {
                                 new ProjectileTrailsMenu(player);
                             } else if (menu.equalsIgnoreCase("balloon")) {
                                 new BalloonsMenu(player);
                             } else if (menu.equalsIgnoreCase("victorydance")) {
-                                 new VictoryDancesMenu(player);
+                                new VictoryDancesMenu(player);
                             } else if (menu.equalsIgnoreCase("title")) {
-                                 new TitlesMenu(player);
-                            }  else if (menu.equalsIgnoreCase("symbols")) {
+                                new TitlesMenu(player);
+                            } else if (menu.equalsIgnoreCase("symbols")) {
                                 new SymbolsMenu(player);
                             } else if (menu.equalsIgnoreCase("closeinv")) {
                                 player.closeInventory();
@@ -90,6 +92,21 @@ public class CosmeticsMenu extends PlayerMenu {
 
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
+    private static String getSelectedName(Account account, VisualCosmeticType type, String fallback) {
+        int selectedId = account.getSelectedContainer().getGlobalSelection(type.getSelectionColumn());
+        if (selectedId <= 0) return fallback;
+        VisualCosmetic c = VisualCosmetic.findByTypeAndId(type, selectedId);
+        return c != null ? c.getRawName() : fallback;
+    }
+
+    private static String getCosmeticStats(Account account, VisualCosmeticType type) {
+        List<VisualCosmetic> all = VisualCosmetic.listByType(type);
+        int max = all.size();
+        int amount = (int) all.stream().filter(cosmetic -> cosmetic.has(account)).count();
+        int percentage = max > 0 ? (int) ((100.0 * amount) / max) : 0;
+        return amount + ";" + max + ";" + percentage;
+    }
+
     public CosmeticsMenu(Player player) {
         super(player, config.getTitle(), config.getRows());
         Account account = Database.getInstance().getAccount(player.getUniqueId());
@@ -98,104 +115,77 @@ public class CosmeticsMenu extends PlayerMenu {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
 
-
                 // Cages
-                int max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).size();
-                int amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> ((SkyWarsCage) cosmetic).has(account)).count();
-                int percentage = (int) ((100.0 * amount) / max);
-                VisualCosmetic c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
-                stack = stack.replace("{cages_has}", String.valueOf(amount));
-                stack = stack.replace("{cages_max}", String.valueOf(max));
-                stack = stack.replace("{cages_percentage}", percentage + "%");
-                stack = stack.replace("{cages_current}", c == null || !(c instanceof SkyWarsCage) ? "Glass" : ((SkyWarsCage) c).getRawName());
+                String[] stats = getCosmeticStats(account, VisualCosmeticType.CAGE).split(";");
+                stack = stack.replace("{cages_has}", stats[0]);
+                stack = stack.replace("{cages_max}", stats[1]);
+                stack = stack.replace("{cages_percentage}", stats[2] + "%");
+                stack = stack.replace("{cages_current}", getSelectedName(account, VisualCosmeticType.CAGE, "Glass"));
 
                 // DeathCries
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_DEATHCRY).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_DEATHCRY).stream().filter(cosmetic -> ((SkyWarsDeathCry) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1);
-                stack = stack.replace("{cries_has}", String.valueOf(amount));
-                stack = stack.replace("{cries_max}", String.valueOf(max));
-                stack = stack.replace("{cries_percentage}", percentage + "%");
-                stack = stack.replace("{cries_current}", c == null || !(c instanceof SkyWarsDeathCry) ? config.getAsString("empty") : ((SkyWarsDeathCry) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.DEATH_CRY).split(";");
+                stack = stack.replace("{cries_has}", stats[0]);
+                stack = stack.replace("{cries_max}", stats[1]);
+                stack = stack.replace("{cries_percentage}", stats[2] + "%");
+                stack = stack.replace("{cries_current}", getSelectedName(account, VisualCosmeticType.DEATH_CRY, config.getAsString("empty")));
 
                 // ProjectileTrail
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TRAIL).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TRAIL).stream().filter(cosmetic -> ((SkyWarsTrail) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TRAIL, 1);
-                stack = stack.replace("{trails_has}", String.valueOf(amount));
-                stack = stack.replace("{trails_max}", String.valueOf(max));
-                stack = stack.replace("{trails_percentage}", percentage + "%");
-                stack = stack.replace("{trails_current}", c == null || !(c instanceof SkyWarsTrail) ? config.getAsString("empty") : ((SkyWarsTrail) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.TRAIL).split(";");
+                stack = stack.replace("{trails_has}", stats[0]);
+                stack = stack.replace("{trails_max}", stats[1]);
+                stack = stack.replace("{trails_percentage}", stats[2] + "%");
+                stack = stack.replace("{trails_current}", getSelectedName(account, VisualCosmeticType.TRAIL, config.getAsString("empty")));
 
                 // KillMessage
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLMESSAGE).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLMESSAGE).stream().filter(cosmetic -> ((SkyWarsKillMessage) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLMESSAGE, 1);
-                stack = stack.replace("{kms_has}", String.valueOf(amount));
-                stack = stack.replace("{kms_max}", String.valueOf(max));
-                stack = stack.replace("{kms_percentage}", percentage + "%");
-                stack = stack.replace("{kms_current}", c == null || !(c instanceof SkyWarsKillMessage) ? config.getAsString("empty") : ((SkyWarsKillMessage) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.KILL_MESSAGE).split(";");
+                stack = stack.replace("{kms_has}", stats[0]);
+                stack = stack.replace("{kms_max}", stats[1]);
+                stack = stack.replace("{kms_percentage}", stats[2] + "%");
+                stack = stack.replace("{kms_current}", getSelectedName(account, VisualCosmeticType.KILL_MESSAGE, config.getAsString("empty")));
 
                 // KillEffect
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLEFFECT).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLEFFECT).stream().filter(cosmetic -> ((SkyWarsKillEffect) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLEFFECT, 1);
-                stack = stack.replace("{kes_has}", String.valueOf(amount));
-                stack = stack.replace("{kes_max}", String.valueOf(max));
-                stack = stack.replace("{kes_percentage}", percentage + "%");
-                stack = stack.replace("{kes_current}", c == null || !(c instanceof SkyWarsKillEffect) ? config.getAsString("empty") : ((SkyWarsKillEffect) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.KILL_EFFECT).split(";");
+                stack = stack.replace("{kes_has}", stats[0]);
+                stack = stack.replace("{kes_max}", stats[1]);
+                stack = stack.replace("{kes_percentage}", stats[2] + "%");
+                stack = stack.replace("{kes_current}", getSelectedName(account, VisualCosmeticType.KILL_EFFECT, config.getAsString("empty")));
+
                 // VictoryDance
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_VICTORYDANCE).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_VICTORYDANCE).stream().filter(cosmetic -> ((SkyWarsVictoryDance) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
-                stack = stack.replace("{vds_has}", String.valueOf(amount));
-                stack = stack.replace("{vds_max}", String.valueOf(max));
-                stack = stack.replace("{vds_percentage}", percentage + "%");
-                stack = stack.replace("{vds_current}", c == null || !(c instanceof SkyWarsVictoryDance) ? config.getAsString("empty") : ((SkyWarsVictoryDance) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.VICTORY_DANCE).split(";");
+                stack = stack.replace("{vds_has}", stats[0]);
+                stack = stack.replace("{vds_max}", stats[1]);
+                stack = stack.replace("{vds_percentage}", stats[2] + "%");
+                stack = stack.replace("{vds_current}", getSelectedName(account, VisualCosmeticType.VICTORY_DANCE, config.getAsString("empty")));
 
                 // Spray
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_SPRAY).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_SPRAY).stream().filter(cosmetic -> ((SkyWarsSpray) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SPRAY, 1);
-                stack = stack.replace("{sprays_has}", String.valueOf(amount));
-                stack = stack.replace("{sprays_max}", String.valueOf(max));
-                stack = stack.replace("{sprays_percentage}", percentage + "%");
-                stack = stack.replace("{sprays_current}", c == null || !(c instanceof SkyWarsSpray) ? config.getAsString("empty") : ((SkyWarsSpray) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.SPRAY).split(";");
+                stack = stack.replace("{sprays_has}", stats[0]);
+                stack = stack.replace("{sprays_max}", stats[1]);
+                stack = stack.replace("{sprays_percentage}", stats[2] + "%");
+                stack = stack.replace("{sprays_current}", getSelectedName(account, VisualCosmeticType.SPRAY, config.getAsString("empty")));
 
                 // Balloons
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLOON).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_BALLOON).stream().filter(cosmetic -> ((SkyWarsBalloon) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1);
-                stack = stack.replace("{balloons_has}", String.valueOf(amount));
-                stack = stack.replace("{balloons_max}", String.valueOf(max));
-                stack = stack.replace("{balloons_percentage}", percentage + "%");
-                stack = stack.replace("{balloons_current}", c == null || !(c instanceof SkyWarsBalloon) ? config.getAsString("empty") : ((SkyWarsBalloon) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.BALLOON).split(";");
+                stack = stack.replace("{balloons_has}", stats[0]);
+                stack = stack.replace("{balloons_max}", stats[1]);
+                stack = stack.replace("{balloons_percentage}", stats[2] + "%");
+                stack = stack.replace("{balloons_current}", getSelectedName(account, VisualCosmeticType.BALLOON, config.getAsString("empty")));
 
                 // Titles
-                max = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TITLE).size();
-                amount = (int) CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_TITLE).stream().filter(cosmetic -> ((SkyWarsTitle) cosmetic).has(account)).count();
-                percentage = (int) ((100.0 * amount) / max);
-                c = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TITLE, 1);
-                stack = stack.replace("{titles_has}", String.valueOf(amount));
-                stack = stack.replace("{titles_max}", String.valueOf(max));
-                stack = stack.replace("{titles_percentage}", percentage + "%");
-                stack = stack.replace("{titles_current}", c == null || !(c instanceof SkyWarsTitle) ? config.getAsString("empty") : ((SkyWarsTitle) c).getRawName());
+                stats = getCosmeticStats(account, VisualCosmeticType.TITLE).split(";");
+                stack = stack.replace("{titles_has}", stats[0]);
+                stack = stack.replace("{titles_max}", stats[1]);
+                stack = stack.replace("{titles_percentage}", stats[2] + "%");
+                stack = stack.replace("{titles_current}", getSelectedName(account, VisualCosmeticType.TITLE, config.getAsString("empty")));
 
-                // Symbols
+                // Symbols / Level
                 Level level = Level.getByLevel(account.getLevel());
                 double currentExp = account.getExp();
                 double needExp = level.getNext() == null ? 0.0 : level.getNext().getExp();
                 stack = stack.replace("{exp}", StringUtils.formatPerMil(currentExp));
                 stack = stack.replace("{nextExp}", needExp != 0.0 ? StringUtils.formatPerMil(needExp) : "Max");
                 stack = stack.replace("{level}", level.getLevel(account));
-                stack = stack.replace("{progressBar}", "§8[ " + account.makeProgressBar(true) + " §8]");
+                stack = stack.replace("{progressBar}", "8[ " + account.makeProgressBar(true) + " 8]");
                 stack = stack.replace("{nextLevel}", needExp != 0.0 ? level.getNext().getLevel(account) : level.getLevel(account));
                 stack = stack.replace("{display}", player.getDisplayName());
 

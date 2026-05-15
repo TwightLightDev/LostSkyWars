@@ -10,6 +10,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
@@ -27,8 +28,9 @@ public class SkyWarsTitle extends VisualCosmetic {
     private String title;
     private ItemStack icon;
     private boolean canBeFoundInBox;
+
     public SkyWarsTitle(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity, boolean buyable, boolean canBeFoundInBox, int coins, String title) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TITLE, rarity);
+        super(id, VisualCosmeticType.TITLE, rarity);
         this.name = name;
         this.permission = permission;
         this.buyable = buyable;
@@ -37,8 +39,6 @@ public class SkyWarsTitle extends VisualCosmetic {
         this.icon = icon;
         this.canBeFoundInBox = canBeFoundInBox;
     }
-
-
 
     public boolean canBeSold() {
         return buyable;
@@ -54,6 +54,7 @@ public class SkyWarsTitle extends VisualCosmetic {
             return false;
         return canBeFoundInBox;
     }
+
     public boolean isPermissible() {
         return !this.permission.isEmpty() && !this.permission.equals("none");
     }
@@ -61,7 +62,6 @@ public class SkyWarsTitle extends VisualCosmetic {
     public boolean hasByPermission(Player player) {
         return !isPermissible() || player.hasPermission(this.permission);
     }
-
 
     @Override
     public String getName() {
@@ -113,13 +113,9 @@ public class SkyWarsTitle extends VisualCosmetic {
             String title = sec.getString("title").toUpperCase();
             String perm = sec.getString("permission").toUpperCase();
 
-
             SkyWarsTitle title1 = new SkyWarsTitle(id, name, perm, icon, rarity, buyable, canBeFoundInBox, price, title);
 
-
-            CosmeticServer.SKYWARS.addCosmetic(title1);
+            VisualCosmetic.register(title1);
         }
     }
-
-
 }

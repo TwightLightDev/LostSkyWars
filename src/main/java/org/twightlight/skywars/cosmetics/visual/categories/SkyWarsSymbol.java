@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
@@ -22,7 +23,7 @@ public class SkyWarsSymbol extends VisualCosmetic {
     private int level;
 
     public SkyWarsSymbol(int id, String name, String symbol, ItemStack icon, int level) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, CosmeticRarity.COMMON);
+        super(id, VisualCosmeticType.SYMBOL, CosmeticRarity.COMMON);
         this.name = name;
         this.symbol = symbol;
         this.icon = icon;
@@ -38,11 +39,12 @@ public class SkyWarsSymbol extends VisualCosmetic {
     }
 
     @Override
-    public void give(Account account, int mode) {
+    public void give(Account account) {
+        // Symbols are unlocked by level, no need to give
     }
 
     @Override
-    public boolean has(Account account, int mode) {
+    public boolean has(Account account) {
         return account.getLevel() >= this.level;
     }
 
@@ -77,7 +79,9 @@ public class SkyWarsSymbol extends VisualCosmetic {
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName(colorDisplay + meta.getDisplayName());
         List<String> list = new ArrayList<>();
-        list.addAll(meta.getLore());
+        if (meta.getLore() != null) {
+            list.addAll(meta.getLore());
+        }
         list.addAll(Arrays.asList(lores));
         meta.setLore(list);
         cloned.setItemMeta(meta);
@@ -94,7 +98,7 @@ public class SkyWarsSymbol extends VisualCosmetic {
             String symbol = CONFIG.getString(key + ".symbol");
             ItemStack icon = BukkitUtils.deserializeItemStack(CONFIG.getString(key + ".icon").replace("{symbol}", symbol));
 
-            CosmeticServer.SKYWARS.addCosmetic(new SkyWarsSymbol(id, name, symbol, icon, level));
+            VisualCosmetic.register(new SkyWarsSymbol(id, name, symbol, icon, level));
         }
     }
 }

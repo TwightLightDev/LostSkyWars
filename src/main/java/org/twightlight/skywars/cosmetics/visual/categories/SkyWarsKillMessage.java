@@ -10,6 +10,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -31,9 +32,10 @@ public class SkyWarsKillMessage extends VisualCosmetic {
     private List<String> byBow;
     private List<String> byMob;
     private boolean canBeFoundInBox;
+
     public SkyWarsKillMessage(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity,
                               boolean buyable, boolean canBeFoundInBox, int coins, List<String> a, List<String> b, List<String> c, List<String> d) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLMESSAGE, rarity);
+        super(id, VisualCosmeticType.KILL_MESSAGE, rarity);
         this.name = name;
         this.buyable = buyable;
         this.permission = permission;
@@ -45,7 +47,6 @@ public class SkyWarsKillMessage extends VisualCosmetic {
         byBow = c;
         byMob = d;
     }
-
 
     public boolean canBeSold() {
         return buyable;
@@ -73,6 +74,7 @@ public class SkyWarsKillMessage extends VisualCosmetic {
             return false;
         return canBeFoundInBox;
     }
+
     public boolean isPermissible() {
         return !this.permission.isEmpty() && !this.permission.equals("none");
     }
@@ -84,9 +86,9 @@ public class SkyWarsKillMessage extends VisualCosmetic {
     @Override
     public boolean has(Account account) {
         if (isPermissible()) {
-            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
+            return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId()) || this.hasByPermission(account.getPlayer());
         }
-        return this.has(account, this.getMode());
+        return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId());
     }
 
     @Override
@@ -146,12 +148,10 @@ public class SkyWarsKillMessage extends VisualCosmetic {
 
                 SkyWarsKillMessage killMessage = new SkyWarsKillMessage(id, name, permission, icon, rarity, buyable, canBeFoundInBox, price, a, b, c, d);
 
-                CosmeticServer.SKYWARS.addCosmetic(killMessage);
+                VisualCosmetic.register(killMessage);
             } catch (NullPointerException e) {
                 System.err.println("Cannot load kill message " + key);
             }
-
         }
     }
 }
-

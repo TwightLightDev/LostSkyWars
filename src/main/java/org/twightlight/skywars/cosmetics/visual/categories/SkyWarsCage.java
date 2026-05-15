@@ -24,6 +24,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.*;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.hook.worldedit.WorldEditHook;
@@ -61,7 +62,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                        List<JSONArray> smallFrames,
                        List<JSONArray> bigFrames,
                        long refreshInterval) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, rarity);
+        super(id, VisualCosmeticType.CAGE, rarity);
         this.name = name;
         this.permission = permission;
         this.icon = icon;
@@ -73,16 +74,17 @@ public class SkyWarsCage extends PreviewableCosmetic {
         this.type = type;
         this.canBeFoundInBox = canBeFoundInBox;
     }
+
     public void apply(Player p, Location location) {
         apply(p, location, false);
     }
+
     public void apply(Player p, Location location, boolean isBig) {
         if (type == CageType.STATIC) {
             applyStatic(location, isBig);
         } else {
             applyAnimated(p, location, isBig);
         }
-
     }
 
     public void applyStatic(Location location, boolean isBig) {
@@ -174,7 +176,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
         } else {
             previewAnimated(player, isBig);
         }
-
     }
 
     public void previewStatic(Player p, boolean isBig) {
@@ -182,11 +183,9 @@ public class SkyWarsCage extends PreviewableCosmetic {
         Location cageLoc;
         if (!isBig) {
             cageLoc = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.cages.small")).getBlock().getLocation();
-
             array = smallCage;
         } else {
             cageLoc = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.cages.big")).getBlock().getLocation().add(0, 1, 0);
-
             array = bigCage;
         }
 
@@ -227,11 +226,9 @@ public class SkyWarsCage extends PreviewableCosmetic {
 
         if (!isBig) {
             cageLoc = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.cages.small")).getBlock().getLocation();
-
             frames = smallFrames;
         } else {
             cageLoc = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.cages.big")).getBlock().getLocation().add(0, 1, 0);
-
             frames = bigFrames;
         }
 
@@ -288,7 +285,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
         });
     }
 
-
     public boolean canBeSold() {
         return false;
     }
@@ -328,7 +324,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
 
     @Override
     public ItemStack getIcon() {
-        return this.getIcon("§a");
+        return this.getIcon("a");
     }
 
     public ItemStack getIcon(String colorDisplay, String... lores) {
@@ -368,7 +364,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
                     } else {
                         smallCage = new JSONArray();
                         LOGGER.log(Level.WARNING, "Small cage data for \"" + key + "\" not found, leave it empty!");
-
                     }
                     if (section.contains("big.data")) {
                         bigCage = (JSONArray) new JSONParser().parse(section.getString("big.data"));
@@ -411,8 +406,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                 bigCage = new JSONArray();
             }
 
-
-            CosmeticServer.SKYWARS.addCosmetic(new SkyWarsCage(id, rarity, name, permission, BukkitUtils.fullyDeserializeItemStack(icon), canBeFoundInBox, type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
+            VisualCosmetic.register(new SkyWarsCage(id, rarity, name, permission, BukkitUtils.fullyDeserializeItemStack(icon), canBeFoundInBox, type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
         }
     }
 
@@ -445,11 +439,11 @@ public class SkyWarsCage extends PreviewableCosmetic {
         CONFIG.createSection("cages." + key);
         ConfigurationSection sec = CONFIG.getSection("cages." + key);
         if (!setupSession.isExisted()) {
-            VisualCosmetic c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
+            VisualCosmetic c = VisualCosmetic.listByType(VisualCosmeticType.CAGE).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
             while (c != null) {
                 id++;
                 int copyId = id;
-                c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_CAGE).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
+                c = VisualCosmetic.listByType(VisualCosmeticType.CAGE).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
             }
             sec.set("id", id);
         }
@@ -469,8 +463,8 @@ public class SkyWarsCage extends PreviewableCosmetic {
         }
         CONFIG.save();
         if (!setupSession.isExisted())
-            CosmeticServer.SKYWARS.addCosmetic(
-                new SkyWarsCage(id, rarity, name, permission, icon, canBeFoundInBox, type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
+            VisualCosmetic.register(
+                    new SkyWarsCage(id, rarity, name, permission, icon, canBeFoundInBox, type, smallCage, bigCage, smallFrames, bigFrames, refreshInterval));
     }
 
     @SuppressWarnings("unchecked")
@@ -503,39 +497,23 @@ public class SkyWarsCage extends PreviewableCosmetic {
         if (big) {
             location.add(0.0D, -1.0D, 0.0D);
             Location[] downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            Location[] var14 = downs;
-            int var5 = downs.length;
-
-            Location down;
-            int var11;
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
+            for (Location down : downs) {
                 down.getBlock().setType(Material.GLASS);
             }
 
             for (int i = 1; i < 4; ++i) {
                 location.add(0.0D, 1.0D, 0.0D);
                 Location[] uppers = new Location[]{location.clone().add(2.0D, 0.0D, 0.0D), location.clone().add(-2.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 2.0D), location.clone().add(0.0D, 0.0D, -2.0D), location.clone().add(2.0D, 0.0D, 1.0D), location.clone().add(2.0D, 0.0D, -1.0D), location.clone().add(-2.0D, 0.0D, 1.0D), location.clone().add(-2.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 2.0D), location.clone().add(-1.0D, 0.0D, -2.0D), location.clone().add(1.0D, 0.0D, -2.0D), location.clone().add(-1.0D, 0.0D, 2.0D)};
-                Location[] var8 = uppers;
-                int var7 = uppers.length;
-
-                for (int var15 = 0; var15 < var7; ++var15) {
-                    Location upper = var8[var15];
+                for (Location upper : uppers) {
                     upper.getBlock().setType(Material.GLASS);
                 }
             }
 
             location.add(0.0D, 1.0D, 0.0D);
             downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            var14 = downs;
-            var5 = downs.length;
-
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
-
+            for (Location down : downs) {
                 down.getBlock().setType(Material.GLASS);
             }
-
         } else {
             for (double y = 0.0D; y <= 4.0D; ++y) {
                 for (double x = -1.0D; x <= 1.0D; ++x) {
@@ -546,85 +524,54 @@ public class SkyWarsCage extends PreviewableCosmetic {
                     }
                 }
             }
-
         }
     }
-
-
 
     public static void previewDefaultCage(Player player, Location location, boolean big) {
         location = location.clone();
         XMaterial xMaterial = XMaterial.GLASS;
         MaterialData matdata = xMaterial.parseItem().getData();
-
         int id = SpigotConversionUtil.fromBukkitMaterialData(matdata).getGlobalId();
-
 
         if (big) {
             location.add(0.0D, -1.0D, 0.0D);
             Location[] downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            Location[] var14 = downs;
-            int var5 = downs.length;
-
-            Location down;
-            int var11;
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
+            for (Location down : downs) {
                 WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                        new Vector3i((int) down.getX(),
-                                (int) down.getY(),
-                                (int) down.getZ()), id);
-
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);            }
+                        new Vector3i((int) down.getX(), (int) down.getY(), (int) down.getZ()), id);
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+            }
 
             for (int i = 1; i < 4; ++i) {
                 location.add(0.0D, 1.0D, 0.0D);
                 Location[] uppers = new Location[]{location.clone().add(2.0D, 0.0D, 0.0D), location.clone().add(-2.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 2.0D), location.clone().add(0.0D, 0.0D, -2.0D), location.clone().add(2.0D, 0.0D, 1.0D), location.clone().add(2.0D, 0.0D, -1.0D), location.clone().add(-2.0D, 0.0D, 1.0D), location.clone().add(-2.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 2.0D), location.clone().add(-1.0D, 0.0D, -2.0D), location.clone().add(1.0D, 0.0D, -2.0D), location.clone().add(-1.0D, 0.0D, 2.0D)};
-                Location[] var8 = uppers;
-                int var7 = uppers.length;
-
-                for (int var15 = 0; var15 < var7; ++var15) {
-                    Location upper = var8[var15];
+                for (Location upper : uppers) {
                     WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                            new Vector3i((int) upper.getX(),
-                                    (int) upper.getY(),
-                                    (int) upper.getZ()), id);
-
-                    PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);                 }
+                            new Vector3i((int) upper.getX(), (int) upper.getY(), (int) upper.getZ()), id);
+                    PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+                }
             }
 
             location.add(0.0D, 1.0D, 0.0D);
             downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            var14 = downs;
-            var5 = downs.length;
-
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
+            for (Location down : downs) {
                 WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                        new Vector3i((int) down.getX(),
-                                (int) down.getY(),
-                                (int) down.getZ()), id);
-
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);             }
-
+                        new Vector3i((int) down.getX(), (int) down.getY(), (int) down.getZ()), id);
+                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+            }
         } else {
             for (double y = 0.0D; y <= 4.0D; ++y) {
                 for (double x = -1.0D; x <= 1.0D; ++x) {
                     for (double z = -1.0D; z <= 1.0D; ++z) {
                         if (y <= 0.0D || y >= 3.0D || x != 0.0D || z != 0.0D) {
                             Location loc = location.clone().add(x, y, z);
-
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                                    new Vector3i((int) loc.getX(),
-                                            (int) loc.getY(),
-                                            (int) loc.getZ()), id);
-
+                                    new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
                             PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
                         }
                     }
                 }
             }
-
         }
     }
 
@@ -632,7 +579,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
         Player p = Bukkit.getPlayer(owner);
         XMaterial xMaterial = XMaterial.AIR;
         MaterialData matdata = xMaterial.parseItem().getData();
-
         int id = SpigotConversionUtil.fromBukkitMaterialData(matdata).getGlobalId();
 
         if (tasks.get(owner) != null) {
@@ -643,34 +589,23 @@ public class SkyWarsCage extends PreviewableCosmetic {
             for (double y = -1.0D; y <= 4.0D; ++y) {
                 for (double x = -3.0D; x <= 3.0D; ++x) {
                     for (double z = -3.0D; z <= 3.0D; ++z) {
-                        if (y <= 0.0D || y >=3.0D || x != 0.0D || z != 0.0D) {
-
+                        if (y <= 0.0D || y >= 3.0D || x != 0.0D || z != 0.0D) {
                             Location loc = location.clone().add(x, y, z);
-
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                                    new Vector3i((int) loc.getX(),
-                                            (int) loc.getY(),
-                                            (int) loc.getZ()), id);
-
+                                    new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
                             PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
                         }
                     }
                 }
             }
-
         } else {
             for (double y = 0.0D; y <= 4.0D; ++y) {
                 for (double x = -1.0D; x <= 1.0D; ++x) {
                     for (double z = -1.0D; z <= 1.0D; ++z) {
                         if (y <= 0.0D || y >= 4.0D || x != 0.0D || z != 0.0D) {
-
                             Location loc = location.clone().add(x, y, z);
-
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
-                                    new Vector3i((int) loc.getX(),
-                                            (int) loc.getY(),
-                                            (int) loc.getZ()), id);
-
+                                    new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
                             PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
                         }
                     }
@@ -678,8 +613,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
             }
         }
     }
-
-
 
     public static void remove(UUID owner, Location location, boolean big) {
         if (tasks.get(owner) != null) {
@@ -705,38 +638,23 @@ public class SkyWarsCage extends PreviewableCosmetic {
         if (big) {
             location.add(0.0D, -1.0D, 0.0D);
             Location[] downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            Location[] var14 = downs;
-            int var5 = downs.length;
-
-            Location down;
-            int var11;
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
+            for (Location down : downs) {
                 down.getBlock().setType(Material.AIR);
             }
 
             for (int i = 1; i < 4; ++i) {
                 location.add(0.0D, 1.0D, 0.0D);
                 Location[] uppers = new Location[]{location.clone().add(2.0D, 0.0D, 0.0D), location.clone().add(-2.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 2.0D), location.clone().add(0.0D, 0.0D, -2.0D), location.clone().add(2.0D, 0.0D, 1.0D), location.clone().add(2.0D, 0.0D, -1.0D), location.clone().add(-2.0D, 0.0D, 1.0D), location.clone().add(-2.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 2.0D), location.clone().add(-1.0D, 0.0D, -2.0D), location.clone().add(1.0D, 0.0D, -2.0D), location.clone().add(-1.0D, 0.0D, 2.0D)};
-                Location[] var8 = uppers;
-                int var7 = uppers.length;
-
-                for (int var15 = 0; var15 < var7; ++var15) {
-                    Location upper = var8[var15];
+                for (Location upper : uppers) {
                     upper.getBlock().setType(Material.AIR);
                 }
             }
 
             location.add(0.0D, 1.0D, 0.0D);
             downs = new Location[]{location, location.clone().add(1.0D, 0.0D, 0.0D), location.clone().add(-1.0D, 0.0D, 0.0D), location.clone().add(0.0D, 0.0D, 1.0D), location.clone().add(0.0D, 0.0D, -1.0D), location.clone().add(1.0D, 0.0D, 1.0D), location.clone().add(-1.0D, 0.0D, 1.0D), location.clone().add(1.0D, 0.0D, -1.0D), location.clone().add(-1.0D, 0.0D, -1.0D)};
-            var14 = downs;
-            var5 = downs.length;
-
-            for (var11 = 0; var11 < var5; ++var11) {
-                down = var14[var11];
+            for (Location down : downs) {
                 down.getBlock().setType(Material.AIR);
             }
-
         } else {
             for (double y = 0.0D; y <= 4.0D; ++y) {
                 for (double x = -1.0D; x <= 1.0D; ++x) {
@@ -749,7 +667,6 @@ public class SkyWarsCage extends PreviewableCosmetic {
             }
         }
     }
-
 
     public enum CageType {
         STATIC,

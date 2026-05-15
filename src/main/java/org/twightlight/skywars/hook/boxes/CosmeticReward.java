@@ -16,13 +16,12 @@ public class CosmeticReward extends BoxReward {
 
     @Override
     public String getId() {
-        return "lsw[" + cosmetic.getType().ordinal() + "-" + cosmetic.getMode() + "-" + cosmetic.getId() + "]";
+        return "lsw[" + cosmetic.getVisualType().ordinal() + "-" + cosmetic.getId() + "]";
     }
 
     @Override
     public String getName() {
-        String suffix = cosmetic.getType().getSize() > 1 ? "- " + SkyWarsType.fromIndex(cosmetic.getMode()).getName() : "";
-        return cosmetic.getRawName() + " §7(" + cosmetic.getType().getName().substring(0, cosmetic.getType().getName().length() - (suffix.isEmpty() ? 1 : 0)) + suffix + ")";
+        return cosmetic.getRawName() + " §7(" + cosmetic.getVisualType().getDisplayName().trim() + ")";
     }
 
     @Override

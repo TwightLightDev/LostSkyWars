@@ -55,7 +55,7 @@ public class ConfirmMenu extends PlayerMenu {
                                     ex.printStackTrace();
                                 }
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (account.getInt("coins") < cosmetic.getCoins()) {
+                                if (account.getCoins() < cosmetic.getCoins()) {
                                     try {
                                         Constructor<?> constructor = returns.getConstructor(Player.class, Order.class, Filter.class, String.class);
                                         constructor.newInstance(player, order, filter, searchQuery);
@@ -65,11 +65,11 @@ public class ConfirmMenu extends PlayerMenu {
                                     return;
                                 }
 
-                                account.removeStat("coins", cosmetic.getCoins());
+                                account.removeCoins(cosmetic.getCoins());
                                 cosmetic.give(account);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
                                 player.sendMessage(StringUtils.formatColors(config1.getAsString("select").replace("{name}", cosmetic.getRawName())));
-                                account.setSelected(cosmetic);
+                                account.getSelectedContainer().setGlobalSelection(cosmetic.getVisualType().getSelectionColumn(), cosmetic.getId());
                                 player.closeInventory();
                             }
                         } else {
@@ -101,7 +101,6 @@ public class ConfirmMenu extends PlayerMenu {
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
-
                 stack = stack.replace("{name}", cosmetic.getRawName());
                 stack = stack.replace("{price}", StringUtils.formatNumber(cosmetic.getCoins()));
 

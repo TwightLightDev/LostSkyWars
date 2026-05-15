@@ -24,6 +24,8 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.killeffects.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.citizens.CitizensHook;
@@ -54,7 +56,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
     }
 
     public SkyWarsKillEffect(int id, String name, CosmeticRarity rarity, boolean buyable, boolean canBeFoundInBox, String permission, ItemStack icon, int coins) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLEFFECT, rarity);
+        super(id, VisualCosmeticType.KILL_EFFECT, rarity);
         this.name = name;
         this.permission = permission;
         this.icon = icon;
@@ -65,7 +67,8 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
 
     @Override
     public final void preview(Player player, Object... objects) {
-        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {        Location klocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.attacker"));
+        Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
+            Location klocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.attacker"));
             Location vlocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("preview-location.killeffects.victim"));
             vlocation.setY(klocation.getY());
             klocation.getChunk().load();
@@ -93,17 +96,14 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
             }, 1);
 
             Vector vector = vlocation.toVector().subtract(klocation.toVector()).normalize();
-
             Location navigationLocation = vlocation.clone().subtract(vector.multiply(0.5));
 
             killerNPC.getNavigator().setTarget(navigationLocation);
 
             CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-
             npcSkyWarsKillEffectMap.put(killerNPC, completableFuture);
 
             completableFuture.thenApply((b) -> {
-
                 WrapperPlayServerEntityAnimation action = new WrapperPlayServerEntityAnimation(killerNPC.getEntity().getEntityId(), WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM);
                 WrapperPlayServerEntityStatus action1 = new WrapperPlayServerEntityStatus(victimNPC.getEntity().getEntityId(), 3);
 
@@ -112,7 +112,6 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
 
                 Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                     victimNPC.destroy();
-
                     killEffectPreview(player, vlocation);
                 }, 5L);
                 return b;
@@ -122,8 +121,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
                 npcSkyWarsKillEffectMap.remove(killerNPC);
                 killerNPC.destroy();
             });
-            }, 15L);
-
+        }, 15L);
     }
 
     public abstract void killEffectPreview(Player player, Location location);
@@ -150,6 +148,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
             return false;
         return canBeFoundInBox;
     }
+
     public boolean isPermissible() {
         return !this.permission.isEmpty() && !this.permission.equals("none");
     }
@@ -161,9 +160,9 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
     @Override
     public boolean has(Account account) {
         if (isPermissible()) {
-            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
+            return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId()) || this.hasByPermission(account.getPlayer());
         }
-        return this.has(account, this.getMode());
+        return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId());
     }
 
     @Override
@@ -177,7 +176,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
 
     @Override
     public ItemStack getIcon() {
-        return this.getIcon("§a");
+        return this.getIcon("a");
     }
 
     public ItemStack getIcon(String colorDisplay, String... lores) {
@@ -205,41 +204,40 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
     public static void setupKillEffects() {
         CONFIG.reload();
         checkIfAbsent("lightning-strike");
-        CosmeticServer.SKYWARS.addCosmetic(new LightningStrikeEffect());
+        VisualCosmetic.register(new LightningStrikeEffect());
         checkIfAbsent("batcrux");
-        CosmeticServer.SKYWARS.addCosmetic(new BatCruxEffect());
+        VisualCosmetic.register(new BatCruxEffect());
         checkIfAbsent("burning-shoes");
-        CosmeticServer.SKYWARS.addCosmetic(new BurningShoesEffect());
+        VisualCosmetic.register(new BurningShoesEffect());
         checkIfAbsent("firework");
-        CosmeticServer.SKYWARS.addCosmetic(new FireworkEffect());
+        VisualCosmetic.register(new FireworkEffect());
         checkIfAbsent("heart-aura");
-        CosmeticServer.SKYWARS.addCosmetic(new HeartAuraEffect());
+        VisualCosmetic.register(new HeartAuraEffect());
         checkIfAbsent("rekt");
-        CosmeticServer.SKYWARS.addCosmetic(new RektEffect());
+        VisualCosmetic.register(new RektEffect());
         checkIfAbsent("squid-missile");
-        CosmeticServer.SKYWARS.addCosmetic(new SquidMissileEffect());
+        VisualCosmetic.register(new SquidMissileEffect());
         checkIfAbsent("tornado");
-        CosmeticServer.SKYWARS.addCosmetic(new TornadoEffect());
+        VisualCosmetic.register(new TornadoEffect());
         checkIfAbsent("crying");
-        CosmeticServer.SKYWARS.addCosmetic(new CryingEffect());
+        VisualCosmetic.register(new CryingEffect());
         checkIfAbsent("explosion");
-        CosmeticServer.SKYWARS.addCosmetic(new ExplosionEffect());
+        VisualCosmetic.register(new ExplosionEffect());
         checkIfAbsent("lucky-block");
-        CosmeticServer.SKYWARS.addCosmetic(new LuckyBlockEffect());
+        VisualCosmetic.register(new LuckyBlockEffect());
         checkIfAbsent("rainbow");
-        CosmeticServer.SKYWARS.addCosmetic(new RainbowEffect());
+        VisualCosmetic.register(new RainbowEffect());
         checkIfAbsent("rebirth");
-        CosmeticServer.SKYWARS.addCosmetic(new RebirthEffect());
+        VisualCosmetic.register(new RebirthEffect());
         checkIfAbsent("sadface");
-        CosmeticServer.SKYWARS.addCosmetic(new SadFaceBannerEffect());
+        VisualCosmetic.register(new SadFaceBannerEffect());
         checkIfAbsent("shatter");
-        CosmeticServer.SKYWARS.addCosmetic(new ShatterEffect());
+        VisualCosmetic.register(new ShatterEffect());
         checkIfAbsent("volcano");
-        CosmeticServer.SKYWARS.addCosmetic(new VolcanoEffect());
+        VisualCosmetic.register(new VolcanoEffect());
         checkIfAbsent("mysterybox");
-        CosmeticServer.SKYWARS.addCosmetic(new MysteryBoxEffect());
+        VisualCosmetic.register(new MysteryBoxEffect());
     }
-
 
     private static void checkIfAbsent(String key) {
         if (CONFIG.contains(key)) {

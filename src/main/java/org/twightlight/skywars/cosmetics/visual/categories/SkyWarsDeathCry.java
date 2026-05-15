@@ -12,6 +12,7 @@ import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -32,8 +33,9 @@ public class SkyWarsDeathCry extends VisualCosmetic {
     private float pitch;
     private ItemStack icon;
     private boolean canBeFoundInBox;
+
     public SkyWarsDeathCry(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity, boolean buyable, boolean canBeFoundInBox, int coins, String sound, float volume, float pitch) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, rarity);
+        super(id, VisualCosmeticType.DEATH_CRY, rarity);
         this.name = name;
         this.buyable = buyable;
         this.permission = permission;
@@ -71,6 +73,7 @@ public class SkyWarsDeathCry extends VisualCosmetic {
             return false;
         return canBeFoundInBox;
     }
+
     public boolean isPermissible() {
         return !this.permission.isEmpty() && !this.permission.equals("none");
     }
@@ -138,19 +141,11 @@ public class SkyWarsDeathCry extends VisualCosmetic {
                 continue;
             }
 
-            CosmeticServer.SKYWARS.addCosmetic(cry);
+            VisualCosmetic.register(cry);
         }
     }
 
     public static void createNew(Object[] arr) {
-        // 0 = name
-        // 1 = key
-        // 2 = sound
-        // 3 = volume
-        // 4 = pitch
-        // 5 = price
-        // 6 = rarity
-        // 7 = buyable
         int id = 1;
         String key = (String) arr[1];
         String sound = ((Sound) arr[2]).name();
@@ -162,11 +157,11 @@ public class SkyWarsDeathCry extends VisualCosmetic {
         CONFIG.createSection(key);
         ConfigurationSection sec = CONFIG.getSection(key);
 
-        VisualCosmetic c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_DEATHCRY).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
+        VisualCosmetic c = VisualCosmetic.listByType(VisualCosmeticType.DEATH_CRY).stream().filter(cosmetic -> cosmetic.getId() == 1).findAny().orElse(null);
         while (c != null) {
             id++;
             int copyId = id;
-            c = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_DEATHCRY).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
+            c = VisualCosmetic.listByType(VisualCosmeticType.DEATH_CRY).stream().filter(cosmetic -> cosmetic.getId() == copyId).findAny().orElse(null);
         }
         sec.set("id", id);
         sec.set("name", (String) arr[0]);
@@ -181,7 +176,7 @@ public class SkyWarsDeathCry extends VisualCosmetic {
         sec.set("icon", "BARRIER : 1 : display=" + arr[0] + " : lore=&7Change that on deathcries.yml\\n ");
         CONFIG.save();
 
-        CosmeticServer.SKYWARS.addCosmetic(new SkyWarsDeathCry(id, (String) arr[0], "none",
+        VisualCosmetic.register(new SkyWarsDeathCry(id, (String) arr[0], "none",
                 BukkitUtils.deserializeItemStack("BARRIER : 1 : display=" + arr[0] + " : lore=&7Change that on deathcries.yml\\n "), rarity, buyable, true, price, sound, volume, pitch));
     }
 }
