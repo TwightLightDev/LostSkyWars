@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -25,7 +25,7 @@ public class EnderMastery extends Perk {
                 CONFIG.getString("endermastery.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("endermastery.icon").replace("{percentage}", CONFIG.getInt("endermastery.percentage") + "%")),
                 CONFIG.getInt("endermastery.price"),
-                SkyWarsPerk.loadAllowedGroups("endermastery"));
+                PerkManager.loadAllowedGroups("endermastery"));
 
         this.percentage = CONFIG.getInt("endermastery.percentage");
 
@@ -39,7 +39,7 @@ public class EnderMastery extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             if (account.getArena() != null) {

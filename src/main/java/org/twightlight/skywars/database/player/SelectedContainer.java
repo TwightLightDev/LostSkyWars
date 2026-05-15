@@ -80,4 +80,8 @@ public class SelectedContainer {
         map.put(groupId, id);
         container.setFromObject(map);
     }
+
+    public Map<String, ValueContainer> getSelections() {
+        return selections;
+    }
 }

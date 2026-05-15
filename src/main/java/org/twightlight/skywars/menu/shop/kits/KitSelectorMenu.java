@@ -8,7 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.kit.Kit;
+import org.twightlight.skywars.cosmetics.kit.KitManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -43,27 +44,27 @@ public class KitSelectorMenu extends PagedPlayerMenu {
                 }
 
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(evt.getInventory()) && item != null && item.getType() != Material.AIR) {
-                    SkyWarsKit kit = kits.get(item);
+                    Kit kit = kits.get(item);
                     if (evt.getSlot() == this.previousPage) {
                         this.openPrevious();
                     } else if (evt.getSlot() == this.nextPage) {
                         this.openNext();
                     } else if (kit != null) {
-                        if (!kit.has(account) || (kit.isPermissible() && !kit.hasByPermission(player))) {
+                        if (!kit.has(account, groupId) || (kit.isPermissible() && !kit.hasByPermission(player))) {
                             Sound.ENDERMAN_TELEPORT.play(player, 1.0F, 1.0F);
                             return;
                         }
 
                         Sound.NOTE_PLING.play(player, 1.0F, 1.0F);
-                        if (account.hasSelected(kit, kit.getMode())) {
+                        if (kit.isSelected(account, groupId)) {
                             player.sendMessage(StringUtils.formatColors(config.getAsString("deselect").replace("{name}", kit.getRawName())));
-                            account.setSelected(kit.getServer(), kit.getType(), kit.getMode(), 0);
+                            account.getSelectedContainer().setSelectedKit(groupId, 0);
                             new KitSelectorMenu(player, groupId);
                             return;
                         }
 
                         player.sendMessage(StringUtils.formatColors(config.getAsString("select").replace("{name}", kit.getRawName())));
-                        account.setSelected(kit, kit.getMode());
+                        account.getSelectedContainer().setSelectedKit(groupId, kit.getId());
                         new KitSelectorMenu(player, groupId);
                     } else {
                         ConfigAction action = actions.get(item);
@@ -85,7 +86,7 @@ public class KitSelectorMenu extends PagedPlayerMenu {
     }
 
     private String groupId;
-    private Map<ItemStack, SkyWarsKit> kits;
+    private Map<ItemStack, Kit> kits;
     private Map<ItemStack, ConfigAction> actions;
 
     public KitSelectorMenu(Player player, String groupId) {
@@ -101,34 +102,30 @@ public class KitSelectorMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (VisualCosmetic cosmetic : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KIT)) {
-            SkyWarsKit kit = (SkyWarsKit) cosmetic;
-            if (!kit.isAllowedInGroup(groupId)) {
-                continue;
-            }
+        for (Kit kit : KitManager.listForGroup(groupId)) {
             String rarity = kit.getRarity().getName();
-            boolean has = kit.has(account) && kit.hasByPermission(player);
+            boolean has = kit.has(account, groupId) && kit.hasByPermission(player);
             ItemStack icon;
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-locked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("c", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("\u00a7c", lore.toArray(new String[lore.size()]));
                 icon.setType(Material.matchMaterial("STAINED_GLASS_PANE"));
                 icon.setDurability((short) 14);
-            } else if (account.hasSelected(kit, kit.getMode())) {
+            } else if (kit.isSelected(account, groupId)) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-selected")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("a", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("\u00a7a", lore.toArray(new String[lore.size()]));
             } else {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-unlocked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = kit.getIcon("a", lore.toArray(new String[lore.size()]));
+                icon = kit.getIcon("\u00a7a", lore.toArray(new String[lore.size()]));
             }
 
             items.add(icon);

@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.balloons.Balloon;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsBalloon;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
@@ -58,8 +59,14 @@ public class SkyWarsTeam {
                     List<Account> accounts = new ArrayList<>();
                     for (Player member : this.getMembers()) {
                         Account account = Database.getInstance().getAccount(member.getUniqueId());
-                        if (account != null && account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1) != null) {
-                            accounts.add(account);
+                        if (account != null) {
+                            int balloonId = account.getSelectedContainer().getGlobalSelection("balloon");
+                            if (balloonId > 0) {
+                                VisualCosmetic vc = VisualCosmetic.findByTypeAndId(VisualCosmeticType.BALLOON, balloonId);
+                                if (vc != null && vc instanceof SkyWarsBalloon && vc.has(account)) {
+                                    accounts.add(account);
+                                }
+                            }
                         }
                     }
 
@@ -69,7 +76,13 @@ public class SkyWarsTeam {
                 }
 
                 if (unique != null) {
-                    cosmetic = (SkyWarsBalloon) unique.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_BALLOON, 1);
+                    int balloonId = unique.getSelectedContainer().getGlobalSelection("balloon");
+                    if (balloonId > 0) {
+                        VisualCosmetic vc = VisualCosmetic.findByTypeAndId(VisualCosmeticType.BALLOON, balloonId);
+                        if (vc != null && vc instanceof SkyWarsBalloon && vc.has(unique)) {
+                            cosmetic = (SkyWarsBalloon) vc;
+                        }
+                    }
                 }
 
                 if (cosmetic != null) {
@@ -103,9 +116,14 @@ public class SkyWarsTeam {
             cageOwner = members.get(RANDOM.nextInt(members.size()));
             Account account = Database.getInstance().getAccount(cageOwner);
             if (account != null) {
-                VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1);
-                if (cosmetic != null && cosmetic instanceof SkyWarsCage) {
-                    ((SkyWarsCage) cosmetic).apply(account.getPlayer(), getLocation());
+                int cageId = account.getSelectedContainer().getGlobalSelection("cage");
+                if (cageId > 0) {
+                    VisualCosmetic cosmetic = VisualCosmetic.findByTypeAndId(VisualCosmeticType.CAGE, cageId);
+                    if (cosmetic != null && cosmetic instanceof SkyWarsCage && cosmetic.has(account)) {
+                        ((SkyWarsCage) cosmetic).apply(account.getPlayer(), getLocation());
+                    } else {
+                        SkyWarsCage.defaultCage(getLocation(), false);
+                    }
                 } else {
                     SkyWarsCage.defaultCage(getLocation(), false);
                 }

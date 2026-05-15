@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.kit.Kit;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -46,14 +46,14 @@ public class ConfirmKitMenu extends PlayerMenu {
                             if (menu.equalsIgnoreCase("shop")) {
                                 new KitsMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (account.getInt("coins") < cosmetic.getCoins()) {
+                                if (account.getCoins() < kit.getCoins()) {
                                     new KitsMenu(player, groupId);
                                     return;
                                 }
 
-                                account.removeStat("coins", cosmetic.getCoins());
-                                cosmetic.give(account);
-                                player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
+                                account.removeCoins(kit.getCoins());
+                                kit.give(account, groupId);
+                                player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", kit.getRawName())));
                                 player.closeInventory();
                             }
                         } else {
@@ -66,21 +66,21 @@ public class ConfirmKitMenu extends PlayerMenu {
         }
     }
 
-    private VisualCosmetic cosmetic;
+    private Kit kit;
     private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ConfirmKitMenu(Player player, VisualCosmetic cosmetic, String groupId) {
+    public ConfirmKitMenu(Player player, Kit kit, String groupId) {
         super(player, config.getTitle(), config.getRows());
-        this.cosmetic = cosmetic;
+        this.kit = kit;
         this.groupId = groupId;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
 
-                stack = stack.replace("{name}", cosmetic.getRawName());
-                stack = stack.replace("{price}", StringUtils.formatNumber(cosmetic.getCoins()));
+                stack = stack.replace("{name}", kit.getRawName());
+                stack = stack.replace("{price}", StringUtils.formatNumber(kit.getCoins()));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
@@ -94,7 +94,7 @@ public class ConfirmKitMenu extends PlayerMenu {
     public void cancel() {
         map.clear();
         map = null;
-        cosmetic = null;
+        kit = null;
         groupId = null;
         HandlerList.unregisterAll(this);
     }

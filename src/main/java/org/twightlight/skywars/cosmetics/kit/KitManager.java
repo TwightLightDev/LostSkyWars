@@ -4,9 +4,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
@@ -37,8 +36,9 @@ public class KitManager {
             if (cu.contains(key + ".allowed-groups")) {
                 allowedGroups = cu.getStringList(key + ".allowed-groups");
             } else {
-                for (ArenaGroup group : GroupManager.getGroups()) {
-                    allowedGroups.add(group.getId());
+                // Default: all CosmeticsGroup IDs
+                for (CosmeticsGroup cg : CosmeticsGroup.listAll()) {
+                    allowedGroups.add(cg.getId());
                 }
                 cu.set(key + ".allowed-groups", allowedGroups);
             }
@@ -93,7 +93,7 @@ public class KitManager {
     public static List<Kit> listForGroup(String cosmeticsGroupId) {
         List<Kit> result = new ArrayList<>();
         for (Kit kit : KITS) {
-            if (kit.isAllowedInGroup(cosmeticsGroupId)) {
+            if (kit.isAllowed(cosmeticsGroupId)) {
                 result.add(kit);
             }
         }

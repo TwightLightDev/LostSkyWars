@@ -78,21 +78,21 @@ public abstract class Perk implements Listener {
         return allowedGroups;
     }
 
-    public boolean isAllowedInGroup(CosmeticsGroup group) {
+    public boolean isAllowed(CosmeticsGroup group) {
         if (group == null) return false;
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(group.getId());
     }
 
-    public boolean isAllowedInGroup(String groupId) {
+    public boolean isAllowed(String groupId) {
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(groupId);
     }
 
-    public boolean isAllowedInGroup(ArenaGroup arenaGroup) {
+    public boolean isAllowed(ArenaGroup arenaGroup) {
         if (arenaGroup == null) return false;
         if (arenaGroup.getCosmeticsGroup() == null) return allowedGroups.isEmpty();
-        return isAllowedInGroup(arenaGroup.getCosmeticsGroup());
+        return isAllowed(arenaGroup.getCosmeticsGroup());
     }
 
     public boolean has(Account account, String cosmeticsGroupId) {
@@ -102,19 +102,40 @@ public abstract class Perk implements Listener {
         return account.getCosmeticHelper().hasPerk(cosmeticsGroupId, id);
     }
 
+
+    public boolean has(Account account) {
+        if (isPermissible() && hasByPermission(account.getPlayer())) {
+            return true;
+        }
+        Arena arena = account.getArena();
+        if (arena != null) {
+            ArenaGroup group = arena.getGroup();
+            if (group != null && group.getCosmeticsGroup() != null) {
+                return has(account, group.getCosmeticsGroup().getId());
+            }
+        }
+        if (!allowedGroups.isEmpty()) {
+            return has(account, allowedGroups.get(0));
+        }
+        return false;
+    }
+
     public void give(Account account, String cosmeticsGroupId) {
         account.getCosmeticHelper().addPerk(cosmeticsGroupId, id);
     }
 
-    public boolean selected(Account account) {
-        Account acc = account;
+    public boolean isSelected(Account acc) {
         Arena arena = acc.getArena();
         if (arena == null) return false;
         ArenaGroup group = arena.getGroup();
         if (group == null) return false;
-        CosmeticsGroup cGroup = group.getCosmeticsGroup();
+        CosmeticsGroup cGroup = acc.getArena().getGroup().getCosmeticsGroup();
         if (cGroup == null) return false;
         return acc.getSelectedContainer().getSelectedPerk(cGroup.getId()) == this.id;
+    }
+
+    public boolean isSelected(Account account, String cosmeticsGroupId) {
+        return account.getSelectedContainer().getSelectedKit(cosmeticsGroupId) == this.id;
     }
 
     public boolean isAbleToUse(Player player) {
@@ -133,7 +154,7 @@ public abstract class Perk implements Listener {
         }
 
         ArenaGroup group = server.getGroup();
-        if (!isAllowedInGroup(group)) {
+        if (!isAllowed(group)) {
             return false;
         }
 

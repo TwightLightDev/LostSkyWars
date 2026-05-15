@@ -8,8 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.Perk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -44,19 +44,19 @@ public class PerksMenu extends PagedPlayerMenu {
                 }
 
                 if (evt.getClickedInventory() != null && evt.getClickedInventory().equals(evt.getInventory()) && item != null && item.getType() != Material.AIR) {
-                    SkyWarsPerk perk = perks.get(item);
+                    Perk perk = perks.get(item);
                     if (evt.getSlot() == this.previousPage) {
                         this.openPrevious();
                     } else if (evt.getSlot() == this.nextPage) {
                         this.openNext();
                     } else if (perk != null) {
-                        if (perk.hasByPermission(player) && !perk.has(account)) {
+                        if (perk.hasByPermission(player) && !perk.has(account, groupId)) {
                             if (!perk.canBeSold()) {
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("unavailable").replace("{name}", perk.getRawName())));
                                 return;
                             }
 
-                            if (account.getInt("coins") < perk.getCoins()) {
+                            if (account.getCoins() < perk.getCoins()) {
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("enoughcoins").replace("{name}", perk.getRawName())));
                                 return;
                             }
@@ -65,15 +65,15 @@ public class PerksMenu extends PagedPlayerMenu {
                             return;
                         }
                         Sound.NOTE_PLING.play(player, 1.0F, 1.0F);
-                        if (account.hasSelected(perk)) {
+                        if (account.getSelectedContainer().getSelectedPerk(groupId) == perk.getId()) {
                             player.sendMessage(StringUtils.formatColors(config.getAsString("deselect").replace("{name}", perk.getRawName())));
-                            account.setSelected(perk.getServer(), perk.getType(), 1, 0);
+                            account.getSelectedContainer().setSelectedPerk(groupId, 0);
                             new PerksMenu(player, groupId);
                             return;
                         }
 
                         player.sendMessage(StringUtils.formatColors(config.getAsString("select").replace("{name}", perk.getRawName())));
-                        account.setSelected(perk, 1);
+                        account.getSelectedContainer().setSelectedPerk(groupId, perk.getId());
                         new PerksMenu(player, groupId);
                     } else {
                         ConfigAction action = actions.get(item);
@@ -97,7 +97,7 @@ public class PerksMenu extends PagedPlayerMenu {
     }
 
     private String groupId;
-    private Map<ItemStack, SkyWarsPerk> perks;
+    private Map<ItemStack, Perk> perks;
     private Map<ItemStack, ConfigAction> actions;
 
     public PerksMenu(Player player, String groupId) {
@@ -113,35 +113,31 @@ public class PerksMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        for (VisualCosmetic cosmetic : CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_PERK)) {
-            SkyWarsPerk perk = (SkyWarsPerk) cosmetic;
-            if (!perk.isAllowedInGroup(groupId)) {
-                continue;
-            }
+        for (Perk perk : PerkManager.listForGroup(groupId)) {
             String rarity = perk.getRarity().getName();
-            boolean has = perk.has(account) && perk.hasByPermission(player);
+            boolean has = perk.has(account, groupId) && perk.hasByPermission(player);
             ItemStack icon;
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 lore.add("");
-                for (String string : config.getAsStringArray(perk.canBeSold() ? account.getInt("coins") < perk.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
+                for (String string : config.getAsStringArray(perk.canBeSold() ? account.getCoins() < perk.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", perk.getRawName()).replace("{rarity}", rarity).replace("{price}", StringUtils.formatNumber(perk.getCoins())));
                 }
-                icon = perk.getIcon("c", lore.toArray(new String[lore.size()]));
-            } else if (account.hasSelected(perk, 1)) {
+                icon = perk.getIcon("\u00a7c", lore.toArray(new String[lore.size()]));
+            } else if (account.getSelectedContainer().getSelectedPerk(groupId) == perk.getId()) {
                 List<String> lore = new ArrayList<>();
                 lore.add("");
                 for (String string : config.getAsStringArray("description-selected")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", perk.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = perk.getIcon("a", lore.toArray(new String[lore.size()]));
+                icon = perk.getIcon("\u00a7a", lore.toArray(new String[lore.size()]));
             } else {
                 List<String> lore = new ArrayList<>();
                 lore.add("");
                 for (String string : config.getAsStringArray("description-unlocked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", perk.getRawName()).replace("{price}", StringUtils.formatNumber(perk.getCoins())).replace("{rarity}", rarity));
                 }
-                icon = perk.getIcon("a", lore.toArray(new String[lore.size()]));
+                icon = perk.getIcon("\u00a7a", lore.toArray(new String[lore.size()]));
             }
 
             items.add(icon);
@@ -151,7 +147,7 @@ public class PerksMenu extends PagedPlayerMenu {
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {
             if (entry.getKey() >= 0 && entry.getKey() < (config.getRows() * 9)) {
                 String stack = entry.getValue().getStack();
-                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
+                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getCoins()));
 
                 ItemStack item = BukkitUtils.deserializeItemStack(stack);
                 this.removeSlotsWith(item, entry.getKey());

@@ -18,6 +18,8 @@ import org.twightlight.skywars.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.balloons.Balloon;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.hook.PacketEventsHook;
@@ -41,7 +43,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
     private boolean canBeFoundInBox;
 
     public SkyWarsBalloon(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity, boolean buyable, boolean canBeFoundInBox, int coins, List<String> textures) {
-        super(id, rarity);
+        super(id, VisualCosmeticType.BALLOON, rarity);
         this.name = name;
         this.buyable = buyable;
         this.permission = permission;
@@ -115,13 +117,18 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
     @Override
     public boolean has(Account account) {
         if (isPermissible()) {
-            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
+            return this.has(account, this.getVisualType()) || this.hasByPermission(account.getPlayer());
         }
-        return this.has(account, this.getMode());    }
+        return account.getCosmeticHelper().hasCosmetic(this.getVisualType(), this.getId());
+    }
+
+    private boolean has(Account account, VisualCosmeticType type) {
+        return account.getCosmeticHelper().hasCosmetic(type, this.getId());
+    }
 
     @Override
     public String getName() {
-        return Language.options$cosmetic$deathcry + this.name;
+        return Language.options$cosmetic$ballon + this.name;
     }
 
     public String getRawName() {
@@ -130,7 +137,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
 
     @Override
     public ItemStack getIcon() {
-        return this.getIcon("§a");
+        return this.getIcon("\u00a7a");
     }
 
     public ItemStack getIcon(String colorDisplay, String... lores) {
@@ -176,7 +183,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
                 continue;
             }
 
-            CosmeticServer.SKYWARS.addCosmetic(balloon);
+            VisualCosmetic.register(balloon);
         }
     }
 }

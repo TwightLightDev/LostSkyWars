@@ -6,7 +6,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -28,7 +28,7 @@ public class LuckyCharm extends Perk {
                 CONFIG.getString("luckycharm.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("luckycharm.icon").replace("{percentage}", CONFIG.getInt("luckycharm.percentage") + "%")),
                 CONFIG.getInt("luckycharm.price"),
-                SkyWarsPerk.loadAllowedGroups("luckycharm"));
+                PerkManager.loadAllowedGroups("luckycharm"));
 
         this.percentage = CONFIG.getInt("luckycharm.percentage");
 
@@ -42,7 +42,7 @@ public class LuckyCharm extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             if (ThreadLocalRandom.current().nextInt(100) < percentage) {

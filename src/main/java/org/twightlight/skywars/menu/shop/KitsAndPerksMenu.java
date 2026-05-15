@@ -8,8 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.Perk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -22,6 +22,7 @@ import org.twightlight.skywars.utils.BukkitUtils;
 import org.twightlight.skywars.utils.StringUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KitsAndPerksMenu extends PlayerMenu {
@@ -77,17 +78,8 @@ public class KitsAndPerksMenu extends PlayerMenu {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
 
-                stack = stack.replace("{souls}", StringUtils.formatNumber(account.getInt("souls")));
-                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
-
-                long perkTotal = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_PERK).size();
-                long perkOwned = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_PERK).stream().filter(c -> c.has(account)).count();
-                int perkPercentage = perkTotal > 0 ? (int) ((100.0 * perkOwned) / perkTotal) : 0;
-                VisualCosmetic selectedPerk = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_PERK, 1);
-                stack = stack.replace("{perks_has}", String.valueOf(perkOwned));
-                stack = stack.replace("{perks_max}", String.valueOf(perkTotal));
-                stack = stack.replace("{perks_percentage}", perkPercentage + "%");
-                stack = stack.replace("{perks_current}", selectedPerk == null || !(selectedPerk instanceof SkyWarsPerk) ? "None" : ((SkyWarsPerk) selectedPerk).getRawName());
+                stack = stack.replace("{souls}", StringUtils.formatNumber(account.getSouls()));
+                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getCoins()));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -31,7 +31,7 @@ public class ArrowRecovery extends Perk {
                 CONFIG.getString("arrowrecovery.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("arrowrecovery.icon").replace("{percentage}", CONFIG.getInt("arrowrecovery.percentage") + "%")),
                 CONFIG.getInt("arrowrecovery.price"),
-                SkyWarsPerk.loadAllowedGroups("arrowrecovery"));
+                PerkManager.loadAllowedGroups("arrowrecovery"));
 
         this.percentage = CONFIG.getInt("arrowrecovery.percentage");
 
@@ -46,7 +46,7 @@ public class ArrowRecovery extends Perk {
                 if (account == null) {
                     return;
                 }
-                if (!this.selected(account)) {
+                if (!this.isSelected(account)) {
                     return;
                 }
                 if (isAbleToUse((Player) evt.getEntity().getShooter()) && ThreadLocalRandom.current().nextInt(100) < percentage) {

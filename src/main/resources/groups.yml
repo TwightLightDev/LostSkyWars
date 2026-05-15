@@ -44,8 +44,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - normal
+    cosmetics_group: normal
   solo_insane:
     display: "&fSolo &cInsane"
     team-size: 1
@@ -91,8 +90,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - insane
+    cosmetics_group: insane
   doubles:
     display: "&fDoubles &7Normal"
     team-size: 2
@@ -139,8 +137,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - normal
+    cosmetics_group: normal
   doubles_insane:
     display: "&fDoubles &cInsane"
     team-size: 2
@@ -187,8 +184,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - insane
+    cosmetics_group: insane
   ranked_solo:
     display: "&6Ranked Solo"
     team-size: 1
@@ -238,8 +234,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - ranked
+    cosmetics_group: ranked
   ranked_doubles:
     display: "&6Ranked Doubles"
     team-size: 2
@@ -290,8 +285,7 @@ groups:
         - 600
       dragon: 300
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars\n \n{centered}&a&lGather resources and equipment on your island\n{centered}&a&lin order to eliminate every other player.\n{centered}&a&lGo to the center island for special chests\n{centered}&a&lwith special items!\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - ranked
+    cosmetics_group: ranked
   duels:
     display: "&dDuels"
     team-size: 1
@@ -333,5 +327,4 @@ groups:
     timeline:
       game: 480
     tutorial: '&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}&f&lSkyWars Duel\n \n{centered}&a&lEliminate your opponents!\n \n{centered}&f&lOpponent{s}: {opponents}\n \n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬'
-    cosmetics_group:
-      - normal
+    cosmetics_group: normal

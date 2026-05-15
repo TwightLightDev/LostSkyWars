@@ -8,7 +8,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -28,7 +28,7 @@ public class Juggernaut extends Perk {
                 CONFIG.getString("juggernaut.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("juggernaut.icon").replace("{time}", CONFIG.getInt("juggernaut.time") + "")),
                 CONFIG.getInt("juggernaut.price"),
-                SkyWarsPerk.loadAllowedGroups("juggernaut"));
+                PerkManager.loadAllowedGroups("juggernaut"));
 
         this.seconds = CONFIG.getInt("juggernaut.time");
 
@@ -42,7 +42,7 @@ public class Juggernaut extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             evt.getKiller().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20 * seconds, 0));

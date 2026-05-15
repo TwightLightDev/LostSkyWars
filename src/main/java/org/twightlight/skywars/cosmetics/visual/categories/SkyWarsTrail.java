@@ -20,6 +20,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -42,7 +43,7 @@ public class SkyWarsTrail extends PreviewableCosmetic {
     private boolean canBeFoundInBox;
     public SkyWarsTrail(int id, String name, String permission, ItemStack icon, CosmeticRarity rarity,
                         boolean buyable, boolean canBeFoundInBox, int coins, Consumer<ProjectileLaunchEvent> consumer) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TRAIL, rarity);
+        super(id, VisualCosmeticType.TRAIL, rarity);
         this.name = name;
         this.buyable = buyable;
         this.permission = permission;

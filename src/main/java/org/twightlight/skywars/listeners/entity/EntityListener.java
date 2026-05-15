@@ -22,7 +22,7 @@ import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.SkyWarsTeam;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.MinecraftVersion;
@@ -36,7 +36,7 @@ public class EntityListener implements Listener {
     public void onPlayerFish(EntityDamageByEntityEvent evt) {
         if (MinecraftVersion.getCurrentVersion().getCompareId() > 183) {
             if (evt.getDamager() != null && evt.getDamager() instanceof FishHook) {
-                 if (evt.getEntity() != null && ((FishHook) evt.getDamager()).getShooter() != evt.getEntity()) {
+                if (evt.getEntity() != null && ((FishHook) evt.getDamager()).getShooter() != evt.getEntity()) {
                     Player player = (Player) ((FishHook) evt.getEntity()).getShooter();
 
                     Arena server = null;
@@ -116,7 +116,7 @@ public class EntityListener implements Listener {
                     evt.setDamage(0.001D);
                 }
 
-                if ((player.getHealth() - evt.getDamage()) <= 0.0 && SkyWarsPerk.isDecisiveStrike(player)) {
+                if ((player.getHealth() - evt.getDamage()) <= 0.0 && PerkManager.isDecisiveStrike(player)) {
                     evt.setDamage(player.getHealth() - 0.5);
                     return;
                 }
@@ -140,8 +140,8 @@ public class EntityListener implements Listener {
                     double damageDealt = evt.getFinalDamage();
                     double healthRemaining = player.getHealth() - damageDealt;
                     String name = player.getName();
-                    damager.sendMessage(ChatColor.RED + "⚔ Dealt: " + damageDealt);
-                    damager.sendMessage(ChatColor.RED + name + " is at ❤: " + healthRemaining);
+                    damager.sendMessage(ChatColor.RED + " Dealt: " + damageDealt);
+                    damager.sendMessage(ChatColor.RED + name + " is at : " + healthRemaining);
                 }
             }
 

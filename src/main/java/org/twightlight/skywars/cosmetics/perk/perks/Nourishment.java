@@ -6,7 +6,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -25,7 +25,7 @@ public class Nourishment extends Perk {
                 CONFIG.getString("nourishment.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("nourishment.icon")),
                 CONFIG.getInt("nourishment.price"),
-                SkyWarsPerk.loadAllowedGroups("nourishment"));
+                PerkManager.loadAllowedGroups("nourishment"));
 
         this.register(SkyWars.getInstance());
     }
@@ -37,7 +37,7 @@ public class Nourishment extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             evt.getKiller().setFoodLevel(20);

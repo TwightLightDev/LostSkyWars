@@ -6,7 +6,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -26,7 +26,7 @@ public class Knowledge extends Perk {
                 CONFIG.getString("knowledge.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("knowledge.icon").replace("{level}", CONFIG.getInt("knowledge.level") + "")),
                 CONFIG.getInt("knowledge.price"),
-                SkyWarsPerk.loadAllowedGroups("knowledge"));
+                PerkManager.loadAllowedGroups("knowledge"));
 
         this.level = CONFIG.getInt("knowledge.level");
 
@@ -40,7 +40,7 @@ public class Knowledge extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             evt.getKiller().setLevel(evt.getKiller().getLevel() + this.level);

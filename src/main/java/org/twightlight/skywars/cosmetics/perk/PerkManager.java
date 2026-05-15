@@ -6,8 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.arena.group.GroupManager;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.cosmetics.perk.perks.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -80,7 +79,7 @@ public class PerkManager {
         DecisiveStrike ds = (DecisiveStrike) dsPerk;
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         if (account == null) return false;
-        if (!ds.selected(account)) return false;
+        if (!ds.isSelected(account)) return false;
         return ds.isAbleToUse(player) && ThreadLocalRandom.current().nextInt(100) < ds.getPercentage();
     }
 
@@ -100,7 +99,7 @@ public class PerkManager {
     public static List<Perk> listForGroup(String cosmeticsGroupId) {
         List<Perk> result = new ArrayList<>();
         for (Perk perk : PERKS) {
-            if (perk.isAllowedInGroup(cosmeticsGroupId)) {
+            if (perk.isAllowed(cosmeticsGroupId)) {
                 result.add(perk);
             }
         }
@@ -111,9 +110,10 @@ public class PerkManager {
         if (CONFIG.contains(key + ".allowed-groups")) {
             return CONFIG.getStringList(key + ".allowed-groups");
         }
+        // Default: all CosmeticsGroup IDs (normal, insane, ranked)
         List<String> defaultGroups = new ArrayList<>();
-        for (ArenaGroup group : GroupManager.getGroups()) {
-            defaultGroups.add(group.getId());
+        for (CosmeticsGroup cg : CosmeticsGroup.listAll()) {
+            defaultGroups.add(cg.getId());
         }
         CONFIG.set(key + ".allowed-groups", defaultGroups);
         return defaultGroups;

@@ -21,6 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.hook.PacketEventsHook;
 import org.twightlight.skywars.hook.protocollib.ProtocolLibHook;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
@@ -40,10 +41,10 @@ import java.util.function.Consumer;
 public abstract class PreviewableCosmetic extends VisualCosmetic {
     protected static final ConfigWrapper PREVIEWCONFIG = ConfigWrapper.getConfig("cosmeticspreview");
     protected static final Map<UUID, PreviewSession> sessionUUID = new ConcurrentHashMap<>();
-    protected static final Map<CosmeticType, List<PreviewSession>> sessionCosmeticType = new ConcurrentHashMap<>();
+    protected static final Map<VisualCosmeticType, List<PreviewSession>> sessionCosmeticType = new ConcurrentHashMap<>();
 
-    public PreviewableCosmetic(int id, CosmeticServer server, CosmeticType type, CosmeticRarity rarity) {
-        super(id, server, type, rarity);
+    public PreviewableCosmetic(int id, VisualCosmeticType visualType, CosmeticRarity rarity) {
+        super(id, visualType, rarity);
     }
 
     public abstract void preview(Player player, Object... objects);
@@ -51,17 +52,17 @@ public abstract class PreviewableCosmetic extends VisualCosmetic {
     public final void playPreview(Player player, long duration, Class<?> returns, Order order, Filter filter, String searchQuery, Object... objects) {
         if (SkyWars.packetevents && SkyWars.protocollib) {
             try {
-                if (sessionCosmeticType.containsKey(getType())) {
-                    if (getType() == CosmeticType.SKYWARS_TRAIL && !sessionCosmeticType.get(getType()).isEmpty()) {
+                if (sessionCosmeticType.containsKey(getVisualType())) {
+                    if (getVisualType() == VisualCosmeticType.TRAIL && !sessionCosmeticType.get(getVisualType()).isEmpty()) {
                         player.sendMessage(ChatColor.RED + "&cThere is no available previewing space for you! Please wait!");
                         return;
-                    } else if (getType() == CosmeticType.SKYWARS_KILLEFFECT && !sessionCosmeticType.get(getType()).isEmpty()) {
+                    } else if (getVisualType() == VisualCosmeticType.KILL_EFFECT && !sessionCosmeticType.get(getVisualType()).isEmpty()) {
                         player.sendMessage(ChatColor.RED + "&cThere is no available previewing space for you! Please wait!");
                         return;
                     }
 
                 }
-                Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location."+ getType().getPreviewID()));
+                Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location."+ getVisualType().getPreviewId()));
 
                 XMaterial xMaterial = XMaterial.BARRIER;
                 MaterialData matdata = xMaterial.parseItem().getData();
@@ -99,7 +100,7 @@ public abstract class PreviewableCosmetic extends VisualCosmetic {
             this.cosmetic = cosmetic;
             consumers = new ArrayList<>();
             sessionUUID.put(player.getUniqueId(), this);
-            sessionCosmeticType.computeIfAbsent(cosmetic.getType(), (k) -> new ArrayList<>()).add(this);
+            sessionCosmeticType.computeIfAbsent(cosmetic.getVisualType(), (k) -> new ArrayList<>()).add(this);
             uuid = player.getUniqueId();
             this.previewLoc = previewLoc;
             Bukkit.getPluginManager().registerEvents(this, SkyWars.getInstance());
@@ -129,11 +130,11 @@ public abstract class PreviewableCosmetic extends VisualCosmetic {
             Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                 HandlerList.unregisterAll(this);
                 sessionUUID.remove(player.getUniqueId());
-                sessionCosmeticType.get(cosmetic.getType()).remove(this);
+                sessionCosmeticType.get(cosmetic.getVisualType()).remove(this);
                 if (!player.isOnline()) {
                     return;
                 }
-                Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location." + cosmetic.getType().getPreviewID()));
+                Location playerLocation = BukkitUtils.deserializeLocation(PREVIEWCONFIG.getString("player-location." + cosmetic.getVisualType().getPreviewId()));
 
                 XMaterial xMaterial = XMaterial.AIR;
                 MaterialData matdata = xMaterial.parseItem().getData();
@@ -208,14 +209,14 @@ public abstract class PreviewableCosmetic extends VisualCosmetic {
         }
         @EventHandler
         public void onQuit(PlayerQuitEvent e) {
-            if (e.getPlayer().getUniqueId() == uuid) {
+            if (e.getPlayer().getUniqueId().equals(uuid)) {
                 consumers.clear();
             }
         }
 
         @EventHandler
         public void onMove(PlayerMoveEvent e) {
-            if (e.getPlayer().getUniqueId() == uuid) {
+            if (e.getPlayer().getUniqueId().equals(uuid)) {
                 e.setTo(previewLoc);
             }
         }
@@ -241,5 +242,4 @@ public abstract class PreviewableCosmetic extends VisualCosmetic {
     public static ConfigWrapper getPreviewConfig() {
         return PREVIEWCONFIG;
     }
-
 }

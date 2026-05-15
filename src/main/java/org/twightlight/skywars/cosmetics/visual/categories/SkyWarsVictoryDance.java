@@ -11,6 +11,7 @@ import org.twightlight.skywars.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.config.ConfigWrapper;
@@ -35,7 +36,7 @@ public abstract class SkyWarsVictoryDance extends VisualCosmetic {
     }
 
     public SkyWarsVictoryDance(int id, String name, CosmeticRarity rarity, boolean buyable, boolean canBeFoundInBox, String permission, ItemStack icon, int coins) {
-        super(id, CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, rarity);
+        super(id, VisualCosmeticType.VICTORY_DANCE, rarity);
         this.name = name;
         this.permission = permission;
         this.icon = icon;
@@ -63,14 +64,6 @@ public abstract class SkyWarsVictoryDance extends VisualCosmetic {
 
     public boolean hasByPermission(Player player) {
         return !isPermissible() || player.hasPermission(this.permission);
-    }
-
-    @Override
-    public boolean has(Account account) {
-        if (isPermissible()) {
-            return this.has(account, this.getMode()) || this.hasByPermission(account.getPlayer());
-        }
-        return this.has(account, this.getMode());
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.twightlight.skywars.api.event.game.SkyWarsGameStartEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.player.CurrencyManager;
+import org.twightlight.skywars.player.helper.CurrencyManager;
 
 import java.util.*;
 

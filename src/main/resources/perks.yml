@@ -8,12 +8,9 @@ arrowrecovery:
   price: 3000
   percentage: 20
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 blazingarrow:
   id: 2
@@ -25,12 +22,9 @@ blazingarrow:
   price: 5000
   percentage: 30
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 bulldozer:
   id: 3
@@ -42,12 +36,9 @@ bulldozer:
   price: 5000
   percentage: 25
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 endermastery:
   id: 4
@@ -58,12 +49,9 @@ endermastery:
   icon: 'ENDER_PEARL : 1 : display=Ender Mastery : lore=&7You take no fall damage from|&7ender pearl teleportation.'
   price: 5000
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 juggernaut:
   id: 5
@@ -74,12 +62,9 @@ juggernaut:
   icon: 'IRON_CHESTPLATE : 1 : display=Juggernaut : lore=&7Regeneration upon getting|&7a kill.'
   price: 7000
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 knowledge:
   id: 6
@@ -91,12 +76,9 @@ knowledge:
   price: 4000
   multiplier: 1.5
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 nourishment:
   id: 7
@@ -107,12 +89,9 @@ nourishment:
   icon: 'APPLE : 1 : display=Nourishment : lore=&7Food heals an extra heart.'
   price: 3000
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 luckycharm:
   id: 8
@@ -124,12 +103,9 @@ luckycharm:
   price: 5000
   percentage: 20
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 voidmaster:
   id: 9
@@ -141,12 +117,9 @@ voidmaster:
   price: 8000
   percentage: 10
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked
 
 decisivestrike:
   id: 10
@@ -158,9 +131,6 @@ decisivestrike:
   price: 12000
   percentage: 5
   allowed-groups:
-    - solo
-    - solo_insane
-    - doubles
-    - doubles_insane
-    - ranked_solo
-    - ranked_doubles
+    - normal
+    - insane
+    - ranked

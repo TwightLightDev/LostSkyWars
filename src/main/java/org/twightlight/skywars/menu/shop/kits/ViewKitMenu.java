@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import org.twightlight.skywars.cosmetics.kit.Kit;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -48,12 +49,12 @@ public class ViewKitMenu extends PlayerMenu {
                             if (menu.equalsIgnoreCase("shop")) {
                                 new KitsMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (kit.has(account)) {
+                                if (kit.has(account, groupId)) {
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("already-unlocked")));
                                     return;
                                 }
 
-                                if (account.getInt("coins") < kit.getCoins()) {
+                                if (account.getCoins() < kit.getCoins()) {
                                     player.sendMessage(StringUtils.formatColors(config.getAsString("enough-coins")));
                                     return;
                                 }
@@ -70,11 +71,11 @@ public class ViewKitMenu extends PlayerMenu {
         }
     }
 
-    private SkyWarsKit kit;
+    private Kit kit;
     private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ViewKitMenu(Player player, SkyWarsKit kit, String groupId) {
+    public ViewKitMenu(Player player, Kit kit, String groupId) {
         super(player, config.getTitle().replace("{kit}", kit.getRawName()), config.getRows());
         this.kit = kit;
         this.groupId = groupId;
@@ -84,19 +85,19 @@ public class ViewKitMenu extends PlayerMenu {
             if (entry.getKey() >= 0 && entry.getKey() < this.getInventory().getSize()) {
                 String stack = entry.getValue().getStack();
                 if (stack.equalsIgnoreCase("{kit_icon}")) {
-                    this.setItem(entry.getKey(), kit.getIcon("a"));
+                    this.setItem(entry.getKey(), kit.getIcon("\u00a7a"));
                     this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());
                     continue;
                 }
 
                 if (stack.equalsIgnoreCase("{buy}")) {
-                    if (kit.has(account)) {
+                    if (kit.has(account, groupId)) {
                         List<String> lore = new ArrayList<>();
                         for (String string : config.getAsStringArray("description-unlocked")) {
                             lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}",
                                     kit.getRarity().getName()));
                         }
-                        ItemStack iconItem = kit.getIcon("a", lore.toArray(new String[lore.size()]));
+                        ItemStack iconItem = kit.getIcon("\u00a7a", lore.toArray(new String[lore.size()]));
                         iconItem.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
                         iconItem.setDurability((short) config.getAsInt("buy-cant"));
                         lore.clear();
@@ -105,13 +106,13 @@ public class ViewKitMenu extends PlayerMenu {
                         continue;
                     }
 
-                    boolean canBuy = kit.hasByPermission(player) && account.getInt("coins") >= kit.getCoins();
+                    boolean canBuy = kit.hasByPermission(player) && account.getCoins() >= kit.getCoins();
                     List<String> lore = new ArrayList<>();
                     for (String string : config.getAsStringArray("description-locked")) {
                         lore.add(StringUtils.formatColors(string).replace("{name}", kit.getRawName()).replace("{price}", StringUtils.formatNumber(kit.getCoins())).replace("{rarity}",
                                 kit.getRarity().getName()));
                     }
-                    ItemStack iconItem = kit.getIcon(canBuy ? "a" : "c", lore.toArray(new String[lore.size()]));
+                    ItemStack iconItem = kit.getIcon(canBuy ? "\u00a7a" : "\u00a7c", lore.toArray(new String[lore.size()]));
                     iconItem.setType(Material.matchMaterial(config.getAsString("buy-material").toUpperCase()));
                     iconItem.setDurability((short) config.getAsInt("buy-can"));
                     lore.clear();
@@ -120,7 +121,7 @@ public class ViewKitMenu extends PlayerMenu {
                     continue;
                 }
 
-                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
+                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getCoins()));
 
                 this.setItem(entry.getKey(), BukkitUtils.deserializeItemStack(stack));
                 this.map.put(this.getItem(entry.getKey()), entry.getValue().getAction());

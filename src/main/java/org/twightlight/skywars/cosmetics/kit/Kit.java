@@ -75,18 +75,18 @@ public class Kit {
         return allowedGroups;
     }
 
-    public boolean isAllowedInGroup(CosmeticsGroup group) {
+    public boolean isAllowed(CosmeticsGroup group) {
         if (group == null) return false;
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(group.getId());
     }
 
-    public boolean isAllowedInGroup(String groupId) {
+    public boolean isAllowed(String groupId) {
         if (allowedGroups.isEmpty()) return true;
         return allowedGroups.contains(groupId);
     }
 
-    public boolean has(Account account) {
+    public boolean has(Account account, String cosmeticsGroupId) {
         if (isPermissible() && hasByPermission(account.getPlayer())) {
             return true;
         }
@@ -96,14 +96,14 @@ public class Kit {
                 return true;
             }
         }
-        return account.getCosmeticHelper().hasKit(getCosmeticsGroupId(), id);
+        return account.getCosmeticHelper().hasKit(cosmeticsGroupId, id);
     }
 
-    public void give(Account account) {
-        account.getCosmeticHelper().addKit(getCosmeticsGroupId(), id);
+    public void give(Account account, String cosmeticsGroupId) {
+        account.getCosmeticHelper().addKit(cosmeticsGroupId, id);
     }
 
-    public boolean selected(Account account, String cosmeticsGroupId) {
+    public boolean isSelected(Account account, String cosmeticsGroupId) {
         return account.getSelectedContainer().getSelectedKit(cosmeticsGroupId) == this.id;
     }
 
@@ -152,10 +152,5 @@ public class Kit {
 
     public ItemStack[] getContents() {
         return content;
-    }
-
-    private String getCosmeticsGroupId() {
-        if (allowedGroups.isEmpty()) return "solo";
-        return allowedGroups.get(0);
     }
 }

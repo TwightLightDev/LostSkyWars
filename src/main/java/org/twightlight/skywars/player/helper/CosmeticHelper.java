@@ -1,10 +1,9 @@
-package org.twightlight.skywars.player;
+package org.twightlight.skywars.player.helper;
 
 import com.google.gson.reflect.TypeToken;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.player.ValueContainer;
 
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class CosmeticHelper {
@@ -14,6 +13,7 @@ public class CosmeticHelper {
     public CosmeticHelper(Map<String, ValueContainer> cosmetics) {
         this.cosmetics = cosmetics;
     }
+
 
     public boolean hasKit(String cosmeticsGroupId, int kitId) {
         Map<String, List<Integer>> map = getKitsMap();
@@ -59,7 +59,6 @@ public class CosmeticHelper {
         }
     }
 
-
     public boolean hasPerk(String cosmeticsGroupId, int perkId) {
         Map<String, List<Integer>> map = getPerksMap();
         List<Integer> list = map.get(cosmeticsGroupId);
@@ -103,7 +102,6 @@ public class CosmeticHelper {
         }
     }
 
-
     public boolean hasCosmetic(VisualCosmeticType type, int cosmeticId) {
         List<Integer> list = getOwnedCosmetics(type);
         return list.contains(cosmeticId);
@@ -137,7 +135,7 @@ public class CosmeticHelper {
         }
     }
 
-    public Map<String, ValueContainer> getRawMap() {
+    public Map<String, ValueContainer> getCosmeticData() {
         return cosmetics;
     }
 }

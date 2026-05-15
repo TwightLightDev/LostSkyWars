@@ -1,4 +1,4 @@
-package org.twightlight.skywars.player;
+package org.twightlight.skywars.player.helper;
 
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.Language;
@@ -6,6 +6,7 @@ import org.twightlight.skywars.api.event.player.SkyWarsPlayerCoinEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerSoulEarnEvent;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerXpGainEvent;
 import org.twightlight.skywars.arena.Arena;
+import org.twightlight.skywars.player.Account;
 
 import java.util.Arrays;
 

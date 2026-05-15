@@ -21,6 +21,7 @@ public class ArenaGroup {
     private final int dragonTime;
     private final String tutorial;
     private CosmeticsGroup cosmeticsGroup;
+
     public ArenaGroup(String id, ConfigurationSection section) {
         String display = section.getString("display", id);
         int teamSize = section.getInt("team-size", 1);
@@ -67,12 +68,13 @@ public class ArenaGroup {
         this.tutorial = tutorial;
 
         String cosmeticsGroupID = section.getString("cosmetics_group");
-        if (!CosmeticsGroup.exists(cosmeticsGroupID)) {
-            CosmeticsGroup.create(cosmeticsGroupID);
+        if (cosmeticsGroupID != null) {
+            if (!CosmeticsGroup.exists(cosmeticsGroupID)) {
+                CosmeticsGroup.create(cosmeticsGroupID);
+            }
+            this.cosmeticsGroup = CosmeticsGroup.getFromID(cosmeticsGroupID);
+            this.cosmeticsGroup.add(this);
         }
-
-        CosmeticsGroup group = CosmeticsGroup.getFromID(cosmeticsGroupID);
-        group.add(this);
     }
 
     public String getId() {

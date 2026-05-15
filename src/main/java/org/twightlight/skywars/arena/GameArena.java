@@ -26,14 +26,18 @@ import org.twightlight.skywars.api.server.SkyWarsState;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.sprays.Spray;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsDeathCry;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
+import org.twightlight.skywars.cosmetics.kit.Kit;
+import org.twightlight.skywars.cosmetics.kit.KitManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.player.CurrencyManager;
+import org.twightlight.skywars.player.helper.CurrencyManager;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.utils.FontUtils;
 import org.twightlight.skywars.utils.PlayerUtils;
@@ -47,7 +51,7 @@ public class GameArena extends Arena {
     private List<UUID> players;
     private List<UUID> spectators;
     private Map<UUID, Integer> kills;
-    private Map<UUID, CurrencyManager> dataContainer;
+    private Map<UUID, org.twightlight.skywars.player.helper.CurrencyManager> dataContainer;
     private Map<UUID, String> opponents;
 
     public GameArena(String yaml, ScanCallback callback, boolean isPrivate) {
@@ -71,7 +75,6 @@ public class GameArena extends Arena {
         }
     }
 
-
     private void recordDeathStats(Account account) {
         if (!isPrivate && group.hasTrait("has_stats")) {
             account.addStat(group.getId(), "deaths");
@@ -94,6 +97,16 @@ public class GameArena extends Arena {
         double expPerPlay = group.getReward("exp-per-play");
         dataContainer.get(player.getUniqueId()).addCoins(coinsPerPlay, SkyWarsPlayerCoinEarnEvent.CoinSource.PLAY);
         dataContainer.get(player.getUniqueId()).addXp(expPerPlay, SkyWarsPlayerXpGainEvent.XpSource.PLAY);
+    }
+
+    private void playDeathCry(Account account, Location location) {
+        int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
+        if (deathCryId > 0) {
+            VisualCosmetic cry = VisualCosmetic.findByTypeAndId(VisualCosmeticType.DEATH_CRY, deathCryId);
+            if (cry != null && cry instanceof SkyWarsDeathCry) {
+                ((SkyWarsDeathCry) cry).getSound().play(location, ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
+            }
+        }
     }
 
     public void killLeave(Account account, Account ack, boolean byMob) {
@@ -143,13 +156,7 @@ public class GameArena extends Arena {
         recordDeathStats(account);
         givePlayRewards(player);
 
-        int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
-        if (deathCryId > 0) {
-            VisualCosmetic cry = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
-            if (cry != null && cry instanceof SkyWarsDeathCry) {
-                ((SkyWarsDeathCry) cry).getSound().play(player.getLocation(), ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
-            }
-        }
+        playDeathCry(account, player.getLocation());
 
         SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
         Bukkit.getPluginManager().callEvent(deathEvent);
@@ -255,13 +262,7 @@ public class GameArena extends Arena {
             }
         }, 3);
 
-        int deathCryId = account.getSelectedContainer().getGlobalSelection("death_cry");
-        if (deathCryId > 0) {
-            VisualCosmetic cry = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_DEATHCRY, 1, String.valueOf(deathCryId));
-            if (cry != null && cry instanceof SkyWarsDeathCry) {
-                ((SkyWarsDeathCry) cry).getSound().play(dieLocation, ((SkyWarsDeathCry) cry).getVolume(), ((SkyWarsDeathCry) cry).getPitch());
-            }
-        }
+        playDeathCry(account, dieLocation);
 
         SkyWarsPlayerDeathEvent deathEvent = new SkyWarsPlayerDeathEvent(this, player, killer, cause, killMessage);
         Bukkit.getPluginManager().callEvent(deathEvent);
@@ -331,7 +332,7 @@ public class GameArena extends Arena {
 
         int cageId = account.getSelectedContainer().getGlobalSelection("cage");
         if (cageId > 0) {
-            VisualCosmetic cosmetic = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_CAGE, 1, String.valueOf(cageId));
+            VisualCosmetic cosmetic = VisualCosmetic.findByTypeAndId(VisualCosmeticType.CAGE, cageId);
             if (cosmetic != null && cosmetic instanceof SkyWarsCage && cosmetic.has(account)) {
                 ((SkyWarsCage) cosmetic).apply(account.getPlayer(), team.getLocation());
             } else {
@@ -520,6 +521,10 @@ public class GameArena extends Arena {
         teams.forEach(SkyWarsTeam::destroy);
         chests.forEach(SkyWarsChest::fill);
 
+        // Get the CosmeticsGroup for this arena's group
+        CosmeticsGroup cosGroup = group.getCosmeticsGroup();
+        String cosGroupId = cosGroup != null ? cosGroup.getId() : "normal";
+
         for (Player player : getPlayers(false)) {
             kills.put(player.getUniqueId(), 0);
             Account account = Database.getInstance().getAccount(player.getUniqueId());
@@ -530,11 +535,11 @@ public class GameArena extends Arena {
                 account.refreshPlayer();
                 dataContainer.put(player.getUniqueId(), new CurrencyManager(account));
 
-                int kitId = account.getSelectedContainer().getSelectedKit(group.getId());
+                int kitId = account.getSelectedContainer().getSelectedKit(cosGroupId);
                 if (kitId > 0) {
-                    VisualCosmetic cosmeticKit = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, 1, String.valueOf(kitId));
-                    if (cosmeticKit != null && cosmeticKit instanceof SkyWarsKit && ((SkyWarsKit) cosmeticKit).has(account)) {
-                        ((SkyWarsKit) cosmeticKit).apply(player);
+                    Kit kit = KitManager.getById(kitId);
+                    if (kit != null && kit.isAllowed(cosGroupId) && kit.has(account, cosGroupId)) {
+                        kit.apply(player);
                     } else {
                         applyDefaultKit(player);
                     }

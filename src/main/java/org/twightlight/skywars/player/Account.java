@@ -17,6 +17,7 @@ import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.ValueContainer;
+import org.twightlight.skywars.player.helper.CosmeticHelper;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
@@ -43,14 +44,7 @@ public class Account {
     protected Map<String, Map<String, ValueContainer>> stats;
 
     protected CosmeticHelper cosmeticHelper;
-
-    //Map favourites and cosmetic selection should be in 2 different container.
-    //Map can stay here but cosmetic related should stay in Cosmetics helper
-    //Kit, perk, visual cosmetics should stay in 3 different Selected container
-    protected SelectedContainer selectedContainer;
-
-    //What is the fucking purpose of this field??
-    protected Map<String, ValueContainer> selections;
+    private SelectedContainer selectedContainer;
 
     private Map<UUID, Long> lastHit = new HashMap<>();
 
@@ -63,19 +57,19 @@ public class Account {
         this.name = name;
         this.stats = new LinkedHashMap<>();
         Map<String, ValueContainer> cosmetics;
+        Map<String, ValueContainer> selectionsRaw;
         if (!virtual) {
             this.profile = Database.getInstance().loadProfile(id, name);
             cosmetics = Database.getInstance().loadCosmetics(id, name);
-            this.selections = Database.getInstance().loadSelections(id, name);
+            selectionsRaw = Database.getInstance().loadSelections(id, name);
         } else {
             this.profile = buildDefaultProfile();
             cosmetics = buildDefaultCosmetics();
-            this.selections = buildDefaultSelections();
+            selectionsRaw = buildDefaultSelections();
         }
 
-        this.selectedContainer = new SelectedContainer(this.selections);
+        this.selectedContainer = new SelectedContainer(selectionsRaw);
         cosmeticHelper = new CosmeticHelper(cosmetics);
-
         if (this.profile.get("leveling").get() == null) {
             this.profile.get("leveling").set("[]");
         }
@@ -241,9 +235,6 @@ public class Account {
         return StringUtils.formatNumber(getSouls());
     }
 
-    /**
-     * Adds souls with max-soul cap enforcement.
-     */
     public void addSoulsCapped(int amount) {
         addSouls(amount);
         int max = getMaxSouls();
@@ -274,7 +265,7 @@ public class Account {
         }
     }
 
-    // --- ELO (in profile, global) ---
+    // --- ELO ---
 
     public int getElo() {
         return this.profile.get("elo").getAs(Integer.class);
@@ -296,7 +287,7 @@ public class Account {
         return StringUtils.formatNumber(getElo());
     }
 
-    // --- BRAVE POINTS (in profile, global, capped at 100) ---
+    // --- BRAVE POINTS ---
 
     public int getBravePoints() {
         return this.profile.get("brave_points").getAs(Integer.class);
@@ -317,7 +308,7 @@ public class Account {
         }
     }
 
-    // --- LEAGUE (direct method, no Ranked.java wrapper) ---
+    // --- LEAGUE ---
 
     public League getLeague() {
         int points = getElo();
@@ -402,7 +393,7 @@ public class Account {
     }
 
     // =========================================================================
-    // DELIVERIES (using Map<String, Long> via ValueContainer)
+    // DELIVERIES
     // =========================================================================
 
     public Map<String, Long> getDeliveries() {
@@ -422,7 +413,7 @@ public class Account {
     }
 
     // =========================================================================
-    // LEVELING (using List<String> via ValueContainer)
+    // LEVELING
     // =========================================================================
 
     public void addLeveling(int level) {
@@ -435,42 +426,42 @@ public class Account {
         return this.profile.get("leveling").getAsStringList().contains(String.valueOf(level));
     }
 
+    // =========================================================================
+    // FAVORITES & MAP SELECTION (non-cosmetic preferences)
+    // =========================================================================
+
     public void addFavoriteMap(String mapName) {
-        List<String> favorites = this.selectedContainer.getFavorites();
+        List<String> favorites = getSelectedContainer().getFavorites();
         if (!favorites.contains(mapName)) {
             favorites.add(mapName);
         }
-        this.selectedContainer.setFavorites(favorites);
+        getSelectedContainer().setFavorites(favorites);
     }
 
     public void removeFavoriteMap(String mapName) {
-        List<String> favorites = this.selectedContainer.getFavorites();
+        List<String> favorites = getSelectedContainer().getFavorites();
         favorites.remove(mapName);
-        this.selectedContainer.setFavorites(favorites);
+        getSelectedContainer().setFavorites(favorites);
     }
 
     public boolean isFavoriteMap(String mapName) {
-        return this.selectedContainer.getFavorites().contains(mapName);
+        return getSelectedContainer().getFavorites().contains(mapName);
     }
 
     public void updateLastSelected() {
-        this.selectedContainer.setLastSelected(TimeUtils.getExpireIn(1));
+        getSelectedContainer().setLastSelected(TimeUtils.getExpireIn(1));
     }
 
     public boolean canSelectMap() {
-        return this.selectedContainer.getLastSelected() < System.currentTimeMillis();
+        return getSelectedContainer().getLastSelected() < System.currentTimeMillis();
     }
 
     // =========================================================================
-    // SELECTIONS
+    // SELECTIONS (delegated to CosmeticHelper's SelectedContainer)
     // =========================================================================
 
     public SelectedContainer getSelectedContainer() {
         return selectedContainer;
-    }
-
-    public Map<String, ValueContainer> getSelectionsMap() {
-        return selections;
     }
 
     // =========================================================================
@@ -780,8 +771,8 @@ public class Account {
         for (Map.Entry<String, Map<String, ValueContainer>> entry : stats.entrySet()) {
             Database.getInstance().saveStats(id, entry.getKey(), entry.getValue());
         }
-        Database.getInstance().saveCosmetics(id, cosmeticHelper.getRawMap());
-        Database.getInstance().saveSelections(id, selections);
+        Database.getInstance().saveCosmetics(id, cosmeticHelper.getCosmeticData());
+        Database.getInstance().saveSelections(id, selectedContainer.getSelections());
     }
 
     public void destroy() {
@@ -795,11 +786,7 @@ public class Account {
             this.stats.clear();
             this.stats = null;
         }
-
-        if (this.selections != null) {
-            this.selections.clear();
-            this.selections = null;
-        }
+        this.cosmeticHelper = null;
         this.selectedContainer = null;
         this.scoreboard = null;
         this.lastHit.clear();

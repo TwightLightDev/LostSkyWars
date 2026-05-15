@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.perk.Perk;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -46,13 +47,13 @@ public class ConfirmPerkMenu extends PlayerMenu {
                             if (menu.equalsIgnoreCase("shop")) {
                                 new PerksMenu(player, groupId);
                             } else if (menu.equalsIgnoreCase("buy")) {
-                                if (account.getInt("coins") < cosmetic.getCoins()) {
+                                if (account.getCoins() < cosmetic.getCoins()) {
                                     new PerksMenu(player, groupId);
                                     return;
                                 }
 
-                                account.removeStat("coins", cosmetic.getCoins());
-                                cosmetic.give(account);
+                                account.removeCoins(cosmetic.getCoins());
+                                cosmetic.give(account, groupId);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
                                 player.closeInventory();
                             }
@@ -66,11 +67,11 @@ public class ConfirmPerkMenu extends PlayerMenu {
         }
     }
 
-    private VisualCosmetic cosmetic;
+    private Perk cosmetic;
     private String groupId;
     private Map<ItemStack, ConfigAction> map = new HashMap<>();
 
-    public ConfirmPerkMenu(Player player, VisualCosmetic cosmetic, String groupId) {
+    public ConfirmPerkMenu(Player player, Perk cosmetic, String groupId) {
         super(player, config.getTitle(), config.getRows());
         this.cosmetic = cosmetic;
         this.groupId = groupId;

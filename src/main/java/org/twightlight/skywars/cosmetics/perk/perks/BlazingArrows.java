@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -30,7 +30,7 @@ public class BlazingArrows extends Perk {
                 CONFIG.getString("blazingarrow.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("blazingarrow.icon").replace("{percentage}", CONFIG.getInt("blazingarrow.percentage") + "%")),
                 CONFIG.getInt("blazingarrow.price"),
-                SkyWarsPerk.loadAllowedGroups("blazingarrow"));
+                PerkManager.loadAllowedGroups("blazingarrow"));
 
         this.percentage = CONFIG.getInt("blazingarrow.percentage");
 
@@ -44,7 +44,7 @@ public class BlazingArrows extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             if (isAbleToUse((Player) evt.getEntity()) && ThreadLocalRandom.current().nextInt(100) < percentage) {

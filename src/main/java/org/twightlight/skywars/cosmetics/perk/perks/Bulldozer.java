@@ -8,7 +8,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.BukkitUtils;
@@ -28,7 +28,7 @@ public class Bulldozer extends Perk {
                 CONFIG.getString("bulldozer.permission"),
                 BukkitUtils.deserializeItemStack(CONFIG.getString("bulldozer.icon").replace("{time}", CONFIG.getInt("bulldozer.time") + "")),
                 CONFIG.getInt("bulldozer.price"),
-                SkyWarsPerk.loadAllowedGroups("bulldozer"));
+                PerkManager.loadAllowedGroups("bulldozer"));
 
         this.seconds = CONFIG.getInt("bulldozer.time");
 
@@ -42,7 +42,7 @@ public class Bulldozer extends Perk {
             if (account == null) {
                 return;
             }
-            if (!this.selected(account)) {
+            if (!this.isSelected(account)) {
                 return;
             }
             evt.getKiller().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * seconds, 0));

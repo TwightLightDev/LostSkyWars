@@ -22,7 +22,10 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.VisualCosmetic;
-import org.twightlight.skywars.cosmetics.skywars.SkyWarsPerk;
+import org.twightlight.skywars.cosmetics.kit.Kit;
+import org.twightlight.skywars.cosmetics.kit.KitManager;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.NMS;
@@ -51,16 +54,24 @@ public class Timer {
 
     private void showKitActionBar() {
         ArenaGroup group = server.getGroup();
-        int kitIndex = SkyWarsPerk.getKitIndexForGroup(group);
+        boolean noKits = group != null && group.hasTrait("no_kits");
         server.getPlayers(true).forEach(player -> {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
-                VisualCosmetic c = kitIndex > 0 ? account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KIT, kitIndex) : null;
-                if (c != null) {
-                    NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", c.getRawName()));
-                } else {
+                if (noKits) {
                     NMS.sendActionBar(player,
-                            Language.game$broadcast$starting$selected_kit.replace("{kit}", kitIndex <= 0 ? "None" : Language.options$cosmetic$default_kit));
+                            Language.game$broadcast$starting$selected_kit.replace("{kit}", "None"));
+                } else {
+                    CosmeticsGroup cGroup = group != null ? group.getCosmeticsGroup() : null;
+                    String cosmeticsGroupId = cGroup != null ? cGroup.getId() : "solo";
+                    int selectedKitId = account.getSelectedContainer().getSelectedKit(cosmeticsGroupId);
+                    Kit kit = selectedKitId > 0 ? KitManager.getById(selectedKitId) : null;
+                    if (kit != null) {
+                        NMS.sendActionBar(player, Language.game$broadcast$starting$selected_kit.replace("{kit}", kit.getRawName()));
+                    } else {
+                        NMS.sendActionBar(player,
+                                Language.game$broadcast$starting$selected_kit.replace("{kit}", Language.options$cosmetic$default_kit));
+                    }
                 }
             }
         });
@@ -237,7 +248,8 @@ public class Timer {
                 if (account == null) {
                     return;
                 }
-                VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_VICTORYDANCE, 1);
+                int selectedVDId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.VICTORY_DANCE.getSelectionColumn());
+                VisualCosmetic cos = selectedVDId > 0 ? VisualCosmetic.findByTypeAndId(VisualCosmeticType.VICTORY_DANCE, selectedVDId) : null;
                 if (cos instanceof SkyWarsVictoryDance) {
                     SkyWarsVictoryDance cos1 = (SkyWarsVictoryDance) cos;
                     cos1.execute(player);
