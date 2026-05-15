@@ -66,16 +66,6 @@ public class CosmeticHelper {
         return list != null && list.contains(perkId);
     }
 
-    public boolean hasPerkInAnyGroup(int perkId) {
-        Map<String, List<Integer>> map = getPerksMap();
-        for (List<Integer> list : map.values()) {
-            if (list.contains(perkId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void addPerk(String cosmeticsGroupId, int perkId) {
         Map<String, List<Integer>> map = getPerksMap();
         List<Integer> list = map.computeIfAbsent(cosmeticsGroupId, k -> new ArrayList<>());

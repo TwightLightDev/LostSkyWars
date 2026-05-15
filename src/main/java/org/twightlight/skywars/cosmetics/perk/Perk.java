@@ -95,11 +95,11 @@ public abstract class Perk implements Listener {
         return isAllowedInGroup(arenaGroup.getCosmeticsGroup());
     }
 
-    public boolean has(Account account) {
+    public boolean has(Account account, String cosmeticsGroupId) {
         if (isPermissible() && hasByPermission(account.getPlayer())) {
             return true;
         }
-        return account.getCosmeticHelper().hasPerkInAnyGroup(id);
+        return account.getCosmeticHelper().hasPerk(cosmeticsGroupId, id);
     }
 
     public void give(Account account, String cosmeticsGroupId) {
