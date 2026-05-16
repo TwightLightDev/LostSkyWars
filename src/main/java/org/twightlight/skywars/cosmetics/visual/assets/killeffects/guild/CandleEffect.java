@@ -11,7 +11,7 @@ import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 public class CandleEffect extends SkyWarsKillEffect {

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;

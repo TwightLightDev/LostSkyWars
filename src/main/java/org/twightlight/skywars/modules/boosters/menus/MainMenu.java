@@ -14,9 +14,9 @@ import org.twightlight.skywars.modules.boosters.menus.submenus.ConfirmMenu;
 import org.twightlight.skywars.modules.boosters.menus.utils.BMenu;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.users.ServerUser;
-import org.twightlight.skywars.utils.ItemBuilder;
-import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.utils.TimeUtils;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
+import org.twightlight.skywars.utils.string.StringUtils;
+import org.twightlight.skywars.utils.player.TimeUtils;
 
 import java.util.List;
 import java.util.UUID;

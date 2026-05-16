@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;

@@ -5,10 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.cosmetics.visual.PreviewableCosmetic;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class PreviewCommand extends SubCommand {
 

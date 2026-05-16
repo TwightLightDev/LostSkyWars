@@ -15,8 +15,8 @@ import org.twightlight.skywars.config.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.ranked.League;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

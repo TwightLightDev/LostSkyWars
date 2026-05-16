@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.concurrent.CompletableFuture;
 

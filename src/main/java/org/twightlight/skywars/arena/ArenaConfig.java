@@ -7,13 +7,13 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;

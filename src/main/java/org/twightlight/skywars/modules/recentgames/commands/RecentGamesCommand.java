@@ -8,7 +8,7 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.libs.xseries.XMaterial;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.api.menus.Item;
 import org.twightlight.skywars.modules.recentgames.GameData;
@@ -16,7 +16,7 @@ import org.twightlight.skywars.modules.recentgames.GameResult;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.modules.recentgames.User;
 import org.twightlight.skywars.modules.recentgames.menus.RGMenu;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.util.Arrays;
 import java.util.List;

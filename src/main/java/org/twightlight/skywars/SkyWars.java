@@ -4,7 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
+import org.twightlight.skywars.integration.placeholderapi.PlaceholderAPIIntegration;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.GroupManager;
@@ -15,18 +18,17 @@ import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreLobbies;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.commands.Commands;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.database.SQLiteDatabase;
+import org.twightlight.skywars.database.providers.SQLiteDatabase;
 import org.twightlight.skywars.fun.customitems.CustomItemsManager;
-import org.twightlight.skywars.hook.*;
-import org.twightlight.skywars.hook.battlepass.BattlePassHook;
-import org.twightlight.skywars.hook.boxes.BoxesHook;
-import org.twightlight.skywars.hook.citizens.CitizensHook;
-import org.twightlight.skywars.hook.decenthologram.DecentHologramsHook;
-import org.twightlight.skywars.hook.guilds.GuildsHook;
-import org.twightlight.skywars.hook.protocollib.ProtocolLibHook;
-import org.twightlight.skywars.hook.worldedit.WorldEditHook;
+import org.twightlight.skywars.integration.battlepass.BattlePassIntegration;
+import org.twightlight.skywars.integration.boxes.BoxesIntegration;
+import org.twightlight.skywars.integration.citizens.CitizensIntegration;
+import org.twightlight.skywars.integration.decenthologram.DecentHologramsIntegration;
+import org.twightlight.skywars.integration.guilds.GuildsIntegration;
+import org.twightlight.skywars.integration.protocollib.ProtocolLibIntegration;
+import org.twightlight.skywars.integration.worldedit.WorldEditIntegration;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.modules.boosters.Boosters;
@@ -41,7 +43,7 @@ import org.twightlight.skywars.player.rank.TagUtils;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.well.AngelOfDeath;
 import org.twightlight.skywars.systems.well.WellNPC;
-import org.twightlight.skywars.utils.MinecraftVersion;
+import org.twightlight.skywars.utils.bukkit.MinecraftVersion;
 
 import java.io.File;
 
@@ -174,13 +176,13 @@ public class SkyWars extends JavaPlugin {
             Holograms.close();
 
             if (citizens) {
-                CitizensHook.destroyCitizens();
+                CitizensIntegration.destroyCitizens();
             }
             if (protocollib) {
-                ProtocolLibHook.destroyProtocolLib();
+                ProtocolLibIntegration.destroyProtocolLib();
             }
             if (lostboxes) {
-                BoxesHook.destroyBoxes();
+                BoxesIntegration.destroyBoxes();
             }
             WellNPC.listNPCs().forEach(WellNPC::destroy);
             AngelOfDeath.listNPCs().forEach(AngelOfDeath::destroy);
@@ -192,7 +194,7 @@ public class SkyWars extends JavaPlugin {
             });
 
             if (decentHolograms) {
-                DecentHologramsHook.disable();
+                DecentHologramsIntegration.disable();
             }
 
             Boosters.disable();
@@ -202,7 +204,7 @@ public class SkyWars extends JavaPlugin {
             RecentGames.disable();
             CustomItemsManager.disable();
             if (packetevents) {
-                PacketEventsHook.disable();
+                PacketEventsIntegration.disable();
             }
             HandlerList.unregisterAll(this);
             Bukkit.getScheduler().cancelTasks(this);
@@ -225,7 +227,7 @@ public class SkyWars extends JavaPlugin {
     private void setupBoxes() {
         try {
             Class.forName("io.github.losteddev.boxes.Main");
-            BoxesHook.setupBoxes();
+            BoxesIntegration.setupBoxes();
         } catch (ClassNotFoundException ex) {
             lostboxes = false;
             LOGGER.log(Level.WARNING, "LostBoxes not found, disabling Mystery Boxes.");
@@ -245,7 +247,7 @@ public class SkyWars extends JavaPlugin {
     private void setupCitizens() {
         try {
             Class.forName("net.citizensnpcs.api.CitizensAPI");
-            CitizensHook.setupCitizens();
+            CitizensIntegration.setupCitizens();
         } catch (ClassNotFoundException ex) {
             citizens = false;
             LOGGER.log(Level.WARNING, "Citizens not found, disabling NPCs.");
@@ -255,7 +257,7 @@ public class SkyWars extends JavaPlugin {
     private void setupProtocolLib() {
         try {
             Class.forName("com.comphenix.protocol.ProtocolLibrary");
-            ProtocolLibHook.setupProtocolLib();
+            ProtocolLibIntegration.setupProtocolLib();
         } catch (ClassNotFoundException ex) {
             protocollib = false;
             LOGGER.log(Level.WARNING, "ProtocolLib not found, disabling StatsNPCs.");
@@ -265,7 +267,7 @@ public class SkyWars extends JavaPlugin {
     private void setupPlaceholderAPI() {
         try {
             Class.forName("me.clip.placeholderapi.PlaceholderAPI");
-            PlaceholderAPIHook.setupPlaceHolderAPI();
+            PlaceholderAPIIntegration.setupPlaceHolderAPI();
         } catch (ClassNotFoundException ex) {
             placeholderapi = false;
             LOGGER.log(Level.WARNING, "PlaceHolderAPI not found, disabling support.");
@@ -275,7 +277,7 @@ public class SkyWars extends JavaPlugin {
     private void setupBattlePass() {
         try {
             Class.forName("io.github.battlepass.BattlePlugin");
-            BattlePassHook.setupBattlePass();
+            BattlePassIntegration.setupBattlePass();
         } catch (ClassNotFoundException ex) {
             LOGGER.log(Level.WARNING, "BattlePass not found, disabling support.");
         }
@@ -284,7 +286,7 @@ public class SkyWars extends JavaPlugin {
     private void setupDecentHolograms() {
         try {
             Class.forName("eu.decentsoftware.holograms.plugin.DecentHologramsPlugin");
-            Bukkit.getScheduler().runTaskLater(this, DecentHologramsHook::setupDecentHolograms, 100L);
+            Bukkit.getScheduler().runTaskLater(this, DecentHologramsIntegration::setupDecentHolograms, 100L);
         } catch (ClassNotFoundException ex) {
             decentHolograms = false;
             LOGGER.log(Level.WARNING, "DecentHolograms not found, disabling support.");
@@ -293,7 +295,7 @@ public class SkyWars extends JavaPlugin {
 
     private void setupPacketEvents() {
         if (Bukkit.getPluginManager().getPlugin("packetevents") != null) {
-            PacketEventsHook.setupPacketEvents();
+            PacketEventsIntegration.setupPacketEvents();
         } else {
             packetevents = false;
             LOGGER.log(Level.WARNING, "PacketEvents not found, disabling support.");
@@ -303,7 +305,7 @@ public class SkyWars extends JavaPlugin {
     private void setupGuilds() {
         try {
             Class.forName("me.leoo.guilds.bukkit.Guilds");
-            GuildsHook.setupGuilds();
+            GuildsIntegration.setupGuilds();
         } catch (ClassNotFoundException ex) {
             guilds = false;
             LOGGER.log(Level.WARNING, "Guilds not found, disabling support.");
@@ -338,7 +340,7 @@ public class SkyWars extends JavaPlugin {
     private void setupWE() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
         if (plugin != null) {
-            WorldEditHook.setupWorldEdit();
+            WorldEditIntegration.setupWorldEdit();
         } else {
             we = false;
             LOGGER.log(Level.WARNING, "WorldEdit not found, disabling support...");

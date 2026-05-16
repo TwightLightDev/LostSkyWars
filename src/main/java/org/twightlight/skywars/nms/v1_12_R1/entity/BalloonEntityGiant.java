@@ -6,8 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.nms.BalloonEntity;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.nms.abstracts.BalloonEntity;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.List;
 import java.util.UUID;

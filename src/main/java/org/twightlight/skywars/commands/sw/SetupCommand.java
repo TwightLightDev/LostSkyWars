@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
-import org.twightlight.skywars.setup.Menu;
+import org.twightlight.skywars.setup.api.Menu;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.setup.chests.Browser;
 import org.twightlight.skywars.setup.kits.KitsSetup;

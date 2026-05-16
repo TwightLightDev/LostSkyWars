@@ -1,7 +1,7 @@
 package org.twightlight.skywars.modules.boosters.boosters;
 
 import org.bukkit.Bukkit;
-import org.twightlight.skywars.utils.PlayerUtils;
+import org.twightlight.skywars.utils.player.PlayerUtils;
 
 import java.util.UUID;
 

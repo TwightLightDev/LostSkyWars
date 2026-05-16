@@ -8,12 +8,12 @@ import org.bukkit.block.Chest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.NumberUtils;
-import org.twightlight.skywars.utils.StringCheckerUtils;
+import org.twightlight.skywars.utils.math.NumberUtils;
+import org.twightlight.skywars.utils.string.StringCheckerUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;

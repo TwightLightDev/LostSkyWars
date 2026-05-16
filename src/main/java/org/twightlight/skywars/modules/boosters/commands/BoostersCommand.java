@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.api.cmds.SubCommand;

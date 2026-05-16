@@ -2,7 +2,7 @@ package org.twightlight.skywars.api.adapters;
 
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
 

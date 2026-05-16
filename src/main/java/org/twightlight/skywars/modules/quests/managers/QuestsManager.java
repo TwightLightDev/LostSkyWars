@@ -1,6 +1,6 @@
 package org.twightlight.skywars.modules.quests.managers;
 
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.modules.quests.Quests;
 import org.twightlight.skywars.modules.quests.quests.Quest;
 

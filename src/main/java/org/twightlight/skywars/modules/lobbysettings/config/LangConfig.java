@@ -81,7 +81,7 @@ public class LangConfig extends YamlWrapper {
                 "&aThe scoreboard has been hidden!",
                 "&9&l-------------------------------------------"
         ));
-        yml.addDefault("lobbysettings.scoreboard.usage", "&6/lobbysettings scoreboard <on/off> &f- &7Toggle scoreboard.");
+        yml.addDefault("lobbysettings.scoreboard.usage", "&6/lobbysettings scoreboard <on/off> &f- &7Toggle scoreboard visibility.");
 
         yml.addDefault("lobbysettings.particles.on", list(
                 "&9&l-------------------------------------------",
@@ -94,7 +94,7 @@ public class LangConfig extends YamlWrapper {
                 "&aParticles has been hidden!",
                 "&9&l-------------------------------------------"
         ));
-        yml.addDefault("lobbysettings.particles.usage", "&6/lobbysettings particles <on/off> &f- &7Toggle particles.");
+        yml.addDefault("lobbysettings.particles.usage", "&6/lobbysettings particles <on/off> &f- &7Toggle particles visibility.");
 
         yml.addDefault("lobbysettings.chat.on", list(
                 "&9&l-------------------------------------------",
@@ -107,7 +107,34 @@ public class LangConfig extends YamlWrapper {
                 "&aChat has been hidden!",
                 "&9&l-------------------------------------------"
         ));
-        yml.addDefault("lobbysettings.chat.usage", "&6/lobbysettings chat <on/off> &f- &7Toggle chat.");
+        yml.addDefault("lobbysettings.chat.usage", "&6/lobbysettings chat <on/off> &f- &7Toggle chat visibility.");
+
+        yml.addDefault("lobbysettings.players.on", list(
+                "&9&l-------------------------------------------",
+                "&aPlayers are now visible.!",
+                "&9&l-------------------------------------------"
+        ));
+
+        yml.addDefault("lobbysettings.players.off", list(
+                "&9&l-------------------------------------------",
+                "&aPlayers has been hidden!",
+                "&9&l-------------------------------------------"
+        ));
+        yml.addDefault("lobbysettings.players.usage", "&6/lobbysettings players <on/off> &f- &7Toggle players visibility.");
+
+        yml.addDefault("lobbysettings.blood.on", list(
+                "&9&l-------------------------------------------",
+                "&aBlood are now visible.!",
+                "&9&l-------------------------------------------"
+        ));
+
+        yml.addDefault("lobbysettings.blood.off", list(
+                "&9&l-------------------------------------------",
+                "&aBlood has been hidden!",
+                "&9&l-------------------------------------------"
+        ));
+        yml.addDefault("lobbysettings.blood.usage", "&6/lobbysettings blood <on/off> &f- &7Toggle blood visibility.");
+
 
         yml.addDefault("lobbysettings.help", list(
                 "§dLobbySettings - Help",

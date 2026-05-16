@@ -6,14 +6,14 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
-import org.twightlight.skywars.menu.shop.SoulWellMenu;
-import org.twightlight.skywars.nms.Sound;
+import org.twightlight.skywars.nms.enums.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -43,8 +43,12 @@ public class RollSoulWellMenu extends UpdatablePlayerMenu {
         this.list = new ArrayList<>(rolls);
         this.rewards = new ArrayList<>();
         this.itemMap = new HashMap<>();
-        for (VisualCosmetic cosmetic : CosmeticServer.SKYWARS.listCosmetics()) {
-            if (cosmetic.getType() == CosmeticType.SKYWARS_KIT || cosmetic.getType() == CosmeticType.SKYWARS_PERK || cosmetic.getType() == CosmeticType.SKYWARS_CAGE) {
+        for (VisualCosmetic cosmetic : VisualCosmetic.listAll()) {
+            VisualCosmeticType vType = cosmetic.getVisualType();
+            if (vType == VisualCosmeticType.CAGE || vType == VisualCosmeticType.BALLOON
+                    || vType == VisualCosmeticType.TRAIL || vType == VisualCosmeticType.KILL_EFFECT
+                    || vType == VisualCosmeticType.KILL_MESSAGE || vType == VisualCosmeticType.DEATH_CRY
+                    || vType == VisualCosmeticType.SPRAY || vType == VisualCosmeticType.VICTORY_DANCE) {
                 if (cosmetic.canBeFoundInBox(player)) {
                     rewards.add(cosmetic);
                     itemMap.put(cosmetic.getIcon(), cosmetic);

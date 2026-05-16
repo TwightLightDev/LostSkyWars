@@ -2,7 +2,7 @@ package org.twightlight.skywars.bungee.server;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.bungee.Bungee;
 import org.twightlight.skywars.bungee.server.balancer.BaseBalancer;
 import org.twightlight.skywars.bungee.server.balancer.server.ArenaServer;
@@ -12,7 +12,7 @@ import org.twightlight.skywars.bungee.server.balancer.type.LeastConnection;
 import org.twightlight.skywars.bungee.server.balancer.type.MostConnection;
 import org.twightlight.skywars.bungee.server.listener.ServerListener;
 import org.twightlight.skywars.bungee.utils.BungeeConfig;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

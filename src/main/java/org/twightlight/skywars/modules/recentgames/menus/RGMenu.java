@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.twightlight.skywars.modules.api.menus.ModulesMenu;
 import org.twightlight.skywars.modules.api.menus.ModulesMenuHolder;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class RGMenu extends ModulesMenu {
 

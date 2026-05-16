@@ -1,9 +1,8 @@
 package org.twightlight.skywars.modules.quests;
 
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
-import org.twightlight.skywars.modules.boosters.commands.BoostersCommand;
 import org.twightlight.skywars.modules.quests.commands.QuestsCommand;
 import org.twightlight.skywars.modules.quests.config.LangConfig;
 import org.twightlight.skywars.modules.quests.config.MenuConfig;

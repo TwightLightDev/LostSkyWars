@@ -3,7 +3,7 @@ package org.twightlight.skywars.listeners.player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.twightlight.skywars.setup.InventoryHolder;
+import org.twightlight.skywars.setup.api.InventoryHolder;
 
 public class InventoryCloseListener implements Listener {
     @EventHandler

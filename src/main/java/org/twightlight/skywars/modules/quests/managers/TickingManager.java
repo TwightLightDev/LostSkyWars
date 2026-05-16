@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules.quests.managers;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.quests.Quests;
 import org.twightlight.skywars.modules.quests.User;

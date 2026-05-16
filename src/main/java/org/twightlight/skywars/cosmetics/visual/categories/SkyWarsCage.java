@@ -20,16 +20,18 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.cosmetics.visual.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.*;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.hook.PacketEventsHook;
-import org.twightlight.skywars.hook.worldedit.WorldEditHook;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
+import org.twightlight.skywars.integration.worldedit.WorldEditIntegration;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.*;
@@ -211,7 +213,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                                 (int) loc.getY(),
                                 (int) loc.getZ()), id);
 
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
+                PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
             }
         }
 
@@ -269,7 +271,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                                         (int) loc.getY(),
                                         (int) loc.getZ()), id);
 
-                        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
+                        PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
                     }
                 }
             }
@@ -539,7 +541,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
             for (Location down : downs) {
                 WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                         new Vector3i((int) down.getX(), (int) down.getY(), (int) down.getZ()), id);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+                PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
             }
 
             for (int i = 1; i < 4; ++i) {
@@ -548,7 +550,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                 for (Location upper : uppers) {
                     WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                             new Vector3i((int) upper.getX(), (int) upper.getY(), (int) upper.getZ()), id);
-                    PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+                    PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
                 }
             }
 
@@ -557,7 +559,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
             for (Location down : downs) {
                 WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                         new Vector3i((int) down.getX(), (int) down.getY(), (int) down.getZ()), id);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+                PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
             }
         } else {
             for (double y = 0.0D; y <= 4.0D; ++y) {
@@ -567,7 +569,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                             Location loc = location.clone().add(x, y, z);
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                                     new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
-                            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+                            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
                         }
                     }
                 }
@@ -593,7 +595,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                             Location loc = location.clone().add(x, y, z);
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                                     new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
-                            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
+                            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
                         }
                     }
                 }
@@ -606,7 +608,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                             Location loc = location.clone().add(x, y, z);
                             WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                                     new Vector3i((int) loc.getX(), (int) loc.getY(), (int) loc.getZ()), id);
-                            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
+                            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(p, packet);
                         }
                     }
                 }
@@ -632,7 +634,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
                 height = 4;
             }
 
-            WorldEditHook.getHelper().removeRegion(location, radius, height);
+            WorldEditIntegration.getHelper().removeRegion(location, radius, height);
             return;
         }
         if (big) {

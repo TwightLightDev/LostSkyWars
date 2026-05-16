@@ -3,12 +3,13 @@ package org.twightlight.skywars.listeners.skywars;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillMessage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.PlayerUtils;
+import org.twightlight.skywars.utils.player.PlayerUtils;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -19,7 +20,9 @@ public class SkyWarsDeath implements Listener {
         if (e.getKiller() == null) return;
         Account account = Database.getInstance().getAccount(e.getKiller().getUniqueId());
         if (account == null) {return;}
-        VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLMESSAGE, 1);
+
+        int selectedKmId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.KILL_MESSAGE.getSelectionColumn());
+        VisualCosmetic cos = VisualCosmetic.findByTypeAndId(VisualCosmeticType.KILL_MESSAGE, selectedKmId);
         if (cos instanceof SkyWarsKillMessage) {
             SkyWarsKillMessage cos1 = (SkyWarsKillMessage) cos;
             SkyWarsPlayerDeathEvent.SkyWarsDeathCause cause = e.getCause();
@@ -68,7 +71,9 @@ public class SkyWarsDeath implements Listener {
                     break;
             }
         }
-        VisualCosmetic cos1 = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_KILLEFFECT, 1);
+
+        int selectedKeId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.KILL_EFFECT.getSelectionColumn());
+        VisualCosmetic cos1 = VisualCosmetic.findByTypeAndId(VisualCosmeticType.KILL_EFFECT, selectedKeId);
         if (cos1 instanceof SkyWarsKillEffect) {
             SkyWarsKillEffect cos2 = (SkyWarsKillEffect) cos1;
             cos2.execute(e.getKiller(), e.getPlayer(), e.getPlayer().getLocation());

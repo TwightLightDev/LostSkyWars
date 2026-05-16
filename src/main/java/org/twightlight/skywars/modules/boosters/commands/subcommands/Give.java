@@ -10,7 +10,7 @@ import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.boosters.boosters.Booster;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
-import org.twightlight.skywars.utils.StringCheckerUtils;
+import org.twightlight.skywars.utils.string.StringCheckerUtils;
 
 import java.util.stream.Collectors;
 

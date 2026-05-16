@@ -10,7 +10,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
@@ -20,11 +21,11 @@ import org.twightlight.skywars.menu.api.PagedPlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
-import org.twightlight.skywars.nms.Sound;
+import org.twightlight.skywars.nms.enums.Sound;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.setup.ChatSession;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.setup.api.ChatSession;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +38,6 @@ public class KillEffectsMenu extends PagedPlayerMenu {
     public void onInventoryClick(InventoryClickEvent evt) {
         if (evt.getInventory().equals(getCurrentInventory())) {
             evt.setCancelled(true);
-
 
             if (evt.getWhoClicked() instanceof Player && evt.getWhoClicked().equals(player)) {
                 ItemStack item = evt.getCurrentItem();
@@ -92,7 +92,7 @@ public class KillEffectsMenu extends PagedPlayerMenu {
                                 return;
                             }
 
-                            if (account.getInt("coins") < cos.getCoins()) {
+                            if (account.getCoins() < cos.getCoins()) {
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("enoughcoins").replace("{name}", cos.getRawName())));
                                 return;
                             }
@@ -102,15 +102,15 @@ public class KillEffectsMenu extends PagedPlayerMenu {
                         }
 
                         Sound.NOTE_PLING.play(player, 1.0F, 1.0F);
-                        if (account.hasSelected(cos)) {
+                        if (cos.selected(account)) {
                             player.sendMessage(StringUtils.formatColors(config.getAsString("deselect").replace("{name}", cos.getRawName())));
-                            account.setSelected(cos.getServer(), cos.getType(), 1, 0);
+                            account.getSelectedContainer().setGlobalSelection(cos.getVisualType().getSelectionColumn(), 0);
                             new KillEffectsMenu(player, order, filter, searchQuery);
                             return;
                         }
 
                         player.sendMessage(StringUtils.formatColors(config.getAsString("select").replace("{name}", cos.getRawName())));
-                        account.setSelected(cos);
+                        account.getSelectedContainer().setGlobalSelection(cos.getVisualType().getSelectionColumn(), cos.getId());
                         new KillEffectsMenu(player, order, filter, searchQuery);
                     } else {
                         ConfigAction action = actions.get(item);
@@ -159,10 +159,10 @@ public class KillEffectsMenu extends PagedPlayerMenu {
 
         Account account = Database.getInstance().getAccount(player.getUniqueId());
         List<ItemStack> items = new ArrayList<>();
-        List<VisualCosmetic> cosmetics = CosmeticServer.SKYWARS.getByType(CosmeticType.SKYWARS_KILLEFFECT);
+        List<VisualCosmetic> cosmetics = VisualCosmetic.listByType(VisualCosmeticType.KILL_EFFECT);
         order.accept(cosmetics);
         cosmetics = filter.accept(cosmetics, player);
-        cosmetics = cosmetics.stream().filter(cos -> cos.getRawName().toLowerCase().startsWith(searchQuery)).collect(Collectors.toList());
+        cosmetics = cosmetics.stream().filter(c -> c.getRawName().toLowerCase().startsWith(searchQuery)).collect(Collectors.toList());
         for (VisualCosmetic c : cosmetics) {
             SkyWarsKillEffect cos = (SkyWarsKillEffect) c;
             String rarity = cos.getRarity().getName();
@@ -171,22 +171,22 @@ public class KillEffectsMenu extends PagedPlayerMenu {
             if (!has) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config
-                        .getAsStringArray(cos.canBeSold() ? account.getInt("coins") < cos.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
+                        .getAsStringArray(cos.canBeSold() ? account.getCoins() < cos.getCoins() ? "description-enoughcoins" : "description-purchase" : "description-unavailable")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", cos.getRawName()).replace("{rarity}", rarity).replace("{price}", StringUtils.formatNumber(cos.getCoins())));
                 }
-                icon = cos.getIcon("§c", lore.toArray(new String[lore.size()]));
-            } else if (account.hasSelected(cos)) {
+                icon = cos.getIcon("c", lore.toArray(new String[lore.size()]));
+            } else if (cos.selected(account)) {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-selected")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", cos.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = cos.getIcon("§a", lore.toArray(new String[lore.size()]));
+                icon = cos.getIcon("a", lore.toArray(new String[lore.size()]));
             } else {
                 List<String> lore = new ArrayList<>();
                 for (String string : config.getAsStringArray("description-unlocked")) {
                     lore.add(StringUtils.formatColors(string).replace("{name}", cos.getRawName()).replace("{rarity}", rarity));
                 }
-                icon = cos.getIcon("§a", lore.toArray(new String[lore.size()]));
+                icon = cos.getIcon("a", lore.toArray(new String[lore.size()]));
             }
 
             items.add(icon);
@@ -197,7 +197,7 @@ public class KillEffectsMenu extends PagedPlayerMenu {
             if (entry.getKey() >= 0 && entry.getKey() < (config.getRows() * 9)) {
                 String stack = entry.getValue().getStack();
 
-                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getInt("coins")));
+                stack = stack.replace("{coins}", StringUtils.formatNumber(account.getCoins()));
 
                 ItemStack item = BukkitUtils.deserializeItemStack(stack);
                 this.removeSlotsWith(item, entry.getKey());
@@ -217,16 +217,16 @@ public class KillEffectsMenu extends PagedPlayerMenu {
     private static List<String> getLore(Order order, Filter filter) {
         List<String> lore = new ArrayList<>();
         lore.add("&e&lFilter");
-        lore.add("{color}➤ ALL".replace("{color}", filter == Filter.ALL ? "&a" : "&7"));
-        lore.add("{color}➤ OWNED ONLY".replace("{color}", filter == Filter.OWNED ? "&a" : "&7"));
-        lore.add("{color}➤ NOT OWNED ONLY".replace("{color}", filter == Filter.NOT_OWNED ? "&a" : "&7"));
+        lore.add("{color} ALL".replace("{color}", filter == Filter.ALL ? "&a" : "&7"));
+        lore.add("{color} OWNED ONLY".replace("{color}", filter == Filter.OWNED ? "&a" : "&7"));
+        lore.add("{color} NOT OWNED ONLY".replace("{color}", filter == Filter.NOT_OWNED ? "&a" : "&7"));
         lore.add("");
         lore.add("&e&lOrder");
-        lore.add("{color}➤ NONE".replace("{color}", order == Order.NONE ? "&a" : "&7"));
-        lore.add("{color}➤ ALPHABETICALLY".replace("{color}", order == Order.FROM_A_TO_Z ? "&a" : "&7"));
-        lore.add("{color}➤ REVERSED ALPHABETICALLY".replace("{color}", order == Order.FROM_Z_TO_A ? "&a" : "&7"));
-        lore.add("{color}➤ RARITY".replace("{color}", order == Order.RARITY ? "&a" : "&7"));
-        lore.add("{color}➤ REVERSED RARITY".replace("{color}", order == Order.RARITY_REVERSED ? "&a" : "&7"));
+        lore.add("{color} NONE".replace("{color}", order == Order.NONE ? "&a" : "&7"));
+        lore.add("{color} ALPHABETICALLY".replace("{color}", order == Order.FROM_A_TO_Z ? "&a" : "&7"));
+        lore.add("{color} REVERSED ALPHABETICALLY".replace("{color}", order == Order.FROM_Z_TO_A ? "&a" : "&7"));
+        lore.add("{color} RARITY".replace("{color}", order == Order.RARITY ? "&a" : "&7"));
+        lore.add("{color} REVERSED RARITY".replace("{color}", order == Order.RARITY_REVERSED ? "&a" : "&7"));
         lore.add("");
         lore.add("&eLeft-click to switch Filter.");
         lore.add("&eRight-click to switch Order.");

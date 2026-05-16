@@ -6,13 +6,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.commands.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.setup.InventoryHolder;
+import org.twightlight.skywars.setup.api.InventoryHolder;
 
 public class InventoryClickListener extends Listeners {
 

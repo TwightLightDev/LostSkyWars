@@ -2,9 +2,9 @@ package org.twightlight.skywars.cosmetics.visual.assets.balloons;
 
 import org.bukkit.Location;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsBalloon;
-import org.twightlight.skywars.nms.BalloonEntity;
+import org.twightlight.skywars.nms.abstracts.BalloonEntity;
 import org.twightlight.skywars.nms.NMS;
-import org.twightlight.skywars.utils.MinecraftVersion;
+import org.twightlight.skywars.utils.bukkit.MinecraftVersion;
 
 import java.util.Collections;
 import java.util.List;

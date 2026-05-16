@@ -4,15 +4,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.api.server.SkyWarsState;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.balloons.Balloon;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsBalloon;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsCage;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.List;

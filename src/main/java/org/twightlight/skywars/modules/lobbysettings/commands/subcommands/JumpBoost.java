@@ -8,7 +8,7 @@ import org.twightlight.skywars.modules.api.ModulesUser;
 import org.twightlight.skywars.modules.api.cmds.SubCommand;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
-import org.twightlight.skywars.utils.StringCheckerUtils;
+import org.twightlight.skywars.utils.string.StringCheckerUtils;
 
 public class JumpBoost extends SubCommand {
     public JumpBoost(Permission permission) {

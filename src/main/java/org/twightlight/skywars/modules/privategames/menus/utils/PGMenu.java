@@ -3,7 +3,7 @@ package org.twightlight.skywars.modules.privategames.menus.utils;
 import org.bukkit.Bukkit;
 import org.twightlight.skywars.modules.api.menus.ModulesMenu;
 import org.twightlight.skywars.modules.api.menus.ModulesMenuHolder;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class PGMenu extends ModulesMenu {
 

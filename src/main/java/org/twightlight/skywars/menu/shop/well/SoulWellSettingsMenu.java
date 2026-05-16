@@ -13,9 +13,8 @@ import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
 import org.twightlight.skywars.config.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
-import org.twightlight.skywars.menu.shop.SoulWellMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,16 +42,16 @@ public class SoulWellSettingsMenu extends PlayerMenu {
                     if (action != null && !action.getType().equals("NOTHING")) {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
-                            int rolls = account.getContainer("account").get("sw_wellroll").getAsInt();
+                            int rolls = account.getWellRoll();
 
                             if (menu.equalsIgnoreCase("increase")) {
                                 if (rolls < 5) {
-                                    account.getContainer("account").get("sw_wellroll").set(rolls + 1);
+                                    account.getProfile().get("well_roll").set(rolls + 1);
                                     new SoulWellSettingsMenu(player, back);
                                 }
                             } else if (menu.equalsIgnoreCase("decrease")) {
                                 if (rolls > 1) {
-                                    account.getContainer("account").get("sw_wellroll").set(rolls - 1);
+                                    account.getProfile().get("well_roll").set(rolls - 1);
                                     new SoulWellSettingsMenu(player, back);
                                 }
                             } else if (menu.equalsIgnoreCase("soulwell")) {
@@ -74,7 +73,7 @@ public class SoulWellSettingsMenu extends PlayerMenu {
     public SoulWellSettingsMenu(Player player, boolean back) {
         super(player, config.getTitle(), config.getRows());
         Account account = Database.getInstance().getAccount(player.getUniqueId());
-        int rolls = account.getContainer("account").get("sw_wellroll").getAsInt();
+        int rolls = account.getWellRoll();
         this.back = back;
 
         for (Map.Entry<Integer, ConfigItem> entry : config.getItems().entrySet()) {

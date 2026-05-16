@@ -14,12 +14,12 @@ import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
 import org.twightlight.skywars.config.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
-import org.twightlight.skywars.nms.Sound;
+import org.twightlight.skywars.nms.enums.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.systems.delivery.Delivery;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
-import org.twightlight.skywars.utils.TimeUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
+import org.twightlight.skywars.utils.player.TimeUtils;
 
 import java.util.*;
 

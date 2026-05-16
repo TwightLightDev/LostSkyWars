@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MapHelper extends org.twightlight.skywars.nms.MapHelper {
+public class MapHelper extends org.twightlight.skywars.nms.abstracts.MapHelper {
     static final int DEFAULT_STARTING_ID = 8000;
 
     private static final Field ENTITY_ID = NMS.findField(Entity.class, "id");

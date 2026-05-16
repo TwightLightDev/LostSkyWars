@@ -17,15 +17,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.SkyWarsTeam;
 import org.twightlight.skywars.commands.sw.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.MinecraftVersion;
+import org.twightlight.skywars.utils.bukkit.MinecraftVersion;
 
 @SuppressWarnings("deprecation")
 public class EntityListener implements Listener {

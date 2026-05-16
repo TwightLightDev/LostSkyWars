@@ -20,7 +20,7 @@ import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.fun.customitems.FunItem;
 import org.twightlight.skywars.fun.customitems.armorequip.ArmorEquipEvent;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.util.ArrayList;
 import java.util.EventObject;

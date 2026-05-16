@@ -4,9 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class CosmeticsCommand extends SubCommand {
 
@@ -25,12 +26,21 @@ public class CosmeticsCommand extends SubCommand {
         if (action.equalsIgnoreCase("give")) {
             if (args.length < 4) {
                 sendHelp(sender);
+                return;
             }
             try {
-                VisualCosmetic cosmetic = VisualCosmetic.findFrom(CosmeticServer.SKYWARS, CosmeticType.valueOf(args[1]), 1, args[2]);
+                VisualCosmeticType type = VisualCosmeticType.valueOf(args[1]);
+                int cosmeticId = Integer.parseInt(args[2]);
+                VisualCosmetic cosmetic = VisualCosmetic.findByTypeAndId(type, cosmeticId);
+                if (cosmetic == null) {
+                    sender.sendMessage(StringUtils.formatColors("&cCosmetic not found for type " + args[1] + " id " + args[2]));
+                    return;
+                }
                 cosmetic.give(Database.getInstance().getAccount(Bukkit.getPlayer(args[3]).getUniqueId()));
                 sender.sendMessage(StringUtils.formatColors("&aSuccessfully gave a cosmetic to " + args[3]));
-            } catch (NullPointerException | NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
+                sendHelp(sender);
+            } catch (NullPointerException e) {
                 sendHelp(sender);
             }
 

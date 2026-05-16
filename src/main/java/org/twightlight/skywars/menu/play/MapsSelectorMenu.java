@@ -23,7 +23,7 @@ import org.twightlight.skywars.menu.api.UpdatablePlayerPagedMenu;
 import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,26 +71,25 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                 }
                             } else if (menu.equalsIgnoreCase("favorites")) {
                                 if (can) {
-                                    List<String> favorites = new ArrayList<>();
-                                    for (Object object : account.getContainer("skywars").get("favorites").getAsJsonArray()) {
-                                        if (object instanceof String) {
-                                            boolean canPlay = arenaMap.containsKey((String) object) && !arenaMap.get((String) object).isEmpty();
-                                            if (Core.MODE != CoreMode.MULTI_ARENA) {
-                                                canPlay = getBungeeMap().containsKey((String) object) && getBungeeMap().get((String) object) > 0;
-                                            }
+                                    List<String> favorites = account.getSelectedContainer().getFavorites();
+                                    List<String> playable = new ArrayList<>();
+                                    for (String fav : favorites) {
+                                        boolean canPlay = arenaMap.containsKey(fav) && !arenaMap.get(fav).isEmpty();
+                                        if (Core.MODE != CoreMode.MULTI_ARENA) {
+                                            canPlay = getBungeeMap().containsKey(fav) && getBungeeMap().get(fav) > 0;
+                                        }
 
-                                            if (canPlay) {
-                                                favorites.add((String) object);
-                                            }
+                                        if (canPlay) {
+                                            playable.add(fav);
                                         }
                                     }
 
-                                    if (favorites.isEmpty()) {
+                                    if (playable.isEmpty()) {
                                         return;
                                     }
 
                                     if (Core.MODE == CoreMode.MULTI_ARENA) {
-                                        for (Arena server : this.arenaMap.get(favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())))) {
+                                        for (Arena server : this.arenaMap.get(playable.get(ThreadLocalRandom.current().nextInt(playable.size())))) {
                                             if (server.getState().canJoin() && server.getAlive() < server.getMaxPlayers()) {
                                                 player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
                                                 player.closeInventory();
@@ -105,10 +104,10 @@ public class MapsSelectorMenu extends UpdatablePlayerPagedMenu {
                                             }
                                         }
                                     } else {
-                                        CoreLobbies.writeMinigame(player, groupId, favorites.get(ThreadLocalRandom.current().nextInt(favorites.size())));
+                                        CoreLobbies.writeMinigame(player, groupId, playable.get(ThreadLocalRandom.current().nextInt(playable.size())));
                                     }
 
-                                    favorites.clear();
+                                    playable.clear();
                                 }
                             } else if (menu.equalsIgnoreCase("play")) {
                                 new PlayMenu(player, groupId);

@@ -2,8 +2,8 @@ package org.twightlight.skywars.commands.sw;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.commands.SubCommand;
 

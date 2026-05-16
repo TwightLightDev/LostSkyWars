@@ -6,7 +6,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.commands.SubCommand;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;

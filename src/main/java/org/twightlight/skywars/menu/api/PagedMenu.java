@@ -3,7 +3,7 @@ package org.twightlight.skywars.menu.api;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.*;
 import java.util.Map.Entry;

@@ -5,12 +5,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.setup.ChatSession;
-import org.twightlight.skywars.setup.ContentsMenu;
-import org.twightlight.skywars.setup.InventoryHolder;
-import org.twightlight.skywars.setup.Menu;
+import org.twightlight.skywars.setup.api.ChatSession;
+import org.twightlight.skywars.setup.api.ContentsMenu;
+import org.twightlight.skywars.setup.api.InventoryHolder;
+import org.twightlight.skywars.setup.api.Menu;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.util.Arrays;
 import java.util.HashSet;

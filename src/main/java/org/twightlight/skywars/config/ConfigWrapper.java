@@ -4,10 +4,10 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.jline.internal.InputStreamReader;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.utils.FileUtils;
+import org.twightlight.skywars.utils.file.FileUtils;
 
 import java.io.*;
 import java.util.*;
@@ -22,7 +22,7 @@ public class ConfigWrapper {
         this.file = new File(path + "/" + name + ".yml");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            InputStream in = SkyWars.getInstance().getResource(name + ".yml");
+            InputStream in = SkyWars.getInstance().getResource(path + "/" + name + ".yml");
             if (in != null) {
                 FileUtils.copyFile(in, file);
             } else {

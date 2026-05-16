@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import static org.twightlight.skywars.listeners.player.PlayerInteractListener.BALLOONS;
 

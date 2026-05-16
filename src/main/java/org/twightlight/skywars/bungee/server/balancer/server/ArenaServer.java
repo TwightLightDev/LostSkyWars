@@ -1,6 +1,6 @@
 package org.twightlight.skywars.bungee.server.balancer.server;
 
-import org.twightlight.skywars.api.server.SkyWarsState;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 
 public class ArenaServer extends BungeeServer {
 

@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.api.cmds.SubCommand;
@@ -44,6 +44,10 @@ public class LobbySettingsCommand extends Command {
         registerSubCommand(new Particles(new Permission("lobbysettings.particles.toggle")));
 
         registerSubCommand(new Chat(new Permission("lobbysettings.chat.toggle")));
+
+        registerSubCommand(new Players(new Permission("lobbysettings.players.toggle")));
+
+        registerSubCommand(new Blood(new Permission("lobbysettings.blood.toggle")));
 
         registerSubCommand(new Help(null));
 

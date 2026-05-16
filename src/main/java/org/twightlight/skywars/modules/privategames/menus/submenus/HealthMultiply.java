@@ -7,7 +7,7 @@ import org.twightlight.skywars.modules.api.menus.Item;
 import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.menus.MainMenu;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 public class HealthMultiply {
     public static void open(User p) {

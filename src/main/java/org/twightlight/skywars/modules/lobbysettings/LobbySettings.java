@@ -1,7 +1,7 @@
 package org.twightlight.skywars.modules.lobbysettings;
 
 import org.bukkit.Bukkit;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.lobbysettings.commands.LobbySettingsCommand;

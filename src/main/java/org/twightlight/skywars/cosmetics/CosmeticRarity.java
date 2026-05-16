@@ -1,7 +1,7 @@
 package org.twightlight.skywars.cosmetics;
 
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

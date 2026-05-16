@@ -1,14 +1,15 @@
 package org.twightlight.skywars;
 
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.bungee.Core;
 import org.twightlight.skywars.bungee.CoreMode;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.LanguageWriter;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.file.LanguageWriter;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -33,16 +34,11 @@ public class Language {
 
     public static boolean options$ranks$tab = true;
     public static boolean options$ranks$chat = true;
-    public static boolean options$ranked$freekitsandperks = true;
     public static int options$ranked$required$level = 1;
     public static boolean options$game$default_kit = true;
     public static String options$ranked$required$message = "§cYou need at least SkyWars Level 1 to play ranked SkyWars! Your Level can be seen on your xp bar in lobbies.";
     public static String options$mode$solo = "Solo";
     public static String options$mode$doubles = "Doubles";
-    public static String options$type$normal = "§aNormal";
-    public static String options$type$insane = "§cInsane";
-    public static String options$type$ranked = "§6Ranked";
-    public static String options$type$duels = "§6Duels";
     public static String options$rarity$common = "§7COMMON";
     public static String options$rarity$uncommon = "§aUNCOMMON";
     public static String options$rarity$rare = "§9RARE";
@@ -82,23 +78,6 @@ public class Language {
     public static String lobby$hotbar$shop$name = "§aShop §7(Right Click)";
     public static String lobby$hotbar$players$name_i = "§fPlayers: §cHidden §7(Right Click)";
     public static String lobby$hotbar$players$name_v = "§fPlayers: §aVisible §7(Right Click)";
-
-    public static String lobby$npcs$play$solo$skin_value =
-            "eyJ0aW1lc3RhbXAiOjE1MTYxMjkzMjM0MzQsInByb2ZpbGVJZCI6IjIzZjFhNTlmNDY5YjQzZGRiZGI1MzdiZmVjMTA0NzFmIiwicHJvZmlsZU5hbWUiOiIyODA3Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS85NDk1MmZjZWJjMjM4MTVkNWQzNWE5ZjQzNGEzNWM2Y2RiODdiOTZmYjkzZTY4N2FmZjljZGIxZmE5ZWQzIn19fQ==";
-    public static String lobby$npcs$play$solo$skin_signature =
-            "a408vXEyIRgDZ+bY5ZW/cmhqd1N0VTKp0mc0Px46mwQ0bJWei7sKmlvh218uaiUmpPTJCLVlWPfimZVa59HDExeZKqaTZIIW8crwqw/KAcgZo8tDzIPg4x7/f0CMju8WL4yfHzLX8ny8ZNeXhP6gKhHyMF7AcL4gYlEBhaE+6gDPw7GHbJM08q38UvGzFQfmduv/0zT013P2uKFyAGgHpmSwlxPmG61vWscYrN55cd6qj8uoXY+OQf1CEQqeWuypm6POED+dYtHl4r1bMZMRCSX6345lM7o6TudlwND2HF+pUe0rpN8vRGelcvhC84yRUrKuyZWVFvA3PHgrNVh8s8BXR1GlbZ4r47PuPnb2jcTF3qFWKuHhcThYI5x1uMnLfYSeAtadt9dT/SiwgCZSk6SUQ1Tt3wSv/eh0ZVnFoEX9tmVEzhQqG8fekaGh5nYp6cyr8Y6jxTM1cnwST6b9slWFU3W2daTOCW4llnfIV2ghhGF6XhwuGxQU89y+4JVoUcdH4eMyEmT8K6526cREAnYC/mSH1vDU2gLVotBAIrfqs2gCIsANaaaO+Bv2T2r/zqazMfw/Dzq/QqzOxQomaHzX2LZrlCO9ozjIPXz5WkiUpMyj9LVxDiQ8ju+9MJTpP9O7cCjJg2go2Np+QvkaSZ38K3uR6Zikgn1rQrAg9i4=";
-    public static String lobby$npcs$play$team$skin_value =
-            "eyJ0aW1lc3RhbXAiOjE1NTQ1MjUzNjc1NTksInByb2ZpbGVJZCI6IjVkMjRiYTBiMjg4YzQyOTM4YmExMGVjOTkwNjRkMjU5IiwicHJvZmlsZU5hbWUiOiIxbnYzbnQxdjN0NGwzbnQiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzMyNjlmNzdjNjdjOGIwMDE3MTkwOWZlYmE2ZjAxMzBmOTkwY2ZhNDA2MjZkZjE3ZWY1NTQwNWFiYzE3YTFlMTEifX19";
-    public static String lobby$npcs$play$team$skin_signature =
-            "DvyPAp8NVAwNHGATU0TqS9O8zh67u1iv9xkQ0V1c3lf5QNBeWmI/xKdMJ1jiFxEN3NCqNne6bHttsCUcDPxtwSS5M4DXIuOIf/pIlWKxh9SXqyAbeM0w68WOYbo5CWrhrO9q3Vgt/ahufDJl/HTiLCX1J02EFcQWF16EEke8cTOi0C6zPYz5a6AE4dMTH1SWHXGyF+xaD7YBioODQcODbkwr3Ku8s12zqIjLRRUwwj1KHTqVOlSyr46atb30KMWmlHSSTv4Q+dAUYn/g94kDoElyiyBuYTC6/VQJZJSFVZl44L+DP5y5kxtcU6anfRJa45ZnkBcPwgnOUWFPmWxaSNZz0ZnT6deJrsR4sZtFzSvXU7x4ThNNVr13+uS71gi7G8fkkCKZoYSGS/5f1AMNbI2RjfuYLEwrRJcqTIcAGIt2h9cLOQD6cTpl2/IiO4Obs/ckVN28KiZHQksyK+5ASSvNafNQMoFLOUgMrw39RuVQhhcxEid2iBMGipaw7Ri6OHky+GuAp+YkgGEjNV9CslP4JIDpLm8f0ecbv8OPkbpphk2FrQo6RUJmjWnmSiLdkGG3rCTnGNAjKEHdYxlKqmIBaajLpreriBB+xL5dXXNGPY55ZSZSsNfaJKNBQzyRdpmeQVz48P0hipCckwQ+Q68r5pWwqAyDsbtXzGR+Fmg=";
-    public static String lobby$npcs$ranked$skin_value =
-            "ewogICJ0aW1lc3RhbXAiIDogMTYyMTQ3NTk1NDcwMCwKICAicHJvZmlsZUlkIiA6ICJmMTA0NzMxZjljYTU0NmI0OTkzNjM4NTlkZWY5N2NjNiIsCiAgInByb2ZpbGVOYW1lIiA6ICJ6aWFkODciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGFlOWYzMGU2NzYxMjJiODdmN2E5MjkxOWNjOTFhNWE3YzBlYjgxNjhkZTVkNmFhZGM2M2ZiNWI2MWJkYzJiMSIKICAgIH0KICB9Cn0=";
-    public static String lobby$npcs$ranked$skin_signature =
-            "DKbvqc84PB9P7gyQqHAeSaURn0zqDR7sDgBgOUAXzHoNsQB3s4zywXFPy8EybZtJr4KZgDj2Ibmps3hOjKIyOL9VrkV1qnxEFQJRaVBnETHwW45msYhr+wuoiRbW4uSBVzZ6ViHmTcdM1bDYv9n5Kxck3dpgxY3+b5+bE+DwdBYqY/7zkLs8Gf/2cWYQBMn/OF9iFxnwMGGupl2qKZ+p/Lj/xRjzIrZ5i7BUMyDCAhj+h+vEMWrZprG4ZBrs2T4tIQySEVKlypm8cNBjaoO9k5SKRW6jVXp7izVOvImFoSBMmzQFsC7/S3jwvcQManoZuGAFcBAi2SKbTxziujEwZkOY732/soArH+k5sJgrBh/9NgIiCk58w1+6+Z8D5KHsTNfMtFT5ROHUp72UBIyHzhNIn9MS5Hb8sZKMDD5JxT3GrfV9M1qYITE7cj16aZ8zG5dKpGow7TMbn0zL+TWUM64r/5SciuebDLlvupAccrTWAT7AeT+fRfeZojPB+mkrasKym7fJuC2ZXY/Wv4BmGvrbIVu35SFlIwsO0RL4I/tKrXTrk+UZyCLQV17doYJAMoVNdMWFfPBRxwPkMQYWp3JCgOcqFLYWXJUc5DIRfEen8MYwk4zPqsNGHYTHPbjdk4e60gyUmC8Y+tf6fm1o/ApJZ9NDeMQ3B8b3akdGueA=";
-    public static String lobby$npcs$duels$skin_value =
-            "eyJ0aW1lc3RhbXAiOjE1Njg2MDQ1NDM3MjMsInByb2ZpbGVJZCI6IjA3NGI4MDlkZjE0MjRiNjM5YjM4ZDRiNWZkODViODI5IiwicHJvZmlsZU5hbWUiOiJzZW5hbG9sIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81NTM1NjU0OTcyNTMwZGRiZTdjMGUxMWIyMjM2Y2MzZDIzYmQzMGNjMzJhMDhhMzFiNWIwMzFmZDQ1NDY0MWU2In19fQ==";
-    public static String lobby$npcs$duels$skin_signature =
-            "GXWTnXIW27vDoGiIQjSlCQXfs56fj9sT5JSeMYB2T+Aj0zTOiQz3LaQEUBG98fPza3WQ5GLxDGa3jMXkK8Rx5DJWr4vuVfwRjtemol5PyOE6r5pjam6qNz0lfVAOW65xqHZjMp//1s+wCk60evfRCOQleQ6xon3iJ1w+tCkP81/TLIxn1g4z9GuPqNfChb4KJv/rr8QM5oMmXyJruDDFb1B4bLg6eMAbeK7H7KkQpEmXpl3aPJUSA4YaJa08CadqNR/LGQiswTfxRKfofk/ivUwJ7WUPVXOYH+Tt9pLSKnnUfH+KO8HGJhnXMSGqJWwPJKnNRE+kcfy+X8Yu3wh0el+u7Fh68XhGLrIh1VJi/hB6oMHKWcH9G+Akbd6ayoVxV7K/ENOetFxakNcom101/d3Ty/Wcxyigm0PE3sayCQv9aguwbZeaHaOdq85VGo1tu17wAFfzun85nLXpDcB0Xm/1+vfL6tk8pp1vBPhlIe7eb56xMTsiZxH1cWhKEL7+wsCMTTgw0RxPsKIsEgcz+N3Yg5l1f/krfBSWzi0sIfVCoVMDr7oLpSfwfHnkjzk3wmu0DsmTJwDWqPq1EW7Ofqm1QqXnwjP37uPx4YtULwntWDNTX05eHB00YYdBDC+Xsk5NHnpOMC+Rk4D/qaGxeAlwt7vyALU/QzLGp50hd4Q=";
     public static String lobby$npcs$deliveryman$skin_value =
             "eyJ0aW1lc3RhbXAiOjE1NzE1OTI3NjkzMjYsInByb2ZpbGVJZCI6ImU0MDE1NTBiZjNkNzRlMThiMzYxNWQzNDNjNTliMjA3IiwicHJvZmlsZU5hbWUiOiJaZWFsb2NrIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hNDAyZDY4MGRhNjZjMmQyNTBiNjVlM2ZlNDZhNzE5YzM1MWFjMzQ2NzhkYTM5NjNmNzcxNjVmYWQzZWY2MzhjIiwibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn19fX0=";
     public static String lobby$npcs$deliveryman$skin_signature =
@@ -119,7 +98,7 @@ public class Language {
     public static boolean lobby$jump_boost$enabled = false;
     public static int lobby$jump_boost$level = 1;
 
-    public static boolean lobby$motd$enabled = true;
+    public static boolean lobby$motd$enabled = false;
     public static String lobby$motd$header = "            §aExample Network §c[1.8-1.13]";
     public static String lobby$motd$footer = "        §aCome here and play the new SkyWars!";
 
@@ -128,13 +107,6 @@ public class Language {
     public static String lobby$tablist$footer = " \n§aRanks, Boosters & MORE! §c§lSTORE.EXAMPLE.NET";
 
     public static String lobby$connecting$party$not_leader = "§cOnly the Party leader can find a match.";
-
-    public static int game$rewards$coins_per_play = 5;
-    public static int game$rewards$coins_per_kill = 5;
-    public static int game$rewards$coins_per_win = 50;
-    public static double game$rewards$exp_per_play = 1.0;
-    public static double game$rewards$exp_per_kill = 5.0;
-    public static double game$rewards$exp_per_win = 10.0;
 
     public static String game$rewards_message$coins_per_play = "&6+{coins} SkyWars Coins Received (Play).";
     public static String game$rewards_message$coins_per_kill = "&6+{coins} SkyWars Coins Received (Kill).";
@@ -363,35 +335,4 @@ public class Language {
         writer.write();
     }
 
-    public static Map<Integer, SkyWarsEvent> getSkyWarsEventTimeline(ArenaGroup group) {
-        Map<Integer, SkyWarsEvent> timeline = new TreeMap<>(Comparator.reverseOrder());
-        if (group.hasTrait("no_timeline")) {
-            return timeline;
-        }
-        int begin;
-        int doom;
-        List<Integer> refills;
-        String groupId = group.getId();
-        if (groupId.contains("insane")) {
-            begin = game$countdown$insane$game;
-            doom = game$countdown$insane$dragon;
-            refills = game$countdown$insane$refills;
-        } else if (groupId.contains("ranked")) {
-            begin = game$countdown$ranked$game;
-            doom = game$countdown$ranked$dragon;
-            refills = game$countdown$ranked$refills;
-        } else {
-            begin = game$countdown$normal$game;
-            doom = game$countdown$normal$dragon;
-            refills = game$countdown$normal$refills;
-        }
-
-        for (Integer integer : refills) {
-            timeline.putIfAbsent(integer, SkyWarsEvent.Refill);
-        }
-        timeline.put(begin, SkyWarsEvent.Begin);
-        timeline.put(doom, SkyWarsEvent.Doom);
-        timeline.put(0, SkyWarsEvent.End);
-        return timeline;
-    }
 }

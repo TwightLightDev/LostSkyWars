@@ -8,15 +8,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
+import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
-import org.twightlight.skywars.setup.ChatSession;
-import org.twightlight.skywars.utils.PlayerUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.setup.api.ChatSession;
+import org.twightlight.skywars.utils.player.PlayerUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public class AsyncPlayerChatListener extends Listeners {
         ArenaGroup group = server != null ? server.getGroup() : null;
 
         if (server != null && group != null && group.hasTrait("no_chat_waiting")
-                && (server.getState().canJoin() || server.getState() == org.twightlight.skywars.api.server.SkyWarsState.STARTING)) {
+                && (server.getState().canJoin() || server.getState() == SkyWarsState.STARTING)) {
             return;
         }
 

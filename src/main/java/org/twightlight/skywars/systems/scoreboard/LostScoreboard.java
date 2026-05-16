@@ -3,7 +3,7 @@ package org.twightlight.skywars.systems.scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 @SuppressWarnings("deprecation")
 public abstract class LostScoreboard {

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

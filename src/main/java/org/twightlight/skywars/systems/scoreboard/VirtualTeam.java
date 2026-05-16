@@ -2,7 +2,7 @@ package org.twightlight.skywars.systems.scoreboard;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class VirtualTeam {
 

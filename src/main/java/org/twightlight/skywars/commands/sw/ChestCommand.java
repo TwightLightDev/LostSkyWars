@@ -11,8 +11,8 @@ import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import static org.twightlight.skywars.listeners.player.PlayerInteractListener.CHEST;
 

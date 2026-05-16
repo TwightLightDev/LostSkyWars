@@ -4,7 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.modules.quests.Quests;
@@ -13,7 +13,7 @@ import org.twightlight.skywars.modules.quests.interfaces.Identifiable;
 import org.twightlight.skywars.modules.quests.interfaces.ProgressGoal;
 import org.twightlight.skywars.modules.quests.interfaces.Refreshable;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.time.Instant;
 import java.time.LocalDate;

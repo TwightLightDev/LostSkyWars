@@ -1,10 +1,10 @@
 package org.twightlight.skywars.config;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

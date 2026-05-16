@@ -1,7 +1,7 @@
 package org.twightlight.skywars.modules.privategames;
 
 import org.bukkit.Bukkit;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;

@@ -2,7 +2,7 @@ package org.twightlight.skywars.player.ranked;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

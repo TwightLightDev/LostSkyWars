@@ -10,7 +10,7 @@ import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.cuboid.SkyWarsCube;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import static org.twightlight.skywars.listeners.player.PlayerInteractListener.WAITING_LOBBY;
 

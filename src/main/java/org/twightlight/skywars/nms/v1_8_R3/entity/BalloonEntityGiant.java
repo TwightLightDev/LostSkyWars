@@ -7,8 +7,8 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.nms.BalloonEntity;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.nms.abstracts.BalloonEntity;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.List;
 import java.util.UUID;

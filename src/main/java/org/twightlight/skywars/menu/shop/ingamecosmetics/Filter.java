@@ -1,7 +1,7 @@
 package org.twightlight.skywars.menu.shop.ingamecosmetics;
 
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 
 import java.util.List;

@@ -15,19 +15,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.hook.PacketEventsHook;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.RenderUtils;
+import org.twightlight.skywars.utils.player.RenderUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -71,14 +71,14 @@ public class SkyWarsSpray extends PreviewableCosmetic {
 
         WrapperPlayServerBlockChange packet = new WrapperPlayServerBlockChange(
                 new Vector3i((int) location.getX(), (int) location.getY(), (int) location.getZ()), id);
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+        PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
 
         int entityId = SpigotReflectionUtil.generateEntityId();
         NMS.getMapHelper().createMap(entityId, Collections.singletonList(player), location.getBlock().getRelative(getBlockFace(location.getYaw())).getLocation(), getBlockFace(location.getYaw()), image);
 
         sessionUUID.get(player.getUniqueId()).addEndConsumers((player1) -> {
             WrapperPlayServerDestroyEntities destroyPacket = new WrapperPlayServerDestroyEntities(entityId);
-            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, destroyPacket);
+            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, destroyPacket);
 
             XMaterial xMaterial1 = XMaterial.AIR;
             MaterialData matdata1 = xMaterial1.parseItem().getData();
@@ -86,7 +86,7 @@ public class SkyWarsSpray extends PreviewableCosmetic {
 
             WrapperPlayServerBlockChange packet1 = new WrapperPlayServerBlockChange(
                     new Vector3i((int) location.getX(), (int) location.getY(), (int) location.getZ()), id1);
-            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet1);
+            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet1);
         });
     }
 

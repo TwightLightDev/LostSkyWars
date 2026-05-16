@@ -20,19 +20,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.killeffects.*;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.hook.citizens.CitizensHook;
-import org.twightlight.skywars.hook.PacketEventsHook;
+import org.twightlight.skywars.integration.citizens.CitizensIntegration;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.io.InputStreamReader;
@@ -74,7 +74,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
             klocation.getChunk().load();
             vlocation.getChunk().load();
 
-            NPC killerNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewKillerNPC");
+            NPC killerNPC = CitizensIntegration.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewKillerNPC");
             killerNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
             killerNPC.setFlyable(true);
 
@@ -83,7 +83,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
             killerNPC.setName("KillEffectsPreviewKillerNPC");
             killerNPC.spawn(klocation);
 
-            NPC victimNPC = CitizensHook.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewVictimNPC");
+            NPC victimNPC = CitizensIntegration.getRegistry().createNPC(EntityType.PLAYER, "KillEffectsPreviewVictimNPC");
             victimNPC.data().setPersistent(NPC.NAMEPLATE_VISIBLE_METADATA, false);
             victimNPC.getOrAddTrait(Gravity.class).gravitate(true);
             victimNPC.setFlyable(true);
@@ -107,8 +107,8 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
                 WrapperPlayServerEntityAnimation action = new WrapperPlayServerEntityAnimation(killerNPC.getEntity().getEntityId(), WrapperPlayServerEntityAnimation.EntityAnimationType.SWING_MAIN_ARM);
                 WrapperPlayServerEntityStatus action1 = new WrapperPlayServerEntityStatus(victimNPC.getEntity().getEntityId(), 3);
 
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action);
-                PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, action1);
+                PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, action);
+                PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, action1);
 
                 Bukkit.getScheduler().runTaskLater(SkyWars.getInstance(), () -> {
                     victimNPC.destroy();

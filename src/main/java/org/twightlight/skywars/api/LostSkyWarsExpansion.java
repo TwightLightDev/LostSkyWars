@@ -14,7 +14,7 @@ import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class LostSkyWarsExpansion extends PlaceholderExpansion {
 

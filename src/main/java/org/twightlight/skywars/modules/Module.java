@@ -2,7 +2,7 @@ package org.twightlight.skywars.modules;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 
 public class Module {

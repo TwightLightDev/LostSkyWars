@@ -13,18 +13,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.Language;
-import org.twightlight.skywars.Logger;
-import org.twightlight.skywars.Logger.Level;
+import org.twightlight.skywars.utils.player.Logger;
+import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.cosmetics.PreviewableCosmetic;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.PreviewableCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.assets.balloons.Balloon;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.hook.PacketEventsHook;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
                         (int) location.getY(),
                         (int) location.getZ()), id);
 
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+        PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
 
         Balloon preview = new Balloon(location,  this, Collections.singletonList(player.getUniqueId()), true);
 
@@ -83,7 +83,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
                             (int) location.getY(),
                             (int) location.getZ()), id1);
 
-            PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet1);
+            PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet1);
         });
     }
 

@@ -1,6 +1,6 @@
 package org.twightlight.skywars.menu.shop.ingamecosmetics;
 
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 
 import java.util.Collections;
 import java.util.Comparator;

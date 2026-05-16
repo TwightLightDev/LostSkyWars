@@ -3,9 +3,12 @@ package org.twightlight.skywars.commands.sw;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.commands.SubCommand;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.kit.Kit;
+import org.twightlight.skywars.cosmetics.kit.KitManager;
 import org.twightlight.skywars.cosmetics.visual.categories.*;
 
 @SuppressWarnings("deprecation")
@@ -25,47 +28,47 @@ public class ReloadCommand extends SubCommand {
         }
 
         if (args[0].equalsIgnoreCase("kits")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsKit.class);
+            VisualCosmetic.unregisterByClass(Kit.class);
 
-            SkyWarsKit.setupKits();
+            KitManager.setupKits();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all kit's cache!"));
         } else if (args[0].equalsIgnoreCase("projectiletrails")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsTrail.class);
+            VisualCosmetic.unregisterByClass(SkyWarsTrail.class);
 
             SkyWarsTrail.setupProjectileTrails();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all projectile trails!"));
         } else if (args[0].equalsIgnoreCase("cages")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsCage.class);
+            VisualCosmetic.unregisterByClass(SkyWarsCage.class);
 
             SkyWarsCage.setupCages();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all cages!"));
         } else if (args[0].equalsIgnoreCase("deathcries")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsDeathCry.class);
+            VisualCosmetic.unregisterByClass(SkyWarsDeathCry.class);
 
             SkyWarsDeathCry.setupDeathCries();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all deathcries!"));
         } else if (args[0].equalsIgnoreCase("killeffects")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsKillEffect.class);
+            VisualCosmetic.unregisterByClass(SkyWarsKillEffect.class);
 
             SkyWarsKillEffect.setupKillEffects();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all killeffects!"));
         } else if (args[0].equalsIgnoreCase("killmessages")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsKillMessage.class);
+            VisualCosmetic.unregisterByClass(SkyWarsKillMessage.class);
 
             SkyWarsKillMessage.setupKM();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all killmessages!"));
         } else if (args[0].equalsIgnoreCase("sprays")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsSpray.class);
+            VisualCosmetic.unregisterByClass(SkyWarsSpray.class);
 
             SkyWarsSpray.setupSprays();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all sprays!"));
         } else if (args[0].equalsIgnoreCase("victorydances")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsVictoryDance.class);
+            VisualCosmetic.unregisterByClass(SkyWarsVictoryDance.class);
 
             SkyWarsVictoryDance.setupVictoryDances();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all victorydances!"));
         } else if (args[0].equalsIgnoreCase("balloons")) {
-            CosmeticServer.SKYWARS.removeByType(SkyWarsBalloon.class);
+            VisualCosmetic.unregisterByClass(SkyWarsBalloon.class);
 
             SkyWarsBalloon.setupBallons();
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully reloaded all balloons!"));

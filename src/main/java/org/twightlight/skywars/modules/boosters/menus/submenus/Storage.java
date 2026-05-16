@@ -8,8 +8,8 @@ import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.menus.utils.BMenu;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.users.ServerUser;
-import org.twightlight.skywars.utils.ItemBuilder;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;

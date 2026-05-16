@@ -7,7 +7,7 @@ import org.twightlight.skywars.modules.privategames.menus.submenus.GameSpeed;
 import org.twightlight.skywars.modules.privategames.menus.submenus.GameTime;
 import org.twightlight.skywars.modules.privategames.menus.submenus.HealthMultiply;
 import org.twightlight.skywars.modules.privategames.menus.utils.PGMenu;
-import org.twightlight.skywars.utils.ItemBuilder;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 public class MainMenu {
     public static void open(User p) {

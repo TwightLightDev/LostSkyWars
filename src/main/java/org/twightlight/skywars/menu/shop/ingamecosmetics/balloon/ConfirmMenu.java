@@ -8,7 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.config.MenuConfig.ConfigAction;
@@ -17,8 +17,8 @@ import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Filter;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.Order;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public class ConfirmMenu extends PlayerMenu {
                                 cosmetic.give(account);
                                 player.sendMessage(StringUtils.formatColors(config.getAsString("buy").replace("{name}", cosmetic.getRawName())));
                                 player.sendMessage(StringUtils.formatColors(config1.getAsString("select").replace("{name}", cosmetic.getRawName())));
-                                account.setSelected(cosmetic);
+                                account.getSelectedContainer().setGlobalSelection(cosmetic.getVisualType().getSelectionColumn(), cosmetic.getId());
                                 player.closeInventory();
                             }
                         } else {

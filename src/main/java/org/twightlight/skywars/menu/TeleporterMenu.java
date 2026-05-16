@@ -13,7 +13,7 @@ import org.twightlight.skywars.config.MenuConfig;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.menu.api.UpdatablePlayerMenu;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,14 +1,15 @@
 package org.twightlight.skywars.player.level;
 
 import com.google.common.collect.ImmutableList;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSymbol;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.file.FileUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class Level {
     }
 
     public String getLevel(Account account) {
-        VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
+        int selectedSymbolId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.SYMBOL.getSelectionColumn());
+        VisualCosmetic cosmetic = selectedSymbolId > 0 ? VisualCosmetic.findByTypeAndId(VisualCosmeticType.SYMBOL, selectedSymbolId) : null;
         if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }
@@ -42,7 +44,8 @@ public class Level {
     }
 
     public String getLevelSymbol(Account account) {
-        VisualCosmetic cosmetic = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_SYMBOL, 1);
+        int selectedSymbolId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.SYMBOL.getSelectionColumn());
+        VisualCosmetic cosmetic = selectedSymbolId > 0 ? VisualCosmetic.findByTypeAndId(VisualCosmeticType.SYMBOL, selectedSymbolId) : null;
         if (!(cosmetic instanceof SkyWarsSymbol)) {
             return StringUtils.formatNumber(this.level);
         }

@@ -19,8 +19,8 @@ import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
 import org.twightlight.skywars.player.rank.Rank;
-import org.twightlight.skywars.utils.BukkitUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +47,7 @@ public class ProfileMenu extends PlayerMenu {
                     if (action != null && !action.getType().equals("NOTHING")) {
                         if (action.getType().equals("OPEN")) {
                             String menu = action.getValue();
-                            if (menu.equalsIgnoreCase("settings")) {
-                                new SettingsMenu(player);
-                            } else if (menu.equalsIgnoreCase("statistics")) {
+                             if (menu.equalsIgnoreCase("statistics")) {
                                 new StatisticsMenu(player);
                             } else if (menu.equalsIgnoreCase("leveling")) {
                                 new LevelingMenu(player);

@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.Plugin;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.api.adapters.WorldLoaderAdapter;
 import org.twightlight.skywars.arena.Arena;
-import org.twightlight.skywars.utils.FileUtils;
-import org.twightlight.skywars.utils.ZipUtils;
+import org.twightlight.skywars.utils.file.FileUtils;
+import org.twightlight.skywars.utils.file.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;

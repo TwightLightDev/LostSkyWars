@@ -9,7 +9,7 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 
 import java.text.SimpleDateFormat;
 

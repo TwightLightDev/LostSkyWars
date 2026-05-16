@@ -8,10 +8,10 @@ import org.twightlight.libs.fastparticles.ParticleType;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.RenderUtils;
-import org.twightlight.skywars.utils.VectorUtils;
+import org.twightlight.skywars.utils.player.RenderUtils;
+import org.twightlight.skywars.utils.math.VectorUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -19,8 +19,8 @@ import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
-import org.twightlight.skywars.hook.PacketEventsHook;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
 
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class SadFaceBannerEffect extends SkyWarsKillEffect {
                         (int) location.getZ()), id);
 
 
-        PacketEventsHook.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
+        PacketEventsIntegration.getPacketEventsAPI().getPlayerManager().sendPacket(player, packet);
 
         final Block block = loc.getBlock();
         Material material = Material.STANDING_BANNER;

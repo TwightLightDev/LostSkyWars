@@ -3,7 +3,7 @@ package org.twightlight.skywars.arena.group;
 import org.bukkit.configuration.ConfigurationSection;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
 import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.*;
 

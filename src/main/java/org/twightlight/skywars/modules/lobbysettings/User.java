@@ -29,6 +29,8 @@ public class User implements ModulesUser {
     private boolean showScoreboard;
     private boolean showParticles;
     private boolean showChat;
+    private boolean showPlayers;
+    private boolean showBlood;
 
     public User(Player p) {
         uuid = p.getUniqueId();
@@ -46,6 +48,10 @@ public class User implements ModulesUser {
         showParticles = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showParticles", new TypeToken<String>() {
         }, "true"));
         showChat = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showChat", new TypeToken<String>() {
+        }, "true"));
+        showPlayers = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showPlayers", new TypeToken<String>() {
+        }, "true"));
+        showBlood = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showBlood", new TypeToken<String>() {
         }, "true"));
     }
     public boolean isChatVisible() {
@@ -67,6 +73,28 @@ public class User implements ModulesUser {
         this.showParticles = showParticles;
         if (modify) {
             LobbySettings.getDatabase().updateData(Bukkit.getPlayer(uuid), String.valueOf(showParticles), "showParticles");
+        }
+    }
+
+    public boolean canSeePlayers() {
+        return showPlayers;
+    }
+
+    public void setPlayersVisibility(boolean showPlayers, boolean modify) {
+        this.showPlayers = showPlayers;
+        if (modify) {
+            LobbySettings.getDatabase().updateData(Bukkit.getPlayer(uuid), String.valueOf(showPlayers), "showPlayers");
+        }
+    }
+
+    public boolean canSeeBlood() {
+        return showBlood;
+    }
+
+    public void setBloodVisibility(boolean showBlood, boolean modify) {
+        this.showBlood = showBlood;
+        if (modify) {
+            LobbySettings.getDatabase().updateData(Bukkit.getPlayer(uuid), String.valueOf(showBlood), "showBlood");
         }
     }
 
@@ -180,6 +208,10 @@ public class User implements ModulesUser {
         }, "true"));
         boolean showChat = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showChat", new TypeToken<String>() {
         }, "true"));
+        boolean showPlayers = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showPlayers", new TypeToken<String>() {
+        }, "true"));
+        boolean showBlood = Boolean.parseBoolean(LobbySettings.getDatabase().getData(p, "showBlood", new TypeToken<String>() {
+        }, "true"));
 
         setScoreboardVisibility(showScoreboard, false);
         setVanishState(vanish, false);
@@ -188,6 +220,8 @@ public class User implements ModulesUser {
         setFlyEnable(fly, false);
         setParticlesVisibility(showParticles, false);
         setChatVisibility(showChat, false);
+        setPlayersVisibility(showPlayers, false);
+        setBloodVisibility(showBlood, false);
     }
 
     public void disable() {
@@ -198,7 +232,8 @@ public class User implements ModulesUser {
         setVanishState(false, false);
         setParticlesVisibility(true, false);
         setChatVisibility(true, false);
-
+        setPlayersVisibility(true, false);
+        setBloodVisibility(false, false);
     }
 
     public UUID getUUID() {

@@ -1,6 +1,6 @@
 package org.twightlight.skywars.bungee;
 
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 
 import java.lang.reflect.Array;

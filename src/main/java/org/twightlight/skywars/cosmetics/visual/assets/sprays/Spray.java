@@ -16,8 +16,8 @@ import org.bukkit.util.Vector;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSpray;
-import org.twightlight.skywars.utils.RenderUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.player.RenderUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;

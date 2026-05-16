@@ -1,8 +1,8 @@
 package org.twightlight.skywars.menu.shop.well;
 
 import org.bukkit.inventory.ItemStack;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,7 +37,7 @@ public class RollList {
             }
             VisualCosmetic c = menu.getItemMap().get(reward);
             menu.getAccount().getPlayer().sendMessage(StringUtils.formatColors(RollSoulWellMenu.config.getAsString("received").replace("{name}",
-                    c.getRarity().getColor() + c.getRawName() + " (" + c.getType().getName() + " - " + SkyWarsType.fromIndex(c.getMode()).getName() + ")")));
+                    c.getRarity().getColor() + c.getRawName() + " (" + c.getVisualType().getDisplayName() + ")")));
             if (!c.has(menu.getAccount())) {
                 c.give(menu.getAccount());
             } else {
@@ -45,7 +45,7 @@ public class RollList {
                 menu.getAccount().addCoins(coins);
                 menu.getAccount().getPlayer()
                         .sendMessage(StringUtils.formatColors(RollSoulWellMenu.config.getAsString("already-have")
-                                .replace("{name}", c.getRarity().getColor() + c.getRawName() + " (" + c.getType().getName() + " - " + SkyWarsType.fromIndex(c.getMode()).getName() + ")")
+                                .replace("{name}", c.getRarity().getColor() + c.getRawName() + " (" + c.getVisualType().getDisplayName() + ")")
                                 .replace("{coins}", StringUtils.formatNumber(coins))));
             }
         }

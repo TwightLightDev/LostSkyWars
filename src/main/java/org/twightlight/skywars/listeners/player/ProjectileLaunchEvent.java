@@ -3,7 +3,8 @@ package org.twightlight.skywars.listeners.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.twightlight.skywars.cosmetics.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
+import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsTrail;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
@@ -21,7 +22,8 @@ public class ProjectileLaunchEvent implements Listener {
             return;
         }
 
-        VisualCosmetic cos = account.getSelected(CosmeticServer.SKYWARS, CosmeticType.SKYWARS_TRAIL, 1);
+        int selectedId = account.getSelectedContainer().getGlobalSelection(VisualCosmeticType.TRAIL.getSelectionColumn());
+        VisualCosmetic cos = VisualCosmetic.findByTypeAndId(VisualCosmeticType.TRAIL, selectedId);
         if (cos instanceof SkyWarsTrail) {
             SkyWarsTrail trail = (SkyWarsTrail) cos;
             trail.getConsumer().accept(e);

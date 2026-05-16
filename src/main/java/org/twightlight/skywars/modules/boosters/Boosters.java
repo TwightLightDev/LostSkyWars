@@ -1,6 +1,6 @@
 package org.twightlight.skywars.modules.boosters;
 
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.modules.Module;
 import org.twightlight.skywars.modules.api.yaml.YamlWrapper;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;

@@ -3,10 +3,10 @@ package org.twightlight.skywars.modules.boosters.boosters;
 import com.google.common.reflect.TypeToken;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.Logger;
+import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.modules.boosters.Boosters;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
-import org.twightlight.skywars.utils.TimeUtils;
+import org.twightlight.skywars.utils.player.TimeUtils;
 
 import java.util.*;
 

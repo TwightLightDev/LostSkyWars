@@ -15,8 +15,8 @@ import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.rank.TagUtils;
-import org.twightlight.skywars.utils.PlayerUtils;
-import org.twightlight.skywars.utils.StringUtils;
+import org.twightlight.skywars.utils.player.PlayerUtils;
+import org.twightlight.skywars.utils.string.StringUtils;
 
 public class PlayerJoinListener extends Listeners {
 

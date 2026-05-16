@@ -6,9 +6,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsVictoryDance;
-import org.twightlight.skywars.utils.BukkitUtils;
+import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.ConfigWrapper;
-import org.twightlight.skywars.utils.VectorUtils;
+import org.twightlight.skywars.utils.math.VectorUtils;
 
 
 public class ThorEffect extends SkyWarsVictoryDance {

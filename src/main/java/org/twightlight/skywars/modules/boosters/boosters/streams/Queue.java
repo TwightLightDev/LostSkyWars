@@ -9,7 +9,6 @@ import org.twightlight.skywars.modules.boosters.boosters.BoosterData;
 import org.twightlight.skywars.modules.boosters.boosters.BoosterManager;
 import org.twightlight.skywars.modules.boosters.users.PlayerUser;
 import org.twightlight.skywars.modules.boosters.users.User;
-import org.twightlight.skywars.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
