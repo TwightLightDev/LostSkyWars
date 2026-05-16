@@ -128,19 +128,7 @@ public class Language {
 
     public static int game$countdown$start = 45;
     public static int game$countdown$full = 10;
-    public static int game$countdown$normal$game = 1200;
-    public static List<Integer> game$countdown$normal$refills = Arrays.asList(900, 600);
-    public static int game$countdown$normal$dragon = 300;
 
-    public static int game$countdown$insane$game = 1200;
-    public static List<Integer> game$countdown$insane$refills = Arrays.asList(900, 600);
-    public static int game$countdown$insane$dragon = 300;
-
-    public static int game$countdown$ranked$game = 1200;
-    public static List<Integer> game$countdown$ranked$refills = Arrays.asList(900, 600);
-    public static int game$countdown$ranked$dragon = 300;
-
-    public static int game$countdown$game_duels = 480;
 
     public static String game$event$start = "Start ";
     public static String game$event$refill = "Refill ";

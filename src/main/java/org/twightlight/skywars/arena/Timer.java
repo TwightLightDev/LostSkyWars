@@ -37,11 +37,11 @@ import java.util.List;
 
 public class Timer {
 
-    private final Arena server;
+    private final Arena arena;
     private BukkitTask task;
 
     public Timer(Arena server) {
-        this.server = server;
+        this.arena = server;
         this.reset();
     }
 
@@ -53,9 +53,9 @@ public class Timer {
     }
 
     private void showKitActionBar() {
-        ArenaGroup group = server.getGroup();
+        ArenaGroup group = arena.getGroup();
         boolean noKits = group != null && group.hasTrait("no_kits");
-        server.getPlayers(true).forEach(player -> {
+        arena.getPlayers(true).forEach(player -> {
             Account account = Database.getInstance().getAccount(player.getUniqueId());
             if (account != null) {
                 if (noKits) {
@@ -87,43 +87,43 @@ public class Timer {
 
             @Override
             public void run() {
-                if (server.getTimer() == 0) {
-                    server.start();
+                if (arena.getTimer() == 0) {
+                    arena.start();
                     return;
                 }
 
                 showKitActionBar();
 
-                if (server.getOnline() < server.getConfig().getMinPlayers()) {
-                    if (server.getTimer() != (Language.game$countdown$start + 1)) {
-                        server.setTimer(Language.game$countdown$start + 1);
+                if (arena.getOnline() < arena.getConfig().getMinPlayers()) {
+                    if (arena.getTimer() != (Language.game$countdown$start + 1)) {
+                        arena.setTimer(Language.game$countdown$start + 1);
                     }
 
-                    server.updateScoreboards();
+                    arena.updateScoreboards();
                     return;
                 }
 
-                if (server.getOnline() < 1) {
+                if (arena.getOnline() < 1) {
                     return;
                 }
 
-                if (server.getTimer() == (Language.game$countdown$start + 1)) {
-                    server.setTimer(server.getTimer() - 1);
+                if (arena.getTimer() == (Language.game$countdown$start + 1)) {
+                    arena.setTimer(arena.getTimer() - 1);
                 }
 
-                if (server.getTimer() == 10 || (server.getTimer() <= 5 && server.getTimer() > 0)) {
-                    server.getPlayers(true).forEach(player -> Sound.CLICK.play(player, 1.0F, 1.0F));
-                    server.broadcast(Language.game$broadcast$starting$start.replace("{s}", server.getTimer() > 1 ? "s" : "").replace("{time}",
-                            (server.getTimer() <= 5 ? "§c" : server.getTimer() <= 10 ? "§6" : "§a") + server.getTimer()));
+                if (arena.getTimer() == 10 || (arena.getTimer() <= 5 && arena.getTimer() > 0)) {
+                    arena.getPlayers(true).forEach(player -> Sound.CLICK.play(player, 1.0F, 1.0F));
+                    arena.broadcast(Language.game$broadcast$starting$start.replace("{s}", arena.getTimer() > 1 ? "s" : "").replace("{time}",
+                            (arena.getTimer() <= 5 ? "§c" : arena.getTimer() <= 10 ? "§6" : "§a") + arena.getTimer()));
 
-                    if (server.getTimer() <= 5) {
-                        server.broadcastTitle(Language.game$broadcast$starting$title.replace("{time}", String.valueOf(server.getTimer())),
-                                Language.game$broadcast$starting$subtitle.replace("{time}", String.valueOf(server.getTimer())));
+                    if (arena.getTimer() <= 5) {
+                        arena.broadcastTitle(Language.game$broadcast$starting$title.replace("{time}", String.valueOf(arena.getTimer())),
+                                Language.game$broadcast$starting$subtitle.replace("{time}", String.valueOf(arena.getTimer())));
                     }
                 }
 
-                server.updateScoreboards();
-                server.setTimer(server.getTimer() - 1);
+                arena.updateScoreboards();
+                arena.setTimer(arena.getTimer() - 1);
             }
         }.runTaskTimer(SkyWars.getInstance(), 0, 20);
     }
@@ -135,114 +135,111 @@ public class Timer {
             task = null;
         }
 
-        if (server.getState() == SkyWarsState.STARTING) {
-            for (Entity entity : server.getWorld().getEntities()) {
+        if (arena.getState() == SkyWarsState.STARTING) {
+            for (Entity entity : arena.getWorld().getEntities()) {
                 if (entity instanceof Player || entity instanceof ItemFrame) {
                     continue;
                 }
                 entity.remove();
             }
-            server.setTimer(10);
+            arena.setTimer(10);
             this.task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (server.getTimer() == 0) {
-                        server.start();
+                    if (arena.getTimer() == 0) {
+                        arena.start();
                         return;
                     }
 
                     showKitActionBar();
 
-                    if (server.getTimer() == 10 || (server.getTimer() <= 5 && server.getTimer() > 0)) {
-                        server.broadcast(Language.game$broadcast$starting$cage.replace("{s}", server.getTimer() > 1 ? "s" : "").replace("{time}",
-                                (server.getTimer() <= 5 ? "§c" : server.getTimer() <= 10 ? "§6" : "§a") + server.getTimer()));
+                    if (arena.getTimer() == 10 || (arena.getTimer() <= 5 && arena.getTimer() > 0)) {
+                        arena.broadcast(Language.game$broadcast$starting$cage.replace("{s}", arena.getTimer() > 1 ? "s" : "").replace("{time}",
+                                (arena.getTimer() <= 5 ? "§c" : arena.getTimer() <= 10 ? "§6" : "§a") + arena.getTimer()));
                     }
 
-                    server.updateScoreboards();
-                    server.setTimer(server.getTimer() - 1);
+                    arena.updateScoreboards();
+                    arena.setTimer(arena.getTimer() - 1);
                 }
             }.runTaskTimer(SkyWars.getInstance(), 0, 20);
-        } else if (server.getState() == SkyWarsState.INGAME) {
-            for (Entity entity : server.getWorld().getEntities()) {
+        } else if (arena.getState() == SkyWarsState.INGAME) {
+            for (Entity entity : arena.getWorld().getEntities()) {
                 if (entity instanceof Player || entity instanceof ItemFrame) {
                     continue;
                 }
                 entity.remove();
             }
-            ArenaGroup group = server.getGroup();
-            boolean hasCustomScoreboard = group.hasTrait("custom_scoreboard");
-            List<Integer> timeline = new ArrayList<>(server.getTimeline().keySet());
-            server.setTimer(hasCustomScoreboard ? Language.game$countdown$game_duels : timeline.get(0));
-            server.getConfig().removeWaitingLobby();
+            List<Integer> timeline = new ArrayList<>(arena.getTimeline().keySet());
+            arena.setTimer(timeline.get(0));
+            arena.getConfig().removeWaitingLobby();
             this.task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    int eventTime = server.getEventTime(false);
-                    if (server.getTimer() == eventTime) {
-                        if (server.getTimer() == 0) {
-                            server.stop(null);
+                    int eventTime = arena.getEventTime(false);
+                    if (arena.getTimer() == eventTime) {
+                        if (arena.getTimer() == 0) {
+                            arena.stop(null);
                             return;
                         }
 
-                        if (!hasCustomScoreboard) {
-                            if (server.getTimeline().get(eventTime) == SkyWarsEvent.Refill) {
-                                server.chests.forEach(SkyWarsChest::fill);
-                                server.getPlayers(false).forEach(player -> {
-                                    Sound.CHEST_OPEN.play(player, 1.0F, 1.0F);
-                                    NMS.sendTitle(player, Language.game$player$ingame$titles$refill$up, Language.game$player$ingame$titles$refill$bottom, 10, 60, 10);
-                                });
-                                Bukkit.getPluginManager().callEvent(new SkyWarsChestRefillEvent(server));
-                                if (server.getEventTime(true) == 0) {
-                                    server.chests.forEach(SkyWarsChest::destroy);
-                                }
-                            } else if (server.getTimeline().get(eventTime) == SkyWarsEvent.Doom) {
-                                Location loc = server.getConfig().getWorldCube().getCenterLocation();
-                                loc.setY(server.getConfig().getWorldCube().getYmax());
-                                Entity enderDragon = loc.getWorld().spawnEntity(loc, EntityType.ENDER_DRAGON);
-                                new BukkitRunnable() {
-                                    @Override
-                                    public void run() {
-                                        if (enderDragon.isDead()) {
-                                            cancel();
-                                            return;
-                                        }
+                        if (arena.getTimeline().get(eventTime) == SkyWarsEvent.Refill) {
+                            arena.chests.forEach(SkyWarsChest::fill);
+                            arena.getPlayers(false).forEach(player -> {
+                                Sound.CHEST_OPEN.play(player, 1.0F, 1.0F);
+                                NMS.sendTitle(player, Language.game$player$ingame$titles$refill$up, Language.game$player$ingame$titles$refill$bottom, 10, 60, 10);
+                            });
+                            Bukkit.getPluginManager().callEvent(new SkyWarsChestRefillEvent(arena));
+                            if (arena.getEventTime(true) == 0) {
+                                arena.chests.forEach(SkyWarsChest::destroy);
+                            }
+                        } else if (arena.getTimeline().get(eventTime) == SkyWarsEvent.Doom) {
+                            Location loc = arena.getConfig().getWorldCube().getCenterLocation();
+                            loc.setY(arena.getConfig().getWorldCube().getYmax());
+                            Entity enderDragon = loc.getWorld().spawnEntity(loc, EntityType.ENDER_DRAGON);
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    if (enderDragon.isDead()) {
+                                        cancel();
+                                        return;
+                                    }
 
-                                        Location dragonLoc = enderDragon.getLocation();
-                                        int radius = 3;
+                                    Location dragonLoc = enderDragon.getLocation();
+                                    int radius = 3;
 
-                                        for (int x = -radius; x <= radius; x++) {
-                                            for (int y = -radius; y <= radius; y++) {
-                                                for (int z = -radius; z <= radius; z++) {
-                                                    Location checkLoc = dragonLoc.clone().add(x, y, z);
-                                                    Material blockType = checkLoc.getBlock().getType();
+                                    for (int x = -radius; x <= radius; x++) {
+                                        for (int y = -radius; y <= radius; y++) {
+                                            for (int z = -radius; z <= radius; z++) {
+                                                Location checkLoc = dragonLoc.clone().add(x, y, z);
+                                                Material blockType = checkLoc.getBlock().getType();
 
-                                                    if (blockType != Material.AIR && blockType.isSolid()) {
-                                                        checkLoc.getBlock().setType(Material.AIR);
-                                                    }
+                                                if (blockType != Material.AIR && blockType.isSolid()) {
+                                                    checkLoc.getBlock().setType(Material.AIR);
                                                 }
                                             }
                                         }
                                     }
-                                }.runTaskTimer(SkyWars.getInstance(), 0L, 1L);
-
-                                for (Player p : server.getPlayers(false)) {
-                                    server.getPlayers(false).forEach(player -> {
-                                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cSudden Death"), "");
-                                    });
-                                    Sound.ENDERDRAGON_GROWL.play(p, 20.0F, 5.0F);
                                 }
-                                Bukkit.getPluginManager().callEvent(new SkyWarsDoomEvent(server));
+                            }.runTaskTimer(SkyWars.getInstance(), 0L, 1L);
+
+                            for (Player p : arena.getPlayers(false)) {
+                                arena.getPlayers(false).forEach(player -> {
+                                    player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cSudden Death"), "");
+                                });
+                                Sound.ENDERDRAGON_GROWL.play(p, 20.0F, 5.0F);
                             }
+                            Bukkit.getPluginManager().callEvent(new SkyWarsDoomEvent(arena));
                         }
+
                     }
 
-                    server.updateScoreboards();
-                    server.chests.forEach(SkyWarsChest::update);
-                    server.setTimer(server.getTimer() - 1);
+                    arena.updateScoreboards();
+                    arena.chests.forEach(SkyWarsChest::update);
+                    arena.setTimer(arena.getTimer() - 1);
                 }
             }.runTaskTimer(SkyWars.getInstance(), 0, 20);
-        } else if (server.getState() == SkyWarsState.ENDED) {
-            server.setTimer(10);
+        } else if (arena.getState() == SkyWarsState.ENDED) {
+            arena.setTimer(10);
             for (Player player : winners) {
                 Account account = Database.getInstance().getAccount(player.getUniqueId());
                 if (account == null) {
@@ -258,8 +255,8 @@ public class Timer {
             this.task = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (server.getTimer() <= 0) {
-                        for (Player player : server.getPlayers(true)) {
+                    if (arena.getTimer() <= 0) {
+                        for (Player player : arena.getPlayers(true)) {
                             Account account = Database.getInstance().getAccount(player.getUniqueId());
                             if (account == null) {
                                 continue;
@@ -276,14 +273,14 @@ public class Timer {
                         }
 
                         if (Core.MODE == CoreMode.MULTI_ARENA) {
-                            server.reset();
+                            arena.reset();
                         } else {
                             Bukkit.getScheduler().scheduleSyncDelayedTask(SkyWars.getInstance(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart"), 40);
                         }
                         return;
                     }
 
-                    server.setTimer(server.getTimer() - 1);
+                    arena.setTimer(arena.getTimer() - 1);
                 }
             }.runTaskTimer(SkyWars.getInstance(), 0, 20);
         }
