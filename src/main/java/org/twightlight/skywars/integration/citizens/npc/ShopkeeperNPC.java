@@ -15,7 +15,7 @@ import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,7 +114,7 @@ public class ShopkeeperNPC {
         return hologram;
     }
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("locations");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("locations");
 
     private static List<ShopkeeperNPC> npcs = new ArrayList<>();
 

@@ -2,7 +2,7 @@ package org.twightlight.skywars.utils.file;
 
 import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.utils.player.Logger.Level;
-import org.twightlight.skywars.bungee.Core;
+import org.twightlight.skywars.bungee.core.Core;
 
 import java.io.*;
 import java.net.URLDecoder;

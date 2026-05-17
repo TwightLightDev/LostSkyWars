@@ -16,7 +16,6 @@ public class Bungee extends Plugin {
 
     @Override
     public void onEnable() {
-        BungeeFiles.setupFiles();
         ServerManager.getManager().enable();
 
         LOGGER.log(Level.INFO, "The plugin has been enabled!");

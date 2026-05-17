@@ -66,25 +66,25 @@ public class MenuConfig {
         return extras;
     }
 
-    public ConfigWrapper getConfig() {
-        return ConfigWrapper.getConfig(name, "plugins/LostSkyWars/menus");
+    public YamlWrapper getConfig() {
+        return YamlWrapper.getConfig(name, "plugins/LostSkyWars/menus");
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Menus");
     private static final List<MenuConfig> menus = new ArrayList<>();
 
     public static final String[] MENUS_ARRAY = new String[]{
-            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
+            "profile", "leveling", "statistics", "settings", "shop", "cages", "play",
             "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
             "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "balloon", "statsnpc",
-            "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics",
-            "victorydance", "title"
+            "mysteryvault", "confirmvault", "deliveryman", "deathcries", "balloons", "statsnpc",
+            "symbols", "projectiletrails", "killmessages", "killeffects", "sprays", "cosmetics",
+            "victorydances", "titles"
     };
 
     public static void setupMenus() {
         for (String menu : MENUS_ARRAY) {
-            ConfigWrapper cu = ConfigWrapper.getConfig(menu, "plugins/LostSkyWars/menus");
+            YamlWrapper cu = YamlWrapper.getConfig(menu, "plugins/LostSkyWars/menus");
             MenuConfig cm = new MenuConfig(menu, StringUtils.formatColors(cu.getString("title")), cu.getInt("rows"));
             for (String key : cu.getSection("items").getKeys(false)) {
                 int slot = cu.getInt("items." + key + ".slot", 0);

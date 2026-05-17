@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class KillMessagesMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("killmessage");
+    private static final MenuConfig config = MenuConfig.getByName("killmessages");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

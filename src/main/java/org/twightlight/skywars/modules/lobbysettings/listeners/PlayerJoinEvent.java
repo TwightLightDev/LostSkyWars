@@ -6,8 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.twightlight.skywars.SkyWars;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreMode;
 import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
 import org.twightlight.skywars.modules.lobbysettings.User;
 

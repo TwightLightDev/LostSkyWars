@@ -16,12 +16,12 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsVictoryDance;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 
 public class WitherRider extends SkyWarsVictoryDance {
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("victorydances");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("victorydances", "plugins/LostSkyWars/cosmetics");
 
     public WitherRider() {
         super(CONFIG.getInt("wither-rider.id"),

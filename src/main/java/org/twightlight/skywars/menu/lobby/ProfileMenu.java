@@ -14,11 +14,9 @@ import org.twightlight.skywars.config.MenuConfig.ConfigAction;
 import org.twightlight.skywars.config.MenuConfig.ConfigItem;
 import org.twightlight.skywars.menu.api.PlayerMenu;
 import org.twightlight.skywars.menu.profile.LevelingMenu;
-import org.twightlight.skywars.menu.profile.SettingsMenu;
 import org.twightlight.skywars.menu.profile.StatisticsMenu;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
-import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.utils.string.StringUtils;
 
@@ -73,7 +71,7 @@ public class ProfileMenu extends PlayerMenu {
                 String stack = entry.getValue().getStack();
 
                 // PLAYER INFO
-                stack = stack.replace("{rank}", Rank.getRank(player).getColoredName());
+                stack = stack.replace("{rank}", "");
                 stack = stack.replace("{dusts}", StringUtils.formatNumber(account.getMysteryDusts()));
 
                 // LEVELING

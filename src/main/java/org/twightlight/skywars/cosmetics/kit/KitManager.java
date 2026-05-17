@@ -7,7 +7,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ public class KitManager {
 
     public static void setupKits() {
         KITS.clear();
-        ConfigWrapper cu = ConfigWrapper.getConfig("kits");
+        YamlWrapper cu = YamlWrapper.getConfig("kits");
 
         for (String key : cu.getKeys(false)) {
             LOGGER.log(Logger.Level.INFO, "Loading kit: " + key + "...");

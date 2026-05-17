@@ -9,7 +9,7 @@ import org.twightlight.skywars.setup.api.ChatSession;
 import org.twightlight.skywars.setup.api.ContentsMenu;
 import org.twightlight.skywars.setup.api.InventoryHolder;
 import org.twightlight.skywars.setup.api.Menu;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 import org.twightlight.skywars.utils.string.StringCheckerUtils;
 
@@ -20,10 +20,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class Weights extends Menu {
-    private ConfigWrapper config;
+    private YamlWrapper config;
     private Consumer<Player> backAction;
     private String path;
-    private Weights(ConfigWrapper config, Consumer<Player> backAction, String path) {
+    private Weights(YamlWrapper config, Consumer<Player> backAction, String path) {
         super(45, true);
         this.config = config;
         this.backAction = backAction;
@@ -95,7 +95,7 @@ public class Weights extends Menu {
         });
     }
 
-    public static Menu init(ConfigWrapper config, Consumer<Player> backAction, String path) {
+    public static Menu init(YamlWrapper config, Consumer<Player> backAction, String path) {
         return new Weights(config, backAction, path);
     }
 }

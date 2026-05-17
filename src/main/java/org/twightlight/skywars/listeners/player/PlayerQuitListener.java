@@ -7,7 +7,6 @@ import org.twightlight.skywars.commands.sw.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.player.rank.TagUtils;
 
 public class PlayerQuitListener extends Listeners {
 
@@ -16,7 +15,6 @@ public class PlayerQuitListener extends Listeners {
         Player player = evt.getPlayer();
         evt.setQuitMessage(null);
 
-        TagUtils.reset(player.getName());
         Account account = Database.getInstance().unloadAccount(player.getUniqueId());
         if (account != null) {
             if (account.getArena() != null) {

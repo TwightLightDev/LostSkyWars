@@ -22,7 +22,7 @@ import org.twightlight.skywars.modules.privategames.User;
 import org.twightlight.skywars.modules.privategames.settings.GameTimeSetting;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.file.FileUtils;
 
 import java.io.File;
@@ -425,7 +425,7 @@ public abstract class Arena {
             newArena += "_temp";
         }
 
-        ConfigWrapper cu = ConfigWrapper.getConfig(newArena, "plugins/LostSkyWars/servers");
+        YamlWrapper cu = YamlWrapper.getConfig(newArena, "plugins/LostSkyWars/servers");
         cu.set("name", getName());
         cu.set("group", getGroup().getId());
         cu.set("cube", getConfig().getWorldCube().toString().replace(getConfig().getId(), newArena));

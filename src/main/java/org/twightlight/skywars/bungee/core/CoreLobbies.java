@@ -1,4 +1,4 @@
-package org.twightlight.skywars.bungee;
+package org.twightlight.skywars.bungee.core;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;

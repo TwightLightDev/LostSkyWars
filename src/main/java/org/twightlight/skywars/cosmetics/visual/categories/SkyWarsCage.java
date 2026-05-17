@@ -32,7 +32,7 @@ import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.integration.worldedit.WorldEditIntegration;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -339,7 +339,7 @@ public class SkyWarsCage extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Cages");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("cages");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("cages", "plugins/LostSkyWars/cosmetics");
 
     public static void setupCages() {
         CONFIG.reload();

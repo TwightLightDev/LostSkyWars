@@ -2,12 +2,10 @@ package org.twightlight.skywars;
 
 import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.utils.player.Logger.Level;
-import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.arena.ui.enums.SkyWarsEvent;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreMode;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.file.LanguageWriter;
 import org.twightlight.skywars.utils.string.StringUtils;
 
@@ -32,8 +30,6 @@ public class Language {
             Arrays.asList("", "Your Level: {level}", "", "Solo Kills: §a{solokills}", "Solo Wins: §a{solowins}", "Doubles Kills: §a{teamkills}", "Doubles Wins: §a{teamwins}",
                     "Ranked Kills: §a{rankedkills}", "Ranked Wins: §a{rankedwins}", "", "Coins: §6{coins}", "Souls: §b{souls}§7/{maxsouls}", "", "§ewww.example.net");
 
-    public static boolean options$ranks$tab = true;
-    public static boolean options$ranks$chat = true;
     public static int options$ranked$required$level = 1;
     public static boolean options$game$default_kit = true;
     public static String options$ranked$required$message = "§cYou need at least SkyWars Level 1 to play ranked SkyWars! Your Level can be seen on your xp bar in lobbies.";
@@ -68,8 +64,6 @@ public class Language {
     public static String lobby$chat$format_spectator = "§7[SPECTATOR] §7[§a{level}§7] {display}{color}: {message}";
 
     public static String lobby$visibility$delay = "§cYou must wait §a{time}s §cbetween uses!";
-    public static String lobby$visibility$enabled = "§aPlayer visibility enabled!";
-    public static String lobby$visibility$disabled = "§cPlayer visibility disabled!";
 
     public static int lobby$hotbar$profile$slot = 0;
     public static int lobby$hotbar$shop$slot = 1;
@@ -118,17 +112,8 @@ public class Language {
 
     public static String game$rewards_message$soul = "&b+{souls} Souls.";
 
-    public static String game$rewards_message$chat$single$coins = "&6+{coins} coin! {reason} {boosters}";
-    public static String game$rewards_message$chat$single$exp = "&d+{xp} SkyWars Experience! {reason}";
-    public static String game$rewards_message$chat$single$souls = "&d+{souls} Soul.";
-
-    public static String game$rewards_message$chat$plural$coins = "&6+{coins} coins! {reason} {boosters}";
-    public static String game$rewards_message$chat$plural$exp = "&d+{xp} SkyWars Experience! {reason}";
-    public static String game$rewards_message$chat$plural$souls = "&d+{souls} Souls";
-
     public static int game$countdown$start = 45;
     public static int game$countdown$full = 10;
-
 
     public static String game$event$start = "Start ";
     public static String game$event$refill = "Refill ";
@@ -212,11 +197,11 @@ public class Language {
     public static String cosmetics$sprays$holograms = "§eClick!";
 
     public static Logger LOGGER;
-    private static ConfigWrapper CONFIG;
+    private static YamlWrapper CONFIG;
 
     public static void setupLanguage() {
         LOGGER = SkyWars.LOGGER.getModule("Language");
-        CONFIG = ConfigWrapper.getConfig("lang");
+        CONFIG = YamlWrapper.getConfig("lang");
 
         boolean save = false;
         LanguageWriter writer = new LanguageWriter(CONFIG.getFile());

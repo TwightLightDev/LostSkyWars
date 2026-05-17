@@ -13,7 +13,6 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
-import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.setup.api.ChatSession;
 import org.twightlight.skywars.utils.player.PlayerUtils;
@@ -62,7 +61,7 @@ public class AsyncPlayerChatListener extends Listeners {
             flood.put(player.getName(), System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(Language.lobby$chat$delay_time));
         }
 
-        String color = Rank.getRank(player).getPermission().equals("none") ? "\u00a77" : "\u00a7f";
+        String color = "§7";
         if (player.hasPermission("lostskywars.chat.color")) {
             evt.setMessage(StringUtils.formatColors(evt.getMessage()));
         }

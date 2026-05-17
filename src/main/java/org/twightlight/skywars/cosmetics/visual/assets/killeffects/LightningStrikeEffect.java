@@ -5,12 +5,10 @@ import org.bukkit.entity.Player;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 
 public class LightningStrikeEffect extends SkyWarsKillEffect {
-
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public LightningStrikeEffect() {
         super(CONFIG.getInt("lightning-strike.id"),

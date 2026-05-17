@@ -1,12 +1,11 @@
-package org.twightlight.skywars.bungee;
+package org.twightlight.skywars.bungee.core;
 
+import org.twightlight.skywars.bungee.Bungee;
 import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.SkyWars;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 public class Core {
 
@@ -22,25 +21,6 @@ public class Core {
     }
 
     private static CoreSender SENDER;
-    public static final String[] menusArray = new String[]{
-            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
-            "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
-            "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "balloon", "statsnpc",
-            "symbol", "projectiletrail", "killmessage", "killeffect", "spray", "cosmetics",
-            "victorydance", "title"
-    };
-    public static final List<String> filesSaved = Arrays.asList(
-            "profile", "leveling", "statistics", "settings", "shop", "cells", "play",
-            "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
-            "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
-            "mysteryvault", "confirmvault", "deliveryman", "deathcry", "projectiletrail",
-            "killmessage", "spray", "balloon", "statsnpc", "symbol",
-            "balloons", "cages", "chesttypes", "deathcries", "projectiletrails",
-            "killmessages", "killeffect", "killeffects", "sprays", "victorydance", "title",
-            "deliveries", "levels", "perks", "ranks", "symbols", "lang", "cosmetics",
-            "groups"
-    );
 
     public static CoreSender getCoreSender() {
         if (SENDER == null) {

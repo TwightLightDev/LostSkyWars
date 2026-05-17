@@ -13,7 +13,7 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +97,7 @@ public class SkyWarsTitle extends VisualCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Title");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("titles");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("titles", "plugins/LostSkyWars/cosmetics");
 
     public static void setupTitles() {
         for (String key : CONFIG.getKeys(false)) {

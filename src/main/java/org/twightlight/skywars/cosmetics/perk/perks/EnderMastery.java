@@ -11,13 +11,13 @@ import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 public class EnderMastery extends Perk {
 
     private int percentage;
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("perks");
 
     public EnderMastery() {
         super(CONFIG.getInt("endermastery.id"), CONFIG.getString("endermastery.name"), CosmeticRarity.fromName(CONFIG.getString("endermastery.rarity")),

@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class SymbolsMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("symbol");
+    private static final MenuConfig config = MenuConfig.getByName("symbols");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -14,9 +14,9 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreLobbies;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreLobbies;
+import org.twightlight.skywars.bungee.core.CoreMode;
 import org.twightlight.skywars.commands.sw.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.integration.boxes.BoxNPC;
@@ -28,6 +28,8 @@ import org.twightlight.skywars.menu.play.PlayMenu;
 import org.twightlight.skywars.menu.shop.ShopMenu;
 import org.twightlight.skywars.menu.shop.well.SoulWellMenu;
 import org.twightlight.skywars.menu.shop.kits.KitSelectorMenu;
+import org.twightlight.skywars.modules.lobbysettings.LobbySettings;
+import org.twightlight.skywars.modules.lobbysettings.User;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.systems.well.WellNPC;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
@@ -78,8 +80,11 @@ public class PlayerInteractListener extends Listeners {
             }
 
             canSeeFlood.put(player.getName(), System.currentTimeMillis() + 3000);
-            account.setCanSeePlayers(!account.canSeePlayers());
-            player.sendMessage(account.canSeePlayers() ? Language.lobby$visibility$enabled : Language.lobby$visibility$disabled);
+            User user = User.getFromUUID(player.getUniqueId());
+            if (user != null) {
+                user.setPlayersVisibility(!user.isPlayerVisible(), true);
+                user.sendMessage(user.isPlayerVisible() ? LobbySettings.getLanguage().getList("lobbysettings.players.on") : LobbySettings.getLanguage().getList("lobbysettings.players.off"));
+            }
             account.refreshPlayers();
         }
 

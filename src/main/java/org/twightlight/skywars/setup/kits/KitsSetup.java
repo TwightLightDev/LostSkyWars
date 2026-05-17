@@ -6,14 +6,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.twightlight.libs.xseries.XMaterial;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
+import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.setup.api.ChatSession;
 import org.twightlight.skywars.setup.api.ContentsMenu;
 import org.twightlight.skywars.setup.api.InventoryHolder;
 import org.twightlight.skywars.setup.api.Menu;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
+import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 import org.twightlight.skywars.utils.string.StringCheckerUtils;
 
 import java.util.ArrayList;
@@ -24,13 +27,13 @@ import java.util.stream.Collectors;
 
 public class KitsSetup extends Menu {
 
-    private ConfigWrapper config;
+    private YamlWrapper config;
     private String path;
     private final List<String> rarities = Arrays.stream(CosmeticRarity.values())
             .map(CosmeticRarity::getUncoloredName)
             .collect(Collectors.toList());
 
-    private KitsSetup(ConfigWrapper config, String path) {
+    private KitsSetup(YamlWrapper config, String path) {
         super(45, true);
         this.config = config;
         this.path = path;
@@ -268,7 +271,6 @@ public class KitsSetup extends Menu {
                         p.closeInventory();
                         p.sendMessage("Succesfully imported kit's armors!");
                     }
-
         });
         setItem(23, BukkitUtils.createItem(Material.CHEST, "", 1, 0, "&bContents", Arrays.asList("" ,"&eClick to browse!"), false),
                 (e) -> {
@@ -334,9 +336,60 @@ public class KitsSetup extends Menu {
                                 });
                     }
                 });
+
+        lore = config.getStringList(path + ".allowed-groups");
+        lore.add("");
+        lore.add("&eLeft-Click to add a group");
+        lore.add("&eRight-Click to remove the last group");
+
+
+        List<String> group = new ArrayList<>(CosmeticsGroup.listAll()).stream().map(c -> c.getId()).collect(Collectors.toList());
+        setItem(32, new ItemBuilder(XMaterial.EMERALD).setName("&eCosmetics Group").setLore(lore).toItemStack(),
+                (e) -> {
+                    Player p = (Player) e.getWhoClicked();
+                    if (e.isLeftClick()) {
+                        p.closeInventory();
+                        ChatSession sessions = new ChatSession(p);
+                        sessions.prompt(Arrays.asList(new String[] {"&aType the value you want: ", "&aType 'cancel' to cancel!", "&bAllowed values: " + String.join(",", group)}), (input) -> {
+                            if (input.equals("cancel")) {
+                                sessions.end();
+                                Bukkit.getScheduler().runTask(SkyWars.getInstance(),
+                                        () -> {
+                                            setItems(holder);
+                                            p.openInventory(holder.getInventory());
+
+                                        });
+                                return;
+                            } else if (!group.contains(input)) {
+                                p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cInvalid value, Allowed: " + String.join(",", group)));
+                                return;
+                            }
+                            sessions.end();
+                            Bukkit.getScheduler().runTask(SkyWars.getInstance(),
+                                    () -> {
+                                        List<String> lore1 = config.getStringList(path + ".allowed-groups");
+                                        lore1.add(input);
+                                        config.setNotSave(path + ".allowed-groups", lore1);
+                                        p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully add a new group"));
+                                        setItems(holder);
+                                        open(p);
+                                    });
+                        });
+                    } else if (e.isRightClick()) {
+                        Bukkit.getScheduler().runTask(SkyWars.getInstance(),
+                                () -> {
+                                    List<String> lore1 = config.getStringList(path + ".allowed-groups");
+                                    lore1.remove(lore1.size()-1);
+                                    config.setNotSave(path + ".allowed-groups", lore1);
+                                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSuccessfully remove a group"));
+                                    setItems(holder);
+                                    open(p);
+                                });
+                    }
+                });
     }
 
-    public static Menu init(ConfigWrapper config, String path) {
+    public static Menu init(YamlWrapper config, String path) {
         return new KitsSetup(config, path);
     }
 

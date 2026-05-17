@@ -1,7 +1,7 @@
 author: TwightLightDev
 name: LostSkyWars
-version: 2.4.26
-softdepend: [packetevents,  Vault, Citizens, LostParties, LostBoxes, TwightLightCore, Guilds, EpicAchievements, DecentHolograms, WorldEdit ]
+version: 3.0.00
+softdepend: [packetevents, Vault, Citizens, LostParties, LostBoxes, TwightLightCore, Guilds, EpicAchievements, DecentHolograms, WorldEdit ]
 
 main: org.twightlight.skywars.SkyWars
 commands:

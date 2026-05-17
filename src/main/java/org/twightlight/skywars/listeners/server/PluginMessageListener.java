@@ -3,7 +3,7 @@ package org.twightlight.skywars.listeners.server;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.entity.Player;
-import org.twightlight.skywars.bungee.CoreLobbies;
+import org.twightlight.skywars.bungee.core.CoreLobbies;
 
 import java.util.HashMap;
 import java.util.Map;

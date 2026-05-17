@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.util.Vector;
+import org.twightlight.skywars.modules.lobbysettings.User;
 import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
@@ -102,10 +103,10 @@ public class EntityListener implements Listener {
                     return;
                 }
 
-                if (account.canSeeBlood()) {
+                if (User.getFromUUID(account.getUniqueId()).isBloodVisible()) {
                     player.playEffect(player.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
                 }
-                if (account2.canSeeBlood()) {
+                if (User.getFromUUID(account2.getUniqueId()).isBloodVisible()) {
                     damager.playEffect(player.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
                 }
 
@@ -130,10 +131,10 @@ public class EntityListener implements Listener {
                         return;
                     }
 
-                    if (account.canSeeBlood()) {
+                    if (User.getFromUUID(account.getUniqueId()).isBloodVisible()) {
                         player.playEffect(player.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
                     }
-                    if (account2.canSeeBlood()) {
+                    if (User.getFromUUID(account2.getUniqueId()).isBloodVisible()) {
                         damager.playEffect(player.getLocation(), Effect.STEP_SOUND, Material.REDSTONE_BLOCK);
                     }
 

@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class ProjectileTrailsMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("projectiletrail");
+    private static final MenuConfig config = MenuConfig.getByName("projectiletrails");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

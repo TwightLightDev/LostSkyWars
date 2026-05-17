@@ -15,13 +15,11 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 
 public class MysteryBoxEffect extends SkyWarsKillEffect {
-
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public MysteryBoxEffect() {
         super(CONFIG.getInt("mysterybox.id"),

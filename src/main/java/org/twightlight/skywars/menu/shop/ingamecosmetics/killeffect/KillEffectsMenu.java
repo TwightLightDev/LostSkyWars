@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class KillEffectsMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("killeffect");
+    private static final MenuConfig config = MenuConfig.getByName("killeffects");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

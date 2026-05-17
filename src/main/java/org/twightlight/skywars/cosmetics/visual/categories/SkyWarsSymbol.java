@@ -9,7 +9,7 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,7 +88,7 @@ public class SkyWarsSymbol extends VisualCosmetic {
         return cloned;
     }
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("symbols");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("symbols", "plugins/LostSkyWars/cosmetics");
 
     public static void setupSymbols() {
         for (String key : CONFIG.getKeys(false)) {

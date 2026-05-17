@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class DeathCriesMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("deathcry");
+    private static final MenuConfig config = MenuConfig.getByName("deathcries");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -26,7 +26,7 @@ import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.player.RenderUtils;
 
 import java.awt.image.BufferedImage;
@@ -168,7 +168,7 @@ public class SkyWarsSpray extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Sprays");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("sprays");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("sprays", "plugins/LostSkyWars/cosmetics");
 
     public static void setupSprays() {
         CONFIG.reload();

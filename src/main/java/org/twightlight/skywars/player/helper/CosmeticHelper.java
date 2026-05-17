@@ -14,7 +14,6 @@ public class CosmeticHelper {
         this.cosmetics = cosmetics;
     }
 
-
     public boolean hasKit(String cosmeticsGroupId, int kitId) {
         Map<String, List<Integer>> map = getKitsMap();
         List<Integer> list = map.get(cosmeticsGroupId);

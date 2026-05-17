@@ -1,7 +1,7 @@
 package org.twightlight.skywars.commands;
 
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreMode;
 
 public class Commands {
 

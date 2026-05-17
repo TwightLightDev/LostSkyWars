@@ -1,8 +1,3 @@
-# Unified kits configuration
-# Each kit has an 'allowed-groups' list determining which CosmeticsGroups can use it.
-# CosmeticsGroup IDs: normal, insane, ranked
-# If allowed-groups is empty or absent, the kit is available in ALL groups.
-
 default_sword:
   id: 1
   name: 'Default Sword'

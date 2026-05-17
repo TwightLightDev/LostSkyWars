@@ -12,13 +12,13 @@ import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 public class Juggernaut extends Perk {
 
     private int seconds;
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("perks");
 
     public Juggernaut() {
         super(CONFIG.getInt("juggernaut.id"),

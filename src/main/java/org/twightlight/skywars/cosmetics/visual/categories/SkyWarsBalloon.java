@@ -25,7 +25,7 @@ import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +160,7 @@ public class SkyWarsBalloon extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Ballons");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("balloons");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig( "balloons", "plugins/LostSkyWars/cosmetics");
 
     public static void setupBallons() {
         CONFIG.reload();

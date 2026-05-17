@@ -1,7 +1,7 @@
 package org.twightlight.skywars.player.ranked;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class League {
 
     private static List<League> leagues = new ArrayList<>();
 
-    public static void setupLeagues(ConfigWrapper config) {
+    public static void setupLeagues(YamlWrapper config) {
         ConfigurationSection section = config.getSection("leagues");
         if (section == null) return;
         leagues.clear();

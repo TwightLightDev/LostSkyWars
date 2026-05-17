@@ -9,14 +9,12 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.Random;
 
 
 public class FireworkEffect extends SkyWarsKillEffect {
-
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public FireworkEffect() {
         super(CONFIG.getInt("firework.id"),

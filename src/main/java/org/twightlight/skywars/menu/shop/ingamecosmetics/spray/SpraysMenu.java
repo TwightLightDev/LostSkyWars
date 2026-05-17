@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class SpraysMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("spray");
+    private static final MenuConfig config = MenuConfig.getByName("sprays");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

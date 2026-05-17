@@ -14,7 +14,7 @@ import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +125,7 @@ public class SkyWarsKillMessage extends VisualCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("KillMessages");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killmessages");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("killmessages", "plugins/LostSkyWars/cosmetics");
 
     public static void setupKM() {
         CONFIG.reload();

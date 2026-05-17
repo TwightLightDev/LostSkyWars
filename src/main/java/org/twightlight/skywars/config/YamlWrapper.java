@@ -13,12 +13,12 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ConfigWrapper {
+public class YamlWrapper {
 
     private File file;
     private YamlConfiguration config;
 
-    private ConfigWrapper(String path, String name) {
+    private YamlWrapper(String path, String name) {
         this.file = new File(path + "/" + name + ".yml");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -144,15 +144,15 @@ public class ConfigWrapper {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("ConfigUtils");
-    private static Map<String, ConfigWrapper> cache = new HashMap<>();
+    private static Map<String, YamlWrapper> cache = new HashMap<>();
 
-    public static ConfigWrapper getConfig(String name) {
+    public static YamlWrapper getConfig(String name) {
         return getConfig(name, "plugins/LostSkyWars");
     }
 
-    public static ConfigWrapper getConfig(String name, String path) {
+    public static YamlWrapper getConfig(String name, String path) {
         if (!cache.containsKey(path + "/" + name)) {
-            cache.put(path + "/" + name, new ConfigWrapper(path, name));
+            cache.put(path + "/" + name, new YamlWrapper(path, name));
         }
 
         return cache.get(path + "/" + name);
@@ -162,8 +162,8 @@ public class ConfigWrapper {
         cache.remove("plugins/LostSkyWars/" + name);
     }
 
-    public static void removeConfig(ConfigWrapper config) {
-        for (Map.Entry<String, ConfigWrapper> cu : ImmutableList.copyOf(cache.entrySet())) {
+    public static void removeConfig(YamlWrapper config) {
+        for (Map.Entry<String, YamlWrapper> cu : ImmutableList.copyOf(cache.entrySet())) {
             if (cu.getValue().equals(config)) {
                 cache.remove(cu.getKey());
                 return;

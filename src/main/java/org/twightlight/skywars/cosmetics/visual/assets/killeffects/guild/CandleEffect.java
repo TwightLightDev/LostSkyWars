@@ -12,11 +12,9 @@ import org.twightlight.skywars.nms.particles.ParticleEffect;
 import org.twightlight.skywars.systems.holograms.Hologram;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 public class CandleEffect extends SkyWarsKillEffect {
-
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public CandleEffect() {
         super(CONFIG.getInt("candle.id"),

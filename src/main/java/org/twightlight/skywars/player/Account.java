@@ -19,8 +19,8 @@ import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.ValueContainer;
 import org.twightlight.skywars.player.helper.CosmeticHelper;
 import org.twightlight.skywars.player.level.Level;
-import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
+import org.twightlight.skywars.modules.lobbysettings.User;
 import org.twightlight.skywars.systems.scoreboard.LostScoreboard;
 import org.twightlight.skywars.systems.scoreboard.ScoreboardScroller;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
@@ -88,11 +88,8 @@ public class Account {
         map.put("well_roll", new ValueContainer(1));
         map.put("souls_per_win", new ValueContainer(0));
         map.put("mystery_dusts", new ValueContainer(0));
-        map.put("last_rank", new ValueContainer("&7"));
         map.put("deliveries", new ValueContainer("{}"));
         map.put("leveling", new ValueContainer("[]"));
-        map.put("show_players", new ValueContainer(true));
-        map.put("show_gore", new ValueContainer(true));
         map.put("elo", new ValueContainer(0));
         map.put("brave_points", new ValueContainer(0));
         return map;
@@ -368,26 +365,6 @@ public class Account {
         return this.profile.get("exp").getAs(Double.class);
     }
 
-    public String getLastRank() {
-        return this.profile.get("last_rank").getAs(String.class);
-    }
-
-    public boolean canSeePlayers() {
-        return this.profile.get("show_players").getAs(Boolean.class);
-    }
-
-    public void setCanSeePlayers(boolean flag) {
-        this.profile.get("show_players").set(flag);
-    }
-
-    public boolean canSeeBlood() {
-        return this.profile.get("show_gore").getAs(Boolean.class);
-    }
-
-    public void setCanSeeBlood(boolean flag) {
-        this.profile.get("show_gore").set(flag);
-    }
-
     public Map<String, ValueContainer> getProfile() {
         return profile;
     }
@@ -525,6 +502,9 @@ public class Account {
     private void setupLobbyInventory(Player player) {
         player.setGameMode(GameMode.ADVENTURE);
 
+        User user = User.getFromUUID(player.getUniqueId());
+        boolean canSeePlayers = user != null ? user.isPlayerVisible() : true;
+
         int slot = Language.lobby$hotbar$profile$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot,
@@ -539,10 +519,9 @@ public class Account {
         slot = Language.lobby$hotbar$players$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
-                    "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display="
-                            + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
+                    "INK_SACK:" + (canSeePlayers ? "10" : "8") + " : 1 : display="
+                            + (canSeePlayers ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
         }
-        Rank.getRank(player).apply(player);
         player.teleport(SetLobbyCommand.getSpawnLocation());
 
         if (Language.lobby$speed$enabled) {
@@ -609,11 +588,14 @@ public class Account {
         Player player = getPlayer();
         if (player == null) return;
 
+        User user = User.getFromUUID(player.getUniqueId());
+        boolean canSeePlayers = user != null ? user.isPlayerVisible() : true;
+
         int slot = Language.lobby$hotbar$players$slot;
         if (slot >= 0 && slot < 9) {
             player.getInventory().setItem(slot, BukkitUtils.deserializeItemStack(
-                    "INK_SACK:" + (canSeePlayers() ? "10" : "8") + " : 1 : display="
-                            + (canSeePlayers() ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
+                    "INK_SACK:" + (canSeePlayers ? "10" : "8") + " : 1 : display="
+                            + (canSeePlayers ? Language.lobby$hotbar$players$name_v : Language.lobby$hotbar$players$name_i)));
         }
         player.updateInventory();
 
@@ -621,12 +603,14 @@ public class Account {
             Player other = account.getPlayer();
             if (other == null) return;
             if (account.inLobby()) {
-                if (canSeePlayers()) {
+                User otherUser = User.getFromUUID(other.getUniqueId());
+                boolean otherCanSeePlayers = otherUser != null ? otherUser.isPlayerVisible() : true;
+                if (canSeePlayers) {
                     player.showPlayer(other);
                 } else {
                     player.hidePlayer(other);
                 }
-                if (account.canSeePlayers()) {
+                if (otherCanSeePlayers) {
                     other.showPlayer(player);
                 } else {
                     other.hidePlayer(player);

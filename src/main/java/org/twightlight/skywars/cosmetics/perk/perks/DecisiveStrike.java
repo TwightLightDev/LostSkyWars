@@ -4,13 +4,13 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
 import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 public class DecisiveStrike extends Perk {
 
     private int percentage;
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("perks");
 
     public DecisiveStrike() {
         super(CONFIG.getInt("decisivestrike.id"),

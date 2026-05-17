@@ -8,15 +8,15 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.setup.api.ChatSession;
 import org.twightlight.skywars.setup.api.InventoryHolder;
 import org.twightlight.skywars.setup.api.Menu;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.util.Arrays;
 
 public class Browser extends Menu {
-    private ConfigWrapper config;
+    private YamlWrapper config;
 
-    private Browser(ConfigWrapper config) {
+    private Browser(YamlWrapper config) {
         super(45, true);
         this.config = config;
         holder.setCloseExecutable((e) -> {
@@ -66,7 +66,7 @@ public class Browser extends Menu {
         });
     }
 
-    public static Menu init(ConfigWrapper config) {
+    public static Menu init(YamlWrapper config) {
         return new Browser(config);
     }
 }

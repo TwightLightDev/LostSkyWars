@@ -45,7 +45,11 @@ public class PlaceholderAPI extends PlaceholderExpansion {
             return String.valueOf(user.isParticlesVisible());
         } else if (params.equals("showchat")) {
             return String.valueOf(user.isChatVisible());
-        }  else {
+        } else if (params.equals("showplayers")) {
+            return String.valueOf(user.isPlayerVisible());
+        } else if (params.equals("showblood")) {
+            return String.valueOf(user.isBloodVisible());
+        } else {
             return "";
         }
     }

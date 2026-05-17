@@ -13,7 +13,7 @@ import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -99,7 +99,7 @@ public abstract class SkyWarsVictoryDance extends VisualCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("VictoryDance");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("victorydances");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("victorydances", "plugins/LostSkyWars/cosmetics");
 
     public static void setupVictoryDances() {
         CONFIG.reload();
@@ -112,7 +112,7 @@ public abstract class SkyWarsVictoryDance extends VisualCosmetic {
         }
 
         try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("victorydances.yml"), "UTF-8"));
+            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("cosmetics/victorydances.yml"), "UTF-8"));
             for (String dataKey : config.getConfigurationSection(key).getKeys(false)) {
                 CONFIG.set(key + "." + dataKey, config.get(key + "." + dataKey));
             }

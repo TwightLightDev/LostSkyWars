@@ -19,7 +19,7 @@ import org.twightlight.skywars.arena.ui.interfaces.ScanCallback;
 import org.twightlight.skywars.commands.SubCommand;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class CreateCommand extends SubCommand {
             }
 
             World world = player.getWorld();
-            ConfigWrapper config = ConfigWrapper.getConfig(world.getName(), "plugins/LostSkyWars/servers");
+            YamlWrapper config = YamlWrapper.getConfig(world.getName(), "plugins/LostSkyWars/servers");
             player.getInventory().clear();
             player.getInventory().setArmorContents(new ItemStack[4]);
             player.updateInventory();

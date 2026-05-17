@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class VictoryDancesMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("victorydance");
+    private static final MenuConfig config = MenuConfig.getByName("victorydances");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

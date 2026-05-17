@@ -21,14 +21,12 @@ import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SadFaceBannerEffect extends SkyWarsKillEffect {
-
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
 
     public SadFaceBannerEffect() {
         super(CONFIG.getInt("sadface.id"),

@@ -27,7 +27,7 @@ import java.util.Map;
 public class ConfirmMenu extends PlayerMenu {
 
     private static final MenuConfig config = MenuConfig.getByName("confirmbuy");
-    private static final MenuConfig config1 = MenuConfig.getByName("balloon");
+    private static final MenuConfig config1 = MenuConfig.getByName("balloons");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

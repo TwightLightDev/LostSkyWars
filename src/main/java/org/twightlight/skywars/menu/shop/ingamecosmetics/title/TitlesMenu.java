@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class TitlesMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("title");
+    private static final MenuConfig config = MenuConfig.getByName("titles");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

@@ -6,13 +6,12 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
 import org.twightlight.skywars.arena.group.GroupManager;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreLobbies;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreLobbies;
+import org.twightlight.skywars.bungee.core.CoreMode;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.level.Level;
-import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.player.ranked.League;
 import org.twightlight.skywars.utils.string.StringUtils;
 
@@ -79,13 +78,6 @@ public class LostSkyWarsExpansion extends PlaceholderExpansion {
                 }
             }
             return String.valueOf(playing);
-        }
-
-        // =====================================================================
-        // Rank / team tag placeholders (no account needed for rank_prefix)
-        // =====================================================================
-        if (params.equals("rank_prefix")) {
-            return Rank.getRank(player).getColoredName();
         }
 
         // =====================================================================

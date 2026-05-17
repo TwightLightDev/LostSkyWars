@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.api.event.player.SkyWarsPlayerDeathEvent;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.perk.Perk;
 import org.twightlight.skywars.cosmetics.perk.PerkManager;
@@ -18,7 +18,7 @@ public class VoidMaster extends Perk {
 
     private int percentage;
 
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("perks");
 
     public VoidMaster() {
         super(CONFIG.getInt("voidmaster.id"),

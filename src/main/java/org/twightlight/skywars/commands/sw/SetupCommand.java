@@ -10,7 +10,7 @@ import org.twightlight.skywars.setup.api.Menu;
 import org.twightlight.skywars.setup.cage.CageSetupSession;
 import org.twightlight.skywars.setup.chests.Browser;
 import org.twightlight.skywars.setup.kits.KitsSetup;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,22 +29,17 @@ public class SetupCommand extends SubCommand {
     @Override
     public void perform(Player player, String[] args) {
         if (args.length == 0) {
-            player.sendMessage(" \n§dSetup - Help\n \n§6/lsw setup kits <id> <normal/insane/ranked> §f- §7Open kit setup menu.\n \n§6/lsw setup chesttypes §f- §7Open chesttypes setup menu.\n \n§6/lsw setup cage §f- §7Manage your cage setup.\n ");
+            player.sendMessage(" \n§dSetup - Help\n \n§6/lsw setup kits <id> §f- §7Open kit setup menu.\n \n§6/lsw setup chesttypes §f- §7Open chesttypes setup menu.\n \n§6/lsw setup cage §f- §7Manage your cage setup.\n ");
             return;
         }
 
         String action = args[0];
         if (action.equalsIgnoreCase("kits")) {
-            if (args.length < 3) {
-                player.sendMessage("§cUse /lsw setup kits <id> <normal/insane/ranked>");
+            if (args.length < 2) {
+                player.sendMessage(" \n§dSetup - Help\n \n§6/lsw setup kits <id> §f- §7Open kit setup menu.\n ");
                 return;
             }
-            String kitType = args[2].toLowerCase();
-            if (!kitType.equals("normal") && !kitType.equals("insane") && !kitType.equals("ranked")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found! Use: normal, insane, ranked"));
-                return;
-            }
-            ConfigWrapper config = ConfigWrapper.getConfig(kitType + "kits", "plugins/LostSkyWars/kits");
+            YamlWrapper config = YamlWrapper.getConfig( "kits", "plugins/LostSkyWars");
             if (config != null) {
                 Menu menu = KitsSetup.init(config, args[1]);
                 menu.open(player);
@@ -52,7 +47,7 @@ public class SetupCommand extends SubCommand {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cFile not found!"));
             }
         } else if (action.equalsIgnoreCase("chesttypes")) {
-            Browser.init(ConfigWrapper.getConfig("chesttypes")).open(player);
+            Browser.init(YamlWrapper.getConfig("chesttypes")).open(player);
         } else if (action.equalsIgnoreCase("cage")) {
             CageSetupSession session = CageSetupSession.getSessionFromUUID(player.getUniqueId());
 

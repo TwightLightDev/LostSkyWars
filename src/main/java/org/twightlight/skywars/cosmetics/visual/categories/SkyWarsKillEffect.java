@@ -33,7 +33,7 @@ import org.twightlight.skywars.integration.packetevents.PacketEventsIntegration;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -199,7 +199,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Kill Effects");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("killeffects");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("killeffects", "plugins/LostSkyWars/cosmetics");
 
     public static void setupKillEffects() {
         CONFIG.reload();
@@ -245,7 +245,7 @@ public abstract class SkyWarsKillEffect extends PreviewableCosmetic {
         }
 
         try {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("killeffects.yml"), "UTF-8"));
+            FileConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(SkyWars.getInstance().getResource("cosmetics/killeffects.yml"), "UTF-8"));
             for (String dataKey : config.getConfigurationSection(key).getKeys(false)) {
                 CONFIG.set(key + "." + dataKey, config.get(key + "." + dataKey));
             }

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.bungee;
+package org.twightlight.skywars.bungee.core;
 
 public abstract class CoreDatabase {
 

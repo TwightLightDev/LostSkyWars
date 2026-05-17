@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class CagesMenu extends PagedPlayerMenu {
 
-    private static final MenuConfig config = MenuConfig.getByName("cells");
+    private static final MenuConfig config = MenuConfig.getByName("cages");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

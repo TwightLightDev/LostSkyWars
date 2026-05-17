@@ -27,7 +27,7 @@ import java.util.Map;
 public class ConfirmMenu extends PlayerMenu {
 
     private static final MenuConfig config = MenuConfig.getByName("confirmbuy");
-    private static final MenuConfig config1 = MenuConfig.getByName("projectiletrail");
+    private static final MenuConfig config1 = MenuConfig.getByName("projectiletrails");
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent evt) {

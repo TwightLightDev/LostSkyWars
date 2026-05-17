@@ -14,9 +14,9 @@ import org.twightlight.skywars.arena.group.GroupManager;
 import org.twightlight.skywars.arena.ui.chest.ChestType;
 import org.twightlight.skywars.arena.worldloaders.InternalLoader;
 import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreLobbies;
-import org.twightlight.skywars.bungee.CoreMode;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreLobbies;
+import org.twightlight.skywars.bungee.core.CoreMode;
 import org.twightlight.skywars.commands.Commands;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
@@ -38,8 +38,6 @@ import org.twightlight.skywars.modules.privategames.PrivateGames;
 import org.twightlight.skywars.modules.quests.Quests;
 import org.twightlight.skywars.modules.recentgames.RecentGames;
 import org.twightlight.skywars.nms.NMS;
-import org.twightlight.skywars.player.rank.Rank;
-import org.twightlight.skywars.player.rank.TagUtils;
 import org.twightlight.skywars.systems.holograms.Holograms;
 import org.twightlight.skywars.systems.well.AngelOfDeath;
 import org.twightlight.skywars.systems.well.WellNPC;
@@ -47,7 +45,7 @@ import org.twightlight.skywars.utils.bukkit.MinecraftVersion;
 
 import java.io.File;
 
-import static org.twightlight.skywars.bungee.Core.MODE;
+import static org.twightlight.skywars.bungee.core.Core.MODE;
 
 public class SkyWars extends JavaPlugin {
 
@@ -107,7 +105,6 @@ public class SkyWars extends JavaPlugin {
         if (!modules.exists()) {
             modules.mkdirs();
         }
-        Rank.setupRanks();
         org.twightlight.skywars.player.level.Level.setupLevels();
         GroupManager.setup();
         CustomItemsManager.load();
@@ -172,7 +169,6 @@ public class SkyWars extends JavaPlugin {
     @Override
     public void onDisable() {
         if (validInit) {
-            TagUtils.reset();
             Holograms.close();
 
             if (citizens) {

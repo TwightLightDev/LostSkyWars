@@ -38,7 +38,6 @@ import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.nms.enums.Sound;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.player.helper.CurrencyManager;
-import org.twightlight.skywars.player.rank.Rank;
 import org.twightlight.skywars.utils.file.FontUtils;
 import org.twightlight.skywars.utils.player.PlayerUtils;
 import org.twightlight.skywars.utils.string.StringUtils;
@@ -756,7 +755,7 @@ public class GameArena extends Arena {
                     if (team == null) {
                         team = scoreboard.registerNewTeam(other.getUniqueId().toString().replace("-", "").substring(0, 16));
                     }
-                    team.setPrefix(StringUtils.getLastColor(Rank.getRank(other).getPrefix()));
+                    team.setPrefix("§7");
                     if (!team.hasEntry(other.getName())) team.addEntry(other.getName());
                 }
             }

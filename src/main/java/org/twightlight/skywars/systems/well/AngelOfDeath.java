@@ -13,7 +13,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.systems.holograms.entity.IArmorStand;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,7 +203,7 @@ public class AngelOfDeath {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Angels");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("locations");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("locations");
 
     private static List<AngelOfDeath> npcs = new ArrayList<>();
 

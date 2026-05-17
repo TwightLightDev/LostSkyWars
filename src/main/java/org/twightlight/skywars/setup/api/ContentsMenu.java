@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -17,12 +17,12 @@ public class ContentsMenu extends Menu {
     private static List<Integer> decorationSlots = Arrays.asList(0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53);
     private static ItemStack decorator = BukkitUtils.createItem(Material.STAINED_GLASS_PANE, "", 1, 15, "", Collections.emptyList(), false);
 
-    private ConfigWrapper config;
+    private YamlWrapper config;
     private Consumer<Player> backAction;
     private String contentsPath;
     private List<ItemStack> contents;
 
-    private ContentsMenu(ConfigWrapper config, Consumer<Player> backAction, String contentsPath) {
+    private ContentsMenu(YamlWrapper config, Consumer<Player> backAction, String contentsPath) {
         super(54, false);
 
         this.config = config;
@@ -116,7 +116,7 @@ public class ContentsMenu extends Menu {
         }
     }
 
-    public static Menu init(ConfigWrapper config, Consumer<Player> backAction, String contentsPath) {
+    public static Menu init(YamlWrapper config, Consumer<Player> backAction, String contentsPath) {
         return new ContentsMenu(config, backAction, contentsPath);
     }
 }

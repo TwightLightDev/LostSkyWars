@@ -76,7 +76,7 @@ public class User implements ModulesUser {
         }
     }
 
-    public boolean canSeePlayers() {
+    public boolean isPlayerVisible() {
         return showPlayers;
     }
 
@@ -87,7 +87,7 @@ public class User implements ModulesUser {
         }
     }
 
-    public boolean canSeeBlood() {
+    public boolean isBloodVisible() {
         return showBlood;
     }
 

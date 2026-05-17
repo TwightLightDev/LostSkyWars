@@ -1,7 +1,7 @@
 package org.twightlight.skywars.utils.player;
 
-import org.twightlight.skywars.bungee.Core;
-import org.twightlight.skywars.bungee.CoreSender;
+import org.twightlight.skywars.bungee.core.Core;
+import org.twightlight.skywars.bungee.core.CoreSender;
 
 public class Logger {
 

@@ -10,7 +10,7 @@ import org.twightlight.skywars.cosmetics.group.CosmeticsGroup;
 import org.twightlight.skywars.cosmetics.perk.perks.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -23,7 +23,7 @@ public class PerkManager {
 
     private static final List<Perk> PERKS = new ArrayList<>();
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("Perks");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("perks");
+    private static final YamlWrapper CONFIG = YamlWrapper.getConfig("perks");
 
     private static String decisiveStrikeId;
 

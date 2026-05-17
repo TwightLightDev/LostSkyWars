@@ -16,7 +16,7 @@ import org.twightlight.skywars.cosmetics.visual.VisualCosmeticType;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.nms.enums.Sound;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,7 +116,7 @@ public class SkyWarsDeathCry extends VisualCosmetic {
     }
 
     public static final Logger LOGGER = SkyWars.LOGGER.getModule("DeathCries");
-    private static final ConfigWrapper CONFIG = ConfigWrapper.getConfig("deathcries");
+    protected static final YamlWrapper CONFIG = YamlWrapper.getConfig("deathcries", "plugins/LostSkyWars/cosmetics");
 
     public static void setupDeathCries() {
         CONFIG.reload();

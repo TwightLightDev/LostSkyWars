@@ -9,7 +9,7 @@ import org.twightlight.skywars.setup.api.ChatSession;
 import org.twightlight.skywars.setup.api.ContentsMenu;
 import org.twightlight.skywars.setup.api.InventoryHolder;
 import org.twightlight.skywars.setup.api.Menu;
-import org.twightlight.skywars.config.ConfigWrapper;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.bukkit.ItemBuilder;
 
 import java.util.Arrays;
@@ -19,10 +19,10 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class Guaranteed extends Menu {
-    private ConfigWrapper config;
+    private YamlWrapper config;
     private Consumer<Player> backAction;
     private String path;
-    private Guaranteed(ConfigWrapper config, Consumer<Player> backAction, String path) {
+    private Guaranteed(YamlWrapper config, Consumer<Player> backAction, String path) {
         super(45, true);
         this.config = config;
         this.backAction = backAction;
@@ -83,7 +83,7 @@ public class Guaranteed extends Menu {
         });
     }
 
-    public static Menu init(ConfigWrapper config, Consumer<Player> backAction, String path) {
+    public static Menu init(YamlWrapper config, Consumer<Player> backAction, String path) {
         return new Guaranteed(config, backAction, path);
     }
 }
