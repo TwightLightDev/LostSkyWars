@@ -1,4 +1,4 @@
-package org.twightlight.skywars.commands.sw;
+package org.twightlight.skywars.commands.skywars;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;

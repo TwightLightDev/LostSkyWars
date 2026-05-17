@@ -22,7 +22,7 @@ import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.SkyWarsTeam;
-import org.twightlight.skywars.commands.sw.SetLobbyCommand;
+import org.twightlight.skywars.commands.skywars.SetLobbyCommand;
 import org.twightlight.skywars.cosmetics.perk.PerkManager;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.player.Account;

@@ -3,7 +3,7 @@ package org.twightlight.skywars.listeners.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.twightlight.skywars.commands.sw.BuildCommand;
+import org.twightlight.skywars.commands.skywars.BuildCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.listeners.Listeners;
 import org.twightlight.skywars.player.Account;

@@ -27,7 +27,7 @@ import org.twightlight.skywars.nms.NMS;
 import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
 import org.twightlight.skywars.config.YamlWrapper;
-import org.twightlight.skywars.utils.player.RenderUtils;
+import org.twightlight.skywars.cosmetics.visual.assets.sprays.MapRender;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -186,7 +186,7 @@ public class SkyWarsSpray extends PreviewableCosmetic {
             BufferedImage img = null;
             if (url != null) {
                 try {
-                    img = RenderUtils.loadImage(url);
+                    img = MapRender.loadImage(url);
                 } catch (IOException e) {
                     throw new RuntimeException("cFailed to load image: " + e.getMessage());
                 }
@@ -195,7 +195,7 @@ public class SkyWarsSpray extends PreviewableCosmetic {
             if (fileStr != null) {
                 try {
                     File imageFile = new File(SkyWars.getInstance().getDataFolder().getPath() + "/sprays/" + fileStr);
-                    img = RenderUtils.loadImage(imageFile);
+                    img = MapRender.loadImage(imageFile);
                 } catch (IOException e) {
                     throw new RuntimeException("cFailed to load image: " + e.getMessage());
                 }

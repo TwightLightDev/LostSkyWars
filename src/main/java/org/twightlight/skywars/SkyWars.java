@@ -17,7 +17,7 @@ import org.twightlight.skywars.arena.worldloaders.SlimeLoader;
 import org.twightlight.skywars.bungee.core.Core;
 import org.twightlight.skywars.bungee.core.CoreLobbies;
 import org.twightlight.skywars.bungee.core.CoreMode;
-import org.twightlight.skywars.commands.Commands;
+import org.twightlight.skywars.commands.CommandsManager;
 import org.twightlight.skywars.cosmetics.visual.VisualCosmetic;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.providers.SQLiteDatabase;
@@ -151,7 +151,7 @@ public class SkyWars extends JavaPlugin {
             citizens = false;
         }
 
-        Commands.setupCommands();
+        CommandsManager.setupCommands();
         Listeners.setupListeners();
 
         if (MODE != CoreMode.ARENA) {

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.utils.player;
+package org.twightlight.skywars.cosmetics.visual.assets.sprays;
 
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class RenderUtils {
+public class MapRender {
 
     public static BufferedImage loadImage(String urlStr) throws IOException {
         BufferedImage image;

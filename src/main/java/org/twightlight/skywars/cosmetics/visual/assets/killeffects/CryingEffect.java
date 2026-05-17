@@ -9,8 +9,7 @@ import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.CosmeticRarity;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsKillEffect;
 import org.twightlight.skywars.utils.bukkit.BukkitUtils;
-import org.twightlight.skywars.config.YamlWrapper;
-import org.twightlight.skywars.utils.player.RenderUtils;
+import org.twightlight.skywars.cosmetics.visual.assets.sprays.MapRender;
 import org.twightlight.skywars.utils.math.VectorUtils;
 
 import java.awt.*;
@@ -43,7 +42,7 @@ public class CryingEffect extends SkyWarsKillEffect {
 
             final Font font = new Font(text, 0, 12);
 
-            final BufferedImage image = RenderUtils.stringToBufferedImage(this.font, text, 90);
+            final BufferedImage image = MapRender.stringToBufferedImage(this.font, text, 90);
 
             final boolean invert = false;
 
@@ -100,7 +99,7 @@ public class CryingEffect extends SkyWarsKillEffect {
 
             final Font font = new Font(text, 0, 12);
 
-            final BufferedImage image = RenderUtils.stringToBufferedImage(this.font, text, 90);
+            final BufferedImage image = MapRender.stringToBufferedImage(this.font, text, 90);
 
             final boolean invert = false;
 

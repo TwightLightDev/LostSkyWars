@@ -13,7 +13,7 @@ import org.twightlight.skywars.arena.ui.enums.SkyWarsState;
 import org.twightlight.skywars.arena.Arena;
 import org.twightlight.skywars.arena.GameArena;
 import org.twightlight.skywars.arena.group.ArenaGroup;
-import org.twightlight.skywars.commands.sw.SetLobbyCommand;
+import org.twightlight.skywars.commands.skywars.SetLobbyCommand;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.database.player.SelectedContainer;
 import org.twightlight.skywars.database.player.ValueContainer;

@@ -1,4 +1,4 @@
-package org.twightlight.skywars.commands.sw;
+package org.twightlight.skywars.commands.skywars;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -16,7 +16,6 @@ import org.bukkit.util.Vector;
 import org.twightlight.skywars.Language;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.cosmetics.visual.categories.SkyWarsSpray;
-import org.twightlight.skywars.utils.player.RenderUtils;
 import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.awt.image.BufferedImage;
@@ -76,7 +75,7 @@ public class Spray {
 
         MapView mapView = Bukkit.createMap(p.getWorld());
         mapView.getRenderers().clear();
-        mapView.addRenderer(new RenderUtils.ImageMapRenderer(image));
+        mapView.addRenderer(new MapRender.ImageMapRenderer(image));
 
         ItemStack mapItem = new ItemStack(Material.MAP);
         mapItem.setDurability(mapView.getId());

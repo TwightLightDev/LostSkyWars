@@ -17,7 +17,7 @@ import org.twightlight.skywars.arena.ui.chest.SkyWarsChest;
 import org.twightlight.skywars.bungee.core.Core;
 import org.twightlight.skywars.bungee.core.CoreLobbies;
 import org.twightlight.skywars.bungee.core.CoreMode;
-import org.twightlight.skywars.commands.sw.*;
+import org.twightlight.skywars.commands.skywars.*;
 import org.twightlight.skywars.database.Database;
 import org.twightlight.skywars.integration.boxes.BoxNPC;
 import org.twightlight.skywars.listeners.Listeners;

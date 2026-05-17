@@ -62,52 +62,10 @@ public class CitizensIntegration {
     }
 
     private static void handleNPCClick(Player player, net.citizensnpcs.api.npc.NPC npc) {
-        if (npc.data().has("play-npc")) {
-            String category = npc.data().get("play-npc");
-            new PlayMenu(player, category);
-        } else if (npc.data().has("ranked-npc")) {
-            Account account = Database.getInstance().getAccount(player.getUniqueId());
-            if (account != null) {
-                if (account.getLevel() >= Language.options$ranked$required$level) {
-                    handleRankedPlay(player, account);
-                    return;
-                }
-                player.sendMessage(Language.options$ranked$required$message);
-            }
-        } else if (npc.data().has("duels-npc")) {
-            handleDuelsPlay(player);
-        } else if (npc.data().has("shopkeeper")) {
+        if (npc.data().has("shopkeeper")) {
             new ShopMenu(player);
         } else if (npc.data().has("profile")) {
             new StatsNPCMenu(player);
-        }
-    }
-
-    private static void handleRankedPlay(Player player, Account account) {
-        String groupId = "ranked_solo";
-        if (Core.MODE == CoreMode.MULTI_ARENA) {
-            Arena server = Arena.findRandom(groupId);
-            if (server != null) {
-                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-                server.connect(account);
-            }
-        } else {
-            CoreLobbies.writeMinigame(player, groupId, "all");
-        }
-    }
-
-    private static void handleDuelsPlay(Player player) {
-        Account account = Database.getInstance().getAccount(player.getUniqueId());
-        if (account == null) return;
-        String groupId = "duels";
-        if (Core.MODE == CoreMode.MULTI_ARENA) {
-            Arena server = Arena.findRandom(groupId);
-            if (server != null) {
-                player.sendMessage(Language.lobby$npcs$play$connecting.replace("{world}", server.getName()));
-                server.connect(account);
-            }
-        } else {
-            CoreLobbies.writeMinigame(player, groupId, "all");
         }
     }
 

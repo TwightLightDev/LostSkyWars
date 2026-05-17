@@ -11,10 +11,13 @@ import org.twightlight.skywars.menu.lobby.DeliveryManMenu;
 import org.twightlight.skywars.menu.lobby.StatsNPCMenu;
 import org.twightlight.skywars.menu.shop.ingamecosmetics.CosmeticsMenu;
 
+import java.util.Arrays;
+
 public class MenuCommand extends Command {
 
     public MenuCommand() {
         super("swmenu");
+        this.setAliases(Arrays.asList("skywarsmenu"));
         try {
             SimpleCommandMap simpleCommandMap = (SimpleCommandMap) Bukkit.getServer().getClass().getDeclaredMethod("getCommandMap").invoke(Bukkit.getServer());
             simpleCommandMap.register(this.getName(), "lostskywars", this);

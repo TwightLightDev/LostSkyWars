@@ -9,7 +9,7 @@ import org.twightlight.skywars.utils.player.Logger.Level;
 import org.twightlight.skywars.SkyWars;
 import org.twightlight.skywars.bungee.core.Core;
 import org.twightlight.skywars.bungee.core.CoreMode;
-import org.twightlight.skywars.commands.sw.*;
+import org.twightlight.skywars.commands.skywars.*;
 import org.twightlight.skywars.integration.boxes.commands.BoxNPCCommand;
 import org.twightlight.skywars.integration.citizens.commands.DeliveryNPCCommand;
 import org.twightlight.skywars.integration.citizens.commands.ShopkeeperNPCCommand;
@@ -34,8 +34,6 @@ public class SkyWarsCommand extends Command {
         }
 
         if (Core.MODE != CoreMode.ARENA) {
-            commands.add(new SetLobbyCommand());
-            commands.add(new BuildCommand());
             if (SkyWars.citizens) {
                 commands.add(new DeliveryNPCCommand());
                 commands.add(new ShopkeeperNPCCommand());
@@ -51,15 +49,16 @@ public class SkyWarsCommand extends Command {
             commands.add(new AODCommand());
             commands.add(new SetupCommand());
             commands.add(new ReloadCommand());
-
-        }
-        if (Core.MODE == CoreMode.MULTI_ARENA) {
+            commands.add(new SetLobbyCommand());
+            commands.add(new BuildCommand());
             commands.add(new CreateCageCommand());
             commands.add(new DeathCryCommand());
+            commands.add(new CloneCommand());
+            commands.add(new DeleteCommand());
+            commands.add(new CosmeticsCommand());
         }
-        if (Core.MODE != CoreMode.ARENA) {}
-        commands.add(new GiveCommand());
-        commands.add(new RemoveCommand());
+
+
         if (Core.MODE != CoreMode.LOBBY) {
             commands.add(new ForceStartCommand());
             commands.add(new LoadCommand());
@@ -70,10 +69,9 @@ public class SkyWarsCommand extends Command {
             commands.add(new BalloonsCommand());
             commands.add(new WaitingLobbyCommand());
         }
-        if (Core.MODE == CoreMode.MULTI_ARENA) {
-            commands.add(new CloneCommand());
-            commands.add(new DeleteCommand());
-        }
+
+        commands.add(new GiveCommand());
+        commands.add(new RemoveCommand());
     }
 
     @Override
