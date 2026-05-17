@@ -8,8 +8,7 @@ database:
 server-mode: MULTI_ARENA
 default-language: english
 ranked:
-  required:
-    level: 1
+  required-level: 1
 lobby:
   chat:
     enabled: true

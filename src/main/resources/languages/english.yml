@@ -90,10 +90,7 @@ scoreboards:
     waiting: "Waiting..."
     starting: "Starting in &a{time}s"
 
-# --- Mode names ---
-mode:
-  solo: "Solo"
-  doubles: "Doubles"
+
 
 # --- Cosmetic rarity names ---
 rarity:
