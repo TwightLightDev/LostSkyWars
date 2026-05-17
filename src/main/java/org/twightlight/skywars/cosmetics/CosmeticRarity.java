@@ -1,6 +1,7 @@
 package org.twightlight.skywars.cosmetics;
 
 import org.twightlight.skywars.Language;
+import org.twightlight.skywars.player.Account;
 import org.twightlight.skywars.utils.string.StringUtils;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public enum CosmeticRarity {
         this.weight = weight;
     }
 
-    public void translate() {
+    public void translate(Account account) {
         if (this == MYTHIC) {
             this.name = Language.options$rarity$mythic;
         } else if (this == LEGENDARY) {

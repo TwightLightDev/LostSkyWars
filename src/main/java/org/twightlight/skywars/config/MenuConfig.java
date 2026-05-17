@@ -74,7 +74,7 @@ public class MenuConfig {
     private static final List<MenuConfig> menus = new ArrayList<>();
 
     public static final String[] MENUS_ARRAY = new String[]{
-            "profile", "leveling", "statistics", "settings", "shop", "cages", "play",
+            "profile", "leveling", "statistics", "settings", "shop", "cages",
             "kitsandperks", "viewkit", "confirmbuy", "kitselector", "mapselector",
             "well", "wellsettings", "wellharvest", "wellupgrades", "wellroll", "teleporter",
             "mysteryvault", "confirmvault", "deliveryman", "deathcries", "balloons", "statsnpc",

@@ -1,0 +1,312 @@
+# ============================================================
+# LostSkyWars - English Language File
+# ============================================================
+# This file contains all player-facing messages and text.
+# Supports '&' color codes. Use \n for newlines.
+# ============================================================
+
+# --- Prefix ---
+prefix: "&5[LostSkyWars] "
+
+# --- Scoreboard ---
+scoreboards:
+  animation:
+    title:
+      - "&f&l&6&lS&a&lKYWARS"
+      - "&f&lS&6&lK&a&lYWARS"
+      - "&f&lSK&6&lY&a&lWARS"
+      - "&f&lSKY&6&lW&a&lARS"
+      - "&f&lSKYW&6&lA&a&lRS"
+      - "&f&lSKYWA&6&lR&a&lS"
+      - "&f&lSKYWAR&6&lS&a&l"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&f&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+      - "&a&lSKYWARS"
+  lines:
+    lobby:
+      - ""
+      - "Your Level: {level}"
+      - ""
+      - "Solo Kills: &a{solokills}"
+      - "Solo Wins: &a{solowins}"
+      - "Doubles Kills: &a{teamkills}"
+      - "Doubles Wins: &a{teamwins}"
+      - "Ranked Kills: &a{rankedkills}"
+      - "Ranked Wins: &a{rankedwins}"
+      - ""
+      - "Coins: &6{coins}"
+      - "Souls: &b{souls}&7/{maxsouls}"
+      - ""
+      - "&ewww.example.net"
+  replace:
+    waiting: "Waiting..."
+    starting: "Starting in &a{time}s"
+
+# --- Mode names ---
+mode:
+  solo: "Solo"
+  doubles: "Doubles"
+
+# --- Cosmetic rarity names ---
+rarity:
+  common: "&7COMMON"
+  uncommon: "&aUNCOMMON"
+  rare: "&9RARE"
+  epic: "&5EPIC"
+  legendary: "&6LEGENDARY"
+  mythic: "&cMYTHIC"
+
+# --- Cosmetic display prefixes ---
+cosmetic:
+  default-kit: "Default"
+  prefix: "SkyWars "
+  kit: "Kit "
+  perk: "Perk "
+  cage: "Cage "
+  deathcry: "Death Cry "
+  trail: "Projectile Trail "
+  killmessage: "Kill Message "
+  killeffect: "Kill Effect "
+  victorydance: "Victory Dance "
+  title: "Title "
+  ballon: "Ballon "
+  spray: "Spray "
+
+# --- Lobby ---
+lobby:
+  chat:
+    delay-message: "&cYou must wait &a{time}s &cbetween send other message!"
+    format: "&7[&a{level}&7] {display}{color}: {message}"
+    format-ranked: "&7[{league}({points})&7] {display}{color}: {message}"
+    format-duels: "&a[GAME] &7{colored}{color}: {message}"
+    format-spectator: "&7[SPECTATOR] &7[&a{level}&7] {display}{color}: {message}"
+  visibility:
+    delay: "&cYou must wait &a{time}s &cbetween uses!"
+  hotbar:
+    profile:
+      name: "&aMy Profile &7(Right Click)"
+    shop:
+      name: "&aShop &7(Right Click)"
+    players:
+      name-visible: "&fPlayers: &aVisible &7(Right Click)"
+      name-hidden: "&fPlayers: &cHidden &7(Right Click)"
+  npcs:
+    play:
+      connecting: "&aSending you to {world}!\n \n "
+    box:
+      already-in-use: "&cOnly one player can use the Mystery Vault at a time!"
+      duplicate: "&aYou've received &b{frags} Mystery Dusts for already have {prefix} {item}&a!"
+    well:
+      holograms:
+        - "&bSoul Well"
+        - "&e&lRIGHT CLICK"
+    box-npc:
+      holograms:
+        - "&bMystery Vault"
+        - "&e&lRIGHT CLICK"
+    deliveryman:
+      holograms:
+        - "&bThe Delivery Man"
+        - "&e&lRIGHT CLICK"
+    shopkeeper:
+      holograms:
+        - "&e&lCLICK TO OPEN!"
+        - "&cShopkeeper"
+    statsnpc:
+      holograms:
+        - "&6&lYour SkyWars Profile"
+        - "Your Level: {level}"
+        - "Progress: &b{exp}&7/&a{nextExp}"
+        - "Total Wins: &a{wins}"
+        - "Total Kills: &a{kills}"
+        - "&e&lCLICK FOR STATS!"
+  connecting:
+    party:
+      not-leader: "&cOnly the Party leader can find a match."
+
+# --- Game ---
+game:
+  rewards-message:
+    coins-per-play: "&6+{coins} SkyWars Coins Received (Play)."
+    coins-per-kill: "&6+{coins} SkyWars Coins Received (Kill)."
+    coins-per-win: "&6+{coins} SkyWars Coins Received (Game Win)."
+    exp-per-play: "&d+{xp} SkyWars Experience Received (Play)."
+    exp-per-kill: "&d+{xp} SkyWars Experience Received (Kill)."
+    exp-per-win: "&d+{xp} SkyWars Experience Received (Game Win)."
+    soul: "&b+{souls} Souls."
+  event:
+    start: "Start "
+    refill: "Refill "
+    doom: "Dragon "
+    end: "End "
+  hotbar:
+    kits:
+      name: "&aKit Selector &7(Right Click)"
+    quit:
+      name: "&c&lReturn to Lobby &7(Right Click)"
+    compass:
+      name: "&a&lTeleporter &7(Right Click)"
+    quit-spectator:
+      name: "&c&lReturn to Lobby &7(Right Click)"
+    play-again:
+      name: "&b&lPlay Again &7(Right Click)"
+  broadcast:
+    starting:
+      join: "{colored} &ahas joined (&b{on}&a/&b{max}&a)!"
+      left: "{colored} &chas left (&b{on}&c/&b{max}&c)!"
+      start: "&aThe game starts in {time} &asecond{s}!"
+      cage: "&aCages open in: {time} &asecond{s}!"
+      selected-kit: "&aSelected Kit: {kit}"
+      title: "&c{time}"
+      subtitle: "&aPrepare to fight!"
+    started:
+      title: "{type_color}{type} MODE"
+      subtitle: ""
+    ingame:
+      action-bar:
+        remaining: "&eThere are &c{alive} &eplayers remaining!"
+      death-messages:
+        suicide:
+          normal: "{display} &edied."
+          void: "{display} &efell into the void."
+        killed:
+          normal: "{display} &ewas killed by {display2}&e."
+          void: "{display} &ewas thrown into the void by {display2}&e."
+          bow: "{display} &ewas shot by {display2}&e."
+          mob: "{display} &ewas killed by {display2}'s mob."
+  hologram:
+    chest: "&e{time}"
+    no-refill: "&cNo refill"
+  player:
+    ingame:
+      receive-box: "&aYou've received a {stars} Star{s} Mystery Box!"
+      title:
+        join:
+          up: "&aSkyWars"
+          down: "{type_color}{type} Mode"
+      titles:
+        refill:
+          up: ""
+          bottom: "&aChests have been refilled!"
+        die:
+          up: "&c&lYOU DIED!"
+          up-killed: "&c&lYOU DIED!"
+          bottom: "&7You are now a spectator!"
+          bottom-killed: "&7killed by {colored}"
+        loser:
+          up: "&c&lGAME END"
+          bottom: "&7You weren't victorious this time"
+        winner:
+          up: "&c&lYOU WIN"
+          bottom: "&7You are the last standing"
+        border:
+          up: "&c&lWARNING"
+          bottom: "&7You are off the world border"
+      leader-board:
+        template: "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\\n{centered}&f&lSkyWars\\n \\n{centered}&aWinner &7- {winner}\\n \\n{centered}&a&l1st Killer &7- {top1} &7- {kills_top1}\\n{centered}&6&l2nd Killer &7- {top2} &7- {kills_top2}\\n{centered}&c&l3rd Killer &7- {top3} &7- {kills_top3}\\n \\n&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+      reward-summary:
+        - "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+        - "                            &f&lReward Summary"
+        - ""
+        - "  &7You earned"
+        - "   &f• &6{totalCoins} SkyWars Coins"
+        - ""
+        - "&7You earned &d{totalExp} SkyWars Experience"
+        - "&7You earned &2{totalGExp} Guild Experience"
+        - "&7You harvested &b{totalSouls} Souls"
+        - ""
+        - "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+    ranked:
+      action-bar:
+        points: "&6+{points} League Points!"
+        brave-points: "&c+{points} Brave Points!"
+
+# --- Commands ---
+command:
+  stats:
+    args: "&cUse /stats <username>"
+    permission: "&cYou must be &bMVP &cor higher to use this command!"
+    user-not-found: "&cUser not found!"
+  watch:
+    args: "&cUse /watch <username>"
+    permission: "&cYou must be &bMVP &cor higher to use this command!"
+    user-not-found: "&cUser not found!"
+    user-not-in-match: "&cUser isn't playing a match."
+  join-game:
+    permission: "&cYou must be &bMVP &cor higher to use this command!"
+    args: "&cUse /joingame <world>"
+    game-not-found: "&cInvalid world name."
+    game-already-started: "&cGame already started."
+  mapselector:
+    no-arenas: "&cNo arenas available for this mode!"
+    cooldown: "&cYou can only select a map once every {time} seconds!"
+
+# --- Cosmetics: spray hologram ---
+cosmetics:
+  sprays:
+    holograms: "&eClick!"
+
+# --- Ranked ---
+ranked:
+  required:
+    message: "&cYou need at least SkyWars Level 1 to play ranked SkyWars! Your Level can be seen on your xp bar in lobbies."
+
+# --- General messages ---
+general:
+  no-permission: "&cYou don't have permission to do this!"
+  player-only: "&cThis command can only be used by players!"
+  reload-success: "&aLanguage and configuration reloaded successfully!"
+  arena-not-found: "&cArena not found!"
+  player-not-found: "&cPlayer not found!"
+  already-in-game: "&cYou are already in a game!"
+  game-full: "&cThis game is full!"
+  not-in-game: "&cYou are not in a game!"
+  cannot-do-in-game: "&cYou cannot do this while in a game!"

@@ -1,311 +1,277 @@
 package org.twightlight.skywars;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.twightlight.skywars.config.YamlWrapper;
 import org.twightlight.skywars.utils.player.Logger;
 import org.twightlight.skywars.utils.player.Logger.Level;
-import org.twightlight.skywars.bungee.core.Core;
-import org.twightlight.skywars.bungee.core.CoreMode;
-import org.twightlight.skywars.cosmetics.CosmeticRarity;
-import org.twightlight.skywars.config.YamlWrapper;
-import org.twightlight.skywars.utils.file.LanguageWriter;
 import org.twightlight.skywars.utils.string.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.*;
 
-@SuppressWarnings("rawtypes")
 public class Language {
 
-    public static long scoreboards$animation$update = 1;
-    public static List<String> scoreboards$animation$title =
-            Arrays.asList("§f§l§6§lS§a§lKYWARS", "§f§lS§6§lK§a§lYWARS", "§f§lSK§6§lY§a§lWARS", "§f§lSKY§6§lW§a§lARS", "§f§lSKYW§6§lA§a§lRS", "§f§lSKYWA§6§lR§a§lS", "§f§lSKYWAR§6§lS§a§l",
-                    "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS",
-                    "§f§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS", "§f§lSKYWARS",
-                    "§f§lSKYWARS", "§f§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS",
-                    "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS",
-                    "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS", "§a§lSKYWARS");
-    public static String scoreboard$replace$waiting = "Waiting...";
-    public static String scoreboard$replace$starting = "Starting in §a{time}s";
-    public static List<String> scoreboards$lines$lobby =
-            Arrays.asList("", "Your Level: {level}", "", "Solo Kills: §a{solokills}", "Solo Wins: §a{solowins}", "Doubles Kills: §a{teamkills}", "Doubles Wins: §a{teamwins}",
-                    "Ranked Kills: §a{rankedkills}", "Ranked Wins: §a{rankedwins}", "", "Coins: §6{coins}", "Souls: §b{souls}§7/{maxsouls}", "", "§ewww.example.net");
-
-    public static int options$ranked$required$level = 1;
-    public static boolean options$game$default_kit = true;
-    public static String options$ranked$required$message = "§cYou need at least SkyWars Level 1 to play ranked SkyWars! Your Level can be seen on your xp bar in lobbies.";
-    public static String options$mode$solo = "Solo";
-    public static String options$mode$doubles = "Doubles";
-    public static String options$rarity$common = "§7COMMON";
-    public static String options$rarity$uncommon = "§aUNCOMMON";
-    public static String options$rarity$rare = "§9RARE";
-    public static String options$rarity$epic = "§5EPIC";
-    public static String options$rarity$legendary = "§6LEGENDARY";
-    public static String options$rarity$mythic = "§cMYTHIC";
-    public static String options$cosmetic$default_kit = "Default";
-    public static String options$cosmetic$prefix = "SkyWars ";
-    public static String options$cosmetic$kit = "Kit ";
-    public static String options$cosmetic$perk = "Perk ";
-    public static String options$cosmetic$cage = "Cage ";
-    public static String options$cosmetic$deathcry = "Death Cry ";
-    public static String options$cosmetic$trail = "Projectile Trail ";
-    public static String options$cosmetic$killmessage = "Kill Message ";
-    public static String options$cosmetic$killeffect = "Kill Effect ";
-    public static String options$cosmetic$victorydance = "Victory Dance ";
-    public static String options$cosmetic$title = "Title ";
-    public static String options$cosmetic$ballon = "Ballon ";
-    public static String options$cosmetic$spray = "Spray ";
-
-    public static boolean lobby$chat$enabled = true;
-    public static int lobby$chat$delay_time = 3;
-    public static String lobby$chat$delay_message = "§cYou must wait §a{time}s §cbetween send other message!";
-    public static String lobby$chat$format = "§7[§a{level}§7] {display}{color}: {message}";
-    public static String lobby$chat$format_ranked = "§7[{league}({points})§7] {display}{color}: {message}";
-    public static String lobby$chat$format_duels = "§a[GAME] §7{colored}{color}: {message}";
-    public static String lobby$chat$format_spectator = "§7[SPECTATOR] §7[§a{level}§7] {display}{color}: {message}";
-
-    public static String lobby$visibility$delay = "§cYou must wait §a{time}s §cbetween uses!";
-
-    public static int lobby$hotbar$profile$slot = 0;
-    public static int lobby$hotbar$shop$slot = 1;
-    public static int lobby$hotbar$players$slot = 7;
-    public static String lobby$hotbar$profile$name = "§aMy Profile §7(Right Click)";
-    public static String lobby$hotbar$shop$name = "§aShop §7(Right Click)";
-    public static String lobby$hotbar$players$name_i = "§fPlayers: §cHidden §7(Right Click)";
-    public static String lobby$hotbar$players$name_v = "§fPlayers: §aVisible §7(Right Click)";
-    public static String lobby$npcs$deliveryman$skin_value =
-            "eyJ0aW1lc3RhbXAiOjE1NzE1OTI3NjkzMjYsInByb2ZpbGVJZCI6ImU0MDE1NTBiZjNkNzRlMThiMzYxNWQzNDNjNTliMjA3IiwicHJvZmlsZU5hbWUiOiJaZWFsb2NrIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hNDAyZDY4MGRhNjZjMmQyNTBiNjVlM2ZlNDZhNzE5YzM1MWFjMzQ2NzhkYTM5NjNmNzcxNjVmYWQzZWY2MzhjIiwibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn19fX0=";
-    public static String lobby$npcs$deliveryman$skin_signature =
-            "l8vl8BjvErK++4xnKharcxJv+Z71GqA0MYXxPbCYB2PAoKCxC+gYsIDm7aG2/cKZuz8RcANLxSp2NNMlqSUcMp8lBptVHdLtB7J+NG+QmGRvgZUd5S7wMU3jQu7VH5XIxn5qgZNZ9ef9naa9v3R9A66WmWOGuKjEJaSW4hKuxZ821zjS1QkeESAYgNzyU7EwSb3MSIuHXPvmAaYH7pUZyoZTh2sTqXTYOAZmJD5k6DWxqVuGinl1fbU07WNPJk/8frlgHWhuhtqYc7Zvx2RV9kDsWJ8Spcex6VQmEk+MJNB/VmPjXrke3YQKEF5udq3C9nJstiM6V/VgduYZTSSkTcP3lfcCwcvROYaVpsydCNS6Hn2Zp953lZseK/p3/W8Zic5zhcUbEwrNiPs37ZO9Ktz/O2YZR98djR95zqv+QImXi35mIelYuLdDEUeGZNPC41jHoeCR952T8i4l5ilN0hXoZPLPq+5NV/m4GP180gxGASVTwD4wkDmDtwjo22XT9d7dr92KTBdNndak2slJ5+hRukpNtUcRyJTsCDz8A3E6hFNjS4pIyCe0gSRIrx2xoDBwqV16ELDtrX2yv8ofQd2b6scxMBJ3zUW16mEDrbON/N8OWACYwD8jdtlExETXP7bDhtdotlaIRmd+pW7s1BZmShCKxKjrOiv/ZCMA5X0=";
-    public static List<String> lobby$npcs$well$holograms = Arrays.asList("§bSoul Well", "§e§lRIGHT CLICK");
-    public static List<String> lobby$npcs$box$holograms = Arrays.asList("§bMystery Vault", "§e§lRIGHT CLICK");
-    public static List<String> lobby$npcs$deliveryman$holograms = Arrays.asList("§bThe Delivery Man", "§e§lRIGHT CLICK");
-    public static List<String> lobby$npcs$shopkeeper$holograms = Arrays.asList("§e§lCLICK TO OPEN!", "§cShopkeeper");
-    public static List<String> lobby$npcs$statsnpc$holograms =
-            Arrays.asList("§6§lYour SkyWars Profile", "Your Level: {level}", "Progress: §b{exp}§7/§a{nextExp}", "Total Wins: §a{wins}", "Total Kills: §a{kills}", "§e§lCLICK FOR STATS!");
-
-    public static String lobby$npcs$play$connecting = "§aSending you to {world}!\n \n ";
-    public static String lobby$npcs$box$already_in_use = "§cOnly one player can use the Mystery Vault at a time!";
-    public static String lobby$npcs$box$duplicate = "§aYou've received §b{frags} Mystery Dusts for already have {prefix} {item}§a!";
-
-    public static boolean lobby$speed$enabled = true;
-    public static int lobby$speed$level = 1;
-    public static boolean lobby$jump_boost$enabled = false;
-    public static int lobby$jump_boost$level = 1;
-
-    public static boolean lobby$motd$enabled = false;
-    public static String lobby$motd$header = "            §aExample Network §c[1.8-1.13]";
-    public static String lobby$motd$footer = "        §aCome here and play the new SkyWars!";
-
-    public static boolean lobby$tablist$enabled = true;
-    public static String lobby$tablist$header = "§bYou are playing on §a§lMC.EXAMPLE.NET\n ";
-    public static String lobby$tablist$footer = " \n§aRanks, Boosters & MORE! §c§lSTORE.EXAMPLE.NET";
-
-    public static String lobby$connecting$party$not_leader = "§cOnly the Party leader can find a match.";
-
-    public static String game$rewards_message$coins_per_play = "&6+{coins} SkyWars Coins Received (Play).";
-    public static String game$rewards_message$coins_per_kill = "&6+{coins} SkyWars Coins Received (Kill).";
-    public static String game$rewards_message$coins_per_win = "&6+{coins} SkyWars Coins Received (Game Win).";
-
-    public static String game$rewards_message$exp_per_play = "&d+{xp} SkyWars Experience Received (Play).";
-    public static String game$rewards_message$exp_per_kill = "&d+{xp} SkyWars Experience Received (Kill).";
-    public static String game$rewards_message$exp_per_win = "&d+{xp} SkyWars Experience Received (Game Win).";
-
-    public static String game$rewards_message$soul = "&b+{souls} Souls.";
-
-    public static int game$countdown$start = 45;
-    public static int game$countdown$full = 10;
-
-    public static String game$event$start = "Start ";
-    public static String game$event$refill = "Refill ";
-    public static String game$event$doom = "Dragon ";
-    public static String game$event$end = "End ";
-
-    public static int game$hotbar$kits$slot = 0;
-    public static int game$hotbar$quit$slot = 8;
-    public static int game$hotbar$compass$slot = 0;
-    public static int game$hotbar$quit_spectator$slot = 8;
-    public static int game$hotbar$play_again$slot = 7;
-    public static String game$hotbar$kits$name = "§aKit Selector §7(Right Click)";
-    public static String game$hotbar$quit$name = "§c§lReturn to Lobby §7(Right Click)";
-    public static String game$hotbar$compass$name = "§a§lTeleporter §7(Right Click)";
-    public static String game$hotbar$quit_spectator$name = "§c§lReturn to Lobby §7(Right Click)";
-    public static String game$hotbar$play_again$name = "§b§lPlay Again §7(Right Click)";
-
-    public static String game$broadcast$starting$join = "{colored} §ahas joined (§b{on}§a/§b{max}§a)!";
-    public static String game$broadcast$starting$left = "{colored} §chas left (§b{on}§c/§b{max}§c)!";
-    public static String game$broadcast$starting$start = "§aThe game starts in {time} §asecond{s}!";
-    public static String game$broadcast$starting$cage = "§aCages open in: {time} §asecond{s}!";
-    public static String game$broadcast$starting$selected_kit = "§aSelected Kit: {kit}";
-    public static String game$broadcast$starting$title = "§c{time}";
-    public static String game$broadcast$starting$subtitle = "§aPrepare to fight!";
-    public static String game$broadcast$started$title = "{type_color}{type} MODE";
-    public static String game$broadcast$started$subtitle = "";
-    public static String game$broadcast$ingame$action_bar$remaining = "§eThere are §c{alive} §eplayers remaining!";
-    public static String game$broadcast$ingame$death_messages$suicide$normal = "{display} §edied.";
-    public static String game$broadcast$ingame$death_messages$suicide$void = "{display} §efell into the void.";
-    public static String game$broadcast$ingame$death_messages$killed$normal = "{display} §ewas killed by {display2}§e.";
-    public static String game$broadcast$ingame$death_messages$killed$void = "{display} §ewas thrown into the void by {display2}§e.";
-    public static String game$broadcast$ingame$death_messages$killed$bow = "{display} §ewas shot by {display2}§e.";
-    public static String game$broadcast$ingame$death_messages$killed$mob = "{display} §ewas killed by {display2}'s mob.";
-    public static String game$hologram$chest = "§e{time}";
-    public static String game$hologram$no_refill = "§cNo refill";
-    public static String game$player$ingame$receive_box = "§aYou've received a {stars} Star{s} Mystery Box!";
-    public static String game$player$ingame$title$join$up = "§aSkyWars";
-    public static String game$player$ingame$title$join$down = "{type_color}{type} Mode";
-    public static String game$player$ingame$titles$refill$up = "";
-    public static String game$player$ingame$titles$refill$bottom = "§aChests have been refilled!";
-    public static String game$player$ingame$titles$die$up = "§c§lYOU DIED!";
-    public static String game$player$ingame$titles$die$up_killed = "§c§lYOU DIED!";
-    public static String game$player$ingame$titles$die$bottom = "§7You are now a spectator!";
-    public static String game$player$ingame$titles$die$bottom_killed = "§7killed by {colored}";
-    public static String game$player$ingame$titles$loser$up = "§c§lGAME END";
-    public static String game$player$ingame$titles$loser$bottom = "§7You weren't victorious this time";
-    public static String game$player$ingame$titles$winner$up = "§c§lYOU WIN";
-    public static String game$player$ingame$titles$winner$bottom = "§7You are the last standing";
-    public static String game$player$ingame$titles$border$up = "§c§lWARNING";
-    public static String game$player$ingame$titles$border$bottom = "§7You are off the world border";
-    public static String game$player$ingame$leader_board$template =
-            "§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n{centered}§f§lSkyWars\n \n{centered}§aWinner §7- {winner}\n \n{centered}§a§l1st Killer §7- {top1} §7- {kills_top1}\n{centered}§6§l2nd Killer §7- {top2} §7- {kills_top2}\n{centered}§c§l3rd Killer §7- {top3} §7- {kills_top3}\n \n§a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
-    public static List<String> game$player$ingame$reward_summary =
-            Arrays.asList("&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",
-                    "                            &f&lReward Summary",
-                    "",
-                    "  &7You earned",
-                    "   &f• &6{totalCoins} SkyWars Coins",
-                    "",
-                    "&7You earned &d{totalExp} SkyWars Experience",
-                    "&7You earned &2{totalGExp} Guild Experience",
-                    "&7You harvested &b{totalSouls} Souls",
-                    "",
-                    "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬");
-
-    public static String game$player$ranked$action_bar$points = "§6+{points} League Points!";
-    public static String game$player$ranked$action_bar$brave_points = "§c+{points} Brave Points!";
-
-    public static String command$stats$args = "§cUse /stats <username>";
-    public static String command$stats$permission = "§cYou must be §bMVP §cor higher to use this command!";
-    public static String command$stats$user_not_found = "§cUser not found!";
-    public static String command$watch$args = "§cUse /watch <username>";
-    public static String command$watch$permission = "§cYou must be §bMVP §cor higher to use this command!";
-    public static String command$watch$user_not_found = "§cUser not found!";
-    public static String command$watch$user_not_in_match = "§cUser isn't playing a match.";
-    public static String command$join_game$permission = "§cYou must be §bMVP §cor higher to use this command!";
-    public static String command$join_game$args = "§cUse /joingame <world>";
-    public static String command$join_game$game_not_found = "§cInvalid world name.";
-    public static String command$join_game$game_already_started = "§cGame already started.";
-
-    public static String cosmetics$sprays$holograms = "§eClick!";
-
+    private static final Gson GSON = new Gson();
     public static Logger LOGGER;
-    private static YamlWrapper CONFIG;
+
+    private static String defaultLanguageId;
+    private static final Map<String, YamlWrapper> loadedLanguages = new LinkedHashMap<>();
+    private static YamlWrapper defaultLanguage;
 
     public static void setupLanguage() {
         LOGGER = SkyWars.LOGGER.getModule("Language");
-        CONFIG = YamlWrapper.getConfig("lang");
 
-        boolean save = false;
-        LanguageWriter writer = new LanguageWriter(CONFIG.getFile());
-        for (Field field : Language.class.getDeclaredFields()) {
-            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers()) && !field.getName().equals("LOGGER")
-                    && !field.getName().equals("CONFIG")) {
-                String nativeName = field.getName().replace("$", ".").replace("_", "-");
+        YamlWrapper mainConfig = YamlWrapper.getConfig("config");
+        defaultLanguageId = mainConfig.getString("default-language", "english");
 
-                try {
-                    Object value = null;
+        File languagesDir = new File("plugins/LostSkyWars/languages");
+        if (!languagesDir.exists()) {
+            languagesDir.mkdirs();
+        }
 
-                    if (CONFIG.contains(nativeName)) {
-                        value = CONFIG.get(nativeName);
-                        if (value instanceof String) {
-                            value = StringUtils.formatColors((String) value).replace("\\n", "\n");
-                        } else if (value instanceof List) {
-                            List l = (List) value;
-                            List<Object> list = new ArrayList<>(l.size());
-                            for (Object v : l) {
-                                if (v instanceof String) {
-                                    list.add(StringUtils.formatColors((String) v).replace("\\n", "\n"));
-                                } else {
-                                    list.add(v);
-                                }
-                            }
+        copyBundledLanguage("english");
 
-                            l = null;
-                            value = list;
-                        }
-
-                        field.set(null, value);
-                        writer.set(nativeName, CONFIG.get(nativeName));
-                    } else {
-                        value = field.get(null);
-                        if (value instanceof String) {
-                            value = StringUtils.deformatColors((String) value).replace("\n", "\\n");
-                        } else if (value instanceof List) {
-                            List l = (List) value;
-                            List<Object> list = new ArrayList<>(l.size());
-                            for (Object v : l) {
-                                if (v instanceof String) {
-                                    list.add(StringUtils.deformatColors((String) v).replace("\n", "\\n"));
-                                } else {
-                                    list.add(v);
-                                }
-                            }
-
-                            l = null;
-                            value = list;
-                        }
-
-                        save = true;
-                        writer.set(nativeName, value);
-                    }
-                } catch (ReflectiveOperationException e) {
-                    LOGGER.log(Level.WARNING, "Unexpected error on language file: ", e);
-                }
+        File[] files = languagesDir.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (files != null) {
+            for (File file : files) {
+                String id = file.getName().replace(".yml", "");
+                YamlWrapper wrapper = YamlWrapper.getConfig(id, "plugins/LostSkyWars/languages");
+                loadedLanguages.put(id.toLowerCase(), wrapper);
             }
         }
 
-        if (save && Core.MODE == CoreMode.MULTI_ARENA) {
-            writer.write();
-            LOGGER.info("Lang.yml modified or created.");
-            CONFIG.reload();
+        defaultLanguage = loadedLanguages.get(defaultLanguageId.toLowerCase());
+        if (defaultLanguage == null) {
+            LOGGER.log(Level.WARNING, "Default language '" + defaultLanguageId + "' not found! Falling back to english.");
+            defaultLanguage = loadedLanguages.get("english");
+            if (defaultLanguage == null) {
+                LOGGER.log(Level.SEVERE, "No language files found at all! Creating empty english.yml.");
+                defaultLanguage = YamlWrapper.getConfig("english", "plugins/LostSkyWars/languages");
+                loadedLanguages.put("english", defaultLanguage);
+            }
         }
 
-        for (CosmeticRarity rarity : CosmeticRarity.values()) {
-            rarity.translate();
+        LOGGER.info("Loaded " + loadedLanguages.size() + " language(s). Default: " + defaultLanguageId);
+    }
+
+    private static void copyBundledLanguage(String name) {
+        File target = new File("plugins/LostSkyWars/languages/" + name + ".yml");
+        if (!target.exists()) {
+            InputStream in = SkyWars.getInstance().getResource("languages/" + name + ".yml");
+            if (in != null) {
+                org.twightlight.skywars.utils.file.FileUtils.copyFile(in, target);
+                LOGGER.info("Created default language file: " + name + ".yml");
+            }
         }
+    }
+
+
+    public static YamlWrapper getLanguageConfig(String languageId) {
+        if (languageId == null || languageId.isEmpty()) {
+            return defaultLanguage;
+        }
+        YamlWrapper wrapper = loadedLanguages.get(languageId.toLowerCase());
+        return wrapper != null ? wrapper : defaultLanguage;
+    }
+
+    public static YamlWrapper getDefaultConfig() {
+        return defaultLanguage;
+    }
+
+    public static String getDefaultLanguageId() {
+        return defaultLanguageId;
+    }
+
+    public static Collection<String> getAvailableLanguages() {
+        return Collections.unmodifiableCollection(loadedLanguages.keySet());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getValue(String path, Type type, T fallback) {
+        return getValue(path, type, fallback, null);
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getValue(String path, Type type, T fallback, String languageId) {
+        YamlWrapper config = getLanguageConfig(languageId);
+        Object raw = config.get(path);
+
+        if (raw == null && config != defaultLanguage) {
+            raw = defaultLanguage.get(path);
+        }
+
+        if (raw == null) {
+            return fallback;
+        }
+
+        if (fallback != null && fallback.getClass().isInstance(raw)) {
+            if (raw instanceof String) {
+                return (T) processString((String) raw);
+            }
+            if (raw instanceof List) {
+                return (T) processStringList((List<?>) raw);
+            }
+            return (T) raw;
+        }
+
+        if (type.equals(String.class) || (fallback instanceof String)) {
+            return (T) processString(raw.toString());
+        }
+
+        TypeToken<List<String>> listToken = new TypeToken<List<String>>() {};
+        if (type.equals(listToken.getType())) {
+            if (raw instanceof List) {
+                return (T) processStringList((List<?>) raw);
+            }
+        }
+
+        if (type.equals(Integer.class) || type.equals(int.class)) {
+            if (raw instanceof Number) {
+                return (T) Integer.valueOf(((Number) raw).intValue());
+            }
+            try {
+                return (T) Integer.valueOf(raw.toString());
+            } catch (NumberFormatException e) {
+                return fallback;
+            }
+        }
+
+        if (type.equals(Double.class) || type.equals(double.class)) {
+            if (raw instanceof Number) {
+                return (T) Double.valueOf(((Number) raw).doubleValue());
+            }
+            try {
+                return (T) Double.valueOf(raw.toString());
+            } catch (NumberFormatException e) {
+                return fallback;
+            }
+        }
+
+        if (type.equals(Boolean.class) || type.equals(boolean.class)) {
+            if (raw instanceof Boolean) {
+                return (T) raw;
+            }
+            return (T) Boolean.valueOf(raw.toString());
+        }
+
+        if (type.equals(Long.class) || type.equals(long.class)) {
+            if (raw instanceof Number) {
+                return (T) Long.valueOf(((Number) raw).longValue());
+            }
+            try {
+                return (T) Long.valueOf(raw.toString());
+            } catch (NumberFormatException e) {
+                return fallback;
+            }
+        }
+
+        try {
+            String json = GSON.toJson(raw);
+            return GSON.fromJson(json, type);
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    public static String getString(String path) {
+        return getString(path, "", null);
+    }
+
+    public static String getString(String path, String fallback) {
+        return getString(path, fallback, null);
+    }
+
+    public static String getString(String path, String fallback, String languageId) {
+        return getValue(path, String.class, fallback, languageId);
+    }
+
+    public static List<String> getStringList(String path) {
+        return getStringList(path, Collections.emptyList(), null);
+    }
+
+    public static List<String> getStringList(String path, List<String> fallback) {
+        return getStringList(path, fallback, null);
+    }
+
+    public static List<String> getStringList(String path, List<String> fallback, String languageId) {
+        return getValue(path, new TypeToken<List<String>>() {}.getType(), fallback, languageId);
+    }
+
+    public static int getInteger(String path) {
+        return getInteger(path, 0, null);
+    }
+
+    public static int getInteger(String path, int fallback) {
+        return getInteger(path, fallback, null);
+    }
+
+    public static int getInteger(String path, int fallback, String languageId) {
+        Integer result = getValue(path, Integer.class, fallback, languageId);
+        return result != null ? result : fallback;
+    }
+
+    public static double getDouble(String path) {
+        return getDouble(path, 0.0, null);
+    }
+
+    public static double getDouble(String path, double fallback) {
+        return getDouble(path, fallback, null);
+    }
+
+    public static double getDouble(String path, double fallback, String languageId) {
+        Double result = getValue(path, Double.class, fallback, languageId);
+        return result != null ? result : fallback;
+    }
+
+    public static boolean getBoolean(String path) {
+        return getBoolean(path, false, null);
+    }
+
+    public static boolean getBoolean(String path, boolean fallback) {
+        return getBoolean(path, fallback, null);
+    }
+
+    public static boolean getBoolean(String path, boolean fallback, String languageId) {
+        Boolean result = getValue(path, Boolean.class, fallback, languageId);
+        return result != null ? result : fallback;
+    }
+
+    public static long getLong(String path) {
+        return getLong(path, 0L, null);
+    }
+
+    public static long getLong(String path, long fallback) {
+        return getLong(path, fallback, null);
+    }
+
+    public static long getLong(String path, long fallback, String languageId) {
+        Long result = getValue(path, Long.class, fallback, languageId);
+        return result != null ? result : fallback;
     }
 
     public static void reload() {
-        LanguageWriter writer = new LanguageWriter(CONFIG.getFile());
-        for (Field field : Language.class.getDeclaredFields()) {
-            if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers()) && !Modifier.isFinal(field.getModifiers())) {
-                String nativeName = field.getName().replace("$", ".").replace("_", "-");
-
-                try {
-                    Object value = field.get(null);
-                    if (value instanceof String) {
-                        value = StringUtils.deformatColors((String) value).replace("\n", "\\n");
-                    } else if (value instanceof List) {
-                        List l = (List) value;
-                        List<Object> list = new ArrayList<>(l.size());
-                        for (Object v : l) {
-                            if (v instanceof String) {
-                                list.add(StringUtils.deformatColors((String) v).replace("\n", "\\n"));
-                            } else {
-                                list.add(v);
-                            }
-                        }
-
-                        l = null;
-                        value = list;
-                    }
-
-                    writer.set(nativeName, value);
-                } catch (ReflectiveOperationException e) {
-                    LOGGER.log(Level.WARNING, "Unexpected error on language file: ", e);
-                }
-            }
-        }
-
-        writer.write();
+        loadedLanguages.values().forEach(YamlWrapper::reload);
+        LOGGER.info("All language files reloaded.");
     }
 
+    private static String processString(String value) {
+        if (value == null) return "";
+        return StringUtils.formatColors(value).replace("\\n", "\n");
+    }
+
+    private static List<String> processStringList(List<?> raw) {
+        List<String> result = new ArrayList<>(raw.size());
+        for (Object obj : raw) {
+            if (obj instanceof String) {
+                result.add(processString((String) obj));
+            } else {
+                result.add(obj != null ? obj.toString() : "");
+            }
+        }
+        return result;
+    }
 }

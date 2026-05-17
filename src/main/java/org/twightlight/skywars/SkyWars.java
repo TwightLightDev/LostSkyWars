@@ -64,8 +64,8 @@ public class SkyWars extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         setupPacketEvents();
-        if (!this.getConfig().contains("servermode")) {
-            this.getConfig().set("servermode", CoreMode.MULTI_ARENA.name());
+        if (!this.getConfig().contains("server-mode")) {
+            this.getConfig().set("server-mode", CoreMode.MULTI_ARENA.name());
             saveConfig();
         }
         try {

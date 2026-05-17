@@ -9,7 +9,6 @@ public class CommandsManager {
         new StatsCommand();
         if (Core.MODE == CoreMode.MULTI_ARENA) {
             new WatchCommand();
-            new PlayCommand();
             new MenuCommand();
         }
         new SkyWarsCommand();

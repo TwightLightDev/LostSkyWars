@@ -1,11 +1,64 @@
 database:
-  # Database types: MySQL | SQLite
   name: SQLite
-  # MySQL connection data
   host: localhost
   port: 3306
   dbname: server
   username: root
   password: ''
-# Server Modes: MULTI_ARENA, LOBBY (Lobby for Bungee Arena), ARENA (Arena for Bungee Lobby)
-servermode: MULTI_ARENA
+server-mode: MULTI_ARENA
+default-language: english
+ranked:
+  required:
+    level: 1
+lobby:
+  chat:
+    enabled: true
+    delay-time: 3
+  hotbar:
+    profile:
+      slot: 0
+    shop:
+      slot: 1
+    players:
+      slot: 7
+  scoreboards-refresh-interval: 1
+  npc-skin:
+    deliveryman:
+      skin-value: "eyJ0aW1lc3RhbXAiOjE1NzE1OTI3NjkzMjYsInByb2ZpbGVJZCI6ImU0MDE1NTBiZjNkNzRlMThiMzYxNWQzNDNjNTliMjA3IiwicHJvZmlsZU5hbWUiOiJaZWFsb2NrIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hNDAyZDY4MGRhNjZjMmQyNTBiNjVlM2ZlNDZhNzE5YzM1MWFjMzQ2NzhkYTM5NjNmNzcxNjVmYWQzZWY2MzhjIiwibWV0YWRhdGEiOnsibW9kZWwiOiJzbGltIn19fX0="
+      skin-signature: "l8vl8BjvErK++4xnKharcxJv+Z71GqA0MYXxPbCYB2PAoKCxC+gYsIDm7aG2/cKZuz8RcANLxSp2NNMlqSUcMp8lBptVHdLtB7J+NG+QmGRvgZUd5S7wMU3jQu7VH5XIxn5qgZNZ9ef9naa9v3R9A66WmWOGuKjEJaSW4hKuxZ821zjS1QkeESAYgNzyU7EwSb3MSIuHXPvmAaYH7pUZyoZTh2sTqXTYOAZmJD5k6DWxqVuGinl1fbU07WNPJk/8frlgHWhuhtqYc7Zvx2RV9kDsWJ8Spcex6VQmEk+MJNB/VmPjXrke3YQKEF5udq3C9nJstiM6V/VgduYZTSSkTcP3lfcCwcvROYaVpsydCNS6Hn2Zp953lZseK/p3/W8Zic5zhcUbEwrNiPs37ZO9Ktz/O2YZR98djR95zqv+QImXi35mIelYuLdDEUeGZNPC41jHoeCR952T8i4l5ilN0hXoZPLPq+5NV/m4GP180gxGASVTwD4wkDmDtwjo22XT9d7dr92KTBdNndak2slJ5+hRukpNtUcRyJTsCDz8A3E6hFNjS4pIyCe0gSRIrx2xoDBwqV16ELDtrX2yv8ofQd2b6scxMBJ3zUW16mEDrbON/N8OWACYwD8jdtlExETXP7bDhtdotlaIRmd+pW7s1BZmShCKxKjrOiv/ZCMA5X0="
+  speed:
+    enabled: true
+    level: 1
+  jump-boost:
+    enabled: false
+    level: 1
+  motd:
+    enabled: false
+    header: "            &aExample Network &c[1.8-1.13]"
+    footer: "        &aCome here and play the new SkyWars!"
+  tablist:
+    enabled: true
+    header: "&bYou are playing on &a&lMC.EXAMPLE.NET\n "
+    footer: " \n&aRanks, Boosters & MORE! &c&lSTORE.EXAMPLE.NET"
+  connecting:
+    party:
+      not-leader-bypass: false
+game:
+  countdown:
+    start: 45
+    full: 10
+  hotbar:
+    kits:
+      slot: 0
+    quit:
+      slot: 8
+    compass:
+      slot: 0
+    quit-spectator:
+      slot: 8
+    play-again:
+      slot: 7
+  default-kit: true
+mapselector:
+  cooldown: 30
+  permission: "lostskywars.mapselector.infinite"
